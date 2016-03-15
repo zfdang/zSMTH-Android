@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/background_login"
+    android:orientation="vertical" >
+
+    <!--
+    Header
+	<include layout="@layout/header" />
+    -->
+
+
+    <!-- 防止默认焦点为edittext -->
+
+    <LinearLayout
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
+
+    <!-- 登录框 -->
+
+    <RelativeLayout
+        android:id="@+id/login_div"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:background="@drawable/background_login_div_bg"
+        android:padding="15dp" >
+
+        <!-- 用户名 text -->
+
+        <TextView
+            android:id="@+id/login_user_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="5dp"
+            android:text="@string/login_label_username" />
+        <!-- 用户名 input -->
+
+        <EditText
+            android:id="@+id/username_edit"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/login_user_input"
+            android:inputType="text"
+            android:singleLine="true" />
+        <!-- 密码 text -->
+
+        <TextView
+            android:id="@+id/login_password_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/username_edit"
+            android:layout_marginTop="3dp"
+            android:text="@string/login_label_password" />
+        <!-- 密码 input -->
+
+        <EditText
+            android:id="@+id/password_edit"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/login_password_input"
+            android:inputType="textPassword"
+            android:password="true"
+            android:singleLine="true" />
+        <!-- 登录 button -->
+
+        <Button
+            android:id="@+id/signin_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/guest_button"
+            android:layout_alignBottom="@+id/guest_button"
+            android:layout_marginRight="15dp"
+            android:layout_toLeftOf="@+id/guest_button"
+            android:text="@string/login_label_signin" />
+
+        <!-- guest button -->
+
+        <Button
+            android:id="@+id/guest_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/password_edit"
+            android:layout_below="@id/password_edit"
+            android:layout_marginTop="10dp"
+            android:text="@string/login_label_guest" />
+
+        <!-- 提示栏 -->
+
+        <TextView
+            android:id="@+id/progress_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/guest_button"
+            android:layout_alignLeft="@id/password_edit"
+            android:autoLink="web"
+            android:clickable="true"
+            android:gravity="bottom"
+            android:textColor="#888"
+            android:textSize="13dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" >
+
+        <TextView
+            android:id="@+id/register_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="@string/login_register_link"
+            android:textColor="#888"
+            android:textColorLink="@color/link_color" />
+
+        <TextView
+            android:id="@+id/asm_help_link"
+            android:layout_below="@id/register_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="15dp"
+            android:text="@string/login_asm_help"
+            android:textColor="#888"
+            android:textColorLink="@color/link_color" />
+
+        <ImageView
+            android:id="@+id/smth_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="25dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="25dp"
+            android:src="@drawable/logo_footer" />
+    </RelativeLayout>
+
+</LinearLayout>
