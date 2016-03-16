@@ -36,8 +36,9 @@ public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRe
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mCategoryView.setText("[" + holder.mItem.getCategoryName() + "]");
+        holder.mModeratorView.setText(holder.mItem.getModerator());
+        holder.mNameView.setText("[" + holder.mItem.getEngName() + "]" + holder.mItem.getChsName());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,21 +58,23 @@ public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRe
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
         public Board mItem;
+        public final View mView;
+        public final TextView mCategoryView;
+        public final TextView mModeratorView;
+        public final TextView mNameView;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mCategoryView = (TextView) view.findViewById(R.id.CategoryName);
+            mModeratorView = (TextView) view.findViewById(R.id.ModeratorID);
+            mNameView = (TextView) view.findViewById(R.id.BoardName);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return mNameView.getText().toString();
         }
     }
 }

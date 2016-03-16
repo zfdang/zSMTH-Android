@@ -4,7 +4,6 @@
     <string name="navigation_drawer_open">打开侧边导航栏</string>
     <string name="navigation_drawer_close">关闭侧边导航栏</string>
 
-    <string name="action_settings">设置</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">This is the first fragment</string>
@@ -12,18 +11,15 @@
     <string name="button_load_version">检查更新</string>
     <string name="title_activity_login">Sign in</string>
 
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
+
+
+    <!--右上的action菜单-->
+    <string name="action_settings">设置</string>
+    <string name="action_refresh">刷新</string>
+    <string name="action_switch_theme">切换主题</string>
+    <string name="action_login">登录</string>
+    <string name="action_logout">退出</string>
+
 
     <!-- 登录页 -->
     <string name="login_label_username">用户名</string>

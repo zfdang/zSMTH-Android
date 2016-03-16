@@ -34,7 +34,7 @@ public class AllBoardContent {
 
     private static void addItem(Board item) {
         ITEMS.add(item);
-        ITEM_MAP.put(item.id, item);
+        ITEM_MAP.put(item.getBoardID(), item);
     }
 
     private static Board createBoard(int position) {
@@ -43,7 +43,7 @@ public class AllBoardContent {
 
     private static String makeDetails(int position) {
         StringBuilder builder = new StringBuilder();
-        builder.append("Details about Item: ").append(position);
+        builder.append("Details about All board: ").append(position);
         for (int i = 0; i < position; i++) {
             builder.append("\nMore details information here.");
         }

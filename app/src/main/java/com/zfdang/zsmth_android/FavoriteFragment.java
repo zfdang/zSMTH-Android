@@ -59,8 +59,11 @@ public class FavoriteFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favorite_board, container, false);
 
+
         // Set the adapter
         if (view instanceof RecyclerView) {
+//            http://stackoverflow.com/questions/28713231/recyclerview-item-separator
+            ((RecyclerView) view).addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
@@ -74,9 +77,9 @@ public class FavoriteFragment extends Fragment {
     }
 
 
-//    @Override
+    //    @Override
     public void onAttach(Context context) {
-        super.onAttach((Activity)context);
+        super.onAttach((Activity) context);
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
         } else {

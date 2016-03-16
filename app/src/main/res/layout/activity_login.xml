@@ -5,12 +5,6 @@
     android:background="@drawable/background_login"
     android:orientation="vertical" >
 
-    <!--
-    Header
-	<include layout="@layout/header" />
-    -->
-
-
     <!-- 防止默认焦点为edittext -->
 
     <LinearLayout

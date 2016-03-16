@@ -1,20 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:paddingBottom="4dp"
+    android:paddingLeft="6dp"
+    android:paddingRight="6dp">
 
     <TextView
-        android:id="@+id/id"
-        android:layout_width="wrap_content"
+        android:id="@+id/CategoryName"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
+        android:text="TextView01"
+        android:textColor="@color/status_text" />
 
     <TextView
-        android:id="@+id/content"
-        android:layout_width="wrap_content"
+        android:id="@+id/ModeratorID"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
-</LinearLayout>
+        android:gravity="right"
+        android:maxLength="25"
+        android:text="TextView02"
+        android:textColor="@color/blue_text" />
+
+    <TextView
+        android:id="@+id/BoardName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/CategoryName"
+        android:text="TextView03"
+        android:textColor="@color/status_text"
+        android:textSize="20dp" />
+</RelativeLayout>

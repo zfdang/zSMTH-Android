@@ -34,16 +34,19 @@ public class FavoriteBoardContent {
 
     private static void addItem(Board item) {
         ITEMS.add(item);
-        ITEM_MAP.put(item.id, item);
+        ITEM_MAP.put(item.getBoardID(), item);
     }
 
     private static Board createDummyItem(int position) {
-        return new Board(String.valueOf(position), "Favorite " + position, makeDetails(position));
+        Board board = new Board(String.valueOf(position), "chsName", "engBoardName");
+        board.setModerator("版主");
+        board.setCategoryName("休闲娱乐");
+        return board;
     }
 
     private static String makeDetails(int position) {
         StringBuilder builder = new StringBuilder();
-        builder.append("Details about Item: ").append(position);
+        builder.append("Details about favorite: ").append(position);
         for (int i = 0; i < position; i++) {
             builder.append("\nMore details information here.");
         }

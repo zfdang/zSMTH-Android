@@ -37,8 +37,8 @@ public class AllBoardRecyclerViewAdapter extends RecyclerView.Adapter<AllBoardRe
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mIdView.setText(holder.mItem.getBoardID());
+        holder.mContentView.setText(holder.mItem.toString());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

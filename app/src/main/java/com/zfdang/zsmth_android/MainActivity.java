@@ -17,6 +17,9 @@ import android.view.MenuItem;
 import android.support.v4.app.Fragment;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.umeng.analytics.MobclickAgent;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
@@ -64,6 +67,18 @@ public class MainActivity extends AppCompatActivity
         fm.beginTransaction().replace(R.id.content_frame, guidanceFragment).commit();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
     protected void initFragments() {
         guidanceFragment = new GuidanceFragment();
         favoriteFragment = new FavoriteFragment();
@@ -100,8 +115,16 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_refresh) {
+            Toast toast = Toast.makeText(this, "Refresh", Toast.LENGTH_SHORT);
+            toast.show();
             return true;
+        } else if (id == R.id.action_switch_theme) {
+
+        } else if (id == R.id.action_login) {
+
+        } else if (id == R.id.action_logout) {
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -151,7 +174,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if(id == R.id.user_avatar) {
+        if (id == R.id.user_avatar) {
             Intent intent = new Intent(this, LoginActivity.class);
 //            EditText editText = (EditText) findViewById(R.id.tv_app_version);
 //            String message = editText.getText().toString();
