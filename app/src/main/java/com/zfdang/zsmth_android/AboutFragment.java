@@ -35,7 +35,6 @@ public class AboutFragment extends Fragment implements View.OnClickListener{
 
     private TextView m_tvAppVersion;
     private Button m_btCheckVersion;
-//    private GitHubReposTask mAuthTask = null;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -113,15 +112,14 @@ public class AboutFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         if(v == m_btCheckVersion) {
 
-            SMTHHelper helper = new SMTHHelper();
-
-            helper.smthService.article("FamilyLife", "1757776949")
+            SMTHHelper helper = SMTHHelper.getInstance();
+            helper.mService.article("FamilyLife", "1757776949")
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Action1<String>() {
                         @Override
                         public void call(String response) {
-                            Log.d("", response);
+                            Log.d("About Fragment", response);
                             m_tvAppVersion.setText(response);
                         }
                     });

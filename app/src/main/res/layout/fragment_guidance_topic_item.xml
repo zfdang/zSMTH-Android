@@ -1,20 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:paddingBottom="0dp"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp">
 
     <TextView
-        android:id="@+id/id"
-        android:layout_width="wrap_content"
+        android:id="@+id/category_name"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
+        android:text="Category"
+        android:paddingLeft="4dp"
+        android:background="@color/recyler_view_seperator"
+        android:textColor="@color/status_text" />
 
     <TextView
-        android:id="@+id/content"
-        android:layout_width="wrap_content"
+        android:id="@+id/board_name"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
-</LinearLayout>
+        android:text="boardName"
+        android:paddingLeft="2dp"
+        android:layout_below="@+id/category_name"
+        android:textColor="@color/blue_text"/>
+
+    <TextView
+        android:id="@+id/author_id"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:text="Author"
+        android:paddingRight="8dp"
+        android:layout_below="@+id/category_name"
+
+        android:textColor="@color/blue_text"/>
+
+    <TextView
+        android:id="@+id/topic_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/board_name"
+        android:paddingLeft="2dp"
+        android:text="Topic"
+        android:textColor="@color/status_text"
+        android:textSize="19dp"/>
+</RelativeLayout>

@@ -62,6 +62,7 @@ public class GuidanceFragment extends Fragment {
 
         // Set the adapter
         if (view instanceof RecyclerView) {
+            ((RecyclerView) view).addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {

@@ -28,17 +28,21 @@ public class GuidanceContent {
     static {
         // Add some sample items.
         for (int i = 1; i <= COUNT; i++) {
-            addItem(createDummyItem(i));
+            addItem(createTopic(i));
         }
     }
 
     private static void addItem(Topic item) {
         ITEMS.add(item);
-        ITEM_MAP.put(item.id, item);
+        ITEM_MAP.put(item.getTitle(), item);
     }
 
-    private static Topic createDummyItem(int position) {
-        return new Topic(String.valueOf(position), "Hot " + position, makeDetails(position));
+    private static Topic createTopic(int position) {
+        Topic topic = new Topic();
+        topic.setAuthor("mozilla");
+        topic.setTitle("热帖" + position);
+        topic.setBoardChsName("版" + position);
+        return topic;
     }
 
     private static String makeDetails(int position) {

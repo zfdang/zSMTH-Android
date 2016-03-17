@@ -35,8 +35,22 @@ public class GuidanceRecyclerViewAdapter extends RecyclerView.Adapter<GuidanceRe
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mSeperator.setText("分界线");
+        holder.mTopicTitle.setText(holder.mItem.getTitle());
+        holder.mBoardName.setText(holder.mItem.getBoardName());
+        holder.mAuthorID.setText(holder.mItem.getAuthor());
+
+        if(position % 5 == 0){
+            holder.mSeperator.setVisibility(View.VISIBLE);
+            holder.mTopicTitle.setVisibility(View.GONE);
+            holder.mBoardName.setVisibility(View.GONE);
+            holder.mAuthorID.setVisibility(View.GONE);
+        } else {
+            holder.mSeperator.setVisibility(View.GONE);
+            holder.mTopicTitle.setVisibility(View.VISIBLE);
+            holder.mBoardName.setVisibility(View.VISIBLE);
+            holder.mAuthorID.setVisibility(View.VISIBLE);
+        }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,20 +71,24 @@ public class GuidanceRecyclerViewAdapter extends RecyclerView.Adapter<GuidanceRe
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
+        public final TextView mSeperator;
+        public final TextView mBoardName;
+        public final TextView mTopicTitle;
+        public final TextView mAuthorID;
         public Topic mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mSeperator = (TextView) view.findViewById(R.id.category_name);
+            mBoardName = (TextView) view.findViewById(R.id.board_name);
+            mTopicTitle = (TextView) view.findViewById(R.id.topic_title);
+            mAuthorID = (TextView) view.findViewById(R.id.author_id);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return mTopicTitle.getText().toString();
         }
     }
 }

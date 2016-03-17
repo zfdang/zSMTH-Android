@@ -3,9 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="4dp"
-    android:paddingLeft="6dp"
-    android:paddingRight="6dp">
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp"
+    android:paddingLeft="2dp"
+    android:paddingRight="8dp">
 
     <TextView
         android:id="@+id/CategoryName"

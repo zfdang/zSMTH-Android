@@ -1,14 +1,13 @@
 package com.zfdang.zsmth_android;
 
+import android.support.v7.app.ActionBar;
 import android.app.ProgressDialog;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
-
-import android.os.AsyncTask;
-
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -16,30 +15,33 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+
+import okhttp3.ResponseBody;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+
 
 /**
  * A login screen that offers login to newsmth forum
  */
 public class LoginActivity extends AppCompatActivity implements OnClickListener {
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
-    private UserLoginTask mAuthTask = null;
 
     private EditText m_userNameEditText;
     private EditText m_passwordEditText;
 
-    private Handler m_handler = new Handler();
     private ProgressDialog pdialog = null;
+    private final String TAG = "Login Activity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-//        String username = aSMApplication.getCurrentApplication().getAutoUserName();
-//        String password = aSMApplication.getCurrentApplication().getAutoPassword();
-
+        // these two variables should be loaded from preference
         String username = "mozilla";
         String password = "hello";
 
@@ -59,47 +61,52 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
         Button gbutton = (Button) findViewById(R.id.guest_button);
         gbutton.setOnClickListener(this);
+
+        // enable back button in the title barT
+        ActionBar bar = getSupportActionBar();
+        if(bar != null){
+            bar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.signin_button) {
             // login with provided username and password
-            attemptLogin();
+            String username = m_userNameEditText.getText().toString();
+            String password = m_passwordEditText.getText().toString();
+
+            boolean cancel = false;
+            View focusView = null;
+
+            // Check for a valid password, if the user entered one.
+            // this code should be refined
+            if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+                focusView = m_passwordEditText;
+                cancel = true;
+            }
+
+            // Check for a valid username.
+            if (TextUtils.isEmpty(username)) {
+                focusView = m_userNameEditText;
+                cancel = true;
+            } else if (!isUsernameValid(username)) {
+                focusView = m_userNameEditText;
+                cancel = true;
+            }
+
+            if (cancel) {
+                // There was an error; don't attempt login and focus the first
+                // form field with an error.
+                focusView.requestFocus();
+                return;
+            } else {
+                attemptLogin(username, password);
+            }
         } else if (view.getId() == R.id.guest_button) {
             // login with guest name
+            attemptLogin("guest", "");
         }
-
-    }
-
-
-    public void showSuccessToast() {
-        m_handler.post(new Runnable() {
-            public void run() {
-                Toast.makeText(getApplicationContext(), "登录成功.",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    public void showAuthenticationFailedToast() {
-        m_handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), "用户名或密码错.",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    public void showConnectionFailedToast() {
-        m_handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), "连接错误，请检查网络.",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
 
@@ -108,47 +115,85 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin() {
-        if (mAuthTask != null) {
-            // login in progress
-            return;
-        }
+    private void attemptLogin(final String username, final String password) {
 
-        // Store values at the time of the login attempt.
-        String username = m_userNameEditText.getText().toString();
-        String password = m_passwordEditText.getText().toString();
+        // Show a progress spinner, and kick off a background task to
+        // perform the user login attempt.
+        showProgress(true);
 
-        boolean cancel = false;
-        View focusView = null;
+        Log.d(TAG, "start login now...");
 
-        // Check for a valid password, if the user entered one.
-        // this code should be refined
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            focusView = m_passwordEditText;
-            cancel = true;
-        }
+        SMTHHelper helper = SMTHHelper.getInstance();
+        helper.wService.loginWithKick(username, password, "1")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(new Func1<ResponseBody, Integer>() {
+                    // parse response body, and convert it to a flag
+                    // 0: success
+                    // 1: wrong username / password
+                    // 2: decoding exception
+                    // 3. network unreachable  -- this is actually hanndled by onErrorAction of Subscriber
+                    @Override
+                    public Integer call(ResponseBody response) { // 参数类型 String
+                        try {
+                            String resp = SMTHHelper.DecodeWWWResponse(response.bytes());
+                            Log.d(TAG, resp);
 
-        // Check for a valid username.
-        if (TextUtils.isEmpty(username)) {
-            focusView = m_userNameEditText;
-            cancel = true;
-        } else if (!isUsernameValid(username)) {
-            focusView = m_userNameEditText;
-            cancel = true;
-        }
+                            if (resp.contains("你登录的窗口过多")) {
+                                Log.d(TAG, "too many login user");
+                                Log.d(TAG, "this should not happend since we are using loginWithKick");
+                                return 0;
+                            } else if (resp.contains("用户密码错误")) {
+                                return 1;
+                            } else if(resp.contains("window.location.href")){
+                                // successful login, user is redirected to frames.html
+                                return 0;
+                            }
+                            return 2;
+                        } catch (Exception e) {
+                            Log.d(TAG, e.toString());
+                            return 2;
+                        }
+                    }
+                })
+        // 自动创建 Subscriber ，并使用 onNextAction、 onErrorAction 和 onCompletedAction 来定义 onNext()、 onError() 和 onCompleted()
+        // observable.subscribe(onNextAction, onErrorAction, onCompletedAction);
+        .subscribe(new Action1<Integer>() {
+            // onNextAction
+            @Override
+            public void call(Integer code) {
+                Log.d(TAG, code.toString());
 
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-            mAuthTask = new UserLoginTask(username, password);
-            mAuthTask.execute((Void) null);
-        }
+                showProgress(false);
+                switch (code) {
+                    case 0:
+                        Toast.makeText(getApplicationContext(), "登录成功!", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1:
+                        Toast.makeText(getApplicationContext(), "用户名或者密码错误.", Toast.LENGTH_LONG).show();
+                        break;
+                    case 2:
+                        Toast.makeText(getApplicationContext(), "未知错误，请稍后重试...", Toast.LENGTH_LONG).show();
+                        break;
+                }
+            }
+        }, new Action1<Throwable>() {
+            // onErrorAction
+            @Override
+            public void call(Throwable throwable) {
+                Log.d(TAG, throwable.toString());
+                showProgress(false);
+                Toast.makeText(getApplicationContext(), "连接错误，请检查网络.", Toast.LENGTH_LONG).show();
+            }
+        }, new Action0() {
+            // onCompletedAction
+            @Override
+            public void call() {
+                Log.d(TAG, "Completed");
+            }
+        });
     }
+
 
     private boolean isUsernameValid(String username) {
         return username.length() > 4;
@@ -162,10 +207,10 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
      * Shows the progress UI and hides the login form.
      */
     private void showProgress(final boolean show) {
-        if(pdialog == null) {
+        if (pdialog == null) {
             pdialog = new ProgressDialog(this);
         }
-        if(show) {
+        if (show) {
             pdialog.setMessage("登录中...");
             pdialog.show();
         } else {
@@ -173,63 +218,24 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         }
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
 
-        private final String username;
-        private final String password;
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
 
-        UserLoginTask(String username, String password) {
-            this.username = username;
-            this.password = password;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            // replace this with actual authentication process
-            final String[] DUMMY_CREDENTIALS = new String[]{
-                    "mozilla:hello", "dantifer:world"
-            };
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(username)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(password);
-                }
-            }
-
-            // TODO: register the new account here.
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                finish();
-            } else {
-                showAuthenticationFailedToast();
-                m_passwordEditText.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

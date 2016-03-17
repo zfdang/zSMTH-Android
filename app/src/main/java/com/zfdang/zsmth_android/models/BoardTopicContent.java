@@ -34,11 +34,15 @@ public class BoardTopicContent {
 
     private static void addItem(Topic item) {
         ITEMS.add(item);
-        ITEM_MAP.put(item.id, item);
+        ITEM_MAP.put(item.getTitle(), item);
     }
 
     private static Topic createTopic(int position) {
-        return new Topic(String.valueOf(position), "Item " + position, makeDetails(position));
+        Topic topic = new Topic();
+        topic.setAuthor("mozilla");
+        topic.setTitle("热帖" + position);
+        topic.setBoardChsName("版" + position);
+        return topic;
     }
 
     private static String makeDetails(int position) {

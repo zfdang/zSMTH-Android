@@ -32,13 +32,14 @@ dependencies {
     //    compile 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
     //    networking
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
     compile 'com.squareup.retrofit2:retrofit:2.0.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.0'
+    //    compile 'com.squareup.retrofit2:converter-gson:2.0.0'
     compile 'com.squareup.retrofit2:converter-scalars:2.0.0'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0'
-
     // rxandroid
-//    http://gank.io/post/560e15be2dca930e00da1083#toc_12
+    // http://gank.io/post/560e15be2dca930e00da1083#toc_12
+    // 给 Android 开发者的 RxJava 详解
     compile 'io.reactivex:rxandroid:1.1.0'
     // Because RxAndroid releases are few and far between, it is recommended you also
     // explicitly depend on RxJava's latest version for bug fixes and new features.

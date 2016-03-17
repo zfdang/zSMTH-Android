@@ -29,15 +29,16 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_board_topic_item, parent, false);
+                .inflate(R.layout.fragment_guidance_topic_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mTopicTitle.setText(holder.mItem.getTitle());
+        holder.mBoardName.setText(holder.mItem.getBoardName());
+        holder.mAuthorID.setText(holder.mItem.getAuthor());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,20 +59,22 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
+        public final TextView mBoardName;
+        public final TextView mTopicTitle;
+        public final TextView mAuthorID;
         public Topic mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mBoardName = (TextView) view.findViewById(R.id.board_name);
+            mTopicTitle = (TextView) view.findViewById(R.id.topic_title);
+            mAuthorID = (TextView) view.findViewById(R.id.author_id);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return mTopicTitle.getText().toString();
         }
     }
 }
