@@ -12,3 +12,4 @@
     <item name="ic_menu_manage" type="drawable">@android:drawable/ic_menu_manage</item>
     <item name="ic_menu_about" type="drawable">@android:drawable/ic_menu_info_details</item>
 </resources>
+

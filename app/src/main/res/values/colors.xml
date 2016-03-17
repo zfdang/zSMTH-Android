@@ -38,5 +38,7 @@
     <color name="blue_text_night">#FBA50E</color>
 
     <color name="recyler_view_seperator">#FBA50E</color>
+    <color name="recyler_view_item_normal">#FFF</color>
+    <color name="recyler_view_item_pressed">#FF0066CC</color>
 
 </resources>

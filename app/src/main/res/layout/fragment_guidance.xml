@@ -10,5 +10,4 @@
                                         android:layout_marginRight="0dp"
                                         android:scrollbars="vertical"
                                         app:layoutManager="LinearLayoutManager"
-                                        tools:context="com.zfdang.zsmth_android.GuidanceFragment"
                                         tools:listitem="@layout/fragment_guidance_topic_item"/>

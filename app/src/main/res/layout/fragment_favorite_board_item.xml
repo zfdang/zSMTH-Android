@@ -3,17 +3,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="2dp"
+    android:background="@drawable/recycleview_item_bg"
     android:paddingBottom="2dp"
     android:paddingLeft="2dp"
-    android:paddingRight="8dp">
+    android:paddingRight="8dp"
+    android:paddingTop="2dp">
 
     <TextView
         android:id="@+id/CategoryName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="TextView01"
-        android:textColor="@color/status_text" />
+        android:textColor="@color/status_text"/>
 
     <TextView
         android:id="@+id/ModeratorID"
@@ -22,7 +23,7 @@
         android:gravity="right"
         android:maxLength="25"
         android:text="TextView02"
-        android:textColor="@color/blue_text" />
+        android:textColor="@color/blue_text"/>
 
     <TextView
         android:id="@+id/BoardName"
@@ -31,5 +32,5 @@
         android:layout_below="@+id/CategoryName"
         android:text="TextView03"
         android:textColor="@color/status_text"
-        android:textSize="20dp" />
+        android:textSize="20dp"/>
 </RelativeLayout>
