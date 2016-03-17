@@ -7,12 +7,22 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.zfdang.zsmth_android.models.GuidanceContent;
 import com.zfdang.zsmth_android.models.Topic;
+import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+
+import okhttp3.ResponseBody;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 
 /**
@@ -22,6 +32,8 @@ import com.zfdang.zsmth_android.models.Topic;
  * interface.
  */
 public class GuidanceFragment extends Fragment {
+
+    private final String TAG = "Guidance Fragment";
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -36,7 +48,6 @@ public class GuidanceFragment extends Fragment {
     public GuidanceFragment() {
     }
 
-    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static GuidanceFragment newInstance(int columnCount) {
         GuidanceFragment fragment = new GuidanceFragment();
@@ -72,8 +83,60 @@ public class GuidanceFragment extends Fragment {
             }
             recyclerView.setAdapter(new GuidanceRecyclerViewAdapter(GuidanceContent.ITEMS, mListener));
         }
+        getActivity().setTitle("zSMTH - " + "首页导读");
+
+        if(GuidanceContent.ITEMS.size() == 0){
+            // only refresh guidance when there is no topic available
+            RefreshGuidance();
+        }
         return view;
     }
+
+    public void RefreshGuidance(){
+        SMTHHelper helper = SMTHHelper.getInstance();
+        helper.wService.getGuidance()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                // convert ResponseBody to UTF-8 String first
+                .map(new Func1<ResponseBody, String>() {
+                    public String call(ResponseBody response) {
+                        try {
+                            String resp = SMTHHelper.DecodeWWWResponse(response.bytes());
+                            Log.d(TAG, resp.length()+"");
+                            return resp;
+                        } catch (Exception e) {
+                            return null;
+                        }
+                    }
+                })
+                // map String to list of topics
+                .flatMap(new Func1<String, Observable<Topic>>() {
+                    @Override
+                    public Observable<Topic> call(String s) {
+                        return Observable.from(SMTHHelper.ParseHotTopics(s));
+                    }
+                })
+                // add topics to guidance recylerview
+                .subscribe(new Action1<Topic>() {
+                    // onNextAction
+                    @Override
+                    public void call(Topic topic) {
+                        // add topic into GuidanceContent, and update RecylerView
+                        Log.d(TAG, topic.toString());
+                        GuidanceContent.addItem(topic);
+                        RecyclerView v = (RecyclerView)getView();
+                        v.getAdapter().notifyItemInserted(GuidanceContent.ITEMS.size());
+                    }
+                }, new Action1<Throwable>() {
+                    // onErrorAction
+                    @Override
+                    public void call(Throwable throwable) {
+                        Log.d(TAG, throwable.toString());
+                        Toast.makeText(getActivity(), "连接错误，请检查网络.", Toast.LENGTH_LONG).show();
+                    }
+                });
+        }
+
 
 
 //    @Override

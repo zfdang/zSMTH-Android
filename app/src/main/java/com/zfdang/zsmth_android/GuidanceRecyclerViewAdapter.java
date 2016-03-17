@@ -35,21 +35,21 @@ public class GuidanceRecyclerViewAdapter extends RecyclerView.Adapter<GuidanceRe
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mSeperator.setText("分界线");
-        holder.mTopicTitle.setText(holder.mItem.getTitle());
-        holder.mBoardName.setText(holder.mItem.getBoardName());
-        holder.mAuthorID.setText(holder.mItem.getAuthor());
 
-        if(position % 5 == 0){
+        if(holder.mItem.isCategory){
             holder.mSeperator.setVisibility(View.VISIBLE);
             holder.mTopicTitle.setVisibility(View.GONE);
             holder.mBoardName.setVisibility(View.GONE);
             holder.mAuthorID.setVisibility(View.GONE);
+            holder.mSeperator.setText(holder.mItem.getCategory());
         } else {
             holder.mSeperator.setVisibility(View.GONE);
             holder.mTopicTitle.setVisibility(View.VISIBLE);
             holder.mBoardName.setVisibility(View.VISIBLE);
             holder.mAuthorID.setVisibility(View.VISIBLE);
+            holder.mTopicTitle.setText(holder.mItem.getTitle());
+            holder.mBoardName.setText(holder.mItem.getBoardName());
+            holder.mAuthorID.setText(holder.mItem.getAuthor());
         }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {

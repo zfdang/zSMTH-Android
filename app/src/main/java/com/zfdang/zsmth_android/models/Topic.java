@@ -10,6 +10,27 @@ import java.io.Serializable;
  * A dummy item representing a piece of content.
  */
 public class Topic implements Serializable {
+
+    // this is actually a category, used in guidance fragment to seperate hot topics
+    public Topic(String category) {
+        this.category = category;
+        isCategory = true;
+    }
+
+    public Topic() {
+        isCategory = false;
+    }
+
+    // this is a real hot topic
+    public Topic(String boardChsName, String boardEngName, String title, String author) {
+        this.boardChsName = boardChsName;
+        this.boardEngName = boardEngName;
+        this.title = title;
+        this.author = author;
+        isCategory = false;
+    }
+
+
     public static final String TYPE_BOTTOM = "d"; // 置底所包含的标记字符
     private String id;
     private String title;
@@ -62,19 +83,42 @@ public class Topic implements Serializable {
     private String boardID;
     private String boardEngName;
     private String boardChsName;
+
+    public String getTopicID() {
+        return topicID;
+    }
+
+    public void setTopicID(String topicID) {
+        this.topicID = topicID;
+    }
+
+    private String topicID;
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    private String category;
     //private Date date;
     private String dateString;
     private String type;
 
     private int totalPageNo;
     private int currentPageNo;
+    public boolean isCategory;
 
-    public Topic() {
-    }
 
 
     @Override
     public String toString() {
-        return getBoardName();
+        if(isCategory) {
+            return "Category " + this.category;
+        } else {
+            return String.format("(%s) %s by %s @ [%s]%s", this.topicID, this.title, this.author, this.boardEngName, this.boardChsName);
+        }
     }
 }
