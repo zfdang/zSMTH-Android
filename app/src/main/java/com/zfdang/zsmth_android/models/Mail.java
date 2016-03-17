@@ -16,6 +16,6 @@ public  class Mail {
 
     @Override
     public String toString() {
-        return content;
+        return id + content + details;
     }
 }

@@ -75,15 +75,21 @@ public class SettingFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        this.onAttach((Context)activity);
+    }
+
 //    @Override
     public void onAttach(Context context) {
         super.onAttach((Activity)context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
         }
+//        else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
+//        }
     }
 
     @Override

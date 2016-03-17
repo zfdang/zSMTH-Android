@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,9 +20,20 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
+import com.zfdang.zsmth_android.models.Board;
+import com.zfdang.zsmth_android.models.Mail;
+import com.zfdang.zsmth_android.models.Topic;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        View.OnClickListener,
+        GuidanceFragment.OnListFragmentInteractionListener,
+        FavoriteFragment.OnListFragmentInteractionListener,
+        AllBoardFragment.OnListFragmentInteractionListener,
+        MailFragment.OnListFragmentInteractionListener
+//        SettingFragment.OnFragmentInteractionListener,
+//        AboutFragment.OnFragmentInteractionListener
+{
 
     GuidanceFragment guidanceFragment = null;
     FavoriteFragment favoriteFragment = null;
@@ -180,5 +192,26 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
 
         }
+    }
+
+    @Override
+    public void onListFragmentInteraction(Topic item) {
+        // Guidance Fragment
+        Log.d("MainActivity", item.getTitle() + "is clicked");
+        Toast.makeText(this, item.getTitle() + " is clicked", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onListFragmentInteraction(Mail item) {
+        // MailFragment
+        Toast.makeText(this, item.toString() + " is clicked", Toast.LENGTH_LONG).show();
+
+    }
+
+    @Override
+    public void onListFragmentInteraction(Board item) {
+        // shared by Favorite & allboard
+        Toast.makeText(this, item.toString() + " is clicked", Toast.LENGTH_LONG).show();
+
     }
 }

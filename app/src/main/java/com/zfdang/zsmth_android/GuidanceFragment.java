@@ -35,9 +35,7 @@ public class GuidanceFragment extends Fragment {
 
     private final String TAG = "Guidance Fragment";
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
@@ -124,7 +122,7 @@ public class GuidanceFragment extends Fragment {
                         // add topic into GuidanceContent, and update RecylerView
                         Log.d(TAG, topic.toString());
                         GuidanceContent.addItem(topic);
-                        RecyclerView v = (RecyclerView)getView();
+                        RecyclerView v = (RecyclerView) getView();
                         v.getAdapter().notifyItemInserted(GuidanceContent.ITEMS.size());
                     }
                 }, new Action1<Throwable>() {
@@ -138,8 +136,15 @@ public class GuidanceFragment extends Fragment {
         }
 
 
+    // http://stackoverflow.com/questions/32604552/onattach-not-called-in-fragment
+    // If you run your application on a device with API 23 (marshmallow) then onAttach(Context) will be called.
+    // On all previous Android Versions onAttach(Activity) will be called.
+    @Override
+    public void onAttach(Activity activity) {
+        this.onAttach((Context)activity);
+    }
 
-//    @Override
+    //    @Override
     public void onAttach(Context context) {
         super.onAttach((Activity)context);
         if (context instanceof OnListFragmentInteractionListener) {

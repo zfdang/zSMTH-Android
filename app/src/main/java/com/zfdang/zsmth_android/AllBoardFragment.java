@@ -73,6 +73,10 @@ public class AllBoardFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        this.onAttach((Context)activity);
+    }
 
 //    @Override
     public void onAttach(Context context) {

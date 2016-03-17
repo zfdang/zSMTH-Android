@@ -83,6 +83,7 @@ public class SMTHHelper {
     }
 
 
+    // parse guidance page, to find all hot topics
     public static List<Topic> ParseHotTopics(String content) {
         List<Topic> results = new ArrayList<Topic>();
         if (content == null) {

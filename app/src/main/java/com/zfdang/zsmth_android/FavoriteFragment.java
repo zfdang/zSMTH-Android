@@ -77,6 +77,11 @@ public class FavoriteFragment extends Fragment {
     }
 
 
+    @Override
+    public void onAttach(Activity activity) {
+        this.onAttach((Context)activity);
+    }
+
     //    @Override
     public void onAttach(Context context) {
         super.onAttach((Activity) context);
