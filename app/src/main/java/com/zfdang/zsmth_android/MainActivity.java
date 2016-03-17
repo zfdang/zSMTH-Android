@@ -1,12 +1,12 @@
 package com.zfdang.zsmth_android;
 
 import android.content.Intent;
-import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -14,8 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.support.v4.app.Fragment;
-import android.widget.EditText;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -175,10 +174,9 @@ public class MainActivity extends AppCompatActivity
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.user_avatar) {
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
             Intent intent = new Intent(this, LoginActivity.class);
-//            EditText editText = (EditText) findViewById(R.id.tv_app_version);
-//            String message = editText.getText().toString();
-//            intent.putExtra(EXTRA_MESSAGE, message);
             startActivity(intent);
 
         }
