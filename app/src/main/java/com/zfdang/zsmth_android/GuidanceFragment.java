@@ -72,9 +72,17 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_guidance, container, false);
+
+        // http://sapandiwakar.in/pull-to-refresh-for-android-recyclerview-or-any-other-vertically-scrolling-view/
+        // pull to refresh for android recyclerview
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView;
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
+        // http://blog.csdn.net/lmj623565791/article/details/45059587
+        // 你想要控制Item间的间隔（可绘制），请通过ItemDecoration
+        // 你想要控制Item增删的动画，请通过ItemAnimator
+        // 你想要控制点击、长按事件，请自己写
+        // item被按下的时候的highlight,这个是通过guidance item的backgroun属性来实现的 (android:background="@drawable/recyclerview_item_bg")
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.guidance_recycler_view);
         // Set the adapter
         if (mRecyclerView != null) {

@@ -36,6 +36,7 @@ public class GuidanceRecyclerViewAdapter extends RecyclerView.Adapter<GuidanceRe
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
 
+
         if(holder.mItem.isCategory){
             holder.mSeperator.setVisibility(View.VISIBLE);
             holder.mTopicTitle.setVisibility(View.GONE);

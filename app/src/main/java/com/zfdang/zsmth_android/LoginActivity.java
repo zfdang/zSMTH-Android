@@ -123,6 +123,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
         Log.d(TAG, "start login now...");
 
+        // RxJava & Retrofit: VERY VERY good article
+        // http://gank.io/post/560e15be2dca930e00da1083
         SMTHHelper helper = SMTHHelper.getInstance();
         helper.wService.loginWithKick(username, password, "1")
                 .subscribeOn(Schedulers.io())
@@ -140,8 +142,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                             Log.d(TAG, resp);
 
                             if (resp.contains("你登录的窗口过多")) {
-                                Log.d(TAG, "too many login user");
-                                Log.d(TAG, "this should not happend since we are using loginWithKick");
+                                Log.d(TAG, "too many login user, this should not happend since we are using loginWithKick");
                                 return 0;
                             } else if (resp.contains("用户密码错误")) {
                                 return 1;

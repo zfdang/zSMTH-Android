@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity
 //        AboutFragment.OnFragmentInteractionListener
 {
 
+    // guidance fragment: display hot topics
+    // this fragment is using RecyclerView to show all hot topics
     GuidanceFragment guidanceFragment = null;
     FavoriteFragment favoriteFragment = null;
     AllBoardFragment allBoardFragment = null;
