@@ -1,5 +1,6 @@
 package com.zfdang.zsmth_android;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -44,6 +45,8 @@ public class MainActivity extends AppCompatActivity
 
     SettingFragment settingFragment = null;
     AboutFragment aboutFragment = null;
+
+    private ProgressDialog pdialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +119,21 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    /**
+     * Shows the progress UI and hides the login form.
+     */
+    public void showProgress(String message, final boolean show) {
+        if (pdialog == null) {
+            pdialog = new ProgressDialog(this);
+        }
+        if (show) {
+            pdialog.setMessage(message);
+            pdialog.show();
+        } else {
+            pdialog.cancel();
         }
     }
 

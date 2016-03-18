@@ -82,6 +82,46 @@ public class SMTHHelper {
         wService = wRetrofit.create(SMTHWWWService.class);
     }
 
+    // parse guidance page, to find all hot topics
+    // http://m.newsmth.net/hot/topTen
+    // http://m.newsmth.net/hot/1
+    public static List<Topic> ParseMobileHotTopics(String content) {
+        List<Topic> results = new ArrayList<Topic>();
+        if (content == null) {
+            return results;
+        }
+
+        // two possible patterns here:
+        // <li class="f">国内院校热门话题</li>
+        // <li>10|<a href="/article/Weiqi/552886">阿法狗（分布式）和李世石的比赛不公平(<span style="color:red">64</span>)</a></li>
+        // <li>3|<a href="/article/BJTU/222066">[代挂][pic]90年高挑金融MM诚意挂，上海 (转载)</a></li>
+        content = content.replaceAll("<span style=\"color:red\">", "");
+        content = content.replaceAll("</span>", "");
+
+        Pattern hp = Pattern.compile("<li class=\"f\">([^<>]*)</li>", Pattern.DOTALL);
+        Matcher hm = hp.matcher(content);
+        if (hm.find()) {
+            // add section header as special topic: category
+            String sectionTitle = hm.group(1);
+            results.add(new Topic(sectionTitle));
+
+            Pattern topic_pattern = Pattern.compile("<li>(\\d+)\\|<a href=\"/article/(\\w+)/(\\d+)\">([^<>]*)</a></li>");
+            Matcher topic_search = topic_pattern.matcher(content);
+            while (topic_search.find()) {
+                // add hot topic
+                Topic topic = new Topic();
+                topic.setBoardEngName(topic_search.group(2));
+                topic.setTopicID(topic_search.group(3));
+                String titleString = Html.fromHtml(topic_search.group(4)).toString();
+                topic.setTitle(titleString);
+
+                results.add(topic);
+            }
+        }
+
+        return results;
+    }
+
 
     // parse guidance page, to find all hot topics
     public static List<Topic> ParseHotTopics(String content) {
@@ -90,7 +130,7 @@ public class SMTHHelper {
             return results;
         }
 
-        Pattern hp = Pattern.compile("<table [^<>]+class=\"HotTable\"[^<>]+>(.*?)</table>", Pattern.DOTALL);
+        Pattern hp = Pattern.compile("<div id=\"top10\">(.*?)</ul></div>", Pattern.DOTALL);
         Matcher hm = hp.matcher(content);
         if (hm.find()) {
             // add category
@@ -151,6 +191,5 @@ public class SMTHHelper {
         results.add(new Topic("END."));
 
         return results;
-
     }
 }

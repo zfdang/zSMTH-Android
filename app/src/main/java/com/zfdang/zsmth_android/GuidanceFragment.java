@@ -20,6 +20,7 @@ import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
 import okhttp3.ResponseBody;
 import rx.Observable;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -100,12 +101,92 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
 
         if(GuidanceContent.ITEMS.size() == 0){
             // only refresh guidance when there is no topic available
+            MainActivity activity = (MainActivity)getActivity();
+            activity.showProgress("获取导读信息...", true);
             RefreshGuidance();
+            activity.showProgress("", false);
         }
         return rootView;
     }
 
-    public void RefreshGuidance(){
+    public void RefreshGuidance() {
+        RefreshGuidanceFromMobile();
+//        RefreshGuidanceFromWWW();
+    }
+
+    public void RefreshGuidanceFromMobile(){
+        String[] SectionIndex = {"topTen", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+
+        // clear current hot topics
+        GuidanceContent.ITEMS.clear();
+        GuidanceContent.ITEM_MAP.clear();
+        mRecyclerView.getAdapter().notifyDataSetChanged();
+
+        SMTHHelper helper = SMTHHelper.getInstance();
+        for (final String index: SectionIndex) {
+            // get hot topics from each section by
+            helper.mService.hotTopics(index)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .flatMap(new Func1<ResponseBody, Observable<Topic>>() {
+                        @Override
+                        public Observable<Topic> call(ResponseBody responseBody) {
+                            try {
+                                String resp = responseBody.string();
+//                                Log.d(TAG, resp);
+                                return Observable.from(SMTHHelper.ParseMobileHotTopics(resp));
+                            } catch (Exception e) {
+                                Log.d(TAG, e.toString());
+                                return null;
+                            }
+                        }
+                    })
+                    .subscribe(new Subscriber<Topic>() {
+                        @Override
+                        public void onStart() {
+                            super.onStart();
+                        }
+
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.d(TAG, e.toString());
+                            Toast.makeText(getActivity(), "获取分区失败!", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onNext(Topic topic) {
+                            Log.d(TAG, topic.toString());
+                            GuidanceContent.addItem(topic);
+                            mRecyclerView.getAdapter().notifyItemInserted(GuidanceContent.ITEMS.size());
+                        }
+                    });
+//                    .subscribe(new Action1<Topic>() {
+//                        @Override
+//                        public void call(Topic topic) {
+//                            Log.d(TAG, topic.toString());
+//                            GuidanceContent.addItem(topic);
+//                            mRecyclerView.getAdapter().notifyItemInserted(GuidanceContent.ITEMS.size());
+//                        }
+//                    }, new Action1<Throwable>() {
+//                        @Override
+//                        public void call(Throwable throwable) {
+//                            Log.d(TAG, throwable.toString());
+//                        }
+//                    });
+        } // for sectionIndex
+    }
+
+
+    public void RefreshGuidanceFromWWW(){
+        // clear current hot topics
+        GuidanceContent.ITEMS.clear();
+        GuidanceContent.ITEM_MAP.clear();
+        mRecyclerView.getAdapter().notifyDataSetChanged();
+
         SMTHHelper helper = SMTHHelper.getInstance();
         helper.wService.getGuidance()
                 .subscribeOn(Schedulers.io())
@@ -126,6 +207,13 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
                 .flatMap(new Func1<String, Observable<Topic>>() {
                     @Override
                     public Observable<Topic> call(String s) {
+                        // remove all existed topics
+                        if(s != null && s.length() > 200){
+                            GuidanceContent.ITEMS.clear();
+                            GuidanceContent.ITEM_MAP.clear();
+                            mRecyclerView.getAdapter().notifyDataSetChanged();
+                        }
+
                         return Observable.from(SMTHHelper.ParseHotTopics(s));
                     }
                 })
@@ -147,8 +235,7 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
                         Toast.makeText(getActivity(), "连接错误，请检查网络.", Toast.LENGTH_LONG).show();
                     }
                 });
-        }
-
+    }
 
     // http://stackoverflow.com/questions/32604552/onattach-not-called-in-fragment
     // If you run your application on a device with API 23 (marshmallow) then onAttach(Context) will be called.
