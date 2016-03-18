@@ -61,6 +61,17 @@ public class SMTHHelper {
         return result;
     }
 
+    public static String DecodeMobileLoginResponse(String response) {
+        String result = "";
+        Pattern hp = Pattern.compile("<div class=\"sp hl f\">([^<]*)</div>");
+        Matcher hm = hp.matcher(response);
+        if (hm.find()) {
+            // add section header as special topic: category
+            result = hm.group(1);
+        }
+        return result;
+    }
+
     // can only be called by getInstance
     protected SMTHHelper(Context context) {
 
