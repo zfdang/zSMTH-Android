@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,13 +32,16 @@ import rx.schedulers.Schedulers;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class GuidanceFragment extends Fragment {
+public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     private final String TAG = "Guidance Fragment";
 
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+
+    private RecyclerView mRecylerView = null;
+    private SwipeRefreshLayout mSwipeRefreshLayout = null;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -67,27 +71,30 @@ public class GuidanceFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_guidance, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_guidance, container, false);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView;
+        mSwipeRefreshLayout.setOnRefreshListener(this);
 
+        mRecylerView = (RecyclerView) rootView.findViewById(R.id.recyler_list);
         // Set the adapter
-        if (view instanceof RecyclerView) {
-            ((RecyclerView) view).addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+        if (mRecylerView != null) {
+            mRecylerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+            Context context = rootView.getContext();
             if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                mRecylerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                mRecylerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new GuidanceRecyclerViewAdapter(GuidanceContent.ITEMS, mListener));
+            mRecylerView.setAdapter(new GuidanceRecyclerViewAdapter(GuidanceContent.ITEMS, mListener));
         }
+
         getActivity().setTitle("zSMTH - " + "首页导读");
 
         if(GuidanceContent.ITEMS.size() == 0){
             // only refresh guidance when there is no topic available
             RefreshGuidance();
         }
-        return view;
+        return rootView;
     }
 
     public void RefreshGuidance(){
@@ -122,8 +129,7 @@ public class GuidanceFragment extends Fragment {
                         // add topic into GuidanceContent, and update RecylerView
                         Log.d(TAG, topic.toString());
                         GuidanceContent.addItem(topic);
-                        RecyclerView v = (RecyclerView) getView();
-                        v.getAdapter().notifyItemInserted(GuidanceContent.ITEMS.size());
+                        mRecylerView.getAdapter().notifyItemInserted(GuidanceContent.ITEMS.size());
                     }
                 }, new Action1<Throwable>() {
                     // onErrorAction
@@ -159,6 +165,13 @@ public class GuidanceFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onRefresh() {
+        RefreshGuidance();
+        mSwipeRefreshLayout.setRefreshing(false);
+        Toast.makeText(getActivity(), "刷新完成!", Toast.LENGTH_SHORT).show();
     }
 
     /**
