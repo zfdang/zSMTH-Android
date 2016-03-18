@@ -147,7 +147,7 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
                                 return Observable.from(SMTHHelper.ParseMobileHotTopics(resp));
                             } catch (Exception e) {
                                 Log.d(TAG, e.toString());
-                                Log.d(TAG, "获取分区{" + SectionName[index] + "}失败!");
+                                Log.d(TAG, "获取分区{" + SectionName[index] + "}的热帖失败!");
                                 return null;
                             }
                         }
@@ -167,12 +167,7 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
                                 GuidanceContent.addItem(topic);
                                 mRecyclerView.getAdapter().notifyItemInserted(GuidanceContent.ITEMS.size());
 
-                                // disable progress bar
-                                MainActivity activity = (MainActivity) getActivity();
-                                activity.showProgress("", false);
-
-                                // disable SwipeFreshLayout
-                                mSwipeRefreshLayout.setRefreshing(false);
+                                clearLoadingHints();
 
                                 // show finish toast
                                 Toast.makeText(getActivity(), "刷新完成!", Toast.LENGTH_SHORT).show();
@@ -182,7 +177,10 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
                         @Override
                         public void onError(Throwable e) {
                             Log.d(TAG, e.toString());
-                            Toast.makeText(getActivity(), "获取分区{" + SectionName[index] + "}失败!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "获取分区{" + SectionName[index] + "}的热帖失败!", Toast.LENGTH_LONG).show();
+
+
+                            clearLoadingHints();
                         }
 
                         @Override
@@ -196,6 +194,14 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
 
     }
 
+    public void clearLoadingHints () {
+        // disable progress bar
+        MainActivity activity = (MainActivity) getActivity();
+        activity.showProgress("", false);
+
+        // disable SwipeFreshLayout
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
 
     public void RefreshGuidanceFromWWW(){
         // clear current hot topics
