@@ -52,6 +52,12 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // how to adjust the height of toolbar
+        // http://stackoverflow.com/questions/17439683/how-to-change-action-bar-size
+        // zsmth_actionbar_size @ dimen ==> ThemeOverlay.ActionBar @ styles ==> theme @ app_bar_main.xml
+//        toolbar.setSubtitle("Hello world");
+//        toolbar.setLogo(R.mipmap.zsmth);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
