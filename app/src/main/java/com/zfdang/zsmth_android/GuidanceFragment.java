@@ -75,7 +75,7 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView;
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        mRecylerView = (RecyclerView) rootView.findViewById(R.id.recyler_list);
+        mRecylerView = (RecyclerView) rootView.findViewById(R.id.guidance_recyler_view);
         // Set the adapter
         if (mRecylerView != null) {
             mRecylerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
