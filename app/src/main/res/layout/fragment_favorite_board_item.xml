@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/recycleview_item_bg"
+    android:background="@drawable/recyclerview_item_bg"
     android:paddingBottom="2dp"
     android:paddingLeft="2dp"
     android:paddingRight="8dp"

@@ -37,8 +37,8 @@
     <color name="status_text_night">#ABC2DA</color>
     <color name="blue_text_night">#FBA50E</color>
 
-    <color name="recyler_view_seperator">#FBA50E</color>
-    <color name="recyler_view_item_normal">#FFF</color>
-    <color name="recyler_view_item_pressed">#FF0066CC</color>
+    <color name="recycler_view_seperator">#f9f5f2</color>
+    <color name="recycler_view_item_normal">#FFF</color>
+    <color name="recycler_view_item_pressed">#F7F7F7</color>
 
 </resources>

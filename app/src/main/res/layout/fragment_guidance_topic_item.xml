@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:paddingBottom="0dp"
     android:paddingLeft="0dp"
-    android:background="@drawable/recycleview_item_bg"
+    android:background="@drawable/recyclerview_item_bg"
     android:paddingRight="0dp">
 
     <TextView
@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:text="Category"
         android:paddingLeft="4dp"
-        android:background="@color/recyler_view_seperator"
+        android:background="@color/recycler_view_seperator"
         android:textColor="@color/status_text" />
 
     <TextView

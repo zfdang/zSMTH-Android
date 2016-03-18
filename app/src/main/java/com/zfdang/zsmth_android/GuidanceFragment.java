@@ -40,7 +40,7 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
-    private RecyclerView mRecylerView = null;
+    private RecyclerView mRecyclerView = null;
     private SwipeRefreshLayout mSwipeRefreshLayout = null;
 
     /**
@@ -75,17 +75,17 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView;
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        mRecylerView = (RecyclerView) rootView.findViewById(R.id.guidance_recyler_view);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.guidance_recycler_view);
         // Set the adapter
-        if (mRecylerView != null) {
-            mRecylerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+        if (mRecyclerView != null) {
+            mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
             Context context = rootView.getContext();
             if (mColumnCount <= 1) {
-                mRecylerView.setLayoutManager(new LinearLayoutManager(context));
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
-                mRecylerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            mRecylerView.setAdapter(new GuidanceRecyclerViewAdapter(GuidanceContent.ITEMS, mListener));
+            mRecyclerView.setAdapter(new GuidanceRecyclerViewAdapter(GuidanceContent.ITEMS, mListener));
         }
 
         getActivity().setTitle("zSMTH - " + "首页导读");
@@ -121,15 +121,15 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
                         return Observable.from(SMTHHelper.ParseHotTopics(s));
                     }
                 })
-                // add topics to guidance recylerview
+                // add topics to guidance recyclerview
                 .subscribe(new Action1<Topic>() {
                     // onNextAction
                     @Override
                     public void call(Topic topic) {
-                        // add topic into GuidanceContent, and update RecylerView
+                        // add topic into GuidanceContent, and update RecyclerView
                         Log.d(TAG, topic.toString());
                         GuidanceContent.addItem(topic);
-                        mRecylerView.getAdapter().notifyItemInserted(GuidanceContent.ITEMS.size());
+                        mRecyclerView.getAdapter().notifyItemInserted(GuidanceContent.ITEMS.size());
                     }
                 }, new Action1<Throwable>() {
                     // onErrorAction
