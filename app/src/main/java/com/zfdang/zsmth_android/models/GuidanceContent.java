@@ -30,6 +30,11 @@ public class GuidanceContent {
         ITEM_MAP.put(item.getTitle(), item);
     }
 
+    public static void clear() {
+        ITEMS.clear();
+        ITEM_MAP.clear();
+    }
+
 //    private static Topic createTopic(int position) {
 //        Topic topic = new Topic();
 //        topic.setAuthor("mozilla");

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -94,6 +95,7 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
             } else {
                 mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
+            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
             mRecyclerView.setAdapter(new GuidanceRecyclerViewAdapter(GuidanceContent.ITEMS, mListener));
         }
 
@@ -104,28 +106,37 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
             MainActivity activity = (MainActivity)getActivity();
             activity.showProgress("获取导读信息...", true);
             RefreshGuidance();
-            activity.showProgress("", false);
         }
         return rootView;
     }
 
-    public void RefreshGuidance() {
-        RefreshGuidanceFromMobile();
-//        RefreshGuidanceFromWWW();
+    @Override
+    public void onRefresh() {
+        // triggered by SwipeRefreshLayout
+        // setRefreshing(false) should be called later
+        RefreshGuidance();
     }
 
-    public void RefreshGuidanceFromMobile(){
-        String[] SectionIndex = {"topTen", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+    public void RefreshGuidance() {
+        RefreshGuidanceFromMobile(0);
+    }
 
-        // clear current hot topics
-        GuidanceContent.ITEMS.clear();
-        GuidanceContent.ITEM_MAP.clear();
-        mRecyclerView.getAdapter().notifyDataSetChanged();
+
+    final String[] SectionName = {"十大", "推荐", "国内院校", "休闲娱乐", "五湖四海", "游戏运动", "社会信息", "知性感性", "文化人文", "学术科学", "电脑技术"};
+    final String[] SectionURLPath = {"topTen", "recommend", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+    public void RefreshGuidanceFromMobile(final int index){
+        // one by one, get all hot topics from mobile site
+        if(index == 0) {
+            // clear current hot topics
+            GuidanceContent.clear();
+            mRecyclerView.getAdapter().notifyDataSetChanged();
+        }
 
         SMTHHelper helper = SMTHHelper.getInstance();
-        for (final String index: SectionIndex) {
-            // get hot topics from each section by
-            helper.mService.hotTopics(index)
+
+        if(index < SectionName.length) {
+            // get hot topics for each section
+            helper.mService.hotTopics(SectionURLPath[index])
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .flatMap(new Func1<ResponseBody, Observable<Topic>>() {
@@ -133,10 +144,10 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
                         public Observable<Topic> call(ResponseBody responseBody) {
                             try {
                                 String resp = responseBody.string();
-//                                Log.d(TAG, resp);
                                 return Observable.from(SMTHHelper.ParseMobileHotTopics(resp));
                             } catch (Exception e) {
                                 Log.d(TAG, e.toString());
+                                Log.d(TAG, "获取分区{" + SectionName[index] + "}失败!");
                                 return null;
                             }
                         }
@@ -149,35 +160,40 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
 
                         @Override
                         public void onCompleted() {
+                            if (index < SectionURLPath.length - 1) {
+                                RefreshGuidanceFromMobile(index + 1);
+                            } else {
+                                Topic topic = new Topic("-- END --");
+                                GuidanceContent.addItem(topic);
+                                mRecyclerView.getAdapter().notifyItemInserted(GuidanceContent.ITEMS.size());
+
+                                // disable progress bar
+                                MainActivity activity = (MainActivity) getActivity();
+                                activity.showProgress("", false);
+
+                                // disable SwipeFreshLayout
+                                mSwipeRefreshLayout.setRefreshing(false);
+
+                                // show finish toast
+                                Toast.makeText(getActivity(), "刷新完成!", Toast.LENGTH_SHORT).show();
+                            }
                         }
 
                         @Override
                         public void onError(Throwable e) {
                             Log.d(TAG, e.toString());
-                            Toast.makeText(getActivity(), "获取分区失败!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "获取分区{" + SectionName[index] + "}失败!", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
                         public void onNext(Topic topic) {
-                            Log.d(TAG, topic.toString());
+//                            Log.d(TAG, topic.toString());
                             GuidanceContent.addItem(topic);
                             mRecyclerView.getAdapter().notifyItemInserted(GuidanceContent.ITEMS.size());
                         }
                     });
-//                    .subscribe(new Action1<Topic>() {
-//                        @Override
-//                        public void call(Topic topic) {
-//                            Log.d(TAG, topic.toString());
-//                            GuidanceContent.addItem(topic);
-//                            mRecyclerView.getAdapter().notifyItemInserted(GuidanceContent.ITEMS.size());
-//                        }
-//                    }, new Action1<Throwable>() {
-//                        @Override
-//                        public void call(Throwable throwable) {
-//                            Log.d(TAG, throwable.toString());
-//                        }
-//                    });
-        } // for sectionIndex
+        }
+
     }
 
 
@@ -242,7 +258,7 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
     // On all previous Android Versions onAttach(Activity) will be called.
     @Override
     public void onAttach(Activity activity) {
-        this.onAttach((Context)activity);
+        this.onAttach((Context) activity);
     }
 
     //    @Override
@@ -262,12 +278,6 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
         mListener = null;
     }
 
-    @Override
-    public void onRefresh() {
-        RefreshGuidance();
-        mSwipeRefreshLayout.setRefreshing(false);
-        Toast.makeText(getActivity(), "刷新完成!", Toast.LENGTH_SHORT).show();
-    }
 
     /**
      * This interface must be implemented by activities that contain this

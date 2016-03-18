@@ -19,6 +19,9 @@ public class Topic implements Serializable {
 
     public Topic() {
         isCategory = false;
+        this.boardChsName = "";
+        this.boardEngName = "";
+        this.author = "";
     }
 
     // this is a real hot topic

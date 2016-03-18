@@ -1,9 +1,15 @@
 package com.zfdang.zsmth_android.newsmth;
 
+import android.content.Context;
 import android.text.Html;
 import android.util.Log;
 
+import com.franmontiel.persistentcookiejar.ClearableCookieJar;
+import com.franmontiel.persistentcookiejar.PersistentCookieJar;
+import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
+import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.zfdang.zsmth_android.models.Topic;
+import com.zfdang.zSMTHApplication;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -40,7 +46,7 @@ public class SMTHHelper {
 
     public static SMTHHelper getInstance() {
         if(instance == null) {
-            instance = new SMTHHelper();
+            instance = new SMTHHelper(zSMTHApplication.getAppContext());
         }
         return instance;
     }
@@ -56,14 +62,21 @@ public class SMTHHelper {
     }
 
     // can only be called by getInstance
-    protected SMTHHelper() {
+    protected SMTHHelper(Context context) {
 
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         // set your desired log level
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        // add logging as last interceptor
-        httpClient = new OkHttpClient().newBuilder().addInterceptor(logging).build();
+        // https://github.com/franmontiel/PersistentCookieJar
+        // A persistent CookieJar implementation for OkHttp 3 based on SharedPreferences.
+        ClearableCookieJar cookieJar =
+                new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
+
+        httpClient = new OkHttpClient().newBuilder()
+                .addInterceptor(logging)
+                .cookieJar(cookieJar)
+                .build();
 
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(SMTH_MOBILE_URL)
