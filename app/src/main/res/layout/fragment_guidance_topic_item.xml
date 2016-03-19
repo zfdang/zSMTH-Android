@@ -15,16 +15,54 @@
         android:text="Category"
         android:paddingLeft="4dp"
         android:background="@color/recycler_view_seperator"
+        android:textSize="16dp"
         android:textColor="@color/status_text" />
 
     <TextView
-        android:id="@+id/board_name"
+        android:id="@+id/topic_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="boardName"
-        android:paddingLeft="2dp"
         android:layout_below="@+id/category_name"
-        android:textColor="@color/blue_text"/>
+        android:paddingLeft="2dp"
+        android:text="Topic"
+        android:textColor="@color/status_text"
+        android:textSize="19dp"/>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_below="@+id/topic_title"
+        android:layout_width="match_parent"
+        android:layout_marginRight="10dp"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/board_name_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/topic_title"
+            android:layout_toLeftOf="@+id/board_name"
+            android:text="@string/guidance_label_board"
+            android:paddingLeft="2dp"
+            android:paddingRight="4dp"
+            android:gravity="left"
+            android:textColor="@color/status_text"/>
+
+        <TextView
+            android:id="@+id/board_name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="boardName"
+            android:paddingLeft="2dp"
+            android:gravity="left"
+            android:textColor="@color/colorPrimary"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/author_id"
@@ -33,17 +71,7 @@
         android:gravity="right"
         android:text="Author"
         android:paddingRight="8dp"
-        android:layout_below="@+id/category_name"
-
+        android:layout_below="@+id/topic_title"
         android:textColor="@color/blue_text"/>
 
-    <TextView
-        android:id="@+id/topic_title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/board_name"
-        android:paddingLeft="2dp"
-        android:text="Topic"
-        android:textColor="@color/status_text"
-        android:textSize="19dp"/>
 </RelativeLayout>

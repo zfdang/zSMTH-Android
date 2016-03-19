@@ -67,7 +67,11 @@ public class Topic implements Serializable {
     }
 
     public String getBoardName() {
-        return "[" + boardEngName +"]" + boardChsName;
+        if(boardChsName != null && boardChsName.length() > 0) {
+            return "[" + boardEngName +"]" + boardChsName;
+        } else {
+            return boardEngName;
+        }
     }
 
     public void setBoardEngName(String boardEngName) {
