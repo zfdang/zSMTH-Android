@@ -27,6 +27,6 @@
     <string name="login_label_signin">登录</string>
     <string name="login_label_guest">匿名</string>
     <string name="login_register_link">没有帐号？  <a href="http://www.newsmth.net/bbsreg0.html">注册</a></string>
-    <string name="login_asm_help">zSMTH  <a href="http://zsmth.zfdang.com/help.html">使用说明</a></string>
+    <string name="login_asm_help">zSMTH  <a href="http://zsmth-android.zfdang.com/">使用说明</a></string>
 
 </resources>
