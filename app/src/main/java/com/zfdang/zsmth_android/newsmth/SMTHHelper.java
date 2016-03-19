@@ -9,7 +9,7 @@ import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.zfdang.zsmth_android.models.Topic;
-import com.zfdang.zSMTHApplication;
+import com.zfdang.SMTHApplication;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class SMTHHelper {
 
     public static SMTHHelper getInstance() {
         if(instance == null) {
-            instance = new SMTHHelper(zSMTHApplication.getAppContext());
+            instance = new SMTHHelper(SMTHApplication.getAppContext());
         }
         return instance;
     }
