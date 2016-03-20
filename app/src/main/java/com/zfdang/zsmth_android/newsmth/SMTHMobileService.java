@@ -17,7 +17,7 @@ public interface SMTHMobileService {
     Observable<ResponseBody> login(@Field("id") String username, @Field("passwd") String password, @Field("save") String save);
 
     @GET("/hot/{index}")
-    Observable<ResponseBody> hotTopics(@Path("index") String index);
+    Observable<ResponseBody> hotTopicsBySection(@Path("index") String index);
 
     // http://m.newsmth.net/article/DSLR/808676538
     @GET("/article/{board}/{article_id}")

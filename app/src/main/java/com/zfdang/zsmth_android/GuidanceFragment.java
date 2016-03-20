@@ -138,7 +138,7 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
         if(index < SectionName.length) {
             // get hot topics for each section
             Log.d(TAG, "开始获取分区{" + SectionName[index] + "}的热帖...");
-            helper.mService.hotTopics(SectionURLPath[index])
+            helper.mService.hotTopicsBySection(SectionURLPath[index])
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .flatMap(new Func1<ResponseBody, Observable<Topic>>() {
