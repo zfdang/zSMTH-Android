@@ -118,6 +118,7 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
     }
 
     public void RefreshGuidance() {
+//        RefreshGuidanceFromWWW();
         RefreshGuidanceFromMobile(0);
     }
 
@@ -136,6 +137,7 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
 
         if(index < SectionName.length) {
             // get hot topics for each section
+            Log.d(TAG, "开始获取分区{" + SectionName[index] + "}的热帖...");
             helper.mService.hotTopics(SectionURLPath[index])
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -144,7 +146,7 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
                         public Observable<Topic> call(ResponseBody responseBody) {
                             try {
                                 String resp = responseBody.string();
-                                return Observable.from(SMTHHelper.ParseMobileHotTopics(resp));
+                                return Observable.from(SMTHHelper.ParseHotTopicsFromMobile(resp));
                             } catch (Exception e) {
                                 Log.d(TAG, e.toString());
                                 Log.d(TAG, "获取分区{" + SectionName[index] + "}的热帖失败!");
@@ -160,6 +162,7 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
 
                         @Override
                         public void onCompleted() {
+                            Log.d(TAG, "获取分区{" + SectionName[index] + "}的热帖完成.");
                             if (index < SectionURLPath.length - 1) {
                                 RefreshGuidanceFromMobile(index + 1);
                             } else {
@@ -177,15 +180,14 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
                         @Override
                         public void onError(Throwable e) {
                             Log.d(TAG, e.toString());
-                            Toast.makeText(getActivity(), "获取分区{" + SectionName[index] + "}的热帖失败!", Toast.LENGTH_LONG).show();
-
-
                             clearLoadingHints();
+
+                            Toast.makeText(getActivity(), "获取分区{" + SectionName[index] + "}的热帖失败!", Toast.LENGTH_LONG).show();
                         }
 
                         @Override
                         public void onNext(Topic topic) {
-//                            Log.d(TAG, topic.toString());
+                            Log.d(TAG, topic.toString());
                             GuidanceContent.addItem(topic);
                             mRecyclerView.getAdapter().notifyItemInserted(GuidanceContent.ITEMS.size());
                         }
@@ -194,14 +196,6 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
 
     }
 
-    public void clearLoadingHints () {
-        // disable progress bar
-        MainActivity activity = (MainActivity) getActivity();
-        activity.showProgress("", false);
-
-        // disable SwipeFreshLayout
-        mSwipeRefreshLayout.setRefreshing(false);
-    }
 
     public void RefreshGuidanceFromWWW(){
         // clear current hot topics
@@ -217,7 +211,7 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
                 .map(new Func1<ResponseBody, String>() {
                     public String call(ResponseBody response) {
                         try {
-                            String resp = SMTHHelper.DecodeWWWResponse(response.bytes());
+                            String resp = SMTHHelper.DecodeResponseFromWWW(response.bytes());
                             Log.d(TAG, resp.length()+"");
                             return resp;
                         } catch (Exception e) {
@@ -231,12 +225,11 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
                     public Observable<Topic> call(String s) {
                         // remove all existed topics
                         if(s != null && s.length() > 200){
-                            GuidanceContent.ITEMS.clear();
-                            GuidanceContent.ITEM_MAP.clear();
+                            GuidanceContent.clear();
                             mRecyclerView.getAdapter().notifyDataSetChanged();
                         }
 
-                        return Observable.from(SMTHHelper.ParseHotTopics(s));
+                        return Observable.from(SMTHHelper.ParseHotTopicsFromWWW(s));
                     }
                 })
                 // add topics to guidance recyclerview
@@ -258,6 +251,16 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
                     }
                 });
     }
+
+    public void clearLoadingHints () {
+        // disable progress bar
+        MainActivity activity = (MainActivity) getActivity();
+        activity.showProgress("", false);
+
+        // disable SwipeFreshLayout
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
 
     // http://stackoverflow.com/questions/32604552/onattach-not-called-in-fragment
     // If you run your application on a device with API 23 (marshmallow) then onAttach(Context) will be called.

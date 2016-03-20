@@ -654,7 +654,7 @@ public class SMTHHelperTest extends TestCase {
             "</html>\n";
 
     public void testParseHotTopics() throws Exception {
-//        List<Topic> results = SMTHHelper.ParseHotTopics(sGuidanceResponse);
+//        List<Topic> results = SMTHHelper.ParseHotTopicsFromWWW(sGuidanceResponse);
 
     }
 

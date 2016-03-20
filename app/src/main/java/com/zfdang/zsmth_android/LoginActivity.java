@@ -138,8 +138,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                     @Override
                     public Integer call(ResponseBody response) { // 参数类型 String
                         try {
-//                            String resp = SMTHHelper.DecodeWWWResponse(response.bytes());
-                            String resp = SMTHHelper.DecodeMobileLoginResponse(response.string());
+//                            String resp = SMTHHelper.DecodeResponseFromWWW(response.bytes());
+                            String resp = SMTHHelper.ParseLoginResponseFromMobile(response.string());
                             // 0. 登陆成功
                             // 1. 您的用户名并不存在，或者您的密码错误
                             // 2. 请勿频繁登录

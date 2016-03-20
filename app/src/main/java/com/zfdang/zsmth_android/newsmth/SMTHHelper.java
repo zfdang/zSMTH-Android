@@ -51,17 +51,17 @@ public class SMTHHelper {
         return instance;
     }
 
-    public static String DecodeWWWResponse(byte[] bytes) {
+    public static String DecodeResponseFromWWW(byte[] bytes) {
         String result = null;
         try {
             result = new String(bytes, SMTH_WWW_ENCODING);
         } catch (UnsupportedEncodingException e) {
-            Log.d("DecodeWWWResponse", e.toString());
+            Log.d("DecodeResponseFromWWW", e.toString());
         }
         return result;
     }
 
-    public static String DecodeMobileLoginResponse(String response) {
+    public static String ParseLoginResponseFromMobile(String response) {
         String result = "";
         Pattern hp = Pattern.compile("<div class=\"sp hl f\">([^<]*)</div>");
         Matcher hm = hp.matcher(response);
@@ -109,7 +109,7 @@ public class SMTHHelper {
     // parse guidance page, to find all hot topics
     // http://m.newsmth.net/hot/topTen
     // http://m.newsmth.net/hot/1
-    public static List<Topic> ParseMobileHotTopics(String content) {
+    public static List<Topic> ParseHotTopicsFromMobile(String content) {
         List<Topic> results = new ArrayList<Topic>();
         if (content == null) {
             return results;
@@ -148,7 +148,7 @@ public class SMTHHelper {
 
 
     // parse guidance page, to find all hot topics
-    public static List<Topic> ParseHotTopics(String content) {
+    public static List<Topic> ParseHotTopicsFromWWW(String content) {
         List<Topic> results = new ArrayList<Topic>();
         if (content == null) {
             return results;
