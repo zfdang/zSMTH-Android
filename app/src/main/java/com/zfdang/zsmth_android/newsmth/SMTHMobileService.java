@@ -22,4 +22,7 @@ public interface SMTHMobileService {
     // http://m.newsmth.net/article/DSLR/808676538
     @GET("/article/{board}/{article_id}")
     Observable<String> article(@Path("board") String board, @Path("article_id") String article_id);
+
+    @GET("/favor/{folder}")
+    Observable<ResponseBody> getFavoriteBoards(@Path("folder") String folder);
 }

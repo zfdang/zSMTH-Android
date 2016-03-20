@@ -42,8 +42,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         setContentView(R.layout.activity_login);
 
         // these two variables should be loaded from preference
-        String username = "mozilla";
-        String password = "hello";
+        String username = "zsmthdev";
+        String password = "newsmth2012";
 
         m_userNameEditText = (EditText) findViewById(R.id.username_edit);
         m_userNameEditText.setText(username);
@@ -101,21 +101,19 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 focusView.requestFocus();
                 return;
             } else {
-                attemptLogin(username, password);
+                attemptLoginFromWWW(username, password);
             }
         } else if (view.getId() == R.id.guest_button) {
             // login with guest name
-            attemptLogin("guest", "");
+            attemptLoginFromWWW("guest", "");
         }
     }
 
 
     /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
+     * 不需要使用这个方法，因为www的登录对于mobile来讲同样有效
      */
-    private void attemptLogin(final String username, final String password) {
+    private void attemptLoginFromMobile(final String username, final String password) {
 
         // Show a progress spinner, and kick off a background task to
         // perform the user login attempt.
@@ -138,7 +136,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                     @Override
                     public Integer call(ResponseBody response) { // 参数类型 String
                         try {
-//                            String resp = SMTHHelper.DecodeResponseFromWWW(response.bytes());
                             String resp = SMTHHelper.ParseLoginResponseFromMobile(response.string());
                             // 0. 登陆成功
                             // 1. 您的用户名并不存在，或者您的密码错误
@@ -201,6 +198,90 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         });
     }
 
+
+    private void attemptLoginFromWWW(final String username, final String password) {
+        // perform the user login attempt.
+        showProgress(true);
+
+        Log.d(TAG, "start login now...");
+
+        // RxJava & Retrofit: VERY VERY good article
+        // http://gank.io/post/560e15be2dca930e00da1083
+        SMTHHelper helper = SMTHHelper.getInstance();
+        helper.wService.loginWithKick(username, password, "on")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(new Func1<ResponseBody, Integer>() {
+                    // parse response body, and convert it to a flag
+                    // 0: success
+                    // 1: wrong username / password
+                    // 2: decoding exception
+                    // 3. network unreachable  -- this is actually hanndled by onErrorAction of Subscriber
+                    @Override
+                    public Integer call(ResponseBody response) { // 参数类型 String
+                        try {
+                            String resp = SMTHHelper.DecodeResponseFromWWW(response.bytes());
+                            // 0. 登陆成功
+                            // 1. 用户密码错误，请重新登录
+                            // 2. 登录过于频繁
+                            // 3. unknown reason
+                            Log.d(TAG, resp);
+
+                            if (resp.contains("window.location.href")) {
+                                Log.d(TAG, "login successfully, redirect to mainframe");
+                                return 0;
+                            } else if (resp.contains("用户密码错误，请重新登录")) {
+                                return 1;
+                            } else if(resp.contains("登录过于频繁")){
+                                // successful login, user is redirected to frames.html
+                                return 2;
+                            }
+                            return 3;
+                        } catch (Exception e) {
+                            Log.d(TAG, e.toString());
+                            return 3;
+                        }
+                    }
+                })
+                        // 自动创建 Subscriber ，并使用 onNextAction、 onErrorAction 和 onCompletedAction 来定义 onNext()、 onError() 和 onCompleted()
+                        // observable.subscribe(onNextAction, onErrorAction, onCompletedAction);
+                .subscribe(new Action1<Integer>() {
+                    // onNextAction
+                    @Override
+                    public void call(Integer code) {
+                        showProgress(false);
+                        switch (code) {
+                            case 0:
+                                Toast.makeText(getApplicationContext(), "登录成功!", Toast.LENGTH_SHORT).show();
+                                finish();
+                                break;
+                            case 1:
+                                Toast.makeText(getApplicationContext(), "您的用户名并不存在，或者您的密码错误!", Toast.LENGTH_LONG).show();
+                                break;
+                            case 2:
+                                Toast.makeText(getApplicationContext(), "请勿频繁登录", Toast.LENGTH_LONG).show();
+                                break;
+                            case 3:
+                                Toast.makeText(getApplicationContext(), "未知错误，请稍后重试...", Toast.LENGTH_LONG).show();
+                                break;
+                        }
+                    }
+                }, new Action1<Throwable>() {
+                    // onErrorAction
+                    @Override
+                    public void call(Throwable throwable) {
+                        Log.d(TAG, throwable.toString());
+                        showProgress(false);
+                        Toast.makeText(getApplicationContext(), "连接错误，请检查网络.", Toast.LENGTH_LONG).show();
+                    }
+                }, new Action0() {
+                    // onCompletedAction
+                    @Override
+                    public void call() {
+                        Log.d(TAG, "Completed");
+                    }
+                });
+    }
 
     private boolean isUsernameValid(String username) {
         return username.length() > 4;

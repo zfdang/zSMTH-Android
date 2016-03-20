@@ -8,8 +8,9 @@ import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
-import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.models.Board;
+import com.zfdang.zsmth_android.models.Topic;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -215,5 +216,10 @@ public class SMTHHelper {
         results.add(new Topic("END."));
 
         return results;
+    }
+
+    public static List<Board> ParseFavoriteBoardsFromMobile(String content) {
+        List<Board> boards = new ArrayList<Board>();
+        return boards;
     }
 }
