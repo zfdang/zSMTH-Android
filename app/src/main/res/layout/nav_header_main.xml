@@ -15,24 +15,26 @@
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/nav_header_padding_left"
         android:layout_gravity="bottom">
 
         <ImageView
             android:id="@+id/user_avatar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/nav_header_vertical_spacing"
+            android:paddingTop="@dimen/nav_header_avatar_padding_top"
             android:src="@drawable/ic_account_circle_black_48dp"
-            android:layout_gravity="bottom|center_horizontal" />
+            android:layout_gravity="center_horizontal" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/nav_header_vertical_spacing"
-            android:text="Mozilla(顺利交付)"
+            android:paddingBottom="@dimen/nav_header_username_padding_bottom"
+            android:text="@string/nav_header_click_to_login"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:layout_gravity="bottom"
-            android:id="@+id/userName" />
+            android:id="@+id/user_name"
+            />
     </LinearLayout>
 
 </LinearLayout>

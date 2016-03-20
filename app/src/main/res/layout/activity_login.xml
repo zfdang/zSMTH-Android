@@ -61,38 +61,28 @@
             android:singleLine="true" />
 
         <!-- 登录 button -->
-        <Button
-            android:id="@+id/signin_button"
+
+        <CheckBox
+            android:id = "@+id/auto_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/guest_button"
-            android:layout_alignBottom="@+id/guest_button"
-            android:layout_marginRight="15dp"
-            android:layout_toLeftOf="@+id/guest_button"
-            android:text="@string/login_label_signin" />
+            android:text="@string/login_label_autologin"
+            android:layout_alignBaseline="@+id/signin_button"
+            android:layout_below="@id/password_edit"
+            android:layout_marginRight="10dp"
+            />
 
-        <!-- guest button -->
         <Button
-            android:id="@+id/guest_button"
+            android:id="@+id/signin_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignRight="@id/password_edit"
             android:layout_below="@id/password_edit"
             android:layout_marginTop="10dp"
-            android:text="@string/login_label_guest" />
+            android:text="@string/login_label_signin" />
+
 
         <!-- 提示栏 -->
-        <TextView
-            android:id="@+id/progress_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/guest_button"
-            android:layout_alignLeft="@id/password_edit"
-            android:autoLink="web"
-            android:clickable="true"
-            android:gravity="bottom"
-            android:textColor="#888"
-            android:textSize="13dp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -131,5 +121,10 @@
             android:layout_marginRight="25dp"
             android:src="@drawable/logo_footer" />
     </RelativeLayout>
+
+    <ZoomButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/zoomButton"/>
 
 </LinearLayout>

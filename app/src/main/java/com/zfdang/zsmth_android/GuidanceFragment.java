@@ -111,6 +111,11 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public void onRefresh() {
         // triggered by SwipeRefreshLayout
         // setRefreshing(false) should be called later

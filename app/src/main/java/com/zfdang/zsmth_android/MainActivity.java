@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
@@ -47,6 +48,13 @@ public class MainActivity extends AppCompatActivity
     AboutFragment aboutFragment = null;
 
     private ProgressDialog pdialog = null;
+    // used by startActivityForResult
+    static final int MAIN_ACTIVITY_REQUEST_CODE = 9527;  // The request code
+
+    private ImageView mAvatar = null;
+    private TextView mUsername = null;
+
+    private DrawerLayout mDrawer = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,17 +78,20 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+                this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawer.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ImageView avatar = (ImageView) findViewById(R.id.user_avatar);
-        avatar.setOnClickListener(this);
+        mAvatar = (ImageView) findViewById(R.id.user_avatar);
+        mAvatar.setOnClickListener(this);
+
+        mUsername = (TextView) findViewById(R.id.user_name);
+        mUsername.setOnClickListener(this);
 
         // init all fragments
         initFragments();
@@ -113,10 +124,26 @@ public class MainActivity extends AppCompatActivity
 
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == MAIN_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                // get username from data, then update mUsername
+                String username = data.getStringExtra("username");
+                if(username != null && username.length() > 0){
+                    // update displayed user name
+                    mUsername.setText(username);
+
+                    // TODO: update user_avatar
+                }
+            }
+        }
+    }
+
+    @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (mDrawer.isDrawerOpen(GravityCompat.START)) {
+            mDrawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -203,20 +230,18 @@ public class MainActivity extends AppCompatActivity
             setTitle("zSMTH - " + title);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        mDrawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.user_avatar) {
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
+        if (id == R.id.user_avatar || id == R.id.user_name) {
+            // 点击图标或者文字，都弹出登录对话框
+            mDrawer.closeDrawer(GravityCompat.START);
             Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-
+            startActivityForResult(intent, MAIN_ACTIVITY_REQUEST_CODE);
         }
     }
 

@@ -3,6 +3,8 @@
 
     <string name="navigation_drawer_open">打开侧边导航栏</string>
     <string name="navigation_drawer_close">关闭侧边导航栏</string>
+    <string name="nav_header_click_to_login">点击登录</string>
+
 
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -21,11 +23,12 @@
     <string name="action_logout">退出</string>
 
 
+
     <!-- 登录页 -->
     <string name="login_label_username">用户名</string>
     <string name="login_label_password">密码</string>
     <string name="login_label_signin">登录</string>
-    <string name="login_label_guest">匿名</string>
+    <string name="login_label_autologin">自动登录</string>
     <string name="login_register_link">没有帐号？  <a href="http://www.newsmth.net/bbsreg0.html">注册</a></string>
     <string name="login_asm_help">zSMTH  <a href="http://zsmth-android.zfdang.com/">使用说明</a></string>
 

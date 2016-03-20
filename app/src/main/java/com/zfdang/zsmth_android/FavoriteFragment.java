@@ -1,18 +1,29 @@
 package com.zfdang.zsmth_android;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.app.Activity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.zfdang.zsmth_android.models.FavoriteBoardContent;
 import com.zfdang.zsmth_android.models.Board;
+import com.zfdang.zsmth_android.models.FavoriteBoardContent;
+import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+
+import java.util.List;
+
+import okhttp3.ResponseBody;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * A fragment representing a list of Items.
@@ -22,11 +33,13 @@ import com.zfdang.zsmth_android.models.Board;
  */
 public class FavoriteFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
+    private final String TAG = "FavoriteFragment";
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+
+    // the current path of favorite
+    private String mFavoritePath = "";
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -73,9 +86,56 @@ public class FavoriteFragment extends Fragment {
             }
             recyclerView.setAdapter(new FavoriteRecyclerViewAdapter(FavoriteBoardContent.ITEMS, mListener));
         }
+
+//        LoadFavorites(mFavoritePath);
+        LoadFavorites("1");
         return view;
     }
 
+
+    public void LoadFavorites(final String path) {
+        SMTHHelper helper = SMTHHelper.getInstance();
+        helper.mService.getFavoriteBoards(mFavoritePath)
+                .observeOn(Schedulers.io())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .flatMap(new Func1<ResponseBody, Observable<Board>>() {
+                    @Override
+                    public Observable<Board> call(ResponseBody resp) {
+                        try{
+                            String response = resp.string();
+                            Log.d(TAG, response);
+                            List<Board> boards = SMTHHelper.ParseFavoriteBoardsFromMobile(response);
+                            return Observable.from(boards);
+                        } catch (Exception e) {
+                            Log.d(TAG, "Failed to load favorite {" + path + "}");
+                            Log.d(TAG, e.toString());
+                        }
+                        return null;
+                    }
+                })
+                .subscribe(new Subscriber<Board>() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                    }
+
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Board board) {
+                        Log.d(TAG, board.toString());
+                    }
+                });
+        return;
+    }
 
     @Override
     public void onAttach(Activity activity) {

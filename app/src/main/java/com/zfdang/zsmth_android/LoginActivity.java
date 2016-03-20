@@ -1,8 +1,10 @@
 package com.zfdang.zsmth_android;
 
-import android.support.v7.app.ActionBar;
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
@@ -59,9 +61,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         Button ubutton = (Button) findViewById(R.id.signin_button);
         ubutton.setOnClickListener(this);
 
-        Button gbutton = (Button) findViewById(R.id.guest_button);
-        gbutton.setOnClickListener(this);
-
         // enable back button in the title barT
         ActionBar bar = getSupportActionBar();
         if(bar != null){
@@ -103,10 +102,11 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             } else {
                 attemptLoginFromWWW(username, password);
             }
-        } else if (view.getId() == R.id.guest_button) {
-            // login with guest name
-            attemptLoginFromWWW("guest", "");
         }
+//        else if (view.getId() == R.id.guest_button) {
+//            // login with guest name
+//            attemptLoginFromWWW("guest", "");
+//        }
     }
 
 
@@ -253,6 +253,10 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                         switch (code) {
                             case 0:
                                 Toast.makeText(getApplicationContext(), "登录成功!", Toast.LENGTH_SHORT).show();
+                                Intent resultIntent = new Intent();
+                                // TODO Add extras or a data URI to this intent as appropriate.
+                                resultIntent.putExtra("username", username);
+                                setResult(Activity.RESULT_OK, resultIntent);
                                 finish();
                                 break;
                             case 1:
