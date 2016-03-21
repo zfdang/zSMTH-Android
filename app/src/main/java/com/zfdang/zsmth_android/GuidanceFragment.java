@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.models.GuidanceContent;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
@@ -99,7 +100,7 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
             mRecyclerView.setAdapter(new GuidanceRecyclerViewAdapter(GuidanceContent.ITEMS, mListener));
         }
 
-        getActivity().setTitle("zSMTH - " + "首页导读");
+        getActivity().setTitle(SMTHApplication.App_Title_Prefix + "首页导读");
 
         if(GuidanceContent.ITEMS.size() == 0){
             // only refresh guidance when there is no topic available

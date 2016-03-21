@@ -16,6 +16,7 @@ import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.FavoriteBoardContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -38,8 +39,45 @@ public class FavoriteFragment extends Fragment {
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
-    // the current path of favorite
-    private String mFavoritePath = "";
+    private RecyclerView mRecylerView = null;
+    private String mOriginalTitle = null;
+
+    // list of favorite paths
+    private List<String> mFavoritePaths = null;
+    private List<String> mFavoritePathNames = null;
+
+    public void pushFavoritePath(String path, String name) {
+        if(mFavoritePaths == null) {
+            mFavoritePaths = new ArrayList<String>();
+        }
+        if(mFavoritePathNames == null) {
+            mFavoritePathNames = new ArrayList<String>();
+        }
+        mFavoritePaths.add(path);
+        mFavoritePathNames.add(name);
+    }
+
+    public void popFavoritePath() {
+        if(mFavoritePaths != null & mFavoritePaths.size() > 1){
+            this.mFavoritePaths.remove(this.mFavoritePaths.size()-1);
+            this.mFavoritePathNames.remove(this.mFavoritePathNames.size()-1);
+        }
+    }
+
+    public String getCurrentFavoritePath(){
+        if(mFavoritePaths != null & mFavoritePaths.size() > 0){
+            return this.mFavoritePaths.get(this.mFavoritePaths.size() - 1);
+        } else {
+            return "";
+        }
+    }
+
+    public boolean atFavoriteRoot() {
+        if(mFavoritePaths != null && mFavoritePaths.size() > 1) {
+            return false;
+        }
+        return true;
+    }
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -65,76 +103,106 @@ public class FavoriteFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
+
+        // set the initial favorite path chain
+        mFavoritePaths = new ArrayList<String>();
+        mFavoritePathNames = new ArrayList<String>();
+        pushFavoritePath("", "根目录");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_favorite_board, container, false);
+        mRecylerView = (RecyclerView) inflater.inflate(R.layout.fragment_favorite_board, container, false);
 
 
         // Set the adapter
-        if (view instanceof RecyclerView) {
+        if (mRecylerView != null) {
 //            http://stackoverflow.com/questions/28713231/recyclerview-item-separator
-            ((RecyclerView) view).addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            mRecylerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+            Context context = mRecylerView.getContext();
             if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                mRecylerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                mRecylerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new FavoriteRecyclerViewAdapter(FavoriteBoardContent.ITEMS, mListener));
+            mRecylerView.setAdapter(new FavoriteRecyclerViewAdapter(FavoriteBoardContent.ITEMS, mListener));
         }
 
-//        LoadFavorites(mFavoritePath);
-        LoadFavorites("1");
-        return view;
+        RefreshFavoriteBoards();
+
+        return mRecylerView;
     }
 
+    public void RefreshFavoriteBoards() {
+        LoadFavoriteBoardsByPath(getCurrentFavoritePath());
+    }
 
-    public void LoadFavorites(final String path) {
+    protected void LoadFavoriteBoardsByPath(final String path) {
         SMTHHelper helper = SMTHHelper.getInstance();
-        helper.mService.getFavoriteBoards(mFavoritePath)
+        helper.wService.getFavoriteByPath(path)
+                .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
-                .subscribeOn(AndroidSchedulers.mainThread())
                 .flatMap(new Func1<ResponseBody, Observable<Board>>() {
                     @Override
                     public Observable<Board> call(ResponseBody resp) {
-                        try{
-                            String response = resp.string();
+                        try {
+                            String response = SMTHHelper.DecodeResponseFromWWW(resp.bytes());
                             Log.d(TAG, response);
-                            List<Board> boards = SMTHHelper.ParseFavoriteBoardsFromMobile(response);
+                            List<Board> boards = SMTHHelper.ParseFavoriteBoardsFromWWW(response);
                             return Observable.from(boards);
                         } catch (Exception e) {
                             Log.d(TAG, "Failed to load favorite {" + path + "}");
                             Log.d(TAG, e.toString());
+                            return null;
                         }
-                        return null;
                     }
                 })
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Board>() {
                     @Override
                     public void onStart() {
+
                         super.onStart();
+                        FavoriteBoardContent.clear();
+                        mRecylerView.getAdapter().notifyDataSetChanged();
                     }
 
                     @Override
                     public void onCompleted() {
-
+                        updateFavoriteTitle();
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        Log.d(TAG, e.toString());
 
                     }
 
                     @Override
                     public void onNext(Board board) {
+                        FavoriteBoardContent.addItem(board);
+                        mRecylerView.getAdapter().notifyItemInserted(FavoriteBoardContent.ITEMS.size());
                         Log.d(TAG, board.toString());
                     }
                 });
         return;
+    }
+
+    private void updateFavoriteTitle(){
+        if(mOriginalTitle == null) {
+            mOriginalTitle = getActivity().getTitle().toString();
+        }
+        if( mFavoritePathNames != null && mFavoritePathNames.size() > 1) {
+            String path = "";
+            for(int i = 1; i < mFavoritePathNames.size(); i ++) {
+                path += ">" + mFavoritePathNames.get(i);
+            }
+            getActivity().setTitle(mOriginalTitle + path);
+
+        } else {
+            getActivity().setTitle(mOriginalTitle);
+        }
     }
 
     @Override

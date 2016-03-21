@@ -36,9 +36,18 @@ public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRe
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mCategoryView.setText("[" + holder.mItem.getCategoryName() + "]");
-        holder.mModeratorView.setText(holder.mItem.getModerator());
-        holder.mNameView.setText("[" + holder.mItem.getEngName() + "]" + holder.mItem.getChsName());
+        Board board = holder.mItem;
+        if(board.isFolder()) {
+            holder.mCategoryView.setText("[" + board.getCategoryName() + "]");
+            holder.mModeratorView.setVisibility(View.GONE);
+            holder.mNameView.setText(board.getFolderName());
+
+        } else {
+            holder.mCategoryView.setText("[" + board.getCategoryName() + "]");
+            holder.mModeratorView.setVisibility(View.VISIBLE);
+            holder.mModeratorView.setText(board.getModerator());
+            holder.mNameView.setText("[" + board.getBoardEngName() + "]" + board.getBoardChsName());
+        }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -218,8 +218,43 @@ public class SMTHHelper {
         return results;
     }
 
-    public static List<Board> ParseFavoriteBoardsFromMobile(String content) {
+    public static List<Board> ParseFavoriteBoardsFromWWW(String content) {
         List<Board> boards = new ArrayList<Board>();
+
+//        o.f(1,'favFolder1 ',0,'');
+//        o.o(false,1,896,22556,'[站务]','Advice','水木发展','SYSOP',7026,895,4);
+//        o.o(false,1,619,2332235,'[生活]','CouponsLife','辣妈羊毛党','hmilytt XZCL',897207,618,1601);
+//        o.o(false,1,179,808676665,'[数码]','DSLR','数码单反','jerryxiao',153110,178,57);
+
+        // 先提取目录
+        Pattern pattern = Pattern.compile("o\\.f\\((\\d+),'([^']+)',\\d+,''\\);");
+        Matcher matcher = pattern.matcher(content);
+//        List<String> list = new ArrayList<String>();
+        while (matcher.find()) {
+//            list.add(matcher.group(1));
+            Board board = new Board(matcher.group(1), matcher.group(2));
+            boards.add(board);
+        }
+
+        // 再提取收藏的版面
+        // o.o(false,1,998,22156,'[站务]','Ask','新用户疑难解答','haning BJH',733,997,0);
+        pattern = Pattern.compile("o\\.o\\(\\w+,\\d+,(\\d+),\\d+,'\\[([^']+)\\]','([^']+)','([^']+)','([^']*)',\\d+,\\d+,\\d+\\)");
+        matcher = pattern.matcher(content);
+        while (matcher.find()) {
+            String boardID = matcher.group(1);
+            String category = matcher.group(2);
+            String engName = matcher.group(3);
+            String chsName = matcher.group(4);
+            String moderator = matcher.group(5);
+            if (moderator.length() > 25) {
+                moderator = moderator.substring(0, 21) + "...";
+            }
+            Board board = new Board(boardID, chsName, engName);
+            board.setModerator(moderator);
+            board.setCategoryName(category);
+            boards.add(board);
+        }
+
         return boards;
     }
 }

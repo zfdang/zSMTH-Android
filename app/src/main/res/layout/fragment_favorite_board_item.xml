@@ -13,7 +13,7 @@
         android:id="@+id/CategoryName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="TextView01"
+        android:text="Category"
         android:textColor="@color/status_text"/>
 
     <TextView
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:gravity="right"
         android:maxLength="25"
-        android:text="TextView02"
+        android:text="版主"
         android:textColor="@color/blue_text"/>
 
     <TextView
@@ -30,7 +30,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/CategoryName"
-        android:text="TextView03"
+        android:text="[engBoard]chsBoard"
         android:textColor="@color/status_text"
         android:textSize="20dp"/>
 </RelativeLayout>

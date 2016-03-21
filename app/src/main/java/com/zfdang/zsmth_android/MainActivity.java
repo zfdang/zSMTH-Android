@@ -3,6 +3,7 @@ package com.zfdang.zsmth_android;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -13,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,9 +24,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
+import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.Topic;
+
+import java.lang.reflect.Field;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -93,6 +98,18 @@ public class MainActivity extends AppCompatActivity
         mUsername = (TextView) findViewById(R.id.user_name);
         mUsername.setOnClickListener(this);
 
+
+        // http://stackoverflow.com/questions/27097126/marquee-title-in-toolbar-actionbar-in-android-with-lollipop-sdk
+        TextView titleTextView = null;
+        try {
+            Field f = toolbar.getClass().getDeclaredField("mTitleTextView");
+            f.setAccessible(true);
+            titleTextView = (TextView) f.get(toolbar);
+            titleTextView.setEllipsize(TextUtils.TruncateAt.START);
+        } catch (NoSuchFieldException e) {
+        } catch (IllegalAccessException e) {
+        }
+
         // init all fragments
         initFragments();
 
@@ -145,8 +162,52 @@ public class MainActivity extends AppCompatActivity
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
             mDrawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+
+            // handle back button for all fragment
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+            if (fragment instanceof FavoriteFragment) {
+                if(! favoriteFragment.atFavoriteRoot()){
+                    favoriteFragment.popFavoritePath();
+                    favoriteFragment.RefreshFavoriteBoards();
+                    return;
+                }
+            }
+
+            // for other cases, double back to exit app
+            DoubleBackToExit();
         }
+    }
+
+
+    // press BACK in 2 seconds, app will quit
+    private boolean mDoubleBackToExit = false;
+    private Handler mHandler = null;
+
+    class PendingDoubleBackToExit implements Runnable {
+        public void run() {
+            mDoubleBackToExit = false;
+        }
+    }
+
+    private void DoubleBackToExit() {
+        if (mDoubleBackToExit) {
+            // if mDoubleBackToExit is true, exit now
+            quitNow();
+        } else {
+            // set mDoubleBackToExit = true, and set delayed task to
+            // reset it to false
+            mDoubleBackToExit = true;
+            if (mHandler == null) {
+                mHandler = new Handler();
+            }
+            // reset will be run after 2000 ms
+            mHandler.postDelayed(new PendingDoubleBackToExit(), 2000);
+            Toast.makeText(this, "再按一次退出zSMTH", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void quitNow() {
+        finish();
     }
 
     /**
@@ -227,7 +288,7 @@ public class MainActivity extends AppCompatActivity
         if (fragment != null) {
             FragmentManager fm = getSupportFragmentManager();
             fm.beginTransaction().replace(R.id.content_frame, fragment).commit();
-            setTitle("zSMTH - " + title);
+            setTitle(SMTHApplication.App_Title_Prefix + title);
         }
 
         mDrawer.closeDrawer(GravityCompat.START);
@@ -262,7 +323,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(Board item) {
         // shared by Favorite & allboard
-        Toast.makeText(this, item.toString() + " is clicked", Toast.LENGTH_LONG).show();
+        if(item.isFolder()) {
+            favoriteFragment.pushFavoritePath(item.getFolderID(), item.getFolderName());
+            favoriteFragment.RefreshFavoriteBoards();
+        } else {
+            Toast.makeText(this, item.toString() + " is clicked", Toast.LENGTH_LONG).show();
 
+        }
     }
 }
