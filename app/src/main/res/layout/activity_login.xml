@@ -51,17 +51,14 @@
             android:text="@string/login_label_password" />
 
         <!-- 密码 input -->
-        <EditText
+        <com.maksim88.passwordedittext.PasswordEditText
             android:id="@+id/password_edit"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/login_password_input"
-            android:inputType="textPassword"
-            android:password="true"
-            android:singleLine="true" />
+            android:longClickable="false"
+            android:layout_below="@id/login_password_input"/>
 
         <!-- 登录 button -->
-
         <CheckBox
             android:id = "@+id/auto_login"
             android:layout_width="wrap_content"

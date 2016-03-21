@@ -86,16 +86,18 @@ public class MainActivity extends AppCompatActivity
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawer.setDrawerListener(toggle);
+        mDrawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mAvatar = (ImageView) findViewById(R.id.user_avatar);
+        // http://stackoverflow.com/questions/33161345/android-support-v23-1-0-update-breaks-navigationview-get-find-header
+        View headerView = navigationView.getHeaderView(0);
+        mAvatar = (ImageView) headerView.findViewById(R.id.nav_user_avatar);
         mAvatar.setOnClickListener(this);
 
-        mUsername = (TextView) findViewById(R.id.user_name);
+        mUsername = (TextView) headerView.findViewById(R.id.nav_user_name);
         mUsername.setOnClickListener(this);
 
 
@@ -298,7 +300,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.user_avatar || id == R.id.user_name) {
+        if (id == R.id.nav_user_avatar || id == R.id.nav_user_name) {
             // 点击图标或者文字，都弹出登录对话框
             mDrawer.closeDrawer(GravityCompat.START);
             Intent intent = new Intent(this, LoginActivity.class);

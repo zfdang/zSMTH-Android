@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
+    compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
     defaultConfig {
@@ -26,10 +26,10 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:22.2.1'
-    compile 'com.android.support:design:22.2.1'
-    compile 'com.android.support:support-v4:22.2.1'
-    compile 'com.android.support:recyclerview-v7:22.2.1'
+    compile 'com.android.support:appcompat-v7:23.2.1'
+    compile 'com.android.support:design:23.2.1'
+    compile 'com.android.support:support-v4:23.2.1'
+    compile 'com.android.support:recyclerview-v7:23.2.1'
     //    友盟分析library
     compile 'com.umeng.analytics:analytics:latest.integration'
     //  sqlite-asset-helper
@@ -51,6 +51,5 @@ dependencies {
     //    image cache and guesture imageview
     //    compile 'com.squareup.picasso:picasso:2.5.2'
     //    compile 'com.commit451:PhotoView:1.2.4'
-//    compile 'com.github.scottyab:showhidepasswordedittext:0.6'
-//    compile 'com.github.anshulagarwal06:PasswordEditText:v1.0'
+    compile 'com.github.maksim88:PasswordEditText:v0.5'
 }

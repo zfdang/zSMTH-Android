@@ -16,7 +16,7 @@ allprojects {
     repositories {
         jcenter()
         // https://github.com/scottyab/showhidepasswordedittext
-//        maven { url "https://jitpack.io" }
+        maven { url "https://jitpack.io" }
     }
 }
 

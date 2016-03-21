@@ -19,7 +19,7 @@
         android:layout_gravity="bottom">
 
         <ImageView
-            android:id="@+id/user_avatar"
+            android:id="@+id/nav_user_avatar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/nav_header_avatar_padding_top"
@@ -33,7 +33,7 @@
             android:paddingBottom="@dimen/nav_header_username_padding_bottom"
             android:text="@string/nav_header_click_to_login"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:id="@+id/user_name"
+            android:id="@+id/nav_user_name"
             />
     </LinearLayout>
 
