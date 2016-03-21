@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single" android:id="@+id/drawer_menu_group1">
         <item
             android:id="@+id/nav_guidance"
             android:icon="@drawable/ic_whatshot_black_48dp"
@@ -18,10 +18,10 @@
             android:id="@+id/nav_mail"
             android:icon="@drawable/ic_email_black_48dp"
             android:title="邮箱" />
+
     </group>
 
-    <item android:title="程序">
-        <menu>
+    <group android:checkableBehavior="single" android:id="@+id/drawer_menu_group2">
             <item
                 android:id="@+id/nav_setting"
                 android:icon="@drawable/ic_settings_black_48dp"
@@ -30,7 +30,6 @@
                 android:id="@+id/nav_about"
                 android:icon="@drawable/ic_info_black_48dp"
                 android:title="关于" />
-        </menu>
-    </item>
+    </group>
 
 </menu>
