@@ -324,12 +324,17 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBoardFragmentInteraction(Board item) {
         // shared by Favorite & allboard
-        if(item.isFolder()) {
-            favoriteFragment.pushFavoritePath(item.getFolderID(), item.getFolderName());
-            favoriteFragment.RefreshFavoriteBoards();
-        } else {
-            Toast.makeText(this, item.toString() + " is clicked", Toast.LENGTH_LONG).show();
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+        if(fragment == favoriteFragment) {
+            if(item.isFolder()) {
+                favoriteFragment.pushFavoritePath(item.getFolderID(), item.getFolderName());
+                favoriteFragment.RefreshFavoriteBoards();
+            } else {
+                Toast.makeText(this, item.toString() + " is clicked", Toast.LENGTH_LONG).show();
+            }
 
+        } else if(fragment == allBoardFragment) {
+            Toast.makeText(this, item.toString() + " is clicked", Toast.LENGTH_LONG).show();
         }
     }
 }

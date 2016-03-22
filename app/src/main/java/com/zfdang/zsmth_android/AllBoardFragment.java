@@ -6,11 +6,23 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.ListBoardContent;
+import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+
+import java.util.List;
+
+import okhttp3.ResponseBody;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * A fragment representing a list of Items.
@@ -20,9 +32,10 @@ import com.zfdang.zsmth_android.models.ListBoardContent;
  */
 public class AllBoardFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
+    final private String TAG = "AllBoardFragment";
+    private RecyclerView mRecylerView = null;
+
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnBoardFragmentInteractionListener mListener;
 
@@ -57,20 +70,65 @@ public class AllBoardFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_board, container, false);
 
+        mRecylerView = (RecyclerView) view;
         // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new BoardRecyclerViewAdapter(ListBoardContent.FAVORITE_BOARDS, mListener));
+        mRecylerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+        Context context = view.getContext();
+        if (mColumnCount <= 1) {
+            mRecylerView.setLayoutManager(new LinearLayoutManager(context));
+        } else {
+            mRecylerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
+        mRecylerView.setAdapter(new BoardRecyclerViewAdapter(ListBoardContent.ALL_BOARDS, mListener));
+
+        LoadAllBoards();
         return view;
     }
 
+    public void LoadAllBoards () {
+        SMTHHelper helper = SMTHHelper.getInstance();
+        helper.wService.getBoardsBySection("1")
+                .observeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
+                .flatMap(new Func1<ResponseBody, Observable<Board>>() {
+                    @Override
+                    public Observable<Board> call(ResponseBody responseBody) {
+                        try {
+                            String response = responseBody.string();
+                            Log.d(TAG, response);
+                            List<Board> boards = SMTHHelper.ParseBoardsInSectionFromWWW(response);
+                            return Observable.from(boards);
+                        } catch (Exception e) {
+                            Log.d(TAG, e.toString());
+                            return null;
+                        }
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Board>() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                    }
+
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(TAG, e.toString());
+                    }
+
+                    @Override
+                    public void onNext(Board board) {
+                        ListBoardContent.addAllBoardItem(board);
+                        mRecylerView.getAdapter().notifyItemInserted(ListBoardContent.ALL_BOARDS.size());
+                        Log.d(TAG, board.toString());
+                    }
+                });
+    }
 
 
     @Override

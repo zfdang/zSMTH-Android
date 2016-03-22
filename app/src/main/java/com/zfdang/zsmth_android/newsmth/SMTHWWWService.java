@@ -6,6 +6,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 import rx.Observable;
 
@@ -29,4 +30,7 @@ public interface SMTHWWWService {
 
     @GET("/bbsfav.php")
     Observable<ResponseBody> getFavoriteByPath(@Query("select") String path);
+
+    @GET("/nForum/section/{section}?ajax")
+    Observable<ResponseBody> getBoardsBySection(@Path("section") String section);
 }

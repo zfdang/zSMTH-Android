@@ -52,4 +52,6 @@ dependencies {
     //    compile 'com.squareup.picasso:picasso:2.5.2'
     //    compile 'com.commit451:PhotoView:1.2.4'
     compile 'com.github.maksim88:PasswordEditText:v0.6'
+
+    compile 'org.jsoup:jsoup:1.8.3'
 }

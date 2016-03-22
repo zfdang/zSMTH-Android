@@ -12,6 +12,11 @@ import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.Topic;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -257,4 +262,71 @@ public class SMTHHelper {
 
         return boards;
     }
+
+
+    public static List<Board> ParseBoardsInSectionFromWWW(String content) {
+        List<Board> boards = new ArrayList<Board>();
+
+//        <tr><td class="title_1"><a href="/nForum/section/Association">协会社团</a><br />Association</td><td class="title_2">[二级目录]<br /></td><td class="title_3">&nbsp;</td><td class="title_4 middle c63f">&nbsp;</td><td class="title_5 middle c09f">&nbsp;</td><td class="title_6 middle c63f">&nbsp;</td><td class="title_7 middle c09f">&nbsp;</td></tr>
+//
+//        <tr><td class="title_1"><a href="/nForum/board/BIT">北京理工大学</a><br />BIT</td><td class="title_2"><a href="/nForum/user/query/mahenry">mahenry</a><br /></td><td class="title_3"><a href="/nForum/article/BIT/250116">今年几万斤苹果都滞销了，果农欲哭无泪！</a><br />发贴人:&ensp;jingling6787 日期:&ensp;2016-03-22 09:19:09</td><td class="title_4 middle c63f">11</td><td class="title_5 middle c09f">2</td><td class="title_6 middle c63f">5529</td><td class="title_7 middle c09f">11854</td></tr>
+//
+//        <tr><td class="title_1"><a href="/nForum/board/Orienteering">定向越野</a><br />Orienteering</td><td class="title_2"><a href="/nForum/user/query/onceloved">onceloved</a><br /></td><td class="title_3"><a href="/nForum/article/Orienteering/59193">圆明园定向</a><br />发贴人:&ensp;jiang2000 日期:&ensp;2016-03-19 14:19:10</td><td class="title_4 middle c63f">0</td><td class="title_5 middle c09f">0</td><td class="title_6 middle c63f">4725</td><td class="title_7 middle c09f">18864</td></tr>
+
+        Document doc = Jsoup.parse(content);
+        // get all tr
+        Elements trs = doc.select("table.board-list tr");
+        for (Element tr: trs) {
+//            Log.d("Node", tr.toString());
+
+            Elements t1links = tr.select("td.title_1 a[href]");
+            if(t1links.size() == 1) {
+                Element link1 = t1links.first();
+                String temp = link1.attr("href");
+
+                String chsBoardName = "";
+                String engBoardName = "";
+                String moderator = "";
+                String folderChsName = "";
+                String folderEngName = "";
+
+                Pattern boardPattern = Pattern.compile("/nForum/board/(\\w+)");
+                Matcher boardMatcher = boardPattern.matcher(temp);
+                if (boardMatcher.find()) {
+                    engBoardName = boardMatcher.group(1);
+                    chsBoardName = link1.text();
+                    // it's a normal board
+                    Elements t2links = tr.select("td.title_2 a[href]");
+                    if(t2links.size() == 1 ) {
+                        // if we can find link to moderator, set moderator
+                        // it's also possible that moderator is empty, so no link can be found
+                        Element link2 = t2links.first();
+                        moderator = link2.text();
+                    }
+
+                    Board board = new Board("", chsBoardName, engBoardName);
+                    board.setModerator(moderator);
+                    boards.add(board);
+
+                }
+
+                Pattern sectionPattern = Pattern.compile("/nForum/section/(\\w+)");
+                Matcher sectionMatcher = sectionPattern.matcher(temp);
+                if (sectionMatcher.find()) {
+                    // it's a section
+                    folderEngName = sectionMatcher.group(1);
+                    folderChsName = link1.text();
+
+                    Board board = new Board(folderEngName, folderChsName);
+                    boards.add(board);
+                }
+
+                Log.d("parse", String.format("%s, %s, %s, %s, %s", chsBoardName, engBoardName, folderChsName, folderEngName, moderator));
+            }
+
+        }
+
+        return boards;
+    }
+
 }
