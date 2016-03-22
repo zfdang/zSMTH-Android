@@ -1,6 +1,5 @@
 package com.zfdang.zsmth_android;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -272,13 +271,8 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
     // If you run your application on a device with API 23 (marshmallow) then onAttach(Context) will be called.
     // On all previous Android Versions onAttach(Activity) will be called.
     @Override
-    public void onAttach(Activity activity) {
-        this.onAttach((Context) activity);
-    }
-
-    //    @Override
     public void onAttach(Context context) {
-        super.onAttach((Activity)context);
+        super.onAttach(context);
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
         } else {

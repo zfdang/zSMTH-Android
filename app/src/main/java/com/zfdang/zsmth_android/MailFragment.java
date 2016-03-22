@@ -1,6 +1,5 @@
 package com.zfdang.zsmth_android;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,8 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.zfdang.zsmth_android.models.MailContent;
 import com.zfdang.zsmth_android.models.Mail;
+import com.zfdang.zsmth_android.models.MailContent;
 
 /**
  * A fragment representing a list of Items.
@@ -73,14 +72,10 @@ public class MailFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        this.onAttach((Context)activity);
-    }
 
-//    @Override
+    @Override
     public void onAttach(Context context) {
-        super.onAttach((Activity)context);
+        super.onAttach(context);
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
         } else {
