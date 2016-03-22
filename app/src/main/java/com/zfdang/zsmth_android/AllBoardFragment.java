@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.ListBoardContent;
@@ -34,6 +35,8 @@ public class AllBoardFragment extends Fragment {
 
     final private String TAG = "AllBoardFragment";
     private RecyclerView mRecylerView = null;
+    private SearchView mSearchView = null;
+    private QueryTextListner mQueryListner = null;
 
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
@@ -70,7 +73,7 @@ public class AllBoardFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_board, container, false);
 
-        mRecylerView = (RecyclerView) view;
+        mRecylerView = (RecyclerView) view.findViewById(R.id.all_board_list);
         // Set the adapter
         mRecylerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         Context context = view.getContext();
@@ -80,6 +83,14 @@ public class AllBoardFragment extends Fragment {
             mRecylerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
         mRecylerView.setAdapter(new BoardRecyclerViewAdapter(ListBoardContent.ALL_BOARDS, mListener));
+
+        mSearchView = (SearchView) view.findViewById(R.id.all_board_search);
+        mSearchView.setIconifiedByDefault(false);
+//        mSearchView.setSubmitButtonEnabled(true);
+        if( mQueryListner == null) {
+            mQueryListner = new QueryTextListner((BoardRecyclerViewAdapter) mRecylerView.getAdapter());
+            mSearchView.setOnQueryTextListener(mQueryListner);
+        }
 
         if(ListBoardContent.ALL_BOARDS.size() == 0) {
             // only load boards on the first time
@@ -161,6 +172,26 @@ public class AllBoardFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public class QueryTextListner implements  SearchView.OnQueryTextListener {
+        private BoardRecyclerViewAdapter mAdapter = null;
+
+        public QueryTextListner(BoardRecyclerViewAdapter mAdapter) {
+            this.mAdapter = mAdapter;
+        }
+
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            return false;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            Log.d(TAG, newText);
+            mAdapter.getFilter().filter(newText);
+            return true;
+        }
     }
 
 
