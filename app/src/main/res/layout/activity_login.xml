@@ -23,41 +23,36 @@
         android:padding="15dp" >
 
 
-        <!-- 用户名 text -->
-        <TextView
-            android:id="@+id/login_user_input"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="5dp"
-            android:text="@string/login_label_username" />
-
         <!-- 用户名 input -->
-        <EditText
-            android:id="@+id/username_edit"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/login_user_input"
-            android:inputType="text"
-            android:singleLine="true" />
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <!-- 密码 text -->
-        <TextView
-            android:id="@+id/login_password_input"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/username_edit"
-            android:layout_marginTop="3dp"
-            android:text="@string/login_label_password" />
+            <EditText
+                android:id="@+id/username_edit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="@string/login_label_username"
+                android:singleLine="true"/>
+        </android.support.design.widget.TextInputLayout>
 
         <!-- 密码 input -->
-        <com.maksim88.passwordedittext.PasswordEditText
-            android:id="@+id/password_edit"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:longClickable="false"
-            android:inputType="textPassword"
-            android:layout_below="@id/login_password_input"/>
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_password"
+            android:layout_below="@id/input_layout_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.maksim88.passwordedittext.PasswordEditText
+                android:id="@+id/password_edit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:hint="@string/login_label_password"
+                android:longClickable="false"/>
+        </android.support.design.widget.TextInputLayout>
 
         <!-- 登录 button -->
         <CheckBox
@@ -66,7 +61,7 @@
             android:layout_height="wrap_content"
             android:text="@string/login_label_autologin"
             android:layout_alignBaseline="@+id/signin_button"
-            android:layout_below="@id/password_edit"
+            android:layout_below="@id/input_layout_password"
             android:checked="true"
             android:layout_marginRight="10dp"
             />
@@ -75,13 +70,10 @@
             android:id="@+id/signin_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@id/password_edit"
-            android:layout_below="@id/password_edit"
+            android:layout_alignRight="@id/input_layout_password"
+            android:layout_below="@id/input_layout_password"
             android:layout_marginTop="10dp"
             android:text="@string/login_label_signin" />
-
-
-        <!-- 提示栏 -->
     </RelativeLayout>
 
     <RelativeLayout
@@ -93,6 +85,7 @@
             android:id="@+id/register_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:layout_marginLeft="15dp"
             android:text="@string/login_register_link"
             android:textColor="#888"
@@ -103,7 +96,7 @@
             android:layout_below="@id/register_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="15dp"
             android:text="@string/login_asm_help"
             android:textColor="#888"

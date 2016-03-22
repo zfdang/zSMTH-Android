@@ -51,5 +51,5 @@ dependencies {
     //    image cache and guesture imageview
     //    compile 'com.squareup.picasso:picasso:2.5.2'
     //    compile 'com.commit451:PhotoView:1.2.4'
-    compile 'com.github.maksim88:PasswordEditText:v0.5'
+    compile 'com.github.maksim88:PasswordEditText:v0.6'
 }

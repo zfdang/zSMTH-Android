@@ -54,7 +54,7 @@ public class FavoriteFragment extends Fragment {
             mFavoritePathNames = new ArrayList<String>();
         }
         mFavoritePaths.add(path);
-        mFavoritePathNames.add(name);
+        mFavoritePathNames.add(name.trim());
     }
 
     public void popFavoritePath() {
