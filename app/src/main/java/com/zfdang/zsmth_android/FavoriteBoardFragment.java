@@ -128,9 +128,24 @@ public class FavoriteBoardFragment extends Fragment {
             mRecylerView.setAdapter(new BoardRecyclerViewAdapter(ListBoardContent.FAVORITE_BOARDS, mListener));
         }
 
-        RefreshFavoriteBoards();
+        if(ListBoardContent.FAVORITE_BOARDS.size() == 0) {
+            // only load boards on the first time
+            showLoadingHints();
+            RefreshFavoriteBoards();
+        }
 
         return mRecylerView;
+    }
+
+    public void showLoadingHints() {
+        MainActivity activity = (MainActivity)getActivity();
+        activity.showProgress("加载收藏版面，请稍候...", true);
+    }
+
+    public void clearLoadingHints () {
+        // disable progress bar
+        MainActivity activity = (MainActivity) getActivity();
+        activity.showProgress("", false);
     }
 
     public void RefreshFavoriteBoards() {

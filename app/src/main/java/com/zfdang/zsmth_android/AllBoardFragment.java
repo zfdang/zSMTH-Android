@@ -81,8 +81,23 @@ public class AllBoardFragment extends Fragment {
         }
         mRecylerView.setAdapter(new BoardRecyclerViewAdapter(ListBoardContent.ALL_BOARDS, mListener));
 
-        LoadAllBoards();
+        if(ListBoardContent.ALL_BOARDS.size() == 0) {
+            // only load boards on the first time
+            showLoadingHints();
+            LoadAllBoards();
+        }
         return view;
+    }
+
+    public void showLoadingHints() {
+        MainActivity activity = (MainActivity)getActivity();
+        activity.showProgress("加载所有版面列表，请等待...", true);
+    }
+
+    public void clearLoadingHints () {
+        // disable progress bar
+        MainActivity activity = (MainActivity) getActivity();
+        activity.showProgress("", false);
     }
 
     public void LoadAllBoards () {
@@ -113,7 +128,7 @@ public class AllBoardFragment extends Fragment {
 
                     @Override
                     public void onCompleted() {
-
+                        clearLoadingHints();
                     }
 
                     @Override
@@ -124,7 +139,7 @@ public class AllBoardFragment extends Fragment {
                     @Override
                     public void onNext(Board board) {
                         ListBoardContent.addAllBoardItem(board);
-                        mRecylerView.getAdapter().notifyItemInserted(ListBoardContent.ALL_BOARDS.size());
+                        mRecylerView.getAdapter().notifyItemInserted(ListBoardContent.ALL_BOARDS.size()-1);
                         Log.d(TAG, board.toString());
                     }
                 });
