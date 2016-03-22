@@ -10,4 +10,4 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="com.zfdang.zsmth_android.AllBoardFragment"
-    tools:listitem="@layout/fragment_all_board_item" />
+    tools:listitem="@layout/fragment_board_item" />

@@ -1,6 +1,5 @@
 package com.zfdang.zsmth_android;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.zfdang.zsmth_android.models.Board;
-import com.zfdang.zsmth_android.models.FavoriteBoardContent;
+import com.zfdang.zsmth_android.models.ListBoardContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
 import java.util.ArrayList;
@@ -29,15 +28,15 @@ import rx.schedulers.Schedulers;
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link OnBoardFragmentInteractionListener}
  * interface.
  */
-public class FavoriteFragment extends Fragment {
+public class FavoriteBoardFragment extends Fragment {
 
-    private final String TAG = "FavoriteFragment";
+    private final String TAG = "FavoriteBoardFragment";
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
+    private OnBoardFragmentInteractionListener mListener;
 
     private RecyclerView mRecylerView = null;
     private String mOriginalTitle = null;
@@ -83,13 +82,13 @@ public class FavoriteFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public FavoriteFragment() {
+    public FavoriteBoardFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static FavoriteFragment newInstance(int columnCount) {
-        FavoriteFragment fragment = new FavoriteFragment();
+    public static FavoriteBoardFragment newInstance(int columnCount) {
+        FavoriteBoardFragment fragment = new FavoriteBoardFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -126,7 +125,7 @@ public class FavoriteFragment extends Fragment {
             } else {
                 mRecylerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            mRecylerView.setAdapter(new FavoriteRecyclerViewAdapter(FavoriteBoardContent.ITEMS, mListener));
+            mRecylerView.setAdapter(new BoardRecyclerViewAdapter(ListBoardContent.FAVORITE_BOARDS, mListener));
         }
 
         RefreshFavoriteBoards();
@@ -164,7 +163,7 @@ public class FavoriteFragment extends Fragment {
                     public void onStart() {
 
                         super.onStart();
-                        FavoriteBoardContent.clear();
+                        ListBoardContent.clearFavorites();
                         mRecylerView.getAdapter().notifyDataSetChanged();
                     }
 
@@ -181,8 +180,8 @@ public class FavoriteFragment extends Fragment {
 
                     @Override
                     public void onNext(Board board) {
-                        FavoriteBoardContent.addItem(board);
-                        mRecylerView.getAdapter().notifyItemInserted(FavoriteBoardContent.ITEMS.size());
+                        ListBoardContent.addFavoriteItem(board);
+                        mRecylerView.getAdapter().notifyItemInserted(ListBoardContent.FAVORITE_BOARDS.size());
                         Log.d(TAG, board.toString());
                     }
                 });
@@ -205,19 +204,15 @@ public class FavoriteFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        this.onAttach((Context)activity);
-    }
 
-    //    @Override
+    @Override
     public void onAttach(Context context) {
-        super.onAttach((Activity) context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+        super.onAttach(context);
+        if (context instanceof OnBoardFragmentInteractionListener) {
+            mListener = (OnBoardFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
+                    + " must implement OnBoardFragmentInteractionListener");
         }
     }
 
@@ -226,19 +221,5 @@ public class FavoriteFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(Board item);
-    }
+    
 }

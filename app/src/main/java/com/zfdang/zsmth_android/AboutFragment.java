@@ -1,6 +1,5 @@
 package com.zfdang.zsmth_android;
 
-import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -90,14 +89,10 @@ public class AboutFragment extends Fragment implements View.OnClickListener{
             mListener.onFragmentInteraction(uri);
         }
     }
-    @Override
-    public void onAttach(Activity activity) {
-        this.onAttach((Context)activity);
-    }
 
 //    @Override
     public void onAttach(Context context) {
-        super.onAttach((Activity)context);
+        super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         }

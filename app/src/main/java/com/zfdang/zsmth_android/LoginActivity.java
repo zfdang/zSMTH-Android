@@ -46,6 +46,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         // these two variables should be loaded from preference
         String username = "zsmthdev";
         String password = "newsmth2012";
+//        String username = "";
+//        String password = "";
 
         m_userNameEditText = (EditText) findViewById(R.id.username_edit);
         m_userNameEditText.setText(username);

@@ -6,22 +6,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.zfdang.zsmth_android.FavoriteFragment.OnListFragmentInteractionListener;
 import com.zfdang.zsmth_android.models.Board;
 
 import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Board} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
+ * specified {@link OnBoardFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRecyclerViewAdapter.ViewHolder> {
+public class BoardRecyclerViewAdapter extends RecyclerView.Adapter<BoardRecyclerViewAdapter.ViewHolder> {
 
     private final List<Board> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    private final OnBoardFragmentInteractionListener mListener;
 
-    public FavoriteRecyclerViewAdapter(List<Board> items, OnListFragmentInteractionListener listener) {
+    public BoardRecyclerViewAdapter(List<Board> items, OnBoardFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -29,7 +28,7 @@ public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRe
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_favorite_board_item, parent, false);
+                .inflate(R.layout.fragment_board_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -55,7 +54,7 @@ public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRe
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.onBoardFragmentInteraction(holder.mItem);
                 }
             }
         });

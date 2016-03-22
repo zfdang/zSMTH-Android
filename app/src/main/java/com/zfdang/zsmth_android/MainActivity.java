@@ -35,8 +35,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         View.OnClickListener,
         GuidanceFragment.OnListFragmentInteractionListener,
-        FavoriteFragment.OnListFragmentInteractionListener,
-        AllBoardFragment.OnListFragmentInteractionListener,
+        OnBoardFragmentInteractionListener,
         MailFragment.OnListFragmentInteractionListener
 //        SettingFragment.OnFragmentInteractionListener,
 //        AboutFragment.OnFragmentInteractionListener
@@ -45,7 +44,7 @@ public class MainActivity extends AppCompatActivity
     // guidance fragment: display hot topics
     // this fragment is using RecyclerView to show all hot topics
     GuidanceFragment guidanceFragment = null;
-    FavoriteFragment favoriteFragment = null;
+    FavoriteBoardFragment favoriteFragment = null;
     AllBoardFragment allBoardFragment = null;
     MailFragment mailFragment = null;
 
@@ -133,7 +132,7 @@ public class MainActivity extends AppCompatActivity
 
     protected void initFragments() {
         guidanceFragment = new GuidanceFragment();
-        favoriteFragment = new FavoriteFragment();
+        favoriteFragment = new FavoriteBoardFragment();
         allBoardFragment = new AllBoardFragment();
         mailFragment = new MailFragment();
 
@@ -167,7 +166,7 @@ public class MainActivity extends AppCompatActivity
 
             // handle back button for all fragment
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-            if (fragment instanceof FavoriteFragment) {
+            if (fragment instanceof FavoriteBoardFragment) {
                 if(! favoriteFragment.atFavoriteRoot()){
                     favoriteFragment.popFavoritePath();
                     favoriteFragment.RefreshFavoriteBoards();
@@ -323,7 +322,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(Board item) {
+    public void onBoardFragmentInteraction(Board item) {
         // shared by Favorite & allboard
         if(item.isFolder()) {
             favoriteFragment.pushFavoritePath(item.getFolderID(), item.getFolderName());

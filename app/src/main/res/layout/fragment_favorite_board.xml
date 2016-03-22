@@ -10,5 +10,5 @@
                                         android:layout_marginRight="0dp"
                                         android:scrollbars="vertical"
                                         app:layoutManager="LinearLayoutManager"
-                                        tools:context="com.zfdang.zsmth_android.FavoriteFragment"
-                                        tools:listitem="@layout/fragment_favorite_board_item"/>
+                                        tools:context=".FavoriteBoardFragment"
+                                        tools:listitem="@layout/fragment_board_item"/>
