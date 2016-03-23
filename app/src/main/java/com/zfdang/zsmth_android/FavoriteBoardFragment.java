@@ -72,10 +72,7 @@ public class FavoriteBoardFragment extends Fragment {
     }
 
     public boolean atFavoriteRoot() {
-        if(mFavoritePaths != null && mFavoritePaths.size() > 1) {
-            return false;
-        }
-        return true;
+        return !(mFavoritePaths != null && mFavoritePaths.size() > 1);
     }
 
     /**
@@ -130,7 +127,6 @@ public class FavoriteBoardFragment extends Fragment {
 
         if(ListBoardContent.FAVORITE_BOARDS.size() == 0) {
             // only load boards on the first time
-            showLoadingHints();
             RefreshFavoriteBoards();
         }
 
@@ -149,6 +145,7 @@ public class FavoriteBoardFragment extends Fragment {
     }
 
     public void RefreshFavoriteBoards() {
+        showLoadingHints();
         LoadFavoriteBoardsByPath(getCurrentFavoritePath());
     }
 
@@ -184,6 +181,7 @@ public class FavoriteBoardFragment extends Fragment {
 
                     @Override
                     public void onCompleted() {
+                        clearLoadingHints();
                         updateFavoriteTitle();
                     }
 
@@ -200,7 +198,6 @@ public class FavoriteBoardFragment extends Fragment {
                         Log.d(TAG, board.toString());
                     }
                 });
-        return;
     }
 
     private void updateFavoriteTitle(){
