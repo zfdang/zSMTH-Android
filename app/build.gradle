@@ -48,10 +48,9 @@ dependencies {
     // Because RxAndroid releases are few and far between, it is recommended you also
     // explicitly depend on RxJava's latest version for bug fixes and new features.
     compile 'io.reactivex:rxjava:1.1.0'
+    compile 'com.github.maksim88:PasswordEditText:v0.6'
+    compile 'org.jsoup:jsoup:1.8.3'
     //    image cache and guesture imageview
     //    compile 'com.squareup.picasso:picasso:2.5.2'
     //    compile 'com.commit451:PhotoView:1.2.4'
-    compile 'com.github.maksim88:PasswordEditText:v0.6'
-
-    compile 'org.jsoup:jsoup:1.8.3'
 }

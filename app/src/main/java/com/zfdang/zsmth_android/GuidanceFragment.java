@@ -23,7 +23,6 @@ import okhttp3.ResponseBody;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -96,12 +95,12 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
                 mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-            mRecyclerView.setAdapter(new GuidanceRecyclerViewAdapter(GuidanceContent.ITEMS, mListener));
+            mRecyclerView.setAdapter(new GuidanceRecyclerViewAdapter(GuidanceContent.TOPICS, mListener));
         }
 
         getActivity().setTitle(SMTHApplication.App_Title_Prefix + "首页导读");
 
-        if(GuidanceContent.ITEMS.size() == 0){
+        if(GuidanceContent.TOPICS.size() == 0){
             // only refresh guidance when there is no topic available
             MainActivity activity = (MainActivity)getActivity();
             activity.showProgress("获取导读信息...", true);
@@ -123,139 +122,80 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
     }
 
     public void RefreshGuidance() {
-//        RefreshGuidanceFromWWW();
-        RefreshGuidanceFromMobile(0);
+        RefreshGuidanceFromMobile();
     }
 
 
     final String[] SectionName = {"十大", "推荐", "国内院校", "休闲娱乐", "五湖四海", "游戏运动", "社会信息", "知性感性", "文化人文", "学术科学", "电脑技术"};
     final String[] SectionURLPath = {"topTen", "recommend", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
-    public void RefreshGuidanceFromMobile(final int index){
-        // one by one, get all hot topics from mobile site
-        if(index == 0) {
-            // clear current hot topics
-            GuidanceContent.clear();
-            mRecyclerView.getAdapter().notifyDataSetChanged();
-        }
 
-        SMTHHelper helper = SMTHHelper.getInstance();
+    public void RefreshGuidanceFromMobile() {
+        final SMTHHelper helper = SMTHHelper.getInstance();
 
-        if(index < SectionName.length) {
-            // get hot topics for each section
-            Log.d(TAG, "开始获取分区{" + SectionName[index] + "}的热帖...");
-            helper.mService.hotTopicsBySection(SectionURLPath[index])
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .flatMap(new Func1<ResponseBody, Observable<Topic>>() {
-                        @Override
-                        public Observable<Topic> call(ResponseBody responseBody) {
-                            try {
-                                String resp = responseBody.string();
-                                return Observable.from(SMTHHelper.ParseHotTopicsFromMobile(resp));
-                            } catch (Exception e) {
-                                Log.d(TAG, e.toString());
-                                Log.d(TAG, "获取分区{" + SectionName[index] + "}的热帖失败!");
-                                return null;
-                            }
-                        }
-                    })
-                    .subscribe(new Subscriber<Topic>() {
-                        @Override
-                        public void onStart() {
-                            super.onStart();
-                        }
-
-                        @Override
-                        public void onCompleted() {
-                            Log.d(TAG, "获取分区{" + SectionName[index] + "}的热帖完成.");
-                            if (index < SectionURLPath.length - 1) {
-                                RefreshGuidanceFromMobile(index + 1);
-                            } else {
-                                Topic topic = new Topic("-- END --");
-                                GuidanceContent.addItem(topic);
-                                mRecyclerView.getAdapter().notifyItemInserted(GuidanceContent.ITEMS.size());
-
-                                clearLoadingHints();
-
-                                // show finish toast
-                                Toast.makeText(getActivity(), "刷新完成!", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            Log.d(TAG, e.toString());
-                            clearLoadingHints();
-
-                            Toast.makeText(getActivity(), "获取分区{" + SectionName[index] + "}的热帖失败!", Toast.LENGTH_LONG).show();
-                        }
-
-                        @Override
-                        public void onNext(Topic topic) {
-                            Log.d(TAG, topic.toString());
-                            GuidanceContent.addItem(topic);
-                            mRecyclerView.getAdapter().notifyItemInserted(GuidanceContent.ITEMS.size());
-                        }
-                    });
-        }
-
-    }
-
-
-    public void RefreshGuidanceFromWWW(){
-        // clear current hot topics
-        GuidanceContent.ITEMS.clear();
-        GuidanceContent.ITEM_MAP.clear();
-        mRecyclerView.getAdapter().notifyDataSetChanged();
-
-        SMTHHelper helper = SMTHHelper.getInstance();
-        helper.wService.getGuidance()
+        Observable.from(SectionURLPath)
+                .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                // convert ResponseBody to UTF-8 String first
-                .map(new Func1<ResponseBody, String>() {
-                    public String call(ResponseBody response) {
+                .concatMap(new Func1<String, Observable<ResponseBody>>() {
+                    @Override
+                    public Observable<ResponseBody> call(String sectionURL) {
+                        return helper.mService.hotTopicsBySection(sectionURL);
+                    }
+                })
+                .concatMap(new Func1<ResponseBody, Observable<Topic>>() {
+                    @Override
+                    public Observable<Topic> call(ResponseBody responseBody) {
                         try {
-                            String resp = SMTHHelper.DecodeResponseFromWWW(response.bytes());
-                            Log.d(TAG, resp.length()+"");
-                            return resp;
+                            String resp = responseBody.string();
+                            return Observable.from(SMTHHelper.ParseHotTopicsFromMobile(resp));
                         } catch (Exception e) {
+                            Log.d(TAG, e.toString());
+                            Log.d(TAG, "获取热帖失败!");
                             return null;
                         }
                     }
                 })
-                // map String to list of topics
-                .flatMap(new Func1<String, Observable<Topic>>() {
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Topic>() {
                     @Override
-                    public Observable<Topic> call(String s) {
-                        // remove all existed topics
-                        if(s != null && s.length() > 200){
-                            GuidanceContent.clear();
-                            mRecyclerView.getAdapter().notifyDataSetChanged();
-                        }
+                    public void onStart() {
+                        super.onStart();
 
-                        return Observable.from(SMTHHelper.ParseHotTopicsFromWWW(s));
+                        // clear current hot topics
+                        GuidanceContent.clear();
+                        mRecyclerView.getAdapter().notifyDataSetChanged();
                     }
-                })
-                // add topics to guidance recyclerview
-                .subscribe(new Action1<Topic>() {
-                    // onNextAction
+
                     @Override
-                    public void call(Topic topic) {
-                        // add topic into GuidanceContent, and update RecyclerView
+                    public void onCompleted() {
+                        Topic topic = new Topic("-- END --");
+                        GuidanceContent.addItem(topic);
+                        mRecyclerView.getAdapter().notifyItemInserted(GuidanceContent.TOPICS.size() - 1);
+
+                        clearLoadingHints();
+
+                        // show finish toast
+                        Toast.makeText(getActivity(), "刷新完成!", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(TAG, e.toString());
+                        clearLoadingHints();
+
+                        Toast.makeText(getActivity(), "获取热帖失败", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onNext(Topic topic) {
                         Log.d(TAG, topic.toString());
                         GuidanceContent.addItem(topic);
-                        mRecyclerView.getAdapter().notifyItemInserted(GuidanceContent.ITEMS.size());
-                    }
-                }, new Action1<Throwable>() {
-                    // onErrorAction
-                    @Override
-                    public void call(Throwable throwable) {
-                        Log.d(TAG, throwable.toString());
-                        Toast.makeText(getActivity(), "连接错误，请检查网络.", Toast.LENGTH_LONG).show();
+                        mRecyclerView.getAdapter().notifyItemInserted(GuidanceContent.TOPICS.size() - 1);
                     }
                 });
+
+
     }
+
 
     public void clearLoadingHints () {
         // disable progress bar
