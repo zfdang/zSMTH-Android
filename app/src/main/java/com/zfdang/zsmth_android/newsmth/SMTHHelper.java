@@ -24,16 +24,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
+import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * Created by zfdang on 2016-3-16.
  */
 public class SMTHHelper {
 
+    static final private String TAG = "SMTHHelper";
     private OkHttpClient httpClient = null;
 
     // WWW service of SMTH
@@ -57,6 +61,7 @@ public class SMTHHelper {
         return instance;
     }
 
+    // response from WWW is GB2312, we need to conver it to UTF-8
     public static String DecodeResponseFromWWW(byte[] bytes) {
         String result = null;
         try {
@@ -67,7 +72,7 @@ public class SMTHHelper {
         return result;
     }
 
-    // can only be called by getInstance
+    // protected constructor, can only be called by getInstance
     protected SMTHHelper(Context context) {
 
         // set your desired log level
@@ -212,6 +217,7 @@ public class SMTHHelper {
         return results;
     }
 
+
     public static List<Board> ParseFavoriteBoardsFromWWW(String content) {
         List<Board> boards = new ArrayList<Board>();
 
@@ -253,13 +259,62 @@ public class SMTHHelper {
     }
 
 
+    public static Observable<Board> getInnerBoards(Board board) {
+        if(board.isFolder()) {
+            String sectionURL = board.getFolderID();
+//            Log.d(TAG, board.toString() + "==>" + sectionURL);
+            return SMTHHelper.loadBoardsInSectionFromWWW(sectionURL);
+        } else {
+            return Observable.just(board);
+        }
+    }
+
+    public static Observable<Board> loadBoardsInSectionFromWWW(String sectionURL) {
+        return SMTHHelper.getInstance().wService.getBoardsBySection(sectionURL)
+                .flatMap(new Func1<ResponseBody, Observable<Board>>() {
+                    @Override
+                    public Observable<Board> call(ResponseBody responseBody) {
+                        try {
+                            String response = responseBody.string();
+                            List<Board> boards = SMTHHelper.ParseBoardsInSectionFromWWW(response);
+                            return Observable.from(boards);
+
+                        } catch (Exception e) {
+                            Log.d(TAG, e.toString());
+                            return null;
+                        }
+                    }
+                });
+    }
+
+
+    // load all boards from WWW, recursively
+    // http://stackoverflow.com/questions/31246088/how-to-do-recursive-observable-call-in-rxjava
+    public static Observable<Board> LoadAllBoardsFromWWW() {
+        final String[] SectionURLs = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "A"};
+
+        return Observable.from(SectionURLs)
+                .flatMap(new Func1<String, Observable<Board>>() {
+                    @Override
+                    public Observable<Board> call(String sectionURL) {
+                        return SMTHHelper.loadBoardsInSectionFromWWW(sectionURL);
+                    }
+                })
+                .flatMap(new Func1<Board, Observable<Board>>() {
+                    @Override
+                    public Observable<Board> call(Board board) {
+//                        Log.d(TAG, board.toString());
+                        return SMTHHelper.getInnerBoards(board);
+                    }
+                });
+    }
+
+
     public static List<Board> ParseBoardsInSectionFromWWW(String content) {
         List<Board> boards = new ArrayList<Board>();
 
 //        <tr><td class="title_1"><a href="/nForum/section/Association">协会社团</a><br />Association</td><td class="title_2">[二级目录]<br /></td><td class="title_3">&nbsp;</td><td class="title_4 middle c63f">&nbsp;</td><td class="title_5 middle c09f">&nbsp;</td><td class="title_6 middle c63f">&nbsp;</td><td class="title_7 middle c09f">&nbsp;</td></tr>
-//
 //        <tr><td class="title_1"><a href="/nForum/board/BIT">北京理工大学</a><br />BIT</td><td class="title_2"><a href="/nForum/user/query/mahenry">mahenry</a><br /></td><td class="title_3"><a href="/nForum/article/BIT/250116">今年几万斤苹果都滞销了，果农欲哭无泪！</a><br />发贴人:&ensp;jingling6787 日期:&ensp;2016-03-22 09:19:09</td><td class="title_4 middle c63f">11</td><td class="title_5 middle c09f">2</td><td class="title_6 middle c63f">5529</td><td class="title_7 middle c09f">11854</td></tr>
-//
 //        <tr><td class="title_1"><a href="/nForum/board/Orienteering">定向越野</a><br />Orienteering</td><td class="title_2"><a href="/nForum/user/query/onceloved">onceloved</a><br /></td><td class="title_3"><a href="/nForum/article/Orienteering/59193">圆明园定向</a><br />发贴人:&ensp;jiang2000 日期:&ensp;2016-03-19 14:19:10</td><td class="title_4 middle c63f">0</td><td class="title_5 middle c09f">0</td><td class="title_6 middle c63f">4725</td><td class="title_7 middle c09f">18864</td></tr>
 
         Document doc = Jsoup.parse(content);
@@ -310,12 +365,11 @@ public class SMTHHelper {
                     boards.add(board);
                 }
 
-                Log.d("parse", String.format("%s, %s, %s, %s, %s", chsBoardName, engBoardName, folderChsName, folderEngName, moderator));
+//                Log.d("parse", String.format("%s, %s, %s, %s, %s", chsBoardName, engBoardName, folderChsName, folderEngName, moderator));
             }
 
         }
 
         return boards;
     }
-
 }

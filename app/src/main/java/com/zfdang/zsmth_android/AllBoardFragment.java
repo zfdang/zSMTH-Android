@@ -16,13 +16,8 @@ import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.ListBoardContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
-import java.util.List;
-
-import okhttp3.ResponseBody;
-import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -94,7 +89,6 @@ public class AllBoardFragment extends Fragment {
 
         if(ListBoardContent.ALL_BOARDS.size() == 0) {
             // only load boards on the first time
-            showLoadingHints();
             LoadAllBoards();
         }
         return view;
@@ -112,29 +106,22 @@ public class AllBoardFragment extends Fragment {
     }
 
     public void LoadAllBoards () {
-        SMTHHelper helper = SMTHHelper.getInstance();
-        helper.wService.getBoardsBySection("1")
-                .observeOn(Schedulers.io())
+        showLoadingHints();
+
+        // http://stackoverflow.com/questions/26311513/convert-observable-to-list
+//        List<Board> boards = SMTHHelper.LoadAllBoardsFromWWW()
+//                .subscribeOn(Schedulers.io())
+//                .toList().toBlocking().single();
+//        Log.d(TAG, "All Boards" + boards.size());
+
+        SMTHHelper.LoadAllBoardsFromWWW()
                 .subscribeOn(Schedulers.io())
-                .flatMap(new Func1<ResponseBody, Observable<Board>>() {
-                    @Override
-                    public Observable<Board> call(ResponseBody responseBody) {
-                        try {
-                            String response = responseBody.string();
-                            Log.d(TAG, response);
-                            List<Board> boards = SMTHHelper.ParseBoardsInSectionFromWWW(response);
-                            return Observable.from(boards);
-                        } catch (Exception e) {
-                            Log.d(TAG, e.toString());
-                            return null;
-                        }
-                    }
-                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Board>() {
                     @Override
                     public void onStart() {
                         super.onStart();
+                        ListBoardContent.clearAllBoards();
                     }
 
                     @Override
@@ -149,11 +136,12 @@ public class AllBoardFragment extends Fragment {
 
                     @Override
                     public void onNext(Board board) {
-                        ListBoardContent.addAllBoardItem(board);
-                        mRecylerView.getAdapter().notifyItemInserted(ListBoardContent.ALL_BOARDS.size()-1);
                         Log.d(TAG, board.toString());
+                        ListBoardContent.addAllBoardItem(board);
+                        mRecylerView.getAdapter().notifyItemInserted(ListBoardContent.ALL_BOARDS.size() - 1);
                     }
                 });
+
     }
 
 
