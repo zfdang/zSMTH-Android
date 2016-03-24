@@ -127,9 +127,18 @@ public class MainActivity extends AppCompatActivity
                 new FragmentManager.OnBackStackChangedListener() {
                     public void onBackStackChanged() {
                         //Enable Up button only  if there are entries in the back stack
-//                        boolean canback = getSupportFragmentManager().getBackStackEntryCount()>0;
-//                        mToggle.setDrawerIndicatorEnabled(!canback);
-//                        getSupportActionBar().setDisplayHomeAsUpEnabled(canback);
+                        boolean canback = getSupportFragmentManager().getBackStackEntryCount()>0;
+                        if(canback) {
+                            mToggle.setDrawerIndicatorEnabled(false);
+                            getSupportActionBar().setDisplayShowHomeEnabled(true);
+                            getSupportActionBar().setHomeButtonEnabled(true);
+                            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+                        } else {
+                            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                            mToggle.setDrawerIndicatorEnabled(true);
+                            mDrawer.addDrawerListener(mToggle);
+                        }
                     }
                 });
     }
@@ -280,6 +289,9 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.action_logout) {
 
+        } else if (id == android.R.id.home) {
+            this.onBackPressed();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -343,7 +355,6 @@ public class MainActivity extends AppCompatActivity
         if(fragment == hotTopicFragment) {
             // switch fragment
             FragmentManager fm = getSupportFragmentManager();
-            mToggle.setDrawerIndicatorEnabled(false);
             fm.beginTransaction()
                     .replace(R.id.content_frame, postListFragment)
                     .addToBackStack(null)

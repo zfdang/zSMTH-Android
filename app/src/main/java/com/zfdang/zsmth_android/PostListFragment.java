@@ -51,6 +51,10 @@ public class PostListFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
+
+        // needed to indicate that the fragment would
+        // like to add items to the Options Menu
+        setHasOptionsMenu(true);
     }
 
     @Override
