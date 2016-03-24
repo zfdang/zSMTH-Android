@@ -15,8 +15,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.zfdang.SMTHApplication;
-import com.zfdang.zsmth_android.models.GuidanceContent;
+import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
 import com.zfdang.zsmth_android.models.Topic;
+import com.zfdang.zsmth_android.models.TopicListContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
 import okhttp3.ResponseBody;
@@ -30,16 +31,16 @@ import rx.schedulers.Schedulers;
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link OnTopicFragmentInteractionListener}
  * interface.
  */
-public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     private final String TAG = "Guidance Fragment";
 
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
+    private OnTopicFragmentInteractionListener mListener;
 
     private RecyclerView mRecyclerView = null;
     private SwipeRefreshLayout mSwipeRefreshLayout = null;
@@ -48,12 +49,12 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public GuidanceFragment() {
+    public HotTopicFragment() {
     }
 
     @SuppressWarnings("unused")
-    public static GuidanceFragment newInstance(int columnCount) {
-        GuidanceFragment fragment = new GuidanceFragment();
+    public static HotTopicFragment newInstance(int columnCount) {
+        HotTopicFragment fragment = new HotTopicFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -72,7 +73,7 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_guidance, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_hot_topic, container, false);
 
         // http://sapandiwakar.in/pull-to-refresh-for-android-recyclerview-or-any-other-vertically-scrolling-view/
         // pull to refresh for android recyclerview
@@ -95,12 +96,12 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
                 mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-            mRecyclerView.setAdapter(new GuidanceRecyclerViewAdapter(GuidanceContent.TOPICS, mListener));
+            mRecyclerView.setAdapter(new TopicRecyclerViewAdapter(TopicListContent.TOPICS, mListener));
         }
 
         getActivity().setTitle(SMTHApplication.App_Title_Prefix + "首页导读");
 
-        if(GuidanceContent.TOPICS.size() == 0){
+        if(TopicListContent.TOPICS.size() == 0){
             // only refresh guidance when there is no topic available
             MainActivity activity = (MainActivity)getActivity();
             activity.showProgress("获取导读信息...", true);
@@ -160,15 +161,15 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
                         super.onStart();
 
                         // clear current hot topics
-                        GuidanceContent.clear();
+                        TopicListContent.clear();
                         mRecyclerView.getAdapter().notifyDataSetChanged();
                     }
 
                     @Override
                     public void onCompleted() {
                         Topic topic = new Topic("-- END --");
-                        GuidanceContent.addItem(topic);
-                        mRecyclerView.getAdapter().notifyItemInserted(GuidanceContent.TOPICS.size() - 1);
+                        TopicListContent.addItem(topic);
+                        mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.TOPICS.size() - 1);
 
                         clearLoadingHints();
 
@@ -187,8 +188,8 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
                     @Override
                     public void onNext(Topic topic) {
                         Log.d(TAG, topic.toString());
-                        GuidanceContent.addItem(topic);
-                        mRecyclerView.getAdapter().notifyItemInserted(GuidanceContent.TOPICS.size() - 1);
+                        TopicListContent.addItem(topic);
+                        mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.TOPICS.size() - 1);
                     }
                 });
 
@@ -212,11 +213,11 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+        if (context instanceof OnTopicFragmentInteractionListener) {
+            mListener = (OnTopicFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
+                    + " must implement OnTopicFragmentInteractionListener");
         }
     }
 
@@ -224,21 +225,5 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(Topic item);
     }
 }

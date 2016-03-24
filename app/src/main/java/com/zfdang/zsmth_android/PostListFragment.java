@@ -10,8 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.zfdang.zsmth_android.models.Mail;
-import com.zfdang.zsmth_android.models.MailContent;
+import com.zfdang.zsmth_android.models.Post;
+import com.zfdang.zsmth_android.models.PostListContent;
 
 /**
  * A fragment representing a list of Items.
@@ -19,7 +19,7 @@ import com.zfdang.zsmth_android.models.MailContent;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class MailFragment extends Fragment {
+public class PostListFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -31,13 +31,13 @@ public class MailFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public MailFragment() {
+    public PostListFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static MailFragment newInstance(int columnCount) {
-        MailFragment fragment = new MailFragment();
+    public static PostListFragment newInstance(int columnCount) {
+        PostListFragment fragment = new PostListFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -56,7 +56,7 @@ public class MailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_mail, container, false);
+        View view = inflater.inflate(R.layout.fragment_post_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -67,8 +67,10 @@ public class MailFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MailRecyclerViewAdapter(MailContent.ITEMS, mListener));
+            recyclerView.setAdapter(new PostRecyclerViewAdapter(PostListContent.ITEMS, mListener));
         }
+
+//        setHasOptionsMenu(true);
         return view;
     }
 
@@ -102,6 +104,6 @@ public class MailFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(Mail item);
+        void onListFragmentInteraction(Post item);
     }
 }

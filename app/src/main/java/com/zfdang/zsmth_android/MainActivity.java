@@ -25,8 +25,11 @@ import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.listeners.OnBoardFragmentInteractionListener;
+import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.Mail;
+import com.zfdang.zsmth_android.models.Post;
 import com.zfdang.zsmth_android.models.Topic;
 
 import java.lang.reflect.Field;
@@ -34,19 +37,21 @@ import java.lang.reflect.Field;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         View.OnClickListener,
-        GuidanceFragment.OnListFragmentInteractionListener,
+        OnTopicFragmentInteractionListener,
         OnBoardFragmentInteractionListener,
-        MailFragment.OnListFragmentInteractionListener
+        MailListFragment.OnListFragmentInteractionListener,
+        PostListFragment.OnListFragmentInteractionListener
 //        SettingFragment.OnFragmentInteractionListener,
 //        AboutFragment.OnFragmentInteractionListener
 {
 
     // guidance fragment: display hot topics
     // this fragment is using RecyclerView to show all hot topics
-    GuidanceFragment guidanceFragment = null;
-    FavoriteBoardFragment favoriteFragment = null;
+    HotTopicFragment hotTopicFragment = null;
+    FavoriteBoardFragment favoriteBoardFragment = null;
     AllBoardFragment allBoardFragment = null;
-    MailFragment mailFragment = null;
+    PostListFragment postListFragment = null;
+    MailListFragment mailListFragment = null;
 
     SettingFragment settingFragment = null;
     AboutFragment aboutFragment = null;
@@ -59,6 +64,7 @@ public class MainActivity extends AppCompatActivity
     private TextView mUsername = null;
 
     private DrawerLayout mDrawer = null;
+    private  ActionBarDrawerToggle mToggle = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,10 +89,10 @@ public class MainActivity extends AppCompatActivity
         });
 
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        mToggle = new ActionBarDrawerToggle(
                 this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawer.addDrawerListener(toggle);
-        toggle.syncState();
+        mDrawer.addDrawerListener(mToggle);
+        mToggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -115,7 +121,17 @@ public class MainActivity extends AppCompatActivity
         initFragments();
 
         FragmentManager fm = getSupportFragmentManager();
-        fm.beginTransaction().replace(R.id.content_frame, guidanceFragment).commit();
+        fm.beginTransaction().replace(R.id.content_frame, hotTopicFragment).commit();
+
+        getSupportFragmentManager().addOnBackStackChangedListener(
+                new FragmentManager.OnBackStackChangedListener() {
+                    public void onBackStackChanged() {
+                        //Enable Up button only  if there are entries in the back stack
+//                        boolean canback = getSupportFragmentManager().getBackStackEntryCount()>0;
+//                        mToggle.setDrawerIndicatorEnabled(!canback);
+//                        getSupportActionBar().setDisplayHomeAsUpEnabled(canback);
+                    }
+                });
     }
 
     @Override
@@ -131,10 +147,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     protected void initFragments() {
-        guidanceFragment = new GuidanceFragment();
-        favoriteFragment = new FavoriteBoardFragment();
+        hotTopicFragment = new HotTopicFragment();
+
+        // following initilization can be delayed
+        favoriteBoardFragment = new FavoriteBoardFragment();
         allBoardFragment = new AllBoardFragment();
-        mailFragment = new MailFragment();
+        mailListFragment = new MailListFragment();
+        postListFragment = new PostListFragment();
 
         settingFragment = new SettingFragment();
         aboutFragment = new AboutFragment();
@@ -162,21 +181,24 @@ public class MainActivity extends AppCompatActivity
     public void onBackPressed() {
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
             mDrawer.closeDrawer(GravityCompat.START);
-        } else {
-
-            // handle back button for all fragment
-            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-            if (fragment instanceof FavoriteBoardFragment) {
-                if(! favoriteFragment.atFavoriteRoot()){
-                    favoriteFragment.popFavoritePath();
-                    favoriteFragment.RefreshFavoriteBoards();
-                    return;
-                }
-            }
-
-            // for other cases, double back to exit app
-            DoubleBackToExit();
+            return;
         }
+
+        // handle back button for all fragment
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+        if (fragment instanceof FavoriteBoardFragment) {
+            if (!favoriteBoardFragment.atFavoriteRoot()) {
+                favoriteBoardFragment.popFavoritePath();
+                favoriteBoardFragment.RefreshFavoriteBoards();
+                return;
+            }
+        } else if (fragment instanceof PostListFragment) {
+            super.onBackPressed();
+            return;
+        }
+        // for other cases, double back to exit app
+        DoubleBackToExit();
+
     }
 
 
@@ -273,16 +295,16 @@ public class MainActivity extends AppCompatActivity
         String title = "";
 
         if (id == R.id.nav_guidance) {
-            fragment = guidanceFragment;
+            fragment = hotTopicFragment;
             title = "首页导读";
         } else if (id == R.id.nav_favorite) {
-            fragment = favoriteFragment;
+            fragment = favoriteBoardFragment;
             title = "收藏夹";
         } else if (id == R.id.nav_all_boards) {
             fragment = allBoardFragment;
             title = "所有版面";
         } else if (id == R.id.nav_mail) {
-            fragment = mailFragment;
+            fragment = mailListFragment;
             title = "邮件";
         } else if (id == R.id.nav_setting) {
             fragment = settingFragment;
@@ -315,27 +337,39 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(Topic item) {
-        // Guidance Fragment
-        Log.d("MainActivity", item.getTitle() + "is clicked");
-        Toast.makeText(this, item.getTitle() + " is clicked", Toast.LENGTH_LONG).show();
+    public void onTopicFragmentInteraction(Topic item) {
+        // shared by HotTopicFragment or BoardTopicFragment
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+        if(fragment == hotTopicFragment) {
+            // switch fragment
+            FragmentManager fm = getSupportFragmentManager();
+            mToggle.setDrawerIndicatorEnabled(false);
+            fm.beginTransaction()
+                    .replace(R.id.content_frame, postListFragment)
+                    .addToBackStack(null)
+                    .commit();
+            setTitle(SMTHApplication.App_Title_Prefix + item.getBoardName());
+
+        } else {
+            Log.d("MainActivity", item.getTitle() + "is clicked");
+            Toast.makeText(this, item.getTitle() + " is clicked", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
     public void onListFragmentInteraction(Mail item) {
-        // MailFragment
+        // MailListFragment
         Toast.makeText(this, item.toString() + " is clicked", Toast.LENGTH_LONG).show();
-
     }
 
     @Override
     public void onBoardFragmentInteraction(Board item) {
-        // shared by Favorite & allboard
+        // shared by FavoriteBoard & AllBoard fragment
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        if(fragment == favoriteFragment) {
+        if(fragment == favoriteBoardFragment) {
             if(item.isFolder()) {
-                favoriteFragment.pushFavoritePath(item.getFolderID(), item.getFolderName());
-                favoriteFragment.RefreshFavoriteBoards();
+                favoriteBoardFragment.pushFavoritePath(item.getFolderID(), item.getFolderName());
+                favoriteBoardFragment.RefreshFavoriteBoards();
             } else {
                 Toast.makeText(this, item.toString() + " is clicked", Toast.LENGTH_LONG).show();
             }
@@ -344,4 +378,11 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(this, item.toString() + " is clicked", Toast.LENGTH_LONG).show();
         }
     }
+
+    @Override
+    public void onListFragmentInteraction(Post item) {
+        // PostListFragment
+        Toast.makeText(this, item.toString() + " is clicked", Toast.LENGTH_LONG).show();
+    }
+
 }

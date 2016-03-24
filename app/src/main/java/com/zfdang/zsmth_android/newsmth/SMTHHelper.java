@@ -10,8 +10,7 @@ import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.models.Board;
-import com.zfdang.zsmth_android.models.BoardSection;
-import com.zfdang.zsmth_android.models.ListBoardContent;
+import com.zfdang.zsmth_android.models.BoardListContent;
 import com.zfdang.zsmth_android.models.Topic;
 
 import org.jsoup.Jsoup;
@@ -351,7 +350,7 @@ public class SMTHHelper {
                 .toList().toBlocking().single();
 
         // sort the board list by chinese name
-        Collections.sort(boards, new ListBoardContent.ChineseComparator());
+        Collections.sort(boards, new BoardListContent.ChineseComparator());
         Log.d("LoadAllBoardsFromWWW", String.format("%d boards loaded from network", boards.size()));
 
         // save boards to disk

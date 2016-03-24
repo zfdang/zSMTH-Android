@@ -11,7 +11,7 @@ import java.util.Locale;
 /**
  * this class is used by FavoriteRecylerViewAdapter & AllBoardRecylerViewAdapter
  */
-public class ListBoardContent {
+public class BoardListContent {
 
     // used by FavoriteBoardFragment
     public static final List<Board> FAVORITE_BOARDS = new ArrayList<>();
@@ -37,7 +37,7 @@ public class ListBoardContent {
 
     public static void sortAllBoardItem() {
         // sort boards by chinese name
-        Collections.sort(ALL_BOARDS, new ListBoardContent.ChineseComparator());
+        Collections.sort(ALL_BOARDS, new BoardListContent.ChineseComparator());
     }
 
     public static void clearFavorites() {

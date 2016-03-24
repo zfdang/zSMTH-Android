@@ -6,38 +6,39 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.zfdang.zsmth_android.MailListFragment.OnListFragmentInteractionListener;
-import com.zfdang.zsmth_android.models.Mail;
+import com.zfdang.zsmth_android.PostListFragment.OnListFragmentInteractionListener;
+import com.zfdang.zsmth_android.models.Post;
 
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link Mail} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link Post} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerViewAdapter.ViewHolder> {
+public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Mail> mValues;
+    private final List<Post> mPosts;
     private final OnListFragmentInteractionListener mListener;
 
-    public MailRecyclerViewAdapter(List<Mail> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+    public PostRecyclerViewAdapter(List<Post> items, OnListFragmentInteractionListener listener) {
+        mPosts = items;
         mListener = listener;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_mail_item, parent, false);
+                .inflate(R.layout.fragment_post_list_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        Post post = mPosts.get(position);
+        holder.mItem = post;
+        holder.mIdView.setText(post.getSubjectID());
+        holder.mContentView.setText(post.getTitle());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,14 +54,14 @@ public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerVi
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return mPosts.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public Mail mItem;
+        public Post mItem;
 
         public ViewHolder(View view) {
             super(view);

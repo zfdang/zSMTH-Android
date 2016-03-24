@@ -6,21 +6,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.zfdang.zsmth_android.GuidanceFragment.OnListFragmentInteractionListener;
+import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
 import com.zfdang.zsmth_android.models.Topic;
+
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link Topic} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
+ * used by HotTopicFragment & BoardTopicFragment
  */
-public class GuidanceRecyclerViewAdapter extends RecyclerView.Adapter<GuidanceRecyclerViewAdapter.ViewHolder> {
+public class TopicRecyclerViewAdapter extends RecyclerView.Adapter<TopicRecyclerViewAdapter.ViewHolder> {
 
     private final List<Topic> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    private final OnTopicFragmentInteractionListener mListener;
 
-    public GuidanceRecyclerViewAdapter(List<Topic> items, OnListFragmentInteractionListener listener) {
+    public TopicRecyclerViewAdapter(List<Topic> items, OnTopicFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -28,7 +27,7 @@ public class GuidanceRecyclerViewAdapter extends RecyclerView.Adapter<GuidanceRe
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_guidance_topic_item, parent, false);
+                .inflate(R.layout.fragment_hot_topic_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -62,7 +61,7 @@ public class GuidanceRecyclerViewAdapter extends RecyclerView.Adapter<GuidanceRe
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.onTopicFragmentInteraction(holder.mItem);
                 }
             }
         });

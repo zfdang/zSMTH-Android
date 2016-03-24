@@ -11,8 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.zfdang.zsmth_android.listeners.OnBoardFragmentInteractionListener;
 import com.zfdang.zsmth_android.models.Board;
-import com.zfdang.zsmth_android.models.ListBoardContent;
+import com.zfdang.zsmth_android.models.BoardListContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
 import java.util.ArrayList;
@@ -122,10 +123,10 @@ public class FavoriteBoardFragment extends Fragment {
             } else {
                 mRecylerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            mRecylerView.setAdapter(new BoardRecyclerViewAdapter(ListBoardContent.FAVORITE_BOARDS, mListener));
+            mRecylerView.setAdapter(new BoardRecyclerViewAdapter(BoardListContent.FAVORITE_BOARDS, mListener));
         }
 
-        if(ListBoardContent.FAVORITE_BOARDS.size() == 0) {
+        if(BoardListContent.FAVORITE_BOARDS.size() == 0) {
             // only load boards on the first time
             RefreshFavoriteBoards();
         }
@@ -174,7 +175,7 @@ public class FavoriteBoardFragment extends Fragment {
                     public void onStart() {
 
                         super.onStart();
-                        ListBoardContent.clearFavorites();
+                        BoardListContent.clearFavorites();
                         mRecylerView.getAdapter().notifyDataSetChanged();
                     }
 
@@ -192,8 +193,8 @@ public class FavoriteBoardFragment extends Fragment {
 
                     @Override
                     public void onNext(Board board) {
-                        ListBoardContent.addFavoriteItem(board);
-                        mRecylerView.getAdapter().notifyItemInserted(ListBoardContent.FAVORITE_BOARDS.size());
+                        BoardListContent.addFavoriteItem(board);
+                        mRecylerView.getAdapter().notifyItemInserted(BoardListContent.FAVORITE_BOARDS.size());
                         Log.d(TAG, board.toString());
                     }
                 });

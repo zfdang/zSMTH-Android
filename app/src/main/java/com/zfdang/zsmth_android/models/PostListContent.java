@@ -11,44 +11,48 @@ import java.util.Map;
  * <p/>
  * TODO: Replace all uses of this class before publishing your app.
  */
-public class MailContent {
+public class PostListContent {
 
     /**
      * An array of sample (dummy) items.
      */
-    public static final List<Mail> ITEMS = new ArrayList<Mail>();
+    public static final List<Post> ITEMS = new ArrayList<Post>();
 
     /**
      * A map of sample (dummy) items, by ID.
      */
-    public static final Map<String, Mail> ITEM_MAP = new HashMap<String, Mail>();
+    public static final Map<String, Post> ITEM_MAP = new HashMap<String, Post>();
 
     private static final int COUNT = 25;
 
     static {
         // Add some sample items.
         for (int i = 1; i <= COUNT; i++) {
-            addItem(createMail(i));
+            addItem(createPost(i));
         }
     }
 
-    private static void addItem(Mail item) {
+    private static void addItem(Post item) {
         ITEMS.add(item);
-        ITEM_MAP.put(item.id, item);
+        ITEM_MAP.put(item.getSubjectID(), item);
     }
 
-    private static Mail createMail(int position) {
-        return new Mail(String.valueOf(position), "Mail " + position, makeDetails(position));
+    private static Post createPost(int position) {
+        Post post = new Post();
+        post.setSubjectID(String.format("Post %d", position));
+        post.setTitle("hello  world");
+        post.setAuthor("authoer");
+        return post;
+
     }
 
     private static String makeDetails(int position) {
         StringBuilder builder = new StringBuilder();
-        builder.append("Details about Mail: ").append(position);
+        builder.append("Details about Item: ").append(position);
         for (int i = 0; i < position; i++) {
             builder.append("\nMore details information here.");
         }
         return builder.toString();
     }
-
-
+    
 }

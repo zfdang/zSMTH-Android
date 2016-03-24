@@ -12,8 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
+import com.zfdang.zsmth_android.listeners.OnBoardFragmentInteractionListener;
 import com.zfdang.zsmth_android.models.Board;
-import com.zfdang.zsmth_android.models.ListBoardContent;
+import com.zfdang.zsmth_android.models.BoardListContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
 import java.util.List;
@@ -81,7 +82,7 @@ public class AllBoardFragment extends Fragment {
         } else {
             mRecylerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
-        mRecylerView.setAdapter(new BoardRecyclerViewAdapter(ListBoardContent.ALL_BOARDS, mListener));
+        mRecylerView.setAdapter(new BoardRecyclerViewAdapter(BoardListContent.ALL_BOARDS, mListener));
 
         mSearchView = (SearchView) view.findViewById(R.id.all_board_search);
         mSearchView.setIconifiedByDefault(false);
@@ -91,7 +92,7 @@ public class AllBoardFragment extends Fragment {
             mSearchView.setOnQueryTextListener(mQueryListner);
         }
 
-        if(ListBoardContent.ALL_BOARDS.size() == 0) {
+        if(BoardListContent.ALL_BOARDS.size() == 0) {
             // only load boards on the first time
             LoadAllBoards();
         }
@@ -160,7 +161,7 @@ public class AllBoardFragment extends Fragment {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        ListBoardContent.clearAllBoards();
+                        BoardListContent.clearAllBoards();
                         mRecylerView.getAdapter().notifyDataSetChanged();
                     }
 
@@ -177,8 +178,8 @@ public class AllBoardFragment extends Fragment {
                     @Override
                     public void onNext(Board board) {
                         Log.d(TAG, board.toString());
-                        ListBoardContent.addAllBoardItem(board);
-                        mRecylerView.getAdapter().notifyItemInserted(ListBoardContent.ALL_BOARDS.size() - 1);
+                        BoardListContent.addAllBoardItem(board);
+                        mRecylerView.getAdapter().notifyItemInserted(BoardListContent.ALL_BOARDS.size() - 1);
                     }
                 });
 

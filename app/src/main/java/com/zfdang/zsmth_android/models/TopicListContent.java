@@ -3,16 +3,15 @@ package com.zfdang.zsmth_android.models;
 import java.util.ArrayList;
 import java.util.List;
 
+// this ca
 /**
- * Helper class for providing sample content for user interfaces created by
+ * this class is shared by HotTopicFragment & BoardTopicFragment
  * Android template wizards.
- * <p/>
- * TODO: Replace all uses of this class before publishing your app.
  */
-public class GuidanceContent {
+public class TopicListContent {
+
 
     public static final List<Topic> TOPICS = new ArrayList<Topic>();
-
 
     public static void addItem(Topic item) {
         TOPICS.add(item);

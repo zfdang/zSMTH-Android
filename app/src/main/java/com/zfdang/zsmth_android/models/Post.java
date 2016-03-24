@@ -1,8 +1,8 @@
 package com.zfdang.zsmth_android.models;
+import android.text.Html;
+
 import java.util.ArrayList;
 import java.util.Date;
-
-import android.text.Html;
 
 /**
  * Created by zfdang on 2016-3-14.
@@ -26,11 +26,6 @@ public class Post {
 
     public Post() {
         date = new Date();
-    }
-
-    @Override
-    public String toString() {
-        return this.content.toString();
     }
 
     public String getSubjectID() {
@@ -118,4 +113,19 @@ public class Post {
         this.attachFiles = attachFiles;
     }
 
+    @Override
+    public String toString() {
+        return "Post{" +
+                "subjectID='" + subjectID + '\'' +
+                ", topicSubjectID='" + topicSubjectID + '\'' +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", board='" + board + '\'' +
+                ", boardID='" + boardID + '\'' +
+                ", date=" + date +
+                ", index='" + index + '\'' +
+                ", content=" + content +
+                ", attachFiles=" + attachFiles +
+                '}';
+    }
 }

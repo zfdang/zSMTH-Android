@@ -11,47 +11,44 @@ import java.util.Map;
  * <p/>
  * TODO: Replace all uses of this class before publishing your app.
  */
-public class BoardTopicContent {
+public class MailListContent {
 
     /**
      * An array of sample (dummy) items.
      */
-    public static final List<Topic> ITEMS = new ArrayList<Topic>();
+    public static final List<Mail> ITEMS = new ArrayList<Mail>();
 
     /**
      * A map of sample (dummy) items, by ID.
      */
-    public static final Map<String, Topic> ITEM_MAP = new HashMap<String, Topic>();
+    public static final Map<String, Mail> ITEM_MAP = new HashMap<String, Mail>();
 
     private static final int COUNT = 25;
 
     static {
         // Add some sample items.
         for (int i = 1; i <= COUNT; i++) {
-            addItem(createTopic(i));
+            addItem(createMail(i));
         }
     }
 
-    private static void addItem(Topic item) {
+    private static void addItem(Mail item) {
         ITEMS.add(item);
-        ITEM_MAP.put(item.getTitle(), item);
+        ITEM_MAP.put(item.id, item);
     }
 
-    private static Topic createTopic(int position) {
-        Topic topic = new Topic();
-        topic.setAuthor("mozilla");
-        topic.setTitle("热帖" + position);
-        topic.setBoardChsName("版" + position);
-        return topic;
+    private static Mail createMail(int position) {
+        return new Mail(String.valueOf(position), "Mail " + position, makeDetails(position));
     }
 
     private static String makeDetails(int position) {
         StringBuilder builder = new StringBuilder();
-        builder.append("Details about Item: ").append(position);
+        builder.append("Details about Mail: ").append(position);
         for (int i = 0; i < position; i++) {
             builder.append("\nMore details information here.");
         }
         return builder.toString();
     }
+
 
 }
