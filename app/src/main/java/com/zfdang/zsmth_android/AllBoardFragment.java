@@ -16,6 +16,9 @@ import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.ListBoardContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
+import java.util.List;
+
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
@@ -98,7 +101,7 @@ public class AllBoardFragment extends Fragment {
 
     public void showLoadingHints() {
         MainActivity activity = (MainActivity)getActivity();
-        activity.showProgress("加载所有版面列表，请等待...", true);
+        activity.showProgress("从缓存或网络加载所有版面，请耐心等待...", true);
     }
 
     public void clearLoadingHints () {
@@ -107,20 +110,48 @@ public class AllBoardFragment extends Fragment {
         activity.showProgress("", false);
     }
 
+    public void LoadAllBoardsWithoutCache() {
+        SMTHHelper.ClearAllBoardCache();
+        LoadAllBoards();
+    }
+
     public void LoadAllBoards () {
         showLoadingHints();
 
-        // http://stackoverflow.com/questions/26311513/convert-observable-to-list
-//        List<Board> boards = SMTHHelper.LoadAllBoardsFromWWW()
-//                .subscribeOn(Schedulers.io())
-//                .toList().toBlocking().single();
-//        Log.d(TAG, "All Boards" + boards.size());
+        // all boards loaded in cached file
+        final Observable<List<Board>> cache = Observable.create(new Observable.OnSubscribe<List<Board>>() {
+            @Override
+            public void call(Subscriber<? super List<Board>> subscriber) {
+                List<Board> boards = SMTHHelper.LoadAllBoardFromCache();
+                if(boards != null && boards.size() > 0) {
+                    subscriber.onNext(boards);
+                } else {
+                    subscriber.onCompleted();
+                }
+            }
+        });
 
-        SMTHHelper.LoadAllBoardsFromWWW()
-                .filter(new Func1<Board, Boolean>() {
+        // all boards loaded from network
+        final Observable<List<Board>> network = Observable.create(new Observable.OnSubscribe<List<Board>>() {
+            @Override
+            public void call(Subscriber<? super List<Board>> subscriber) {
+                List<Board> boards =  SMTHHelper.LoadAllBoardsFromWWW();
+                if(boards != null && boards.size() > 0) {
+                    subscriber.onNext(boards);
+                } else {
+                    subscriber.onCompleted();
+                }
+            }
+        });
+
+
+        // use the first available source to load all boards
+        Observable.concat(cache, network)
+                .first()
+                .flatMap(new Func1<List<Board>, Observable<Board>>() {
                     @Override
-                    public Boolean call(Board board) {
-                        return !board.isFolder();
+                    public Observable<Board> call(List<Board> boards) {
+                        return Observable.from(boards);
                     }
                 })
                 .subscribeOn(Schedulers.io())
@@ -130,14 +161,11 @@ public class AllBoardFragment extends Fragment {
                     public void onStart() {
                         super.onStart();
                         ListBoardContent.clearAllBoards();
+                        mRecylerView.getAdapter().notifyDataSetChanged();
                     }
 
                     @Override
                     public void onCompleted() {
-                        // sort all boards
-                        ListBoardContent.sortAllBoardItem();
-                        mRecylerView.getAdapter().notifyDataSetChanged();
-
                         clearLoadingHints();
                     }
 

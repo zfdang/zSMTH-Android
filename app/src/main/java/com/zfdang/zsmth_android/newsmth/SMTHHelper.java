@@ -11,6 +11,7 @@ import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersisto
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.BoardSection;
+import com.zfdang.zsmth_android.models.ListBoardContent;
 import com.zfdang.zsmth_android.models.Topic;
 
 import org.jsoup.Jsoup;
@@ -18,8 +19,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -52,6 +58,9 @@ public class SMTHHelper {
     private Retrofit wRetrofit = null;
     public SMTHMobileService mService = null;
 
+    // All boards cache file
+    static private final String ALL_BOARD_CACHE_FILE = "SMTH_ALL_BOARDS_CACHE";
+
     // singleton
     private static SMTHHelper instance = null;
 
@@ -78,7 +87,7 @@ public class SMTHHelper {
 
         // set your desired log level
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
 
         // https://github.com/franmontiel/PersistentCookieJar
         // A persistent CookieJar implementation for OkHttp 3 based on SharedPreferences.
@@ -263,9 +272,51 @@ public class SMTHHelper {
     * All Boards related methods
     * Starts here
      */
+
+    public static List<Board> LoadAllBoardFromCache(){
+        List<Board> boards = new ArrayList<>();
+        try {
+            FileInputStream is = SMTHApplication.getAppContext().openFileInput(ALL_BOARD_CACHE_FILE);
+            ObjectInputStream ois = new ObjectInputStream(is);
+            boards = (ArrayList<Board>) ois.readObject();
+            is.close();
+            Log.d("LoadAllBoardFromCache", String.format("%d boards loaded from cache file", boards.size()));
+        } catch (Exception e) {
+            Log.d("LoadAllBoardFromCache", e.toString());
+            Log.d("LoadAllBoardFromCache", "failed to load boards from cache");
+        }
+        return boards;
+    }
+
+    public static void SaveAllBoardToCache(List<Board> boards){
+        try {
+            FileOutputStream fos = SMTHApplication.getAppContext().openFileOutput(ALL_BOARD_CACHE_FILE, Context.MODE_PRIVATE);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(boards);
+            fos.close();
+            Log.d("SaveAllBoardToCache", String.format("%d boards saved to cache file", boards.size()));
+        } catch (Exception e) {
+            Log.d("SaveAllBoardToCache", e.toString());
+            Log.d("SaveAllBoardToCache", "failed to save boards to cache file");
+        }
+    }
+
+    public static void ClearAllBoardCache() {
+        try{
+            if(SMTHApplication.getAppContext().deleteFile(ALL_BOARD_CACHE_FILE))
+            {
+                Log.d("ClearAllBoardCache", "delete all_boards cache file successfully");
+                return;
+            }
+        } catch (Exception e) {
+            Log.d("ClearAllBoardCache", e.toString());
+        }
+        Log.d("ClearAllBoardCache", "Failed to delete all_boards cache file");
+    }
+
     // load all boards from WWW, recursively
     // http://stackoverflow.com/questions/31246088/how-to-do-recursive-observable-call-in-rxjava
-    public static Observable<Board> LoadAllBoardsFromWWW() {
+    public static List<Board> LoadAllBoardsFromWWW() {
         final String[] SectionNames = {"社区管理", "国内院校", "休闲娱乐", "五湖四海", "游戏运动", "社会信息", "知性感性", "文化人文", "学术科学", "电脑技术", "终止版面"};
         final String[] SectionURLs = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A"};
         final List<BoardSection> sections = new ArrayList<>();
@@ -276,7 +327,7 @@ public class SMTHHelper {
             sections.add(section);
         }
 
-        return Observable.from(sections)
+        List<Board>  boards = Observable.from(sections)
                 .flatMap(new Func1<BoardSection, Observable<Board>>() {
                     @Override
                     public Observable<Board> call(BoardSection section) {
@@ -286,10 +337,27 @@ public class SMTHHelper {
                 .flatMap(new Func1<Board, Observable<Board>>() {
                     @Override
                     public Observable<Board> call(Board board) {
-//                        Log.d(TAG, board.toString());
                         return SMTHHelper.loadChildBoardsRecursivelyFromWWW(board);
                     }
-                });
+                })
+                .filter(new Func1<Board, Boolean>() {
+                    @Override
+                    public Boolean call(Board board) {
+                        // keep board only
+                        return !board.isFolder();
+                    }
+                })
+                // http://stackoverflow.com/questions/26311513/convert-observable-to-list
+                .toList().toBlocking().single();
+
+        // sort the board list by chinese name
+        Collections.sort(boards, new ListBoardContent.ChineseComparator());
+        Log.d("LoadAllBoardsFromWWW", String.format("%d boards loaded from network", boards.size()));
+
+        // save boards to disk
+        SaveAllBoardToCache(boards);
+
+        return boards;
     }
 
     public static Observable<Board> loadChildBoardsRecursivelyFromWWW(Board board) {

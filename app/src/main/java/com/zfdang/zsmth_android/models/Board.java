@@ -10,6 +10,9 @@ import java.io.ObjectOutput;
  */
 public class Board implements Externalizable{
 
+    // for Externalizable
+    static final long serialVersionUID = 20160322L;
+
     // 具体的版面
     // http://www.newsmth.net/nForum/#!board/DrivingStudy
     private String boardID;
@@ -24,6 +27,10 @@ public class Board implements Externalizable{
     private String folderName;  // 汽车
     private String folderID;    // Automobile
 
+    // http://stackoverflow.com/questions/21966784/reading-object-from-file-throws-illegalaccessexception
+    // used by readObject
+    public Board(){
+    }
 
     public Board(String id, String chsName, String enName) {
         isFolder = false;

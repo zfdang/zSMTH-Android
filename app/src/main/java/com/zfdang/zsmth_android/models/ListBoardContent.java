@@ -36,19 +36,8 @@ public class ListBoardContent {
 
 
     public static void sortAllBoardItem() {
-        // remove pure sections, and only boards are kept
-//        List<Board> temp = new ArrayList<>(ALL_BOARDS);
-//        for (Board board: temp ) {
-//            if(board.getBoardChsName() == null || board.getBoardEngName() == null) {
-//                Log.d("ListBoardContent", board.toString());
-//            }
-//            if(board.isFolder()) {
-//                ALL_BOARDS.remove(board);
-//            }
-//        }
-
         // sort boards by chinese name
-        Collections.sort(ALL_BOARDS, new ChineseComparator());
+        Collections.sort(ALL_BOARDS, new ListBoardContent.ChineseComparator());
     }
 
     public static void clearFavorites() {
