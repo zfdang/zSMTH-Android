@@ -10,6 +10,7 @@ import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.models.Board;
+import com.zfdang.zsmth_android.models.BoardSection;
 import com.zfdang.zsmth_android.models.Topic;
 
 import org.jsoup.Jsoup;
@@ -110,7 +111,7 @@ public class SMTHHelper {
     // http://m.newsmth.net/hot/topTen
     // http://m.newsmth.net/hot/1
     public static List<Topic> ParseHotTopicsFromMobile(String content) {
-        List<Topic> results = new ArrayList<Topic>();
+        List<Topic> results = new ArrayList<>();
         if (content == null) {
             return results;
         }
@@ -149,7 +150,7 @@ public class SMTHHelper {
 
     // parse guidance page, to find all hot topics
     public static List<Topic> ParseHotTopicsFromWWW(String content) {
-        List<Topic> results = new ArrayList<Topic>();
+        List<Topic> results = new ArrayList<>();
         if (content == null) {
             return results;
         }
@@ -219,7 +220,7 @@ public class SMTHHelper {
 
 
     public static List<Board> ParseFavoriteBoardsFromWWW(String content) {
-        List<Board> boards = new ArrayList<Board>();
+        List<Board> boards = new ArrayList<>();
 
 //        o.f(1,'favFolder1 ',0,'');
 //        o.o(false,1,896,22556,'[站务]','Advice','水木发展','SYSOP',7026,895,4);
@@ -258,25 +259,62 @@ public class SMTHHelper {
         return boards;
     }
 
+    /*
+    * All Boards related methods
+    * Starts here
+     */
+    // load all boards from WWW, recursively
+    // http://stackoverflow.com/questions/31246088/how-to-do-recursive-observable-call-in-rxjava
+    public static Observable<Board> LoadAllBoardsFromWWW() {
+        final String[] SectionNames = {"社区管理", "国内院校", "休闲娱乐", "五湖四海", "游戏运动", "社会信息", "知性感性", "文化人文", "学术科学", "电脑技术", "终止版面"};
+        final String[] SectionURLs = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A"};
+        final List<BoardSection> sections = new ArrayList<>();
+        for(int index = 0; index < SectionNames.length; index ++) {
+            BoardSection section = new BoardSection();
+            section.sectionURL = SectionURLs[index];
+            section.sectionName = SectionNames[index];
+            sections.add(section);
+        }
 
-    public static Observable<Board> getInnerBoards(Board board) {
+        return Observable.from(sections)
+                .flatMap(new Func1<BoardSection, Observable<Board>>() {
+                    @Override
+                    public Observable<Board> call(BoardSection section) {
+                        return SMTHHelper.loadBoardsInSectionFromWWW(section);
+                    }
+                })
+                .flatMap(new Func1<Board, Observable<Board>>() {
+                    @Override
+                    public Observable<Board> call(Board board) {
+//                        Log.d(TAG, board.toString());
+                        return SMTHHelper.loadChildBoardsRecursivelyFromWWW(board);
+                    }
+                });
+    }
+
+    public static Observable<Board> loadChildBoardsRecursivelyFromWWW(Board board) {
         if(board.isFolder()) {
-            String sectionURL = board.getFolderID();
-//            Log.d(TAG, board.toString() + "==>" + sectionURL);
-            return SMTHHelper.loadBoardsInSectionFromWWW(sectionURL);
+            BoardSection section = new BoardSection();
+            section.sectionURL = board.getFolderID();
+            section.sectionName = board.getFolderName();
+            section.parentName = board.getCategoryName();
+
+            return SMTHHelper.loadBoardsInSectionFromWWW(section);
         } else {
             return Observable.just(board);
         }
     }
 
-    public static Observable<Board> loadBoardsInSectionFromWWW(String sectionURL) {
+
+    public static Observable<Board> loadBoardsInSectionFromWWW(final BoardSection section) {
+        String sectionURL = section.sectionURL;
         return SMTHHelper.getInstance().wService.getBoardsBySection(sectionURL)
                 .flatMap(new Func1<ResponseBody, Observable<Board>>() {
                     @Override
                     public Observable<Board> call(ResponseBody responseBody) {
                         try {
                             String response = responseBody.string();
-                            List<Board> boards = SMTHHelper.ParseBoardsInSectionFromWWW(response);
+                            List<Board> boards = SMTHHelper.ParseBoardsInSectionFromWWW(response, section);
                             return Observable.from(boards);
 
                         } catch (Exception e) {
@@ -288,30 +326,9 @@ public class SMTHHelper {
     }
 
 
-    // load all boards from WWW, recursively
-    // http://stackoverflow.com/questions/31246088/how-to-do-recursive-observable-call-in-rxjava
-    public static Observable<Board> LoadAllBoardsFromWWW() {
-        final String[] SectionURLs = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "A"};
 
-        return Observable.from(SectionURLs)
-                .flatMap(new Func1<String, Observable<Board>>() {
-                    @Override
-                    public Observable<Board> call(String sectionURL) {
-                        return SMTHHelper.loadBoardsInSectionFromWWW(sectionURL);
-                    }
-                })
-                .flatMap(new Func1<Board, Observable<Board>>() {
-                    @Override
-                    public Observable<Board> call(Board board) {
-//                        Log.d(TAG, board.toString());
-                        return SMTHHelper.getInnerBoards(board);
-                    }
-                });
-    }
-
-
-    public static List<Board> ParseBoardsInSectionFromWWW(String content) {
-        List<Board> boards = new ArrayList<Board>();
+    public static List<Board> ParseBoardsInSectionFromWWW(String content, BoardSection section) {
+        List<Board> boards = new ArrayList<>();
 
 //        <tr><td class="title_1"><a href="/nForum/section/Association">协会社团</a><br />Association</td><td class="title_2">[二级目录]<br /></td><td class="title_3">&nbsp;</td><td class="title_4 middle c63f">&nbsp;</td><td class="title_5 middle c09f">&nbsp;</td><td class="title_6 middle c63f">&nbsp;</td><td class="title_7 middle c09f">&nbsp;</td></tr>
 //        <tr><td class="title_1"><a href="/nForum/board/BIT">北京理工大学</a><br />BIT</td><td class="title_2"><a href="/nForum/user/query/mahenry">mahenry</a><br /></td><td class="title_3"><a href="/nForum/article/BIT/250116">今年几万斤苹果都滞销了，果农欲哭无泪！</a><br />发贴人:&ensp;jingling6787 日期:&ensp;2016-03-22 09:19:09</td><td class="title_4 middle c63f">11</td><td class="title_5 middle c09f">2</td><td class="title_6 middle c63f">5529</td><td class="title_7 middle c09f">11854</td></tr>
@@ -350,6 +367,7 @@ public class SMTHHelper {
 
                     Board board = new Board("", chsBoardName, engBoardName);
                     board.setModerator(moderator);
+                    board.setCategoryName(section.getBoardCategory());
                     boards.add(board);
 
                 }
@@ -362,6 +380,7 @@ public class SMTHHelper {
                     folderChsName = link1.text();
 
                     Board board = new Board(folderEngName, folderChsName);
+                    board.setCategoryName(section.sectionName);
                     boards.add(board);
                 }
 
@@ -372,4 +391,9 @@ public class SMTHHelper {
 
         return boards;
     }
+    /*
+    * All Boards related methods
+    * Ends here
+     */
+
 }

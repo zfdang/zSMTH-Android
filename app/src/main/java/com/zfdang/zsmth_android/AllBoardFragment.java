@@ -18,6 +18,7 @@ import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -116,6 +117,12 @@ public class AllBoardFragment extends Fragment {
 //        Log.d(TAG, "All Boards" + boards.size());
 
         SMTHHelper.LoadAllBoardsFromWWW()
+                .filter(new Func1<Board, Boolean>() {
+                    @Override
+                    public Boolean call(Board board) {
+                        return !board.isFolder();
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Board>() {
