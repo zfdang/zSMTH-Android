@@ -3,7 +3,7 @@ package com.zfdang.zsmth_android.models;
 /**
  * Created by zfdang on 2016-3-14.
  */
-public class Board {
+public class Board{
 
     private String boardID;
     private String boardEngName;
@@ -85,4 +85,5 @@ public class Board {
                 ", folderID='" + folderID + '\'' +
                 '}';
     }
+
 }

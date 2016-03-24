@@ -152,8 +152,6 @@ public class FavoriteBoardFragment extends Fragment {
     protected void LoadFavoriteBoardsByPath(final String path) {
         SMTHHelper helper = SMTHHelper.getInstance();
         helper.wService.getFavoriteByPath(path)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
                 .flatMap(new Func1<ResponseBody, Observable<Board>>() {
                     @Override
                     public Observable<Board> call(ResponseBody resp) {
@@ -169,6 +167,7 @@ public class FavoriteBoardFragment extends Fragment {
                         }
                     }
                 })
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Board>() {
                     @Override

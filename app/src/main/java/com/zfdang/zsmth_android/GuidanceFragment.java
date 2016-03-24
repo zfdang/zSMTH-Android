@@ -133,8 +133,6 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
         final SMTHHelper helper = SMTHHelper.getInstance();
 
         Observable.from(SectionURLPath)
-                .observeOn(Schedulers.io())
-                .subscribeOn(Schedulers.io())
                 .concatMap(new Func1<String, Observable<ResponseBody>>() {
                     @Override
                     public Observable<ResponseBody> call(String sectionURL) {
@@ -154,6 +152,7 @@ public class GuidanceFragment extends Fragment implements SwipeRefreshLayout.OnR
                         }
                     }
                 })
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Topic>() {
                     @Override

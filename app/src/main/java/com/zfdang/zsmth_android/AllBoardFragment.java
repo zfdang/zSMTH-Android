@@ -91,6 +91,7 @@ public class AllBoardFragment extends Fragment {
             // only load boards on the first time
             LoadAllBoards();
         }
+
         return view;
     }
 
@@ -126,6 +127,10 @@ public class AllBoardFragment extends Fragment {
 
                     @Override
                     public void onCompleted() {
+                        // sort all boards
+                        ListBoardContent.sortAllBoardItem();
+                        mRecylerView.getAdapter().notifyDataSetChanged();
+
                         clearLoadingHints();
                     }
 
