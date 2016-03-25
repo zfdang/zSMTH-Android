@@ -346,7 +346,11 @@ public class MainActivity extends AppCompatActivity
         // shared by HotTopicFragment or BoardTopicFragment
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         if(fragment == hotTopicFragment) {
-
+            Intent intent = new Intent(this, PostListActivity.class);
+            intent.putExtra("board_chs_name", item.getBoardChsName());
+            intent.putExtra("board_eng_name", item.getBoardEngName());
+            intent.putExtra("source", item);
+            startActivity(intent);
         } else {
             Log.d("MainActivity", item.getTitle() + "is clicked");
             Toast.makeText(this, item.getTitle() + " is clicked", Toast.LENGTH_LONG).show();

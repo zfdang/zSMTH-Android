@@ -41,6 +41,7 @@ public class PostListContent {
         Post post = new Post();
         post.setSubjectID(String.format("Post %d", position));
         post.setTitle("hello  world");
+        post.setContent("headsfadfasdfllo  world");
         post.setAuthor("authoer");
         return post;
 

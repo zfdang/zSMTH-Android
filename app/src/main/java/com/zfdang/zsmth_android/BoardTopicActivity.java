@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.models.TopicListContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
@@ -32,7 +34,7 @@ import rx.schedulers.Schedulers;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class BoardTopicActivity extends AppCompatActivity {
+public class BoardTopicActivity extends AppCompatActivity implements OnTopicFragmentInteractionListener {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -53,11 +55,11 @@ public class BoardTopicActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board_topic);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.board_topic_toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.board_topic_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,7 +70,7 @@ public class BoardTopicActivity extends AppCompatActivity {
 
         mRecyclerView = (RecyclerView) findViewById(R.id.board_topic_list);
         assert mRecyclerView != null;
-        mRecyclerView.setAdapter(new TopicRecyclerViewAdapter(TopicListContent.BOARD_TOPICS, null));
+        mRecyclerView.setAdapter(new TopicRecyclerViewAdapter(TopicListContent.BOARD_TOPICS, this));
 
         // get Board information from launcher
         Intent intent = getIntent();
@@ -81,7 +83,11 @@ public class BoardTopicActivity extends AppCompatActivity {
             TopicListContent.setBoardName(mBoardEngName);
         }
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // Show the Up button in the action bar.
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         updateTitle();
 
@@ -175,9 +181,9 @@ public class BoardTopicActivity extends AppCompatActivity {
 
                     @Override
                     public void onCompleted() {
-                        Topic topic = new Topic("-- END --");
-                        TopicListContent.addHotTopic(topic);
-                        mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.HOT_TOPICS.size() - 1);
+//                        Topic topic = new Topic("-- END --");
+//                        TopicListContent.addHotTopic(topic);
+//                        mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.HOT_TOPICS.size() - 1);
 
                         clearLoadingHints();
 
@@ -212,5 +218,12 @@ public class BoardTopicActivity extends AppCompatActivity {
     }
 
 
-
+    @Override
+    public void onTopicFragmentInteraction(Topic item) {
+        Intent intent = new Intent(this, PostListActivity.class);
+//        intent.putExtra("board_chs_name", item.getBoardChsName());
+//        intent.putExtra("board_eng_name", item.getBoardEngName());
+//        intent.putExtra("source", item);
+        startActivity(intent);
+    }
 }

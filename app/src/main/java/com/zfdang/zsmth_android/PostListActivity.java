@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+
+import com.zfdang.zsmth_android.models.PostListContent;
 
 /**
  * An activity representing a single Topic detail screen. This
@@ -19,14 +22,18 @@ import android.view.MenuItem;
  */
 public class PostListActivity extends AppCompatActivity {
 
+    private static final String TAG = "PostListActivity";
+    private RecyclerView mRecyclerView = null;
+    private String mSubjectID = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_list);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.post_list_toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.post_list_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -41,27 +48,22 @@ public class PostListActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        // savedInstanceState is non-null when there is fragment state
-        // saved from previous configurations of this activity
-        // (e.g. when rotating the screen from portrait to landscape).
-        // In this case, the fragment will automatically be re-added
-        // to its container so we don't need to manually add it.
-        // For more information, see the Fragments API guide at:
-        //
-        // http://developer.android.com/guide/components/fragments.html
-        //
-        if (savedInstanceState == null) {
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putString(TopicDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(TopicDetailFragment.ARG_ITEM_ID));
-            TopicDetailFragment fragment = new TopicDetailFragment();
-            fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.topic_detail_container, fragment)
-                    .commit();
-        }
+        mRecyclerView = (RecyclerView) findViewById(R.id.post_list);
+        assert mRecyclerView != null;
+        mRecyclerView.setAdapter(new PostRecyclerViewAdapter(PostListContent.ITEMS, null));
+
+        // get Board information from launcher
+        Intent intent = getIntent();
+        mSubjectID = intent.getStringExtra("board_chs_name");
+//        mSource = intent.getStringExtra("source");
+//        String engName = intent.getStringExtra("board_eng_name");
+//        if(engName != mBoardEngName) {
+//            TopicListContent.clearBoardTopics();
+//            mBoardEngName = engName;
+//            TopicListContent.setBoardName(mBoardEngName);
+//        }
+
+
     }
 
     @Override
