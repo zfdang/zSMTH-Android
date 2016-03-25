@@ -44,6 +44,8 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
             holder.mReplier.setVisibility(View.GONE);
             holder.mPublishDate.setVisibility(View.GONE);
             holder.mReplyDate.setVisibility(View.GONE);
+            holder.mPublishLabel.setVisibility(View.GONE);
+            holder.mReplyLabel.setVisibility(View.GONE);
 
             holder.mSeperator.setText(topic.getCategory());
         } else {
@@ -53,6 +55,8 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
             holder.mReplier.setVisibility(View.VISIBLE);
             holder.mPublishDate.setVisibility(View.VISIBLE);
             holder.mReplyDate.setVisibility(View.VISIBLE);
+            holder.mPublishLabel.setVisibility(View.VISIBLE);
+            holder.mReplyLabel.setVisibility(View.VISIBLE);
 
             holder.mTitle.setText(topic.getTitle());
             holder.mAuthor.setText(topic.getAuthor());
@@ -86,6 +90,8 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
         public final TextView mReplier;
         public final TextView mPublishDate;
         public final TextView mReplyDate;
+        public final TextView mReplyLabel;
+        public final TextView mPublishLabel;
         public Topic mTopic;
 
         public ViewHolder(View view) {
@@ -97,6 +103,8 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
             mReplier = (TextView) view.findViewById(R.id.topic_replier);
             mPublishDate = (TextView) view.findViewById(R.id.topic_public_date);
             mReplyDate = (TextView) view.findViewById(R.id.topic_reply_date);
+            mPublishLabel = (TextView) view.findViewById(R.id.topic_publish_label);
+            mReplyLabel = (TextView) view.findViewById(R.id.topic_reply_label);
         }
 
         @Override

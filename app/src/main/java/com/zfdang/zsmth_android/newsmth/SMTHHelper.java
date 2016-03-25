@@ -255,7 +255,7 @@ public class SMTHHelper {
         // get all lis
         Elements lis = doc.select("ul li");
         for (Element li: lis) {
-            Log.d("ParseBoardTopics", li.toString());
+//            Log.d("ParseBoardTopics", li.toString());
             Topic topic = new Topic();
 
             Elements links = li.select("a[href]");

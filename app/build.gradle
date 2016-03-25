@@ -40,6 +40,4 @@ dependencies {
     compile 'io.reactivex:rxjava:1.1.0'
     compile 'com.github.maksim88:PasswordEditText:v0.6'
     compile 'org.jsoup:jsoup:1.8.3'
-//    compile 'com.hkm.slidingmenulib:libmenu:0.4.7'
-    compile 'com.malinskiy:superrecyclerview:1.1.3'
 }
