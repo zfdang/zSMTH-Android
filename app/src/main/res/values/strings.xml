@@ -6,13 +6,11 @@
     <string name="nav_header_click_to_login">点击登录</string>
 
 
-
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">This is the first fragment</string>
     <string name="setting_fragment">程序设置</string>
     <string name="button_load_version">检查更新</string>
     <string name="title_activity_login">zSMTH - 登录水木社区</string>
-
 
 
     <!--右上的action菜单-->
@@ -21,7 +19,6 @@
     <string name="action_switch_theme">切换主题</string>
     <string name="action_login">登录</string>
     <string name="action_logout">退出</string>
-
 
 
     <!-- 登录页 -->
@@ -34,5 +31,7 @@
 
     <!-- 导读页 -->
     <string name="guidance_label_board">版面:</string>
+    <string name="title_topic_list">Topics</string>
+    <string name="title_topic_detail">Topic Detail</string>
 
 </resources>

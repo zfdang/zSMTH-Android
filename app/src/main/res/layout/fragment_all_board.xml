@@ -31,5 +31,5 @@
         android:scrollbars="vertical"
         app:layoutManager="LinearLayoutManager"
         tools:context="com.zfdang.zsmth_android.AllBoardFragment"
-        tools:listitem="@layout/fragment_board_item"/>
+        tools:listitem="@layout/board_item"/>
 </RelativeLayout>

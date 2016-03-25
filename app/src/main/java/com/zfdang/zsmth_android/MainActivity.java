@@ -29,7 +29,6 @@ import com.zfdang.zsmth_android.listeners.OnBoardFragmentInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.Mail;
-import com.zfdang.zsmth_android.models.Post;
 import com.zfdang.zsmth_android.models.Topic;
 
 import java.lang.reflect.Field;
@@ -39,8 +38,7 @@ public class MainActivity extends AppCompatActivity
         View.OnClickListener,
         OnTopicFragmentInteractionListener,
         OnBoardFragmentInteractionListener,
-        MailListFragment.OnListFragmentInteractionListener,
-        PostListFragment.OnListFragmentInteractionListener
+        MailListFragment.OnListFragmentInteractionListener
 //        SettingFragment.OnFragmentInteractionListener,
 //        AboutFragment.OnFragmentInteractionListener
 {
@@ -50,7 +48,6 @@ public class MainActivity extends AppCompatActivity
     HotTopicFragment hotTopicFragment = null;
     FavoriteBoardFragment favoriteBoardFragment = null;
     AllBoardFragment allBoardFragment = null;
-    PostListFragment postListFragment = null;
     MailListFragment mailListFragment = null;
 
     SettingFragment settingFragment = null;
@@ -162,7 +159,6 @@ public class MainActivity extends AppCompatActivity
         favoriteBoardFragment = new FavoriteBoardFragment();
         allBoardFragment = new AllBoardFragment();
         mailListFragment = new MailListFragment();
-        postListFragment = new PostListFragment();
 
         settingFragment = new SettingFragment();
         aboutFragment = new AboutFragment();
@@ -201,9 +197,6 @@ public class MainActivity extends AppCompatActivity
                 favoriteBoardFragment.RefreshFavoriteBoards();
                 return;
             }
-        } else if (fragment instanceof PostListFragment) {
-            super.onBackPressed();
-            return;
         }
         // for other cases, double back to exit app
         DoubleBackToExit();
@@ -353,13 +346,6 @@ public class MainActivity extends AppCompatActivity
         // shared by HotTopicFragment or BoardTopicFragment
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         if(fragment == hotTopicFragment) {
-            // switch fragment
-            FragmentManager fm = getSupportFragmentManager();
-            fm.beginTransaction()
-                    .replace(R.id.content_frame, postListFragment)
-                    .addToBackStack(null)
-                    .commit();
-            setTitle(SMTHApplication.App_Title_Prefix + item.getBoardName());
 
         } else {
             Log.d("MainActivity", item.getTitle() + "is clicked");
@@ -382,18 +368,22 @@ public class MainActivity extends AppCompatActivity
                 favoriteBoardFragment.pushFavoritePath(item.getFolderID(), item.getFolderName());
                 favoriteBoardFragment.RefreshFavoriteBoards();
             } else {
-                Toast.makeText(this, item.toString() + " is clicked", Toast.LENGTH_LONG).show();
+                startBoardTopicActivity(item, "收藏夹");
             }
 
         } else if(fragment == allBoardFragment) {
-            Toast.makeText(this, item.toString() + " is clicked", Toast.LENGTH_LONG).show();
+            startBoardTopicActivity(item,  "所有版面");
         }
     }
 
-    @Override
-    public void onListFragmentInteraction(Post item) {
-        // PostListFragment
-        Toast.makeText(this, item.toString() + " is clicked", Toast.LENGTH_LONG).show();
+
+    public void startBoardTopicActivity(Board board, String source) {
+//        Toast.makeText(this, board.toString() + " is clicked", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, BoardTopicActivity.class);
+        intent.putExtra("board_chs_name", board.getBoardChsName());
+        intent.putExtra("board_eng_name", board.getBoardEngName());
+        intent.putExtra("source", source);
+        startActivity(intent);
     }
 
 }

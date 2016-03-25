@@ -26,19 +26,6 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    //    友盟分析library
-    //  sqlite-asset-helper
-    //    compile 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
-    //    networking
-    //    compile 'com.squareup.retrofit2:converter-gson:2.0.0'
-    // rxandroid
-    // http://gank.io/post/560e15be2dca930e00da1083#toc_12
-    // 给 Android 开发者的 RxJava 详解
-    // Because RxAndroid releases are few and far between, it is recommended you also
-    // explicitly depend on RxJava's latest version for bug fixes and new features.
-    //    image cache and guesture imageview
-    //    compile 'com.squareup.picasso:picasso:2.5.2'
-    //    compile 'com.commit451:PhotoView:1.2.4'
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile 'com.android.support:design:23.2.1'
     compile 'com.android.support:support-v4:23.2.1'
@@ -53,4 +40,6 @@ dependencies {
     compile 'io.reactivex:rxjava:1.1.0'
     compile 'com.github.maksim88:PasswordEditText:v0.6'
     compile 'org.jsoup:jsoup:1.8.3'
+//    compile 'com.hkm.slidingmenulib:libmenu:0.4.7'
+    compile 'com.malinskiy:superrecyclerview:1.1.3'
 }

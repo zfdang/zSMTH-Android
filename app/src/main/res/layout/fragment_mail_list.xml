@@ -10,4 +10,4 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context=".MailListFragment"
-    tools:listitem="@layout/fragment_mail_item" />
+    tools:listitem="@layout/mail_item" />

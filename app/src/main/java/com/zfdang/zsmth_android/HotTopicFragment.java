@@ -96,12 +96,12 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
                 mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-            mRecyclerView.setAdapter(new TopicRecyclerViewAdapter(TopicListContent.TOPICS, mListener));
+            mRecyclerView.setAdapter(new TopicRecyclerViewAdapter(TopicListContent.HOT_TOPICS, mListener));
         }
 
         getActivity().setTitle(SMTHApplication.App_Title_Prefix + "首页导读");
 
-        if(TopicListContent.TOPICS.size() == 0){
+        if(TopicListContent.HOT_TOPICS.size() == 0){
             // only refresh guidance when there is no topic available
             MainActivity activity = (MainActivity)getActivity();
             activity.showProgress("获取导读信息...", true);
@@ -160,16 +160,16 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
                     public void onStart() {
                         super.onStart();
 
-                        // clear current hot topics
-                        TopicListContent.clear();
+                        // clearHotTopics current hot topics
+                        TopicListContent.clearHotTopics();
                         mRecyclerView.getAdapter().notifyDataSetChanged();
                     }
 
                     @Override
                     public void onCompleted() {
                         Topic topic = new Topic("-- END --");
-                        TopicListContent.addItem(topic);
-                        mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.TOPICS.size() - 1);
+                        TopicListContent.addHotTopic(topic);
+                        mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.HOT_TOPICS.size() - 1);
 
                         clearLoadingHints();
 
@@ -188,8 +188,8 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
                     @Override
                     public void onNext(Topic topic) {
                         Log.d(TAG, topic.toString());
-                        TopicListContent.addItem(topic);
-                        mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.TOPICS.size() - 1);
+                        TopicListContent.addHotTopic(topic);
+                        mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.HOT_TOPICS.size() - 1);
                     }
                 });
 

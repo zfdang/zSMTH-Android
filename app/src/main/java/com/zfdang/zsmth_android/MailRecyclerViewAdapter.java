@@ -29,7 +29,7 @@ public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerVi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_mail_item, parent, false);
+                .inflate(R.layout.mail_item, parent, false);
         return new ViewHolder(view);
     }
 
