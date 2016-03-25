@@ -15,7 +15,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Category"
-        android:textColor="@color/status_text"/>
+        android:textColor="@color/colorPrimary"/>
 
     <TextView
         android:id="@+id/ModeratorID"

@@ -31,16 +31,22 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
+        android:id = "@+id/author_row"
         android:layout_below="@+id/topic_title"
         android:layout_width="match_parent"
         android:layout_marginRight="10dp"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/topic_publish_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/topic_title"
+            android:layout_toLeftOf="@+id/topic_author"
+            android:text="@string/publish_date_label"
+            android:paddingLeft="2dp"
+            android:gravity="left"
+            android:textColor="@color/colorSecondaryText"/>
 
         <TextView
             android:id="@+id/topic_author"
@@ -48,43 +54,35 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/topic_title"
             android:text="作者"
+            android:layout_toRightOf="@+id/topic_publish_label"
             android:paddingLeft="2dp"
             android:gravity="left"
             android:textColor="@color/colorPrimary"/>
 
-        <TextView
-            android:id="@+id/topic_publish_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/topic_title"
-            android:layout_toRightOf="@+id/topic_author"
-            android:text="@string/publish_date_label"
-            android:paddingLeft="2dp"
-            android:gravity="left"
-            android:textColor="@color/status_text"/>
 
         <TextView
             android:id="@+id/topic_public_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2016-03-24"
-            android:paddingLeft="2dp"
-            android:gravity="left"
-            android:layout_toRightOf="@+id/topic_publish_label"
+            android:paddingRight="10dp"
             android:layout_below="@+id/topic_title"
-            android:textColor="@color/status_text"/>
+            android:textColor="@color/colorSecondaryText"
+            android:layout_gravity="end"
+            android:layout_weight="1"
+            android:textAlignment="textEnd"/>
 
+    </LinearLayout>
 
-        <TextView
-            android:id="@+id/topic_replier"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="回复者"
-            android:paddingLeft="20dp"
-            android:gravity="left"
-            android:layout_toRightOf="@+id/topic_public_date"
-            android:layout_below="@+id/topic_title"
-            android:textColor="@color/colorPrimary"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id = "@+id/replier_row"
+        android:layout_marginRight="10dp"
+
+        android:layout_below="@+id/author_row"
+        >
 
         <TextView
             android:id="@+id/topic_reply_label"
@@ -93,9 +91,22 @@
             android:text="@string/reply_date_label"
             android:paddingLeft="2dp"
             android:gravity="left"
-            android:layout_toRightOf="@+id/topic_replier"
+            android:layout_toLeftOf="@+id/topic_replier"
             android:layout_below="@+id/topic_title"
-            android:textColor="@color/status_text"/>
+            android:textColor="@color/colorSecondaryText"
+            />
+
+        <TextView
+            android:id="@+id/topic_replier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="回复者"
+            android:paddingLeft="2dp"
+            android:gravity="left"
+            android:layout_below="@+id/topic_author"
+            android:layout_toRightOf="@+id/topic_reply_label"
+            android:textColor="@color/colorPrimary"
+            android:layout_gravity="top|left"/>
 
 
         <TextView
@@ -103,45 +114,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2016-03-24"
-            android:paddingLeft="2dp"
-            android:gravity="left"
-            android:layout_toRightOf="@+id/topic_reply_label"
+            android:paddingRight="10dp"
+            android:gravity="end"
             android:layout_below="@+id/topic_title"
-            android:textColor="@color/status_text"/>
-
-        <!--<TextView-->
-            <!--android:id="@+id/replier"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:gravity="right"-->
-            <!--android:text="Author"-->
-            <!--android:paddingRight="8dp"-->
-            <!--android:layout_toLeftOf="@+id/reply_date_label"-->
-            <!--android:layout_below="@+id/topic_title"-->
-            <!--android:textColor="@color/blue_text"/>-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/reply_date_label"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:gravity="right"-->
-            <!--android:text="@string/reply_date_label"-->
-            <!--android:layout_toLeftOf="@+id/reply_date"-->
-            <!--android:paddingRight="8dp"-->
-            <!--android:layout_below="@+id/topic_title"-->
-            <!--android:textColor="@color/blue_text"/>-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/reply_date"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:gravity="right"-->
-            <!--android:text="2016-03-27"-->
-            <!--android:paddingRight="8dp"-->
-            <!--android:layout_below="@+id/topic_title"-->
-            <!--android:textColor="@color/blue_text"/>-->
+            android:textColor="@color/colorSecondaryText"
+            android:layout_weight="1"
+            android:textAlignment="textEnd"/>
     </LinearLayout>
-
 
 
 </RelativeLayout>
