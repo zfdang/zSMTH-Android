@@ -16,8 +16,10 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/post_list_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+            android:layout_height="@dimen/zsmth_actionbar_size"
+            android:theme="@style/ThemeOverlay.ToolBar"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:titleTextAppearance="@style/Toolbar.TitleText"/>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -27,7 +29,22 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <include layout="@layout/post_list"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/post_list"
+            android:name="com.zfdang.zsmth_android.TopicListFragment"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:scrollbars="vertical"
+            app:layoutManager="LinearLayoutManager"
+            tools:context=".BoardTopicActivity"
+
+            tools:listitem="@layout/post_item"/>
+
     </FrameLayout>
 
     <android.support.design.widget.FloatingActionButton

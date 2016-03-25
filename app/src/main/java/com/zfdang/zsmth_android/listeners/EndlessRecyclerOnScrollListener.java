@@ -32,7 +32,7 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
         if(dy < 0) {
             return;
         }
-        // check for scroll down
+        // check for scroll down only
         visibleItemCount = recyclerView.getChildCount();
         totalItemCount = mLinearLayoutManager.getItemCount();
         firstVisibleItem = mLinearLayoutManager.findFirstVisibleItemPosition();

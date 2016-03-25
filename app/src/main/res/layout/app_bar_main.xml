@@ -19,7 +19,6 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/zsmth_actionbar_size"
             android:padding="0dp"
-            app:navigationIcon="@drawable/ic_menu_gallery"
             android:background="?attr/colorPrimary"
             android:theme="@style/ThemeOverlay.ToolBar"
             app:titleTextAppearance="@style/Toolbar.TitleText"

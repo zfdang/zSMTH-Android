@@ -16,7 +16,9 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/board_topic_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="@dimen/zsmth_actionbar_size"
+            android:theme="@style/ThemeOverlay.ToolBar"
+            app:titleTextAppearance="@style/Toolbar.TitleText"
             app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
     </android.support.design.widget.AppBarLayout>
@@ -43,6 +45,7 @@
                 android:layout_marginLeft="0dp"
                 android:layout_marginRight="0dp"
                 app:layoutManager="LinearLayoutManager"
+                android:scrollbars="vertical"
                 tools:context=".BoardTopicActivity"
                 tools:listitem="@layout/board_topic_item"/>
         </android.support.v4.widget.SwipeRefreshLayout>
