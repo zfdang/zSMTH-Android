@@ -39,7 +39,7 @@ public class FavoriteBoardFragment extends Fragment {
     private int mColumnCount = 1;
     private OnBoardFragmentInteractionListener mListener;
 
-    private RecyclerView mRecylerView = null;
+    private RecyclerView mRecyclerView = null;
     private String mOriginalTitle = null;
 
     // list of favorite paths
@@ -110,20 +110,20 @@ public class FavoriteBoardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mRecylerView = (RecyclerView) inflater.inflate(R.layout.fragment_favorite_board, container, false);
+        mRecyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_favorite_board, container, false);
 
 
         // Set the adapter
-        if (mRecylerView != null) {
+        if (mRecyclerView != null) {
 //            http://stackoverflow.com/questions/28713231/recyclerview-item-separator
-            mRecylerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
-            Context context = mRecylerView.getContext();
+            mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+            Context context = mRecyclerView.getContext();
             if (mColumnCount <= 1) {
-                mRecylerView.setLayoutManager(new LinearLayoutManager(context));
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
-                mRecylerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            mRecylerView.setAdapter(new BoardRecyclerViewAdapter(BoardListContent.FAVORITE_BOARDS, mListener));
+            mRecyclerView.setAdapter(new BoardRecyclerViewAdapter(BoardListContent.FAVORITE_BOARDS, mListener));
         }
 
         if(BoardListContent.FAVORITE_BOARDS.size() == 0) {
@@ -131,7 +131,7 @@ public class FavoriteBoardFragment extends Fragment {
             RefreshFavoriteBoards();
         }
 
-        return mRecylerView;
+        return mRecyclerView;
     }
 
     public void showLoadingHints() {
@@ -176,7 +176,7 @@ public class FavoriteBoardFragment extends Fragment {
 
                         super.onStart();
                         BoardListContent.clearFavorites();
-                        mRecylerView.getAdapter().notifyDataSetChanged();
+                        mRecyclerView.getAdapter().notifyDataSetChanged();
                     }
 
                     @Override
@@ -194,7 +194,7 @@ public class FavoriteBoardFragment extends Fragment {
                     @Override
                     public void onNext(Board board) {
                         BoardListContent.addFavoriteItem(board);
-                        mRecylerView.getAdapter().notifyItemInserted(BoardListContent.FAVORITE_BOARDS.size());
+                        mRecyclerView.getAdapter().notifyItemInserted(BoardListContent.FAVORITE_BOARDS.size());
                         Log.d(TAG, board.toString());
                     }
                 });

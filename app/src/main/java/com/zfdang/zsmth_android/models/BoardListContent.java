@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * this class is used by BoardRecylerViewAdapter
+ * this class is used by BoardRecyclerViewAdapter
  */
 public class BoardListContent {
 

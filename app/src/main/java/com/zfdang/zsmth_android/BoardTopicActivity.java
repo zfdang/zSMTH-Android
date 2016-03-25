@@ -8,13 +8,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.malinskiy.superrecyclerview.SuperRecyclerView;
 import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.models.TopicListContent;
@@ -52,7 +52,7 @@ public class BoardTopicActivity extends AppCompatActivity implements OnTopicFrag
     private ProgressDialog pdialog = null;
     private int mCurrentPageNo = 1;
 
-    private RecyclerView mRecyclerView = null;
+    private SuperRecyclerView mRecyclerView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,9 +72,10 @@ public class BoardTopicActivity extends AppCompatActivity implements OnTopicFrag
             }
         });
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.board_topic_list);
+        mRecyclerView = (SuperRecyclerView) findViewById(R.id.board_topic_list);
         assert mRecyclerView != null;
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(new BoardTopicRecyclerViewAdapter(TopicListContent.BOARD_TOPICS, this));
 
         // get Board information from launcher
@@ -184,7 +185,7 @@ public class BoardTopicActivity extends AppCompatActivity implements OnTopicFrag
                         clearLoadingHints();
 
                         // show finish toast
-                        Toast.makeText(getApplicationContext(), "刷新完成!", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getApplicationContext(), "刷新完成!", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

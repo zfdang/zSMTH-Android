@@ -34,7 +34,7 @@ import rx.schedulers.Schedulers;
 public class AllBoardFragment extends Fragment {
 
     final private String TAG = "AllBoardFragment";
-    private RecyclerView mRecylerView = null;
+    private RecyclerView mRecyclerView = null;
     private SearchView mSearchView = null;
     private QueryTextListner mQueryListner = null;
 
@@ -73,22 +73,22 @@ public class AllBoardFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_board, container, false);
 
-        mRecylerView = (RecyclerView) view.findViewById(R.id.all_board_list);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.all_board_list);
         // Set the adapter
-        mRecylerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         Context context = view.getContext();
         if (mColumnCount <= 1) {
-            mRecylerView.setLayoutManager(new LinearLayoutManager(context));
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         } else {
-            mRecylerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+            mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
-        mRecylerView.setAdapter(new BoardRecyclerViewAdapter(BoardListContent.ALL_BOARDS, mListener));
+        mRecyclerView.setAdapter(new BoardRecyclerViewAdapter(BoardListContent.ALL_BOARDS, mListener));
 
         mSearchView = (SearchView) view.findViewById(R.id.all_board_search);
         mSearchView.setIconifiedByDefault(false);
 //        mSearchView.setSubmitButtonEnabled(true);
         if( mQueryListner == null) {
-            mQueryListner = new QueryTextListner((BoardRecyclerViewAdapter) mRecylerView.getAdapter());
+            mQueryListner = new QueryTextListner((BoardRecyclerViewAdapter) mRecyclerView.getAdapter());
             mSearchView.setOnQueryTextListener(mQueryListner);
         }
 
@@ -162,7 +162,7 @@ public class AllBoardFragment extends Fragment {
                     public void onStart() {
                         super.onStart();
                         BoardListContent.clearAllBoards();
-                        mRecylerView.getAdapter().notifyDataSetChanged();
+                        mRecyclerView.getAdapter().notifyDataSetChanged();
                     }
 
                     @Override
@@ -179,7 +179,7 @@ public class AllBoardFragment extends Fragment {
                     public void onNext(Board board) {
                         Log.d(TAG, board.toString());
                         BoardListContent.addAllBoardItem(board);
-                        mRecylerView.getAdapter().notifyItemInserted(BoardListContent.ALL_BOARDS.size() - 1);
+                        mRecyclerView.getAdapter().notifyItemInserted(BoardListContent.ALL_BOARDS.size() - 1);
                     }
                 });
 
