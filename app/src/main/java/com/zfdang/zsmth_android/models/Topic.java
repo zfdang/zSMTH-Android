@@ -7,14 +7,36 @@ package com.zfdang.zsmth_android.models;
 import java.io.Serializable;
 
 /**
- * A dummy item representing a piece of content.
  */
 public class Topic implements Serializable {
 
+    // 分隔符，只有一个category的名称
+    public boolean isCategory;
+    private String category;
+
+    // 正常的主题
+    private String boardEngName;
+    private String boardChsName;
+
+    private String topicID;
+    private String title;
+    private String author;
+    private String publishDate;
+    private String replier;
+    private String replyDate;
+
+    // 是否是置顶的主题
+    public boolean isSticky;
+
+    private String type;
+
+    private int totalPageNo;
+    private int currentPageNo;
+
     // this is actually a category, used in guidance fragment to seperate hot topics
     public Topic(String category) {
-        this.category = category;
         isCategory = true;
+        this.category = category;
     }
 
     public Topic() {
@@ -33,15 +55,9 @@ public class Topic implements Serializable {
         isCategory = false;
     }
 
-
-    public static final String TYPE_BOTTOM = "d"; // 置底所包含的标记字符
-    private String id;
-    private String title;
-
     public String getTitle() {
         return title;
     }
-
     public void setTitle(String title) {
         this.title = title;
     }
@@ -54,78 +70,76 @@ public class Topic implements Serializable {
         this.author = author;
     }
 
-    public String getBoardID() {
-        return boardID;
-    }
-
-    public void setBoardID(String boardID) {
-        this.boardID = boardID;
-    }
-
     public String getBoardEngName() {
         return boardEngName;
     }
-
+    public void setBoardEngName(String boardEngName) {
+        this.boardEngName = boardEngName;
+    }
+    public String getBoardChsName() {
+        return boardChsName;
+    }
+    public void setBoardChsName(String boardChsName) {
+        this.boardChsName = boardChsName;
+    }
     public String getBoardName() {
-        if(boardChsName != null && boardChsName.length() > 0) {
-            return "[" + boardEngName +"]" + boardChsName;
+        if (boardChsName != null && boardChsName.length() > 0) {
+            return "[" + boardEngName + "]" + boardChsName;
         } else {
             return boardEngName;
         }
     }
 
-    public void setBoardEngName(String boardEngName) {
-        this.boardEngName = boardEngName;
-    }
-
-    public String getBoardChsName() {
-        return boardChsName;
-    }
-
-    public void setBoardChsName(String boardChsName) {
-        this.boardChsName = boardChsName;
-    }
-
-    private String author;
-    private String boardID;
-    private String boardEngName;
-    private String boardChsName;
 
     public String getTopicID() {
         return topicID;
     }
-
     public void setTopicID(String topicID) {
         this.topicID = topicID;
     }
-
-    private String topicID;
-
     public String getCategory() {
         return category;
     }
-
     public void setCategory(String category) {
         this.category = category;
     }
 
-    private String category;
-    //private Date date;
-    private String dateString;
-    private String type;
 
-    private int totalPageNo;
-    private int currentPageNo;
-    public boolean isCategory;
+    public String getPublishDate() {
+        return publishDate;
+    }
 
+    public void setPublishDate(String publishDate) {
+        this.publishDate = publishDate;
+    }
 
+    public String getReplier() {
+        return replier;
+    }
+
+    public void setReplier(String replier) {
+        this.replier = replier;
+    }
+
+    public String getReplyDate() {
+        return replyDate;
+    }
+
+    public void setReplyDate(String replyDate) {
+        this.replyDate = replyDate;
+    }
 
     @Override
     public String toString() {
-        if(isCategory) {
+        if (isCategory) {
             return "Category " + this.category;
         } else {
-            return String.format("(%s) %s by %s @ [%s]%s", this.topicID, this.title, this.author, this.boardEngName, this.boardChsName);
+            if(isSticky) {
+                return String.format("置顶: (%s) %s by %s, %s @ %s", this.topicID, this.title, this.author, this.publishDate, this.boardEngName);
+            } else {
+                return String.format("(%s) %s by %s, %s @ %s", this.topicID, this.title, this.author, this.publishDate, this.boardEngName);
+
+            }
         }
     }
 }

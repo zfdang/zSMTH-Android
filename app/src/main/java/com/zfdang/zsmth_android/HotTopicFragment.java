@@ -96,7 +96,7 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
                 mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-            mRecyclerView.setAdapter(new TopicRecyclerViewAdapter(TopicListContent.HOT_TOPICS, mListener));
+            mRecyclerView.setAdapter(new HotTopicRecyclerViewAdapter(TopicListContent.HOT_TOPICS, mListener));
         }
 
         getActivity().setTitle(SMTHApplication.App_Title_Prefix + "首页导读");
@@ -137,7 +137,7 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
                 .concatMap(new Func1<String, Observable<ResponseBody>>() {
                     @Override
                     public Observable<ResponseBody> call(String sectionURL) {
-                        return helper.mService.hotTopicsBySection(sectionURL);
+                        return helper.mService.getHotTopicsBySection(sectionURL);
                     }
                 })
                 .concatMap(new Func1<ResponseBody, Observable<Topic>>() {

@@ -14,12 +14,12 @@ import java.util.List;
 /**
  * used by HotTopicFragment & BoardTopicFragment
  */
-public class TopicRecyclerViewAdapter extends RecyclerView.Adapter<TopicRecyclerViewAdapter.ViewHolder> {
+public class HotTopicRecyclerViewAdapter extends RecyclerView.Adapter<HotTopicRecyclerViewAdapter.ViewHolder> {
 
     private final List<Topic> mValues;
     private final OnTopicFragmentInteractionListener mListener;
 
-    public TopicRecyclerViewAdapter(List<Topic> items, OnTopicFragmentInteractionListener listener) {
+    public HotTopicRecyclerViewAdapter(List<Topic> items, OnTopicFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -27,7 +27,7 @@ public class TopicRecyclerViewAdapter extends RecyclerView.Adapter<TopicRecycler
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.topic_item, parent, false);
+                .inflate(R.layout.hot_topic_item, parent, false);
         return new ViewHolder(view);
     }
 

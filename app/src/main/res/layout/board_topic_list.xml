@@ -10,4 +10,4 @@
                                         android:layout_marginRight="0dp"
                                         app:layoutManager="LinearLayoutManager"
                                         tools:context=".BoardTopicActivity"
-                                        tools:listitem="@layout/topic_item"/>
+                                        tools:listitem="@layout/board_topic_item"/>

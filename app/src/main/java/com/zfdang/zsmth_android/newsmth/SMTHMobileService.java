@@ -6,6 +6,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import rx.Observable;
 
 /**
@@ -17,7 +18,7 @@ public interface SMTHMobileService {
     Observable<ResponseBody> login(@Field("id") String username, @Field("passwd") String password, @Field("save") String save);
 
     @GET("/hot/{index}")
-    Observable<ResponseBody> hotTopicsBySection(@Path("index") String index);
+    Observable<ResponseBody> getHotTopicsBySection(@Path("index") String index);
 
     // http://m.newsmth.net/article/DSLR/808676538
     @GET("/article/{board}/{article_id}")
@@ -25,4 +26,7 @@ public interface SMTHMobileService {
 
     @GET("/favor/{folder}")
     Observable<ResponseBody> getFavoriteBoards(@Path("folder") String folder);
+
+    @GET("/board/{boardEngName}")
+    Observable<ResponseBody> getBoardTopicsByPage(@Path("boardEngName") String boardEngName, @Query("p") String page);
 }

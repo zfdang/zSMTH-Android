@@ -16,5 +16,5 @@
         android:layout_marginRight="0dp"
         android:scrollbars="vertical"
         app:layoutManager="LinearLayoutManager"
-        tools:listitem="@layout/topic_item"/>
+        tools:listitem="@layout/hot_topic_item"/>
 </android.support.v4.widget.SwipeRefreshLayout>

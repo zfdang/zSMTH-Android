@@ -34,4 +34,8 @@
     <string name="title_topic_list">Topics</string>
     <string name="title_topic_detail">Topic Detail</string>
 
+    <!--版面主题列表-->
+    <string name="publish_date_label">"@"</string>
+    <string name="reply_date_label">"@"</string>
+
 </resources>

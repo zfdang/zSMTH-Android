@@ -226,6 +226,91 @@ public class SMTHHelper {
         return results;
     }
 
+    // parse board topics from mobile
+    public static List<Topic> ParseBoardTopicsFromMobile(String content) {
+        List<Topic> results = new ArrayList<>();
+        if (content == null) {
+            return results;
+        }
+
+        Log.d("ParseBoardTopics", content);
+
+        // <a class="plant">1/1272</a> 当前页/总共页
+        Pattern pagePattern = Pattern.compile("<a class=\"plant\">(\\d+)/(\\d+)");
+        Matcher pageMatcher = pagePattern.matcher(content);
+        if (pageMatcher.find()) {
+            int currentPageNo = Integer.parseInt(pageMatcher.group(1));
+            int totalPageNo = Integer.parseInt(pageMatcher.group(2));
+            Log.d("ParseBoardTopics", String.format(" %d of %d", currentPageNo, totalPageNo));
+        }
+
+//        <ul class="list sec">
+//        <li class="hla"><div><a href="/article/DSLR/1700440" class="top">[合集] 水木上的低价单反广告不可信</a>(0)</div><div>2012-10-16&nbsp;<a href="/user/query/yuningilike">yuningilike</a>|2012-10-16&nbsp;<a href="/user/query/yuningilike">yuningilike</a></div></li>
+//        <li><div><a href="/article/DSLR/808676907" class="m">谷歌完全免费化专业PS滤镜套装Nik Collection</a>(6)</div><div>09:52:33&nbsp;<a href="/user/query/BEO">BEO</a>|14:22:58&nbsp;<a href="/user/query/yuningilike">yuningilike</a></div></li>
+//        </ul>
+
+        // parse topics using Jsoup
+        Document doc = Jsoup.parse(content);
+
+        // get all lis
+        Elements lis = doc.select("ul li");
+        for (Element li: lis) {
+            Log.d("ParseBoardTopics", li.toString());
+            Topic topic = new Topic();
+
+            Elements links = li.select("a[href]");
+            if(links.size() == 3) {
+                Element link1 =  links.get(0);
+                Element link2 =  links.get(1);
+                Element link3 =  links.get(2);
+                String topicID = ParseTopicID(link1.attr("href"));
+                String title = link1.text();
+                String author = link2.text();
+                String replier = link3.text();
+
+                topic.setAuthor(author);
+                topic.setTopicID(topicID);
+                topic.setTitle(title);
+                topic.setReplier(replier);
+            }
+
+            // find dates
+            Elements divs = li.select("div");
+            if(divs.size() == 2) {
+                String temp = divs.get(1).text();
+                // temp的样本
+                // 2016-03-22 Dd1122Ee|2016-03-23 DRAGON94Dd1122Ee
+                // 09:51:35 Qid|11:37:42 Frankiewong4Qid
+                String[] tokens = temp.split("[\\|\\s]+");
+                if(tokens.length == 4) {
+                    String publishDate = tokens[0];
+                    String replyDate = tokens[2];
+
+                    topic.setPublishDate(publishDate);
+                    topic.setReplyDate(replyDate);
+                }
+            }
+
+            Log.d("ParseBoardTopics", topic.toString());
+            results.add(topic);
+        }
+
+
+        return results;
+    }
+
+
+    public static String ParseTopicID(String temp) {
+        Pattern pattern = Pattern.compile("/article/(\\w+)/(\\d+)");
+        Matcher matcher = pattern.matcher(temp);
+        if (matcher.find()) {
+//            String boardName = matcher.group(1);
+            String topicID = matcher.group(2);
+            return topicID;
+        }
+        return "";
+    }
+
 
     public static List<Board> ParseFavoriteBoardsFromWWW(String content) {
         List<Board> boards = new ArrayList<>();

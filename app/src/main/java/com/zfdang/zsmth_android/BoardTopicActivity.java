@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,6 +19,8 @@ import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.models.TopicListContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import rx.Observable;
@@ -47,6 +50,7 @@ public class BoardTopicActivity extends AppCompatActivity implements OnTopicFrag
     private String mSource = null;
 
     private ProgressDialog pdialog = null;
+    private int mCurrentPageNo = 1;
 
     private RecyclerView mRecyclerView = null;
 
@@ -70,7 +74,8 @@ public class BoardTopicActivity extends AppCompatActivity implements OnTopicFrag
 
         mRecyclerView = (RecyclerView) findViewById(R.id.board_topic_list);
         assert mRecyclerView != null;
-        mRecyclerView.setAdapter(new TopicRecyclerViewAdapter(TopicListContent.BOARD_TOPICS, this));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        mRecyclerView.setAdapter(new BoardTopicRecyclerViewAdapter(TopicListContent.BOARD_TOPICS, this));
 
         // get Board information from launcher
         Intent intent = getIntent();
@@ -139,31 +144,22 @@ public class BoardTopicActivity extends AppCompatActivity implements OnTopicFrag
 
     public void RefreshBoardTopics() {
         showProgress("加载版面文章...", true);
-        RefreshGuidanceFromMobile();
+        RefreshBoardTopicsFromMobile();
     }
 
-    final String[] SectionName = {"十大"};
-    final String[] SectionURLPath = {"topTen"};
-
-    public void RefreshGuidanceFromMobile() {
+    public void RefreshBoardTopicsFromMobile() {
         final SMTHHelper helper = SMTHHelper.getInstance();
 
-        Observable.from(SectionURLPath)
-                .concatMap(new Func1<String, Observable<ResponseBody>>() {
-                    @Override
-                    public Observable<ResponseBody> call(String sectionURL) {
-                        return helper.mService.hotTopicsBySection(sectionURL);
-                    }
-                })
-                .concatMap(new Func1<ResponseBody, Observable<Topic>>() {
+        helper.mService.getBoardTopicsByPage(mBoardEngName, Integer.toString(mCurrentPageNo))
+                .flatMap(new Func1<ResponseBody, Observable<Topic>>() {
                     @Override
                     public Observable<Topic> call(ResponseBody responseBody) {
                         try {
-                            String resp = responseBody.string();
-                            return Observable.from(SMTHHelper.ParseHotTopicsFromMobile(resp));
+                            String response = responseBody.string();
+                            List<Topic> topics = SMTHHelper.ParseBoardTopicsFromMobile(response);
+                            return Observable.from(topics);
                         } catch (Exception e) {
                             Log.d(TAG, e.toString());
-                            Log.d(TAG, "获取热帖失败!");
                             return null;
                         }
                     }
