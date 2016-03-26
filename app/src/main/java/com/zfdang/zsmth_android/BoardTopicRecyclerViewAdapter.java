@@ -67,9 +67,9 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
             holder.mReplyDate.setText(topic.getReplyDate());
 
             if(topic.isSticky) {
-                holder.mView.setBackgroundColor(ContextCompat.getColor(SMTHApplication.getAppContext(), R.color.board_sticky_topic_background));
+                holder.mView.setBackgroundDrawable(ContextCompat.getDrawable(SMTHApplication.getAppContext(), R.drawable.recyclerview_sticky_item_bg));
             } else {
-                holder.mView.setBackgroundColor(ContextCompat.getColor(SMTHApplication.getAppContext(), R.color.body_background));
+                holder.mView.setBackgroundDrawable(ContextCompat.getDrawable(SMTHApplication.getAppContext(), R.drawable.recyclerview_item_bg));
             }
         }
 

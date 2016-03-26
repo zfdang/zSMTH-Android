@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--http://sunjiajia.com/2015/06/19/android-material-theme-and-toolbar/-->
 <resources>
-
 
     <color name="colorPrimary">#607D8B</color>
     <color name="colorPrimaryDark">#455A64</color>
@@ -47,7 +47,6 @@
     <color name="recycler_view_seperator">#f9f5f2</color>
     <color name="recycler_view_item_normal">#FFF</color>
     <color name="recycler_view_item_pressed">#F7F7F7</color>
-
-    <color name="board_sticky_topic_background">#FFE0B2</color>
+    <color name="recycler_view_item_sticky">#FFE0B2</color>
 
 </resources>
