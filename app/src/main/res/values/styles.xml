@@ -48,5 +48,12 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
+    <!--http://stackoverflow.com/questions/31204320/how-can-i-change-the-navigationviews-item-text-size-->
+    <style name="NavigationDrawerStyle">
+        <!-- text size in menu-->
+        <item name="android:textSize">20sp</item>
+        <!-- item size in menu-->
+        <!--<item name="android:listPreferredItemHeightSmall">40dp</item>-->
+    </style>
 
 </resources>
