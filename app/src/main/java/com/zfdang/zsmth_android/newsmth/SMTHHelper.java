@@ -264,6 +264,10 @@ public class SMTHHelper {
                 Element link2 =  links.get(1);
                 Element link3 =  links.get(2);
                 String topicID = ParseTopicID(link1.attr("href"));
+                String type = link1.attr("class");
+                if("top".equals(type)) {
+                    topic.isSticky = true;
+                }
                 String title = link1.text();
                 String author = link2.text();
                 String replier = link3.text();

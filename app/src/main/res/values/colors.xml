@@ -5,12 +5,11 @@
     <color name="colorPrimary">#607D8B</color>
     <color name="colorPrimaryDark">#455A64</color>
     <color name="colorPrimaryLight">#CFD8DC</color>
-    <color name="colorAccent">#536DFE</color>
+    <color name="colorAccent">#FF4081</color>
     <color name="colorPrimaryText">#212121</color>
     <color name="colorSecondaryText">#727272</color>
     <color name="colorIcons">#FFFFFF</color>
     <color name="colorDivider">#B6B6B6</color>
-
 
     <!--copy from aSM resource -->
     <drawable name="label_color">#FF6BB324</drawable>
@@ -48,5 +47,7 @@
     <color name="recycler_view_seperator">#f9f5f2</color>
     <color name="recycler_view_item_normal">#FFF</color>
     <color name="recycler_view_item_pressed">#F7F7F7</color>
+
+    <color name="board_sticky_topic_background">#FFE0B2</color>
 
 </resources>

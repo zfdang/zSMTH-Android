@@ -1,11 +1,13 @@
 package com.zfdang.zsmth_android;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
 import com.zfdang.zsmth_android.models.Topic;
 
@@ -37,7 +39,7 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
         Topic topic = holder.mTopic;
 
 
-        if(holder.mTopic.isCategory){
+        if(topic.isCategory){
             holder.mSeperator.setVisibility(View.VISIBLE);
             holder.mTitle.setVisibility(View.GONE);
             holder.mAuthor.setVisibility(View.GONE);
@@ -63,6 +65,12 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
             holder.mReplier.setText(topic.getReplier());
             holder.mPublishDate.setText(topic.getPublishDate());
             holder.mReplyDate.setText(topic.getReplyDate());
+
+            if(topic.isSticky) {
+                holder.mView.setBackgroundColor(ContextCompat.getColor(SMTHApplication.getAppContext(), R.color.board_sticky_topic_background));
+            } else {
+                holder.mView.setBackgroundColor(ContextCompat.getColor(SMTHApplication.getAppContext(), R.color.body_background));
+            }
         }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {

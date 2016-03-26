@@ -233,7 +233,7 @@ public class BoardTopicActivity extends AppCompatActivity
 
                     @Override
                     public void onNext(Topic topic) {
-                        Log.d(TAG, topic.toString());
+                        // Log.d(TAG, topic.toString());
                         TopicListContent.addBoardTopic(topic, mBoardEngName);
                         mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
                     }
