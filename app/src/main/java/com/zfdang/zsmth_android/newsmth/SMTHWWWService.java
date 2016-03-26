@@ -16,21 +16,21 @@ import rx.Observable;
 
 
 public interface SMTHWWWService {
-
-    @FormUrlEncoded
-    @POST("/bbslogin.php")
-    Observable<ResponseBody> login(@Field("id") String username, @Field("passwd") String password);
+//    @FormUrlEncoded
+//    @POST("/bbslogin.php")
+//    Observable<ResponseBody> login(@Field("id") String username, @Field("passwd") String password);
 
     @FormUrlEncoded
     @POST("/bbslogin.php")
     Observable<ResponseBody> loginWithKick(@Field("id") String username, @Field("passwd") String password, @Field("kick_multi") String kickID);
-
-    @GET("/mainpage.html")
-    Observable<ResponseBody> getGuidance();
 
     @GET("/bbsfav.php")
     Observable<ResponseBody> getFavoriteByPath(@Query("select") String path);
 
     @GET("/nForum/section/{section}?ajax")
     Observable<ResponseBody> getBoardsBySection(@Path("section") String section);
+
+    @GET("/nForum/article/{boardEngName}/{topicID}?ajax")
+    Observable<ResponseBody> getPostListByPage(@Path("boardEngName") String boardEngName, @Path("topicID") String topicID, @Query("p") int page);
+
 }
