@@ -7,12 +7,16 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.Toast;
 
+import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.listeners.OnBoardFragmentInteractionListener;
+import com.zfdang.zsmth_android.listeners.OnVolumeUpDownListener;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.BoardListContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
@@ -31,7 +35,7 @@ import rx.schedulers.Schedulers;
  * Activities containing this fragment MUST implement the {@link OnBoardFragmentInteractionListener}
  * interface.
  */
-public class AllBoardFragment extends Fragment {
+public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener {
 
     final private String TAG = "AllBoardFragment";
     private RecyclerView mRecyclerView = null;
@@ -221,6 +225,16 @@ public class AllBoardFragment extends Fragment {
             mAdapter.getFilter().filter(newText);
             return true;
         }
+    }
+
+    @Override
+    public boolean onVolumeUpDown(int keyCode) {
+        if(keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            Toast.makeText(SMTHApplication.getAppContext(), "Volume UP, to scroll up", Toast.LENGTH_SHORT).show();
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            Toast.makeText(SMTHApplication.getAppContext(), "Volume down, to scroll down", Toast.LENGTH_SHORT).show();
+        }
+        return true;
     }
 
 

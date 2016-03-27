@@ -9,13 +9,16 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
 import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
+import com.zfdang.zsmth_android.listeners.OnVolumeUpDownListener;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.models.TopicListContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
@@ -34,7 +37,7 @@ import rx.schedulers.Schedulers;
  * Activities containing this fragment MUST implement the {@link OnTopicFragmentInteractionListener}
  * interface.
  */
-public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, OnVolumeUpDownListener {
 
     private final String TAG = "Guidance Fragment";
 
@@ -228,5 +231,17 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public boolean onVolumeUpDown(int keyCode) {
+        if(keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, keyCode);
+//            Toast.makeText(SMTHApplication.getAppContext(), "Volume UP, to scroll up", Toast.LENGTH_SHORT).show();
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, keyCode);
+//            Toast.makeText(SMTHApplication.getAppContext(), "Volume down, to scroll down", Toast.LENGTH_SHORT).show();
+        }
+        return true;
     }
 }

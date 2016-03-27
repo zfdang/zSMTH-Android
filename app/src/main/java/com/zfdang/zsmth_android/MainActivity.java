@@ -16,6 +16,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.listeners.OnBoardFragmentInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
+import com.zfdang.zsmth_android.listeners.OnVolumeUpDownListener;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.Topic;
@@ -139,6 +141,25 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
     }
+
+    // http://stackoverflow.com/questions/2367484/how-to-override-the-behavior-of-the-volume-buttons-in-an-android-application
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        int keyCode = event.getKeyCode();
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_UP:
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+                if(fragment instanceof OnVolumeUpDownListener) {
+                    OnVolumeUpDownListener frag = (OnVolumeUpDownListener) fragment;
+                    return frag.onVolumeUpDown(keyCode);
+                }
+                return false;
+            default:
+                return super.dispatchKeyEvent(event);
+        }
+    }
+
 
     @Override
     protected void onPause() {
