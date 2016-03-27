@@ -102,9 +102,6 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
         getActivity().setTitle(SMTHApplication.App_Title_Prefix + "首页导读");
 
         if(TopicListContent.HOT_TOPICS.size() == 0){
-            // only refresh guidance when there is no topic available
-            MainActivity activity = (MainActivity)getActivity();
-            activity.showProgress("获取导读信息...", true);
             RefreshGuidance();
         }
         return rootView;
@@ -122,10 +119,26 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
         RefreshGuidance();
     }
 
-    public void RefreshGuidance() {
-        RefreshGuidanceFromMobile();
+    public void showLoadingHints() {
+        MainActivity activity = (MainActivity)getActivity();
+        activity.showProgress("获取导读信息...", true);
     }
 
+    public void clearLoadingHints () {
+        // disable progress bar
+        MainActivity activity = (MainActivity) getActivity();
+        activity.showProgress("", false);
+
+        // disable SwipeFreshLayout
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    public void RefreshGuidance() {
+        // called by onCreate & refresh menu item
+        //
+        showLoadingHints();
+        RefreshGuidanceFromMobile();
+    }
 
     final String[] SectionName = {"十大", "推荐", "国内院校", "休闲娱乐", "五湖四海", "游戏运动", "社会信息", "知性感性", "文化人文", "学术科学", "电脑技术"};
     final String[] SectionURLPath = {"topTen", "recommend", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
@@ -182,7 +195,7 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
                         Log.d(TAG, e.toString());
                         clearLoadingHints();
 
-                        Toast.makeText(getActivity(), "获取热帖失败", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "获取热帖失败!", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -194,16 +207,6 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
                 });
 
 
-    }
-
-
-    public void clearLoadingHints () {
-        // disable progress bar
-        MainActivity activity = (MainActivity) getActivity();
-        activity.showProgress("", false);
-
-        // disable SwipeFreshLayout
-        mSwipeRefreshLayout.setRefreshing(false);
     }
 
 

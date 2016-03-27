@@ -269,7 +269,9 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
-            if (fragment == allBoardFragment) {
+            if(fragment == hotTopicFragment) {
+                hotTopicFragment.RefreshGuidance();
+            } else if (fragment == allBoardFragment) {
                 allBoardFragment.LoadAllBoardsWithoutCache();
             } else if(fragment == favoriteBoardFragment) {
                 favoriteBoardFragment.RefreshFavoriteBoardsWithCache();
