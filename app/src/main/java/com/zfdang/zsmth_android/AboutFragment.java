@@ -4,18 +4,11 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
-import com.zfdang.zsmth_android.newsmth.SMTHHelper;
-
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 
 /**
@@ -112,17 +105,6 @@ public class AboutFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         if(v == m_btCheckVersion) {
 
-            SMTHHelper helper = SMTHHelper.getInstance();
-            helper.mService.article("FamilyLife", "1757776949")
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<String>() {
-                        @Override
-                        public void call(String response) {
-                            Log.d("About Fragment", response);
-                            m_tvAppVersion.setText(response);
-                        }
-                    });
         }
 
     }

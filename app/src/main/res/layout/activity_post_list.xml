@@ -23,12 +23,24 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <FrameLayout
-        android:id="@+id/frameLayout"
+    <LinearLayout
+        android:id="@+id/post_list_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+        <!--Header-->
+        <TextView
+            android:id="@+id/post_list_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/recycler_view_seperator"
+            android:text="@string/post_list_title"
+            android:textColor="@color/status_text"
+            android:textSize="18sp"/>
+
+        <!-- Body -->
         <android.support.v7.widget.RecyclerView
             android:id="@+id/post_list"
             android:name="com.zfdang.zsmth_android.TopicListFragment"
@@ -36,24 +48,18 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="0dp"
+            android:layout_weight="1"
             android:scrollbars="vertical"
             app:layoutManager="LinearLayoutManager"
-            tools:context=".BoardTopicActivity"
 
+            tools:context=".BoardTopicActivity"
             tools:listitem="@layout/post_item"/>
 
-    </FrameLayout>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/post_list_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_dialog_email"/>
-
+        <!-- footer -->
+        <include layout="@layout/post_list_page_navigator"/>
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

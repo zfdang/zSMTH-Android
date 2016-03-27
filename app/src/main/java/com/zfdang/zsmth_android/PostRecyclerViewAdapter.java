@@ -1,6 +1,8 @@
 package com.zfdang.zsmth_android;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +38,13 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         holder.mPost = mPosts.get(position);
         Post post = holder.mPost;
 
-        holder.mPostID.setText(post.getSubjectID());
-        holder.mPostContent.setText(post.getContent());
+        holder.mPostAuthor.setText(post.getAuthor());
+
+        String formattedText = post.getTextContent();
+        Spanned result = Html.fromHtml(formattedText);
+        holder.mPostContent.setText(result);
+
+        holder.mPostIndex.setText(String.format("第%d楼", position));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,14 +65,18 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mPostID;
+        public final TextView mPostAuthor;
+        public final TextView mPostIndex;
+        public final TextView mPostPublishDate;
         public final TextView mPostContent;
         public Post mPost;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mPostID = (TextView) view.findViewById(R.id.post_id);
+            mPostAuthor = (TextView) view.findViewById(R.id.post_author);
+            mPostIndex = (TextView) view.findViewById(R.id.post_index);
+            mPostPublishDate = (TextView) view.findViewById(R.id.post_publish_date);
             mPostContent = (TextView) view.findViewById(R.id.post_content);
         }
 

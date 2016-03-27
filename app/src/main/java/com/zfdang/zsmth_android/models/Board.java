@@ -1,5 +1,8 @@
 package com.zfdang.zsmth_android.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -8,7 +11,7 @@ import java.io.ObjectOutput;
 /**
  * Created by zfdang on 2016-3-14.
  */
-public class Board implements Externalizable{
+public class Board implements Externalizable, Parcelable{
 
     // for Externalizable
     static final long serialVersionUID = 20160322L;
@@ -30,6 +33,7 @@ public class Board implements Externalizable{
     // http://stackoverflow.com/questions/21966784/reading-object-from-file-throws-illegalaccessexception
     // used by readObject
     public Board(){
+
     }
 
     public Board(String id, String chsName, String enName) {
@@ -57,6 +61,14 @@ public class Board implements Externalizable{
 
     public String getBoardChsName() {
         return boardChsName;
+    }
+
+    public String getBoardName() {
+        if(boardChsName == null || boardChsName.length() == 0){
+            return boardEngName;
+        } else {
+            return String.format("[%s]%s", boardEngName, boardChsName);
+        }
     }
 
     public String getCategoryName() {
@@ -126,4 +138,44 @@ public class Board implements Externalizable{
         output.writeObject(folderID);
         output.writeObject(folderName);
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.boardID);
+        dest.writeString(this.boardEngName);
+        dest.writeString(this.boardChsName);
+        dest.writeString(this.categoryName);
+        dest.writeString(this.moderator);
+        dest.writeByte(isFolder ? (byte) 1 : (byte) 0);
+        dest.writeString(this.folderName);
+        dest.writeString(this.folderID);
+    }
+
+    protected Board(Parcel in) {
+        this.boardID = in.readString();
+        this.boardEngName = in.readString();
+        this.boardChsName = in.readString();
+        this.categoryName = in.readString();
+        this.moderator = in.readString();
+        this.isFolder = in.readByte() != 0;
+        this.folderName = in.readString();
+        this.folderID = in.readString();
+    }
+
+    public static final Creator<Board> CREATOR = new Creator<Board>() {
+        @Override
+        public Board createFromParcel(Parcel source) {
+            return new Board(source);
+        }
+
+        @Override
+        public Board[] newArray(int size) {
+            return new Board[size];
+        }
+    };
 }

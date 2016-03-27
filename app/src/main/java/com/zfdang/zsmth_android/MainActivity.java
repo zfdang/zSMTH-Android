@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -15,7 +16,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -343,17 +343,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onTopicFragmentInteraction(Topic item) {
-        // shared by HotTopicFragment or BoardTopicFragment
+        // will be triggered in HotTopicFragment
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         if(fragment == hotTopicFragment) {
             Intent intent = new Intent(this, PostListActivity.class);
-            intent.putExtra("board_chs_name", item.getBoardChsName());
-            intent.putExtra("board_eng_name", item.getBoardEngName());
-            intent.putExtra("source", item);
+            intent.putExtra("topic_object", item);
             startActivity(intent);
-        } else {
-            Log.d("MainActivity", item.getTitle() + "is clicked");
-            Toast.makeText(this, item.getTitle() + " is clicked", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -384,8 +379,7 @@ public class MainActivity extends AppCompatActivity
     public void startBoardTopicActivity(Board board, String source) {
 //        Toast.makeText(this, board.toString() + " is clicked", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this, BoardTopicActivity.class);
-        intent.putExtra("board_chs_name", board.getBoardChsName());
-        intent.putExtra("board_eng_name", board.getBoardEngName());
+        intent.putExtra("board_object", (Parcelable)board);
         intent.putExtra("source", source);
         startActivity(intent);
     }

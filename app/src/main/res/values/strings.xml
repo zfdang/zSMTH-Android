@@ -38,4 +38,13 @@
     <string name="publish_date_label">作者:</string>
     <string name="reply_date_label">回复:</string>
 
+    <!-- 同主题下导航 -->
+    <string name="first_page">首页</string>
+    <string name="last_page">末页</string>
+    <string name="pre_page">上页</string>
+    <string name="next_page">下页</string>
+    <string name="go_page">GO</string>
+    <string name="go_and_last_page">GO/末页</string>
+    <string name="post_list_title">文章标题</string>
+
 </resources>

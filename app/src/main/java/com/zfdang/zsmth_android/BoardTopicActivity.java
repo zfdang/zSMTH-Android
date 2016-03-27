@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.zfdang.zsmth_android.listeners.EndlessRecyclerOnScrollListener;
 import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
+import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.models.TopicListContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
@@ -50,8 +51,8 @@ public class BoardTopicActivity extends AppCompatActivity
      */
 
     private final String TAG = "BoardTopicActivity";
-    private String mBoardChsName = null;
-    private String mBoardEngName = null;
+
+    private Board mBoard = null;
     private String mSource = null;
 
     private ProgressDialog pdialog = null;
@@ -104,41 +105,31 @@ public class BoardTopicActivity extends AppCompatActivity
         };
         mRecyclerView.addOnScrollListener(mScrollListener);
 
-        // get Board information from launcher
-        Intent intent = getIntent();
-        mBoardChsName = intent.getStringExtra("board_chs_name");
-        mSource = intent.getStringExtra("source");
-        String engName = intent.getStringExtra("board_eng_name");
-        if (engName != mBoardEngName) {
-            TopicListContent.clearBoardTopics();
-            mBoardEngName = engName;
-            TopicListContent.setBoardName(mBoardEngName);
-            mCurrentPageNo = 1;
-        }
-
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        // get Board information from launcher
+        Intent intent = getIntent();
+        Board board = intent.getParcelableExtra("board_object");
+        assert board != null;
+        mSource = intent.getStringExtra("source");
+        if (mBoard == null || !mBoard.getBoardEngName().equals(board.getClass())) {
+            mBoard = board;
+            TopicListContent.clearBoardTopics();
+            mCurrentPageNo = 1;
+        }
         updateTitle();
-
         if (TopicListContent.BOARD_TOPICS.size() == 0) {
             // only load boards on the first time
             RefreshBoardTopics();
         }
-
     }
 
     public void updateTitle() {
-        String title = "";
-        if (mBoardChsName != null && mBoardChsName.length() > 0) {
-            title += String.format("[%s]%s", mBoardEngName, mBoardChsName);
-        } else {
-            title += String.format("%s", mBoardEngName);
-        }
-
+        String title = mBoard.getBoardName();
         setTitle(title);
     }
 
@@ -192,7 +183,7 @@ public class BoardTopicActivity extends AppCompatActivity
     public void LoadBoardTopicsFromMobile() {
         final SMTHHelper helper = SMTHHelper.getInstance();
 
-        helper.mService.getBoardTopicsByPage(mBoardEngName, Integer.toString(mCurrentPageNo))
+        helper.mService.getBoardTopicsByPage(mBoard.getBoardEngName(), Integer.toString(mCurrentPageNo))
                 .flatMap(new Func1<ResponseBody, Observable<Topic>>() {
                     @Override
                     public Observable<Topic> call(ResponseBody responseBody) {
@@ -214,7 +205,7 @@ public class BoardTopicActivity extends AppCompatActivity
                         super.onStart();
 
                         Topic topic = new Topic(String.format("第%d页:", mCurrentPageNo));
-                        TopicListContent.addBoardTopic(topic, mBoardEngName);
+                        TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
                         mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
                     }
 
@@ -234,7 +225,7 @@ public class BoardTopicActivity extends AppCompatActivity
                     @Override
                     public void onNext(Topic topic) {
                         // Log.d(TAG, topic.toString());
-                        TopicListContent.addBoardTopic(topic, mBoardEngName);
+                        TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
                         mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
                     }
                 });
@@ -246,9 +237,9 @@ public class BoardTopicActivity extends AppCompatActivity
     @Override
     public void onTopicFragmentInteraction(Topic item) {
         Intent intent = new Intent(this, PostListActivity.class);
-//        intent.putExtra("board_chs_name", item.getBoardChsName());
-//        intent.putExtra("board_eng_name", item.getBoardEngName());
-//        intent.putExtra("source", item);
+        item.setBoardEngName(mBoard.getBoardEngName());
+        item.setBoardChsName(mBoard.getBoardChsName());
+        intent.putExtra("topic_object", item);
         startActivity(intent);
     }
 

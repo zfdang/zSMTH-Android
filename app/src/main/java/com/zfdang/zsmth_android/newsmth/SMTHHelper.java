@@ -11,6 +11,7 @@ import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersisto
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.BoardListContent;
+import com.zfdang.zsmth_android.models.Post;
 import com.zfdang.zsmth_android.models.Topic;
 
 import org.jsoup.Jsoup;
@@ -114,6 +115,62 @@ public class SMTHHelper {
                 .build();
         wService = wRetrofit.create(SMTHWWWService.class);
     }
+
+
+    public static List<Post> ParsePostListFromWWW(String content, Topic topic) {
+        final String TAG = "ParsePostListFromWWW";
+        List<Post> results = new ArrayList<>();
+        Log.d("ParsePostListFromWWW", content);
+
+        Document doc = Jsoup.parse(content);
+
+        // find total posts for this topic, and total pages
+        Elements lis = doc.select("li.page-pre");
+        if(lis.size() > 0) {
+            Element li = lis.first();
+            // 贴数:152 分页:
+            Log.d(TAG, li.text());
+
+            Pattern pattern = Pattern.compile("(\\d+)", Pattern.DOTALL);
+            Matcher matcher = pattern.matcher(li.text());
+            if (matcher.find()) {
+                String totalPostString = matcher.group(0);
+                Log.d(TAG, totalPostString);
+                try{
+                    int totalPostNo = Integer.parseInt(totalPostString);
+                    topic.setTotalPostNo(totalPostNo);
+                } catch (Exception e) {
+                    Log.d(TAG, e.toString());
+                }
+            }
+        }
+
+        // find all posts
+        Elements tables = doc.select("table.article");
+        for (Element table: tables) {
+            Post post = new Post();
+
+            // find author for this post
+            Elements authors = table.select("span.a-u-name");
+            if(authors.size() > 0){
+                Element author = authors.get(0);
+                String authorName = author.text();
+                post.setAuthor(authorName);
+                Log.d(TAG, authorName);
+            }
+
+            Elements contents = table.select("td.a-content");
+            if(contents.size() == 1) {
+                String postContent = contents.get(0).toString();
+                post.setContent(postContent);
+                Log.d(TAG, postContent);
+            }
+            results.add(post);
+        }
+
+        return results;
+    }
+
 
     // parse guidance page, to find all hot topics
     // http://m.newsmth.net/hot/topTen

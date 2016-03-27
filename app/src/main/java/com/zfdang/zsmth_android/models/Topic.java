@@ -4,11 +4,14 @@ package com.zfdang.zsmth_android.models;
  * Created by zfdang on 2016-3-14.
  */
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  */
-public class Topic implements Serializable {
+public class Topic implements Parcelable {
+
+    private final int POST_PER_PAGE = 10;
 
     // 分隔符，只有一个category的名称
     public boolean isCategory;
@@ -30,14 +33,26 @@ public class Topic implements Serializable {
 
     private String type;
 
+    public int getTotalPageNo() {
+        return totalPageNo;
+    }
+
     private int totalPageNo;
     private int currentPageNo;
+    private int totalPostNo;
+
+    public void setTotalPostNo(int totalPostNo) {
+        this.totalPostNo = totalPostNo;
+        this.totalPageNo = this.totalPostNo / this.POST_PER_PAGE + 1;
+    }
+
 
     // this is actually a category, used in guidance fragment to seperate hot topics
     public Topic(String category) {
         isCategory = true;
         this.category = category;
     }
+
 
     public Topic() {
         isCategory = false;
@@ -46,18 +61,11 @@ public class Topic implements Serializable {
         this.author = "";
     }
 
-    // this is a real hot topic
-    public Topic(String boardChsName, String boardEngName, String title, String author) {
-        this.boardChsName = boardChsName;
-        this.boardEngName = boardEngName;
-        this.title = title;
-        this.author = author;
-        isCategory = false;
-    }
 
     public String getTitle() {
         return title;
     }
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -73,15 +81,19 @@ public class Topic implements Serializable {
     public String getBoardEngName() {
         return boardEngName;
     }
+
     public void setBoardEngName(String boardEngName) {
         this.boardEngName = boardEngName;
     }
+
     public String getBoardChsName() {
         return boardChsName;
     }
+
     public void setBoardChsName(String boardChsName) {
         this.boardChsName = boardChsName;
     }
+
     public String getBoardName() {
         if (boardChsName != null && boardChsName.length() > 0) {
             return "[" + boardEngName + "]" + boardChsName;
@@ -94,12 +106,15 @@ public class Topic implements Serializable {
     public String getTopicID() {
         return topicID;
     }
+
     public void setTopicID(String topicID) {
         this.topicID = topicID;
     }
+
     public String getCategory() {
         return category;
     }
+
     public void setCategory(String category) {
         this.category = category;
     }
@@ -134,7 +149,7 @@ public class Topic implements Serializable {
         if (isCategory) {
             return "Category " + this.category;
         } else {
-            if(isSticky) {
+            if (isSticky) {
                 return String.format("置顶: (%s) %s by %s, %s @ %s", this.topicID, this.title, this.author, this.publishDate, this.boardEngName);
             } else {
                 return String.format("(%s) %s by %s, %s @ %s", this.topicID, this.title, this.author, this.publishDate, this.boardEngName);
@@ -142,4 +157,61 @@ public class Topic implements Serializable {
             }
         }
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+//        dest.writeInt(this.POST_PER_PAGE);
+        dest.writeByte(isCategory ? (byte) 1 : (byte) 0);
+        dest.writeString(this.category);
+        dest.writeString(this.boardEngName);
+        dest.writeString(this.boardChsName);
+        dest.writeString(this.topicID);
+        dest.writeString(this.title);
+        dest.writeString(this.author);
+        dest.writeString(this.publishDate);
+        dest.writeString(this.replier);
+        dest.writeString(this.replyDate);
+        dest.writeByte(isSticky ? (byte) 1 : (byte) 0);
+        dest.writeString(this.type);
+        dest.writeInt(this.totalPageNo);
+        dest.writeInt(this.currentPageNo);
+        dest.writeInt(this.totalPostNo);
+    }
+
+    protected Topic(Parcel in) {
+//        this.POST_PER_PAGE = in.readInt();
+        this.isCategory = in.readByte() != 0;
+        this.category = in.readString();
+        this.boardEngName = in.readString();
+        this.boardChsName = in.readString();
+        this.topicID = in.readString();
+        this.title = in.readString();
+        this.author = in.readString();
+        this.publishDate = in.readString();
+        this.replier = in.readString();
+        this.replyDate = in.readString();
+        this.isSticky = in.readByte() != 0;
+        this.type = in.readString();
+        this.totalPageNo = in.readInt();
+        this.currentPageNo = in.readInt();
+        this.totalPostNo = in.readInt();
+    }
+
+    public static final Creator<Topic> CREATOR = new Creator<Topic>() {
+        @Override
+        public Topic createFromParcel(Parcel source) {
+            return new Topic(source);
+        }
+
+        @Override
+        public Topic[] newArray(int size) {
+            return new Topic[size];
+        }
+    };
 }

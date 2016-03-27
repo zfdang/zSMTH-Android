@@ -1,6 +1,4 @@
 package com.zfdang.zsmth_android.models;
-import android.text.Html;
-
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -85,7 +83,7 @@ public class Post {
     }
 
     public void setContent(String content) {
-        this.content = Html.fromHtml(content);
+        this.content = content;
     }
 
     public String getTextContent() {
