@@ -271,7 +271,10 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_refresh) {
             if (fragment == allBoardFragment) {
                 allBoardFragment.LoadAllBoardsWithoutCache();
-            } else {
+            } else if(fragment == favoriteBoardFragment) {
+                favoriteBoardFragment.RefreshFavoriteBoardsWithCache();
+            }
+            else {
                 Toast toast = Toast.makeText(this, "Refresh", Toast.LENGTH_SHORT);
                 toast.show();
             }

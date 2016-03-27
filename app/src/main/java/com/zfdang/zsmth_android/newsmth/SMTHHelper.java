@@ -59,7 +59,10 @@ public class SMTHHelper {
     public SMTHMobileService mService = null;
 
     // All boards cache file
+    public static int BOARD_TYPE_FAVORITE = 1;
+    public static int BOARD_TYPE_ALL = 2;
     static private final String ALL_BOARD_CACHE_FILE = "SMTH_ALL_BOARDS_CACHE";
+    static private final String FAVORITE_BOARD_CACHE_PREFIX = "SMTH_FAVORITE_CACHE";
 
     // singleton
     private static SMTHHelper instance = null;
@@ -283,6 +286,7 @@ public class SMTHHelper {
         return results;
     }
 
+
     // parse board topics from mobile
     public static List<Topic> ParseBoardTopicsFromMobile(String content) {
         List<Topic> results = new ArrayList<>();
@@ -417,47 +421,86 @@ public class SMTHHelper {
     * All Boards related methods
     * Starts here
      */
+    public static String getCacheFile(int type, String folder) {
+        if(type == BOARD_TYPE_ALL) {
+            return ALL_BOARD_CACHE_FILE;
+        } else if (type == BOARD_TYPE_FAVORITE) {
+            if(folder == null || folder.length() == 0){
+                folder = "ROOT";
+            }
+            return String.format("%s-%s", FAVORITE_BOARD_CACHE_PREFIX, folder);
+        }
+        return null;
+    }
 
-    public static List<Board> LoadAllBoardFromCache(){
+    public static List<Board> LoadBoardListFromCache(int type, String folder){
+        String filename = getCacheFile(type, folder);
         List<Board> boards = new ArrayList<>();
         try {
-            FileInputStream is = SMTHApplication.getAppContext().openFileInput(ALL_BOARD_CACHE_FILE);
+            FileInputStream is = SMTHApplication.getAppContext().openFileInput(filename);
             ObjectInputStream ois = new ObjectInputStream(is);
             boards = (ArrayList<Board>) ois.readObject();
             is.close();
-            Log.d("LoadAllBoardFromCache", String.format("%d boards loaded from cache file", boards.size()));
+            Log.d("LoadBoardListFromCache", String.format("%d boards loaded from cache file %s", boards.size(), filename));
         } catch (Exception e) {
-            Log.d("LoadAllBoardFromCache", e.toString());
-            Log.d("LoadAllBoardFromCache", "failed to load boards from cache");
+            Log.d("LoadBoardListFromCache", e.toString());
+            Log.d("LoadBoardListFromCache", "failed to load boards from cache file " + filename);
         }
         return boards;
     }
 
-    public static void SaveAllBoardToCache(List<Board> boards){
+    public static void SaveBoardListToCache(List<Board> boards, int type, String folder){
+        String filename = getCacheFile(type, folder);
         try {
-            FileOutputStream fos = SMTHApplication.getAppContext().openFileOutput(ALL_BOARD_CACHE_FILE, Context.MODE_PRIVATE);
+            FileOutputStream fos = SMTHApplication.getAppContext().openFileOutput(filename, Context.MODE_PRIVATE);
             ObjectOutputStream os = new ObjectOutputStream(fos);
             os.writeObject(boards);
             fos.close();
-            Log.d("SaveAllBoardToCache", String.format("%d boards saved to cache file", boards.size()));
+            Log.d("SaveBoardListToCache", String.format("%d boards saved to cache file %s", boards.size(), filename));
         } catch (Exception e) {
-            Log.d("SaveAllBoardToCache", e.toString());
-            Log.d("SaveAllBoardToCache", "failed to save boards to cache file");
+            Log.d("SaveBoardListToCache", e.toString());
+            Log.d("SaveBoardListToCache", "failed to save boards to cache file " + filename);
         }
     }
 
-    public static void ClearAllBoardCache() {
+    public static void ClearBoardListCache(int type, String folder) {
+        String filename = getCacheFile(type, folder);
         try{
-            if(SMTHApplication.getAppContext().deleteFile(ALL_BOARD_CACHE_FILE))
+            if(SMTHApplication.getAppContext().deleteFile(filename))
             {
-                Log.d("ClearAllBoardCache", "delete all_boards cache file successfully");
+                Log.d("ClearBoardListCache", String.format("delete cache file %s successfully", filename));
                 return;
             }
         } catch (Exception e) {
-            Log.d("ClearAllBoardCache", e.toString());
+            Log.d("ClearBoardListCache", e.toString());
+            Log.d("ClearBoardListCache", "Failed to delete cache file " + filename);
         }
-        Log.d("ClearAllBoardCache", "Failed to delete all_boards cache file");
     }
+
+    public static List<Board> LoadFavoriteBoardsByFolderFromWWW(final String path) {
+        List<Board> results = SMTHHelper.getInstance().wService.getFavoriteByPath(path)
+                .flatMap(new Func1<ResponseBody, Observable<Board>>() {
+                    @Override
+                    public Observable<Board> call(ResponseBody resp) {
+                        try {
+                            String response = SMTHHelper.DecodeResponseFromWWW(resp.bytes());
+//                            Log.d(TAG, response);
+                            List<Board> boards = SMTHHelper.ParseFavoriteBoardsFromWWW(response);
+                            return Observable.from(boards);
+                        } catch (Exception e) {
+                            Log.d(TAG, "Failed to load favorite {" + path + "}");
+                            Log.d(TAG, e.toString());
+                            return null;
+                        }
+                    }
+                })
+                .toList().toBlocking().single();
+
+        SaveBoardListToCache(results, BOARD_TYPE_FAVORITE, path);
+
+        return results;
+    }
+
 
     // load all boards from WWW, recursively
     // http://stackoverflow.com/questions/31246088/how-to-do-recursive-observable-call-in-rxjava
@@ -500,7 +543,7 @@ public class SMTHHelper {
         Log.d("LoadAllBoardsFromWWW", String.format("%d boards loaded from network", boards.size()));
 
         // save boards to disk
-        SaveAllBoardToCache(boards);
+        SaveBoardListToCache(boards, BOARD_TYPE_ALL, null);
 
         return boards;
     }

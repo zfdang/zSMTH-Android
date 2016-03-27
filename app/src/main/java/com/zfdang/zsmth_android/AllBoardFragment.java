@@ -112,7 +112,7 @@ public class AllBoardFragment extends Fragment {
     }
 
     public void LoadAllBoardsWithoutCache() {
-        SMTHHelper.ClearAllBoardCache();
+        SMTHHelper.ClearBoardListCache(SMTHHelper.BOARD_TYPE_ALL, null);
         LoadAllBoards();
     }
 
@@ -123,7 +123,7 @@ public class AllBoardFragment extends Fragment {
         final Observable<List<Board>> cache = Observable.create(new Observable.OnSubscribe<List<Board>>() {
             @Override
             public void call(Subscriber<? super List<Board>> subscriber) {
-                List<Board> boards = SMTHHelper.LoadAllBoardFromCache();
+                List<Board> boards = SMTHHelper.LoadBoardListFromCache(SMTHHelper.BOARD_TYPE_ALL, null);
                 if(boards != null && boards.size() > 0) {
                     subscriber.onNext(boards);
                 } else {
@@ -177,7 +177,7 @@ public class AllBoardFragment extends Fragment {
 
                     @Override
                     public void onNext(Board board) {
-                        Log.d(TAG, board.toString());
+//                        Log.d(TAG, board.toString());
                         BoardListContent.addAllBoardItem(board);
                         mRecyclerView.getAdapter().notifyItemInserted(BoardListContent.ALL_BOARDS.size() - 1);
                     }

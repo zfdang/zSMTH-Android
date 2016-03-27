@@ -19,7 +19,6 @@ import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -145,6 +144,12 @@ public class FavoriteBoardFragment extends Fragment {
         activity.showProgress("", false);
     }
 
+    public void RefreshFavoriteBoardsWithCache() {
+        SMTHHelper.ClearBoardListCache(SMTHHelper.BOARD_TYPE_FAVORITE, getCurrentFavoritePath());
+        RefreshFavoriteBoards();
+    }
+
+
     public void RefreshFavoriteBoards() {
         showLoadingHints();
         LoadFavoriteBoardsByPath(getCurrentFavoritePath());
@@ -152,20 +157,39 @@ public class FavoriteBoardFragment extends Fragment {
 
     protected void LoadFavoriteBoardsByPath(final String path) {
         SMTHHelper helper = SMTHHelper.getInstance();
-        helper.wService.getFavoriteByPath(path)
-                .flatMap(new Func1<ResponseBody, Observable<Board>>() {
+
+        // all boards loaded in cached file
+        final Observable<List<Board>> cache = Observable.create(new Observable.OnSubscribe<List<Board>>() {
+            @Override
+            public void call(Subscriber<? super List<Board>> subscriber) {
+                List<Board> boards = SMTHHelper.LoadBoardListFromCache(SMTHHelper.BOARD_TYPE_FAVORITE, path);
+                if(boards != null && boards.size() > 0) {
+                    subscriber.onNext(boards);
+                } else {
+                    subscriber.onCompleted();
+                }
+            }
+        });
+
+        // all boards loaded from network
+        final Observable<List<Board>> network = Observable.create(new Observable.OnSubscribe<List<Board>>() {
+            @Override
+            public void call(Subscriber<? super List<Board>> subscriber) {
+                List<Board> boards = SMTHHelper.LoadFavoriteBoardsByFolderFromWWW(path);
+                if (boards != null && boards.size() > 0) {
+                    subscriber.onNext(boards);
+                } else {
+                    subscriber.onCompleted();
+                }
+            }
+        });
+
+        Observable.concat(cache, network)
+                .first()
+                .flatMap(new Func1<List<Board>, Observable<Board>>() {
                     @Override
-                    public Observable<Board> call(ResponseBody resp) {
-                        try {
-                            String response = SMTHHelper.DecodeResponseFromWWW(resp.bytes());
-                            Log.d(TAG, response);
-                            List<Board> boards = SMTHHelper.ParseFavoriteBoardsFromWWW(response);
-                            return Observable.from(boards);
-                        } catch (Exception e) {
-                            Log.d(TAG, "Failed to load favorite {" + path + "}");
-                            Log.d(TAG, e.toString());
-                            return null;
-                        }
+                    public Observable<Board> call(List<Board> boards) {
+                        return Observable.from(boards);
                     }
                 })
                 .subscribeOn(Schedulers.io())
@@ -188,14 +212,14 @@ public class FavoriteBoardFragment extends Fragment {
                     @Override
                     public void onError(Throwable e) {
                         Log.d(TAG, e.toString());
-
+                        clearLoadingHints();
                     }
 
                     @Override
                     public void onNext(Board board) {
                         BoardListContent.addFavoriteItem(board);
                         mRecyclerView.getAdapter().notifyItemInserted(BoardListContent.FAVORITE_BOARDS.size());
-                        Log.d(TAG, board.toString());
+//                        Log.d(TAG, board.toString());
                     }
                 });
     }
