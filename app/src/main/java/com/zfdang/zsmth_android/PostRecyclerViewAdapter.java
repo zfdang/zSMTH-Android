@@ -20,11 +20,11 @@ import java.util.List;
 public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerViewAdapter.ViewHolder> {
 
     public interface OnItemClickListener {
-        public void onItemClicked(int position);
+        public void onItemClicked(int position, View v);
     }
 
     public interface OnItemLongClickListener {
-        public boolean onItemLongClicked(int position);
+        public boolean onItemLongClicked(int position, View v);
     }
 
     private final List<Post> mPosts;
@@ -65,7 +65,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                 if (null != mListener && mListener instanceof OnItemClickListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    ((OnItemClickListener) mListener).onItemClicked(position);
+                    ((OnItemClickListener) mListener).onItemClicked(position, holder.mView);
                 }
             }
         });
@@ -75,7 +75,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                 if (null != mListener && mListener instanceof OnItemLongClickListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    return ((OnItemLongClickListener) mListener).onItemLongClicked(position);
+                    return ((OnItemLongClickListener) mListener).onItemLongClicked(position, holder.mView);
                 }
                 return false;
             }

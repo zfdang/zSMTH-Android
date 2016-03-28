@@ -2,23 +2,31 @@ package com.zfdang.zsmth_android;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.zfdang.zsmth_android.models.AlertDialogItem;
 import com.zfdang.zsmth_android.models.Post;
 import com.zfdang.zsmth_android.models.PostListContent;
 import com.zfdang.zsmth_android.models.Topic;
@@ -167,7 +175,7 @@ public class PostListActivity extends AppCompatActivity
                     @Override
                     public void onNext(Post post) {
                         PostListContent.addItem(post);
-                        mRecyclerView.getAdapter().notifyItemInserted(PostListContent.POSTS.size()-1);
+                        mRecyclerView.getAdapter().notifyItemInserted(PostListContent.POSTS.size() - 1);
                         Log.d(TAG, post.toString());
                     }
                 });
@@ -251,13 +259,82 @@ public class PostListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemClicked(int position) {
+    public void onItemClicked(int position, View v) {
         Log.d(TAG, String.format("Post by %s is clicked", PostListContent.POSTS.get(position).getAuthor()));
     }
 
     @Override
-    public boolean onItemLongClicked(int position) {
+    public boolean onItemLongClicked(int position, View v) {
         Log.d(TAG, String.format("Post by %s is long clicked", PostListContent.POSTS.get(position).getAuthor()));
+
+
+        final AlertDialogItem[] menuItems = {
+                new AlertDialogItem(getString(R.string.post_reply_post), android.R.drawable.ic_menu_add),       // 0
+                new AlertDialogItem(getString(R.string.post_reply_mail), android.R.drawable.ic_menu_delete),    // 1
+                new AlertDialogItem(getString(R.string.post_query_author), android.R.drawable.ic_menu_send),    // 2
+                new AlertDialogItem(getString(R.string.post_copy_content), android.R.drawable.ic_menu_send),    // 3
+                new AlertDialogItem(getString(R.string.post_foward_self), android.R.drawable.ic_menu_send),     // 4
+                new AlertDialogItem(getString(R.string.post_foward_external), android.R.drawable.ic_menu_send), // 5
+                new AlertDialogItem(getString(R.string.post_view_in_browser), android.R.drawable.ic_menu_send), // 6
+                new AlertDialogItem(getString(R.string.post_delete_post), android.R.drawable.ic_menu_send),     // 7
+        };
+
+
+        ListAdapter adapter = new ArrayAdapter<AlertDialogItem>(getApplicationContext(), R.layout.post_popup_menu_item, menuItems) {
+            ViewHolder holder;
+            public View getView(int position, View convertView, ViewGroup parent) {
+                final LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                if (convertView == null) {
+                    convertView = inflater.inflate(R.layout.post_popup_menu_item, null);
+
+                    holder = new ViewHolder();
+                    holder.mIcon = (ImageView) convertView.findViewById(R.id.post_popupmenu_icon);
+                    holder.mTitle = (TextView) convertView.findViewById(R.id.post_popupmenu_title);
+                    convertView.setTag(holder);
+                } else {
+                    // view already defined, retrieve view holder
+                    holder = (ViewHolder) convertView.getTag();
+                }
+
+                holder.mTitle.setText(menuItems[position].text);
+                holder.mIcon.setImageResource(menuItems[position].icon);
+                return convertView;
+            }
+
+            class ViewHolder {
+                ImageView mIcon;
+                TextView mTitle;
+            }
+        };
+
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.post_alert_title))
+                .setAdapter(adapter, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        onPostPopupMenuItem(which);
+                    }
+                })
+                .show();
+
         return true;
     }
+
+    private void onPostPopupMenuItem(int which) {
+        Log.d(TAG, String.format("MenuItem %d was clicked", which));
+
+        if(which == 0) {
+
+        } else if (which == 1) {
+        } else if (which == 2) {
+        } else if (which == 3) {
+        } else if (which == 4) {
+        } else if (which == 5) {
+        } else if (which == 6) {
+        } else if (which == 7) {
+
+        }
+
+    }
+
 }
