@@ -1,6 +1,6 @@
 package com.zfdang.zsmth_android;
 
-import android.support.v4.app.Fragment;
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.zfdang.zsmth_android.models.Post;
+import com.zfdang.zsmth_android.models.Topic;
 
 import java.util.List;
 
@@ -27,11 +28,11 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
     }
 
     private final List<Post> mPosts;
-    private final Fragment mFragment;
+    private final Activity mListener;
 
-    public PostRecyclerViewAdapter(List<Post> posts, Fragment fragment) {
+    public PostRecyclerViewAdapter(List<Post> posts, Activity listener) {
         mPosts = posts;
-        mFragment = fragment;
+        mListener = listener;
     }
 
     @Override
@@ -52,27 +53,29 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         Spanned result = Html.fromHtml(formattedText);
         holder.mPostContent.setText(result);
 
-        holder.mPostIndex.setText(String.format("第%d楼", position));
-
+        if(mListener != null) {
+            int mCurrentPageNo = ((PostListActivity) mListener).mCurrentPageNo;
+            holder.mPostIndex.setText(Topic.getPostIndex(mCurrentPageNo, position));
+        }
 
         // http://stackoverflow.com/questions/4415528/how-to-pass-the-onclick-event-to-its-parent-on-android
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != mFragment && mFragment instanceof OnItemClickListener) {
+                if (null != mListener && mListener instanceof OnItemClickListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    ((OnItemClickListener) mFragment).onItemClicked(position);
+                    ((OnItemClickListener) mListener).onItemClicked(position);
                 }
             }
         });
         holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (null != mFragment && mFragment instanceof OnItemLongClickListener) {
+                if (null != mListener && mListener instanceof OnItemLongClickListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    return ((OnItemLongClickListener) mFragment).onItemLongClicked(position);
+                    return ((OnItemLongClickListener) mListener).onItemLongClicked(position);
                 }
                 return false;
             }

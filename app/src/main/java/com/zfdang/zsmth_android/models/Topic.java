@@ -12,7 +12,7 @@ import android.util.Log;
  */
 public class Topic implements Parcelable {
 
-    private final int POST_PER_PAGE = 10;
+    static private final int POST_PER_PAGE = 10;
 
     // 分隔符，只有一个category的名称
     public boolean isCategory;
@@ -184,6 +184,14 @@ public class Topic implements Parcelable {
 
             }
         }
+    }
+
+    public static String getPostIndex(int mCurrentPageNo, int position) {
+        if(mCurrentPageNo == 1 && position == 0) {
+            return "楼主";
+        }
+        int index = (mCurrentPageNo - 1) * POST_PER_PAGE + position;
+        return String.format("第%d楼", index);
     }
 
 

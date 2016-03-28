@@ -19,7 +19,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.zfdang.zsmth_android.listeners.RecyclerItemClickListener;
 import com.zfdang.zsmth_android.models.Post;
 import com.zfdang.zsmth_android.models.PostListContent;
 import com.zfdang.zsmth_android.models.Topic;
@@ -41,14 +40,14 @@ import rx.schedulers.Schedulers;
  * in a {@link BoardTopicActivity}.
  */
 public class PostListActivity extends AppCompatActivity
-        implements View.OnClickListener {
+        implements View.OnClickListener, PostRecyclerViewAdapter.OnItemClickListener, PostRecyclerViewAdapter.OnItemLongClickListener{
 
     private static final String TAG = "PostListActivity";
     private RecyclerView mRecyclerView = null;
     private TextView mTitle = null;
     private EditText mPageNo = null;
 
-    private int mCurrentPageNo = 1;
+    public int mCurrentPageNo = 1;
 
     private Topic mTopic = null;
 
@@ -77,22 +76,7 @@ public class PostListActivity extends AppCompatActivity
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
-        mRecyclerView.setAdapter(new PostRecyclerViewAdapter(PostListContent.POSTS, null));
-
-        mRecyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getApplicationContext(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        // do whatever
-                        Log.d(TAG, String.format("Post by %s was clicked", PostListContent.POSTS.get(position).getAuthor()));
-                    };
-
-                    @Override
-                    public void onItemLongClick(View view, int position) {
-                        // ...
-                        Log.d(TAG, String.format("Post by %s was long clicked", PostListContent.POSTS.get(position).getAuthor()));
-                    };
-                }));
+        mRecyclerView.setAdapter(new PostRecyclerViewAdapter(PostListContent.POSTS, this));
 
         // get Board information from launcher
         Intent intent = getIntent();
@@ -166,7 +150,7 @@ public class PostListActivity extends AppCompatActivity
                 .subscribe(new Subscriber<Post>() {
                     @Override
                     public void onCompleted() {
-                        String title = String.format("[%d/%d]%s", mCurrentPageNo, mTopic.getTotalPageNo(), mTopic.getTitle());
+                        String title = String.format("[%d/%d] %s", mCurrentPageNo, mTopic.getTotalPageNo(), mTopic.getTitle());
                         mTitle.setText(title);
                         mPageNo.setText(String.format("%d", mCurrentPageNo));
 
@@ -264,5 +248,16 @@ public class PostListActivity extends AppCompatActivity
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onItemClicked(int position) {
+        Log.d(TAG, String.format("Post by %s is clicked", PostListContent.POSTS.get(position).getAuthor()));
+    }
+
+    @Override
+    public boolean onItemLongClicked(int position) {
+        Log.d(TAG, String.format("Post by %s is long clicked", PostListContent.POSTS.get(position).getAuthor()));
+        return true;
     }
 }
