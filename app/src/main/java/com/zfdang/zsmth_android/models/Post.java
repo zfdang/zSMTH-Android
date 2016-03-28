@@ -14,7 +14,7 @@ public class Post {
     private String boardID;
     private Date date;
     private String index;
-    private CharSequence content;
+    private String content;
     private ArrayList<Attachment> attachFiles;
 
     public static int ACTION_DEFAULT = 0;
@@ -86,12 +86,7 @@ public class Post {
         this.content = content;
     }
 
-    public String getTextContent() {
-        String text = content.toString();
-        return text;
-    }
-
-    public CharSequence getContent() {
+    public String getContent() {
         return content;
     }
 

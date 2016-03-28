@@ -26,6 +26,7 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.thefinestartist.finestwebview.FinestWebView;
 import com.zfdang.zsmth_android.models.AlertDialogItem;
 import com.zfdang.zsmth_android.models.Post;
 import com.zfdang.zsmth_android.models.PostListContent;
@@ -331,6 +332,7 @@ public class PostListActivity extends AppCompatActivity
         } else if (which == 4) {
         } else if (which == 5) {
         } else if (which == 6) {
+            new FinestWebView.Builder(this).show("http://www.zfdang.com/");
         } else if (which == 7) {
 
         }

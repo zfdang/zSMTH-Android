@@ -1,6 +1,7 @@
 package com.zfdang.zsmth_android.newsmth;
 
 import android.content.Context;
+import android.text.Html;
 import android.util.Log;
 
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
@@ -8,6 +9,7 @@ import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.BoardListContent;
 import com.zfdang.zsmth_android.models.Post;
@@ -23,9 +25,13 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -157,9 +163,7 @@ public class SMTHHelper {
 
             Elements contents = table.select("td.a-content");
             if(contents.size() == 1) {
-                String postContent = contents.get(0).toString();
-                post.setContent(postContent);
-                Log.d(TAG, postContent);
+                ParsePostContentFromWWW(contents.get(0), post, topic);
             }
             results.add(post);
         }
@@ -168,59 +172,165 @@ public class SMTHHelper {
     }
 
 
-    // parse guidance page, to find all hot topics
-    // http://m.newsmth.net/hot/topTen
-    // http://m.newsmth.net/hot/1
-//    public static List<Topic> ParseHotTopicsFromMobile(String content) {
-//        List<Topic> results = new ArrayList<>();
-//        if (content == null) {
-//            return results;
-//        }
-//
-//        // two possible patterns here:
-//        // <li class="f">国内院校热门话题</li>
-//        // <li>10|<a href="/article/Weiqi/552886">阿法狗（分布式）和李世石的比赛不公平(<span style="color:red">64</span>)</a></li>
-//        // <li>3|<a href="/article/BJTU/222066">[代挂][pic]90年高挑金融MM诚意挂，上海 (转载)</a></li>
-//        content = content.replaceAll("<span style=\"color:red\">", "");
-//        content = content.replaceAll("</span>", "");
-//
-//        Pattern hp = Pattern.compile("<li class=\"f\">([^<>]*)</li>", Pattern.DOTALL);
-//        Matcher hm = hp.matcher(content);
-//        if (hm.find()) {
-//            // add section header as special topic: category
-//            String sectionTitle = hm.group(1);
-//            results.add(new Topic(sectionTitle));
-//
-//            Pattern topic_pattern = Pattern.compile("<li>(\\d+)\\|<a href=\"/article/(\\w+)/(\\d+)\">([^<>]*)</a></li>");
-//            Matcher topic_search = topic_pattern.matcher(content);
-//            while (topic_search.find()) {
-//                // add hot topic
-//                Topic topic = new Topic();
-//                topic.setBoardEngName(topic_search.group(2));
-//                topic.setTopicID(topic_search.group(3));
-//                String titleString = Html.fromHtml(topic_search.group(4)).toString();
-//                topic.setTitle(titleString);
-//
-//                results.add(topic);
-//            }
-//        }
-//
-//        return results;
-//    }
 
+    public static String ParsePostBodyFromWWW(String content, Post post) {
+        Date date = new Date();
 
-    // /nForum/board/ADAgent_TG ==> ADAgent_TG
-    // /nForum/article/RealEstate/5017593 ==> 5017593
-    public static String getLastStringSegment(String content) {
-        if(content == null || content.length() == 0){
-            return "";
+        content = content.replace("\\n", "\n").replace("\\r", "\r")
+                .replace("\\/", "/").replace("\\\"", "\"").replace("\\'", "'");
+        String[] lines = content.split("\n");
+        StringBuilder sb = new StringBuilder();
+        int linebreak = 0;
+        int linequote = 0;
+        int seperator = 0;
+        for (String line : lines) {
+            if (line.startsWith("发信人:") || line.startsWith("寄信人:")) {
+                /*
+                 * line = "<font color=#6699FF>" +
+                 * MyUtils.subStringBetween(line, "发信人: ", ", 信区:") + "</font>";
+                 * sb.append(line);
+                 */
+                continue;
+            } else if (line.startsWith("标  题:")) {
+                continue;
+            } else if (line.startsWith("发信站:")) {
+                line = StringUtils.subStringBetween(line, "(", ")");
+                SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy", Locale.US);
+                try {
+                    date = sdf.parse(line);
+                    post.setDate(date);
+                    continue;
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
+                }
+            }
+            if (line.equals("--")) {
+                if (seperator > 1) {
+                    break;
+                }
+
+                seperator++;
+            } else {
+                if (seperator > 0) {
+                    if (line.length() > 0) {
+                        line = "<font color=#33CC66>" + line + "</font>";
+                    } else {
+                        continue;
+                    }
+                }
+            }
+
+            if (line.startsWith(":")) {
+                linequote++;
+                if (linequote > 5) {
+                    continue;
+                } else {
+                    line = "<font color=#006699>" + line + "</font>";
+                }
+            } else {
+                linequote = 0;
+            }
+
+            if (line.equals("")) {
+                linebreak++;
+                if (linebreak > 1) {
+                    continue;
+                }
+            } else {
+                linebreak = 0;
+            }
+
+            // [36m※ 修改:・mozilla 于 Mar 18 13:42:45 2013 修改本文・[FROM: 220.249.41.*]\r[m\n\r
+            // [m\r[1;31m※ 来源:・水木社区 newsmth.net・[FROM: 220.249.41.*]\r[m\n
+            // ※ 来源:·水木社区 newsmth.net·[FROM: 119.6.200.*]
+            if (line.contains("※ 来源:·") || line.contains("※ 修改:·")) {
+                // remove ASCII control first
+                Pattern cPattern = Pattern.compile("※[^\\]]*\\]");
+                Matcher cMatcher = cPattern.matcher(line);
+                if(cMatcher.find()){
+                    line = cMatcher.group(0);
+                }
+
+//                if (aSMApplication.getCurrentApplication().isShowIp()) {
+//                    Pattern myipPattern = Pattern.compile("FROM[: ]*(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.)[\\d\\*]+");
+//                    Matcher myipMatcher = myipPattern.matcher(line);
+//                    while (myipMatcher.find()) {
+//                        String ipl = myipMatcher.group(1);
+//                        if (ipl.length() > 5) {
+//                            ipl = "<font color=\"#c0c0c0\">FROM $1\\*("
+//                                    + aSMApplication.db.getLocation(ipl + "1") + ")<\\/font>";
+//                        } else {
+//                            ipl = "<font color=\"#c0c0c0\">FROM $1\\*<\\/font>";
+//                        }
+//                        line = myipMatcher.replaceAll(ipl);
+//                    }
+//                }
+            }
+            sb.append(line).append("<br />");
         }
-        String[] segments = content.split("/");
-        if(segments.length > 0) {
-            return segments[segments.length - 1];
-        }
-        return "";
+
+        String result = sb.toString().trim();
+        return result;
     }
+
+    public static String ParseLikeElementFromWWW(Element like) {
+        List<String> likes = new ArrayList<>();
+
+        // <div class="like_name">有36位用户评价了这篇文章：</div>
+        Elements nodes = like.select("div.like_name");
+        if(nodes.size() == 1) {
+            Element node = nodes.first();
+            likes.add(node.text());
+        }
+
+        // <li><span class="like_score_0">[&nbsp;&nbsp;]</span><span class="like_user">fly891198061:</span>
+        // <span class="like_msg">无法忍受，我不会变节，先斗智，不行就自杀！来个痛快的~！</span>
+        // <span class="like_time">(2016-03-27 15:04)</span></li>
+        nodes = like.select("li");
+        for(Element n: nodes) {
+            likes.add(n.text());
+        }
+
+        StringBuilder wordList = new StringBuilder();
+        for (String word : likes) {
+            wordList.append("<br/>" + word);
+        }
+        return new String(wordList);
+    }
+
+    public static void ParsePostContentFromWWW(Element content, Post post, Topic topic) {
+
+        // find, parse and remove likes node first
+        // <div class="likes">
+        Elements nodes = content.select("div.likes");
+        String likeString = "";
+        if(nodes.size() == 1) {
+            Element node = nodes.first();
+            likeString = ParseLikeElementFromWWW(node);
+            node.remove();
+        }
+
+        // find and remove add_link button
+        // <button class="button add_like"
+        nodes = content.select("button.button");
+        if(nodes.size() == 1) {
+            Element node = nodes.first();
+            node.remove();
+        }
+
+//        Log.d("ParsePost-2", content.html());
+
+        String contentResult = Html.fromHtml(content.html()).toString();
+        String contentFinal = ParsePostBodyFromWWW(contentResult, post);
+
+        if(likeString != null && likeString.length() > 0) {
+            contentFinal += likeString;
+        }
+        Log.d("ParsePost-3", contentFinal);
+
+        post.setContent(contentFinal);
+    }
+    
 
     // [团购]3.28-4.03 花的传说饰品团购(18) ==> 18
     public static String getReplyCountInParentheses(String content) {
@@ -253,11 +363,10 @@ public class SMTHHelper {
                 Element a2 = as.get(1);
 
                 String boardChsName = a1.text().replace("]", "").replace("[", "");
-                String boardEngName = getLastStringSegment(a1.attr("href"));
+                String boardEngName = StringUtils.getLastStringSegment(a1.attr("href"));
 
                 String title = a2.attr("title");
-                String topicID = getLastStringSegment(a2.attr("href"));
-
+                String topicID = StringUtils.getLastStringSegment(a2.attr("href"));
 
                 Topic topic = new Topic();
                 String reply_count = getReplyCountInParentheses(title);
@@ -291,10 +400,10 @@ public class SMTHHelper {
                 Element a2 = as.get(2);
 
                 String boardChsName = a1.text().replace("]", "").replace("[", "");
-                String boardEngName = getLastStringSegment(a1.attr("href"));
+                String boardEngName = StringUtils.getLastStringSegment(a1.attr("href"));
 
                 String title = a2.attr("title");
-                String topicID = getLastStringSegment(a2.attr("href"));
+                String topicID = StringUtils.getLastStringSegment(a2.attr("href"));
 
 
                 Topic topic = new Topic();
@@ -452,7 +561,7 @@ public class SMTHHelper {
                 Element link1 =  links.get(0);
                 Element link2 =  links.get(1);
                 Element link3 =  links.get(2);
-                String topicID = ParseTopicID(link1.attr("href"));
+                String topicID = StringUtils.getLastStringSegment(link1.attr("href"));
                 String type = link1.attr("class");
                 if("top".equals(type)) {
                     topic.isSticky = true;
@@ -492,17 +601,6 @@ public class SMTHHelper {
         return results;
     }
 
-
-    public static String ParseTopicID(String temp) {
-        Pattern pattern = Pattern.compile("/article/(\\w+)/(\\d+)");
-        Matcher matcher = pattern.matcher(temp);
-        if (matcher.find()) {
-//            String boardName = matcher.group(1);
-            String topicID = matcher.group(2);
-            return topicID;
-        }
-        return "";
-    }
 
 
     public static List<Board> ParseFavoriteBoardsFromWWW(String content) {
@@ -708,7 +806,6 @@ public class SMTHHelper {
                     }
                 });
     }
-
 
 
     public static List<Board> ParseBoardsInSectionFromWWW(String content, BoardSection section) {

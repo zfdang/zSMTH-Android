@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.models.Post;
 import com.zfdang.zsmth_android.models.Topic;
 
@@ -48,8 +49,8 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         Post post = holder.mPost;
 
         holder.mPostAuthor.setText(post.getAuthor());
-
-        String formattedText = post.getTextContent();
+        holder.mPostPublishDate.setText(StringUtils.getFormattedString(post.getDate()));
+        String formattedText = post.getContent();
         Spanned result = Html.fromHtml(formattedText);
         holder.mPostContent.setText(result);
 
