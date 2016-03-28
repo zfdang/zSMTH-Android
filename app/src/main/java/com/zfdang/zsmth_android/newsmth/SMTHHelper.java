@@ -380,7 +380,7 @@ public class SMTHHelper {
 
             Elements lis = section.select("div li");
             for (Element li: lis) {
-                Log.d(TAG, li.toString());
+//                Log.d(TAG, li.toString());
                 topic = ParseTopicFromElement(li, "pictures");
                 if(topic != null) {
 //                    Log.d(TAG, topic.toString());
@@ -403,7 +403,7 @@ public class SMTHHelper {
 
             Elements lis = section.select("div.topics li");
             for (Element li: lis) {
-                Log.d(TAG, li.toString());
+//                Log.d(TAG, li.toString());
                 topic = ParseTopicFromElement(li, "sectionhot");
                 if(topic != null) {
 //                    Log.d(TAG, topic.toString());

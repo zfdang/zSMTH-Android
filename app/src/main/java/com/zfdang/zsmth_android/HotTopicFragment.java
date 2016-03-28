@@ -140,7 +140,6 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
 
     public void RefreshGuidance() {
         // called by onCreate & refresh menu item
-        //
         showLoadingHints();
         RefreshGuidanceFromMobile();
     }
@@ -157,7 +156,6 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
                     public Observable<Topic> call(ResponseBody responseBody) {
                         try {
                             String response = responseBody.string();
-                            Log.d(TAG, response);
                             List<Topic> results = SMTHHelper.ParseHotTopicsFromWWW(response);
                             return Observable.from(results);
                         } catch (Exception e) {

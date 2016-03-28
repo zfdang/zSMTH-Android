@@ -36,10 +36,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/recycler_view_seperator"
+            android:paddingLeft="2dp"
+            android:paddingRight="4dp"
             android:text="@string/post_list_title"
             android:textColor="@color/status_text"
-            android:paddingLeft="2dp"
-            android:paddingRight="2dp"
             android:textSize="18sp"/>
 
         <!-- Body -->
