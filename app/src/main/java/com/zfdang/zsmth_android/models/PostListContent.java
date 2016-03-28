@@ -16,7 +16,7 @@ public class PostListContent {
 
     public static void addItem(Post item) {
         POSTS.add(item);
-        POST_MAP.put(item.getTopicSubjectID(), item);
+        POST_MAP.put(item.getPostID(), item);
     }
 
     public static void clear() {

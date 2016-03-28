@@ -153,6 +153,7 @@ public class SMTHHelper {
             Post post = new Post();
 
             // find author for this post
+            // <span class="a-u-name"><a href="/nForum/user/query/CZB">CZB</a></span>
             Elements authors = table.select("span.a-u-name");
             if(authors.size() > 0){
                 Element author = authors.get(0);
@@ -161,6 +162,17 @@ public class SMTHHelper {
                 Log.d(TAG, authorName);
             }
 
+            // find post id for this post
+            // <samp class="ico-pos-reply"></samp><a href="/nForum/article/WorkLife/post/1113865" class="a-post">回复</a></li>
+            Elements links = table.select("li a.a-post");
+            if(links.size() > 0){
+                Element link = links.first();
+                String postID = StringUtils.getLastStringSegment(link.attr("href"));
+                Log.d(TAG, postID);
+                post.setPostID(postID);
+            }
+
+            // find & parse post content
             Elements contents = table.select("td.a-content");
             if(contents.size() == 1) {
                 ParsePostContentFromWWW(contents.get(0), post, topic);
@@ -190,6 +202,10 @@ public class SMTHHelper {
                  * MyUtils.subStringBetween(line, "发信人: ", ", 信区:") + "</font>";
                  * sb.append(line);
                  */
+                String nickName = StringUtils.subStringBetween(line, "(", ")");
+                if(nickName != null && nickName.length() > 0) {
+                    post.setNickName(nickName);
+                }
                 continue;
             } else if (line.startsWith("标  题:")) {
                 continue;
@@ -298,9 +314,10 @@ public class SMTHHelper {
         return new String(wordList);
     }
 
+    // this method will call ParseLikeElementFromWWW & ParsePostBodyFromWWW
     public static void ParsePostContentFromWWW(Element content, Post post, Topic topic) {
-
-        // find, parse and remove likes node first
+//        Log.d("ParsePost-1", content.html());
+        // 1. find, parse and remove likes node first
         // <div class="likes">
         Elements nodes = content.select("div.likes");
         String likeString = "";
@@ -310,7 +327,7 @@ public class SMTHHelper {
             node.remove();
         }
 
-        // find and remove add_link button
+        // 2. find and remove add_link button
         // <button class="button add_like"
         nodes = content.select("button.button");
         if(nodes.size() == 1) {
@@ -320,17 +337,19 @@ public class SMTHHelper {
 
 //        Log.d("ParsePost-2", content.html());
 
-        String contentResult = Html.fromHtml(content.html()).toString();
-        String contentFinal = ParsePostBodyFromWWW(contentResult, post);
+        // 3. parse post body
+        String contentString = Html.fromHtml(content.html()).toString();
+        String contentFinal = ParsePostBodyFromWWW(contentString, post);
 
+        // 4. merge post body and likes
         if(likeString != null && likeString.length() > 0) {
             contentFinal += likeString;
         }
-        Log.d("ParsePost-3", contentFinal);
+//        Log.d("ParsePost-3", contentFinal);
 
         post.setContent(contentFinal);
     }
-    
+
 
     // [团购]3.28-4.03 花的传说饰品团购(18) ==> 18
     public static String getReplyCountInParentheses(String content) {

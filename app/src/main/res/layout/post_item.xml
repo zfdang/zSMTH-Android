@@ -16,7 +16,8 @@
             android:paddingLeft="2dp"
             android:text="mozilla"
             android:textColor="@color/status_text"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:ellipsize="end"/>
 
         <LinearLayout
             android:layout_width="fill_parent"

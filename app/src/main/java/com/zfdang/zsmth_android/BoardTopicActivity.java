@@ -116,12 +116,14 @@ public class BoardTopicActivity extends AppCompatActivity
         Board board = intent.getParcelableExtra("board_object");
         assert board != null;
         mSource = intent.getStringExtra("source");
-        if (mBoard == null || !mBoard.getBoardEngName().equals(board.getClass())) {
+        if (mBoard == null || !mBoard.getBoardEngName().equals(board.getBoardEngName())) {
             mBoard = board;
             TopicListContent.clearBoardTopics();
             mCurrentPageNo = 1;
         }
+
         updateTitle();
+
         if (TopicListContent.BOARD_TOPICS.size() == 0) {
             // only load boards on the first time
             RefreshBoardTopics();

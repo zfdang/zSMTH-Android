@@ -1,4 +1,9 @@
 package com.zfdang.zsmth_android.models;
+import android.text.Html;
+import android.text.Spanned;
+
+import com.zfdang.zsmth_android.helpers.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -6,16 +11,33 @@ import java.util.Date;
  * Created by zfdang on 2016-3-14.
  */
 public class Post {
-    private String subjectID;
-    private String topicSubjectID;
+    private String postID;
     private String title;
     private String author;
-    private String board;
-    private String boardID;
+    private String nickName;
     private Date date;
-    private String index;
     private String content;
+
     private ArrayList<Attachment> attachFiles;
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                ", postID='" + postID + '\'' +
+                ", title='" + title + '\'' +
+                ", date=" + date +
+                ", author='" + author + '\'' +
+                ", nickName='" + nickName + '\'' +
+                '}';
+    }
+
+    public void setNickName(String nickName) {
+        if(nickName.length() > 12) {
+            nickName = nickName.substring(0, 12) + "...";
+        }
+        this.nickName = nickName;
+    }
+
 
     public static int ACTION_DEFAULT = 0;
     public static int ACTION_FIRST_POST_IN_SUBJECT = 1;
@@ -26,20 +48,12 @@ public class Post {
         date = new Date();
     }
 
-    public String getSubjectID() {
-        return subjectID;
+    public String getPostID() {
+        return postID;
     }
 
-    public void setSubjectID(String subjectid) {
-        this.subjectID = subjectid;
-    }
-
-    public void setTopicSubjectID(String topicSubjectID) {
-        this.topicSubjectID = topicSubjectID;
-    }
-
-    public String getTopicSubjectID() {
-        return topicSubjectID;
+    public void setPostID(String postID) {
+        this.postID = postID;
     }
 
     public String getTitle() {
@@ -51,74 +65,40 @@ public class Post {
     }
 
     public String getAuthor() {
-        return author;
+        if(nickName == null || nickName.length() == 0){
+            return this.author;
+        } else {
+            return String.format("%s(%s)", this.author, this.nickName);
+        }
     }
 
     public void setAuthor(String author) {
         this.author = author;
     }
 
-    public String getPostIndex() {
-        return index;
-    }
-
-    public void setPostIndex(String index) {
-        this.index = index;
-    }
-
-    public String getBoard() {
-        return board;
-    }
-
-    public void setBoard(String board) {
-        this.board = board;
-    }
-
     public void setDate(Date date) {
         this.date = date;
     }
 
-    public Date getDate() {
-        return date;
+    public String getFormatedDate() {
+        return StringUtils.getFormattedString(this.date);
     }
 
     public void setContent(String content) {
+        // content is expected to be HTML segment
         this.content = content;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setBoardID(String boardid) {
-        this.boardID = boardid;
-    }
-
-    public String getBoardID() {
-        return boardID;
+    public Spanned getSpannedContent() {
+        Spanned result = Html.fromHtml(this.content);
+        return result;
     }
 
     public ArrayList<Attachment> getAttachFiles() {
         return attachFiles;
     }
-
     public void setAttachFiles(ArrayList<Attachment> attachFiles) {
         this.attachFiles = attachFiles;
     }
 
-    @Override
-    public String toString() {
-        return "Post{" +
-                "subjectID='" + subjectID + '\'' +
-                ", topicSubjectID='" + topicSubjectID + '\'' +
-                ", title='" + title + '\'' +
-                ", author='" + author + '\'' +
-                ", board='" + board + '\'' +
-                ", boardID='" + boardID + '\'' +
-                ", date=" + date +
-                ", index='" + index + '\'' +
-                ", content=" + content +
-                ", attachFiles=" + attachFiles +
-                '}';
-    }
 }

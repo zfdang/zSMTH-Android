@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -193,7 +192,7 @@ public class PostListActivity extends AppCompatActivity
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            NavUtils.navigateUpTo(this, new Intent(this, BoardTopicActivity.class));
+            onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -261,7 +260,9 @@ public class PostListActivity extends AppCompatActivity
 
     @Override
     public void onItemClicked(int position, View v) {
-        Log.d(TAG, String.format("Post by %s is clicked", PostListContent.POSTS.get(position).getAuthor()));
+
+        Log.d(TAG, String.format("Topic information: %s", mTopic.getTopicID()));
+        Log.d(TAG, String.format("Post [%s] by %s is clicked", PostListContent.POSTS.get(position).getPostID(), PostListContent.POSTS.get(position).getAuthor()));
     }
 
     @Override
@@ -332,7 +333,8 @@ public class PostListActivity extends AppCompatActivity
         } else if (which == 4) {
         } else if (which == 5) {
         } else if (which == 6) {
-            new FinestWebView.Builder(this).show("http://www.zfdang.com/");
+            String url = String.format("http://m.newsmth.net/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
+            new FinestWebView.Builder(this).show(url);
         } else if (which == 7) {
 
         }
