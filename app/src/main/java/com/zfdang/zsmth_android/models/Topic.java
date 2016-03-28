@@ -6,6 +6,7 @@ package com.zfdang.zsmth_android.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 /**
  */
@@ -31,19 +32,39 @@ public class Topic implements Parcelable {
     // 是否是置顶的主题
     public boolean isSticky;
 
+    // Hot topics in Shida section has special settings
+    // <div><a href="/nForum/board/AutoWorld"><span class="board">[汽车世界]</span></a><a href="/nForum/article/ShiDa/59791" title=" 女子横穿西直门被三车碾轧 逃逸司机30小时全部落网">
+    private boolean isShida = false;
+    public void setIsShida(boolean isShida) {
+        this.isShida = isShida;
+    }
+
+
     private String type;
 
     public int getTotalPageNo() {
         return totalPageNo;
     }
 
-    private int totalPageNo;
-    private int currentPageNo;
-    private int totalPostNo;
+    public String getTotalPostNoAsStr() {
+        if(this.totalPostNo == 0)
+            return "";
 
-    public void setTotalPostNo(int totalPostNo) {
-        this.totalPostNo = totalPostNo;
-        this.totalPageNo = this.totalPostNo / this.POST_PER_PAGE + 1;
+        String result = String.format("%d", this.totalPostNo);
+        return result;
+    }
+
+    private int totalPageNo = 0;
+    private int currentPageNo = 0;
+    private int totalPostNo = 0;
+
+    public void setTotalPostNoFromString(String totalPostNoString) {
+        try {
+            this.totalPostNo = Integer.parseInt(totalPostNoString);
+            this.totalPageNo = this.totalPostNo / this.POST_PER_PAGE + 1;
+        }catch (Exception e) {
+            Log.d("", e.toString());
+        }
     }
 
 
@@ -79,6 +100,13 @@ public class Topic implements Parcelable {
     }
 
     public String getBoardEngName() {
+        return boardEngName;
+    }
+
+    public String getTopicURL() {
+        // "近期热帖"的topic, boardEngName和boardChsName显示的都是原来的版面，但是URL显示的
+        if(this.isShida)
+            return "ShiDa";
         return boardEngName;
     }
 
@@ -166,7 +194,6 @@ public class Topic implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-//        dest.writeInt(this.POST_PER_PAGE);
         dest.writeByte(isCategory ? (byte) 1 : (byte) 0);
         dest.writeString(this.category);
         dest.writeString(this.boardEngName);
@@ -178,6 +205,7 @@ public class Topic implements Parcelable {
         dest.writeString(this.replier);
         dest.writeString(this.replyDate);
         dest.writeByte(isSticky ? (byte) 1 : (byte) 0);
+        dest.writeByte(isShida ? (byte) 1 : (byte) 0);
         dest.writeString(this.type);
         dest.writeInt(this.totalPageNo);
         dest.writeInt(this.currentPageNo);
@@ -185,7 +213,6 @@ public class Topic implements Parcelable {
     }
 
     protected Topic(Parcel in) {
-//        this.POST_PER_PAGE = in.readInt();
         this.isCategory = in.readByte() != 0;
         this.category = in.readString();
         this.boardEngName = in.readString();
@@ -197,6 +224,7 @@ public class Topic implements Parcelable {
         this.replier = in.readString();
         this.replyDate = in.readString();
         this.isSticky = in.readByte() != 0;
+        this.isShida = in.readByte() != 0;
         this.type = in.readString();
         this.totalPageNo = in.readInt();
         this.currentPageNo = in.readInt();

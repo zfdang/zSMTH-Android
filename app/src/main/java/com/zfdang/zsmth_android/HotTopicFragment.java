@@ -23,6 +23,8 @@ import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.models.TopicListContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
+import java.util.List;
+
 import okhttp3.ResponseBody;
 import rx.Observable;
 import rx.Subscriber;
@@ -143,30 +145,25 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
         RefreshGuidanceFromMobile();
     }
 
-    final String[] SectionName = {"十大", "推荐", "国内院校", "休闲娱乐", "五湖四海", "游戏运动", "社会信息", "知性感性", "文化人文", "学术科学", "电脑技术"};
-    final String[] SectionURLPath = {"topTen", "recommend", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+//    final String[] SectionName = {"十大", "推荐", "国内院校", "休闲娱乐", "五湖四海", "游戏运动", "社会信息", "知性感性", "文化人文", "学术科学", "电脑技术"};
+//    final String[] SectionURLPath = {"topTen", "recommend", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
 
     public void RefreshGuidanceFromMobile() {
         final SMTHHelper helper = SMTHHelper.getInstance();
 
-        Observable.from(SectionURLPath)
-                .concatMap(new Func1<String, Observable<ResponseBody>>() {
-                    @Override
-                    public Observable<ResponseBody> call(String sectionURL) {
-                        return helper.mService.getHotTopicsBySection(sectionURL);
-                    }
-                })
-                .concatMap(new Func1<ResponseBody, Observable<Topic>>() {
+        helper.wService.getAllHotTopics()
+                .flatMap(new Func1<ResponseBody, Observable<Topic>>() {
                     @Override
                     public Observable<Topic> call(ResponseBody responseBody) {
                         try {
-                            String resp = responseBody.string();
-                            return Observable.from(SMTHHelper.ParseHotTopicsFromMobile(resp));
+                            String response = responseBody.string();
+                            Log.d(TAG, response);
+                            List<Topic> results = SMTHHelper.ParseHotTopicsFromWWW(response);
+                            return Observable.from(results);
                         } catch (Exception e) {
                             Log.d(TAG, e.toString());
-                            Log.d(TAG, "获取热帖失败!");
-                            return null;
                         }
+                        return null;
                     }
                 })
                 .subscribeOn(Schedulers.io())

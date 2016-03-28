@@ -42,17 +42,6 @@
         android:layout_marginRight="10dp"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/board_name_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/topic_title"
-            android:layout_toLeftOf="@+id/board_name"
-            android:text="@string/guidance_label_board"
-            android:paddingLeft="2dp"
-            android:paddingRight="4dp"
-            android:gravity="left"
-            android:textColor="@color/status_text"/>
 
         <TextView
             android:id="@+id/board_name"
@@ -65,13 +54,13 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/author_id"
+        android:id="@+id/topic_reply_count"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="right"
         android:text="Author"
         android:paddingRight="8dp"
         android:layout_below="@+id/topic_title"
-        android:textColor="@color/blue_text"/>
+        android:textColor="@color/colorPrimary"/>
 
 </RelativeLayout>

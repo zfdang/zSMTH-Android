@@ -39,20 +39,18 @@ public class HotTopicRecyclerViewAdapter extends RecyclerView.Adapter<HotTopicRe
         if(holder.mItem.isCategory){
             holder.mSeperator.setVisibility(View.VISIBLE);
             holder.mTopicTitle.setVisibility(View.GONE);
-            holder.mBoardNameLabel.setVisibility(View.GONE);
             holder.mBoardName.setVisibility(View.GONE);
-            holder.mAuthorID.setVisibility(View.GONE);
+            holder.mReplyCount.setVisibility(View.GONE);
             holder.mSeperator.setText(holder.mItem.getCategory());
         } else {
             holder.mSeperator.setVisibility(View.GONE);
             holder.mTopicTitle.setVisibility(View.VISIBLE);
-            holder.mBoardNameLabel.setVisibility(View.VISIBLE);
             holder.mBoardName.setVisibility(View.VISIBLE);
-            holder.mAuthorID.setVisibility(View.VISIBLE);
+            holder.mReplyCount.setVisibility(View.VISIBLE);
 
             holder.mTopicTitle.setText(holder.mItem.getTitle());
             holder.mBoardName.setText(holder.mItem.getBoardName());
-            holder.mAuthorID.setText(holder.mItem.getAuthor());
+            holder.mReplyCount.setText(holder.mItem.getTotalPostNoAsStr());
         }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -77,18 +75,16 @@ public class HotTopicRecyclerViewAdapter extends RecyclerView.Adapter<HotTopicRe
         public final TextView mSeperator;
         public final TextView mBoardName;
         public final TextView mTopicTitle;
-        public final TextView mAuthorID;
-        public final TextView mBoardNameLabel;
+        public final TextView mReplyCount;
         public Topic mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mSeperator = (TextView) view.findViewById(R.id.category_name);
-            mBoardNameLabel = (TextView) view.findViewById(R.id.board_name_label);
             mBoardName = (TextView) view.findViewById(R.id.board_name);
             mTopicTitle = (TextView) view.findViewById(R.id.topic_title);
-            mAuthorID = (TextView) view.findViewById(R.id.author_id);
+            mReplyCount = (TextView) view.findViewById(R.id.topic_reply_count);
         }
 
         @Override

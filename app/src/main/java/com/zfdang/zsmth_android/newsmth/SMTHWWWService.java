@@ -33,4 +33,6 @@ public interface SMTHWWWService {
     @GET("/nForum/article/{boardEngName}/{topicID}?ajax")
     Observable<ResponseBody> getPostListByPage(@Path("boardEngName") String boardEngName, @Path("topicID") String topicID, @Query("p") int page);
 
+    @GET("/nForum/mainpage?ajax")
+    Observable<ResponseBody> getAllHotTopics();
 }

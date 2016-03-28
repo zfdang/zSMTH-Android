@@ -1,7 +1,6 @@
 package com.zfdang.zsmth_android.newsmth;
 
 import android.content.Context;
-import android.text.Html;
 import android.util.Log;
 
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
@@ -138,13 +137,8 @@ public class SMTHHelper {
             Matcher matcher = pattern.matcher(li.text());
             if (matcher.find()) {
                 String totalPostString = matcher.group(0);
+                topic.setTotalPostNoFromString(totalPostString);
                 Log.d(TAG, totalPostString);
-                try{
-                    int totalPostNo = Integer.parseInt(totalPostString);
-                    topic.setTotalPostNo(totalPostNo);
-                } catch (Exception e) {
-                    Log.d(TAG, e.toString());
-                }
             }
         }
 
@@ -178,110 +172,243 @@ public class SMTHHelper {
     // parse guidance page, to find all hot topics
     // http://m.newsmth.net/hot/topTen
     // http://m.newsmth.net/hot/1
-    public static List<Topic> ParseHotTopicsFromMobile(String content) {
-        List<Topic> results = new ArrayList<>();
-        if (content == null) {
-            return results;
+//    public static List<Topic> ParseHotTopicsFromMobile(String content) {
+//        List<Topic> results = new ArrayList<>();
+//        if (content == null) {
+//            return results;
+//        }
+//
+//        // two possible patterns here:
+//        // <li class="f">国内院校热门话题</li>
+//        // <li>10|<a href="/article/Weiqi/552886">阿法狗（分布式）和李世石的比赛不公平(<span style="color:red">64</span>)</a></li>
+//        // <li>3|<a href="/article/BJTU/222066">[代挂][pic]90年高挑金融MM诚意挂，上海 (转载)</a></li>
+//        content = content.replaceAll("<span style=\"color:red\">", "");
+//        content = content.replaceAll("</span>", "");
+//
+//        Pattern hp = Pattern.compile("<li class=\"f\">([^<>]*)</li>", Pattern.DOTALL);
+//        Matcher hm = hp.matcher(content);
+//        if (hm.find()) {
+//            // add section header as special topic: category
+//            String sectionTitle = hm.group(1);
+//            results.add(new Topic(sectionTitle));
+//
+//            Pattern topic_pattern = Pattern.compile("<li>(\\d+)\\|<a href=\"/article/(\\w+)/(\\d+)\">([^<>]*)</a></li>");
+//            Matcher topic_search = topic_pattern.matcher(content);
+//            while (topic_search.find()) {
+//                // add hot topic
+//                Topic topic = new Topic();
+//                topic.setBoardEngName(topic_search.group(2));
+//                topic.setTopicID(topic_search.group(3));
+//                String titleString = Html.fromHtml(topic_search.group(4)).toString();
+//                topic.setTitle(titleString);
+//
+//                results.add(topic);
+//            }
+//        }
+//
+//        return results;
+//    }
+
+
+    // /nForum/board/ADAgent_TG ==> ADAgent_TG
+    // /nForum/article/RealEstate/5017593 ==> 5017593
+    public static String getLastStringSegment(String content) {
+        if(content == null || content.length() == 0){
+            return "";
         }
+        String[] segments = content.split("/");
+        if(segments.length > 0) {
+            return segments[segments.length - 1];
+        }
+        return "";
+    }
 
-        // two possible patterns here:
-        // <li class="f">国内院校热门话题</li>
-        // <li>10|<a href="/article/Weiqi/552886">阿法狗（分布式）和李世石的比赛不公平(<span style="color:red">64</span>)</a></li>
-        // <li>3|<a href="/article/BJTU/222066">[代挂][pic]90年高挑金融MM诚意挂，上海 (转载)</a></li>
-        content = content.replaceAll("<span style=\"color:red\">", "");
-        content = content.replaceAll("</span>", "");
-
-        Pattern hp = Pattern.compile("<li class=\"f\">([^<>]*)</li>", Pattern.DOTALL);
+    // [团购]3.28-4.03 花的传说饰品团购(18) ==> 18
+    public static String getReplyCountInParentheses(String content) {
+        Pattern hp = Pattern.compile("\\((\\d+)\\)$", Pattern.DOTALL);
         Matcher hm = hp.matcher(content);
         if (hm.find()) {
-            // add section header as special topic: category
-            String sectionTitle = hm.group(1);
-            results.add(new Topic(sectionTitle));
-
-            Pattern topic_pattern = Pattern.compile("<li>(\\d+)\\|<a href=\"/article/(\\w+)/(\\d+)\">([^<>]*)</a></li>");
-            Matcher topic_search = topic_pattern.matcher(content);
-            while (topic_search.find()) {
-                // add hot topic
-                Topic topic = new Topic();
-                topic.setBoardEngName(topic_search.group(2));
-                topic.setTopicID(topic_search.group(3));
-                String titleString = Html.fromHtml(topic_search.group(4)).toString();
-                topic.setTitle(titleString);
-
-                results.add(topic);
-            }
+            String count = hm.group(1);
+            return count;
         }
 
-        return results;
+        return "";
+    }
+
+
+    public static Topic ParseTopicFromElement(Element ele, String type) {
+        if("top10".equals(type) || "hotspot".equals(type) || "sectionhot".equals(type)) {
+            // two <A herf> nodes
+
+            // normal hot topic
+            // <li><a href="/nForum/article/OurEstate/1685281" title="lj让我走垫资(114)">lj让我走垫资&nbsp;(114)</a></li>
+
+            // special hot topic -- 近期热帖: 1. board信息，没有reply_count
+            // <li>
+            // <div><a href="/nForum/board/Picture"><span class="board">[贴图]</span></a><a href="/nForum/article/ShiDa/59833" title=" 南都副总编及编辑被处分开除"><span class="title"> 南都副总编及编辑被处分开除</span></a></div>
+            // </li>
+
+            Elements as = ele.select("a[href]");
+            if(as.size() == 2) {
+                Element a1 = as.get(0);
+                Element a2 = as.get(1);
+
+                String boardChsName = a1.text().replace("]", "").replace("[", "");
+                String boardEngName = getLastStringSegment(a1.attr("href"));
+
+                String title = a2.attr("title");
+                String topicID = getLastStringSegment(a2.attr("href"));
+
+
+                Topic topic = new Topic();
+                String reply_count = getReplyCountInParentheses(title);
+                if(reply_count.length() > 0) {
+                    title = title.substring(0, title.length() - reply_count.length() - 2);
+                    topic.setTotalPostNoFromString(reply_count);
+                }
+
+                topic.setBoardEngName(boardEngName);
+                topic.setBoardChsName(boardChsName);
+                if("hotspot".equals(type)) {
+                    topic.setIsShida(true);
+                }
+                topic.setTopicID(topicID);
+                topic.setTitle(title);
+
+                Log.d(TAG, topic.toString());
+                return topic;
+            }
+        } else if("pictures".equals(type)) {
+            // three <A herf> nodes
+
+            // <li>
+            // <a href="/nForum/article/SchoolEstate/430675"><img src="http://images.newsmth.net/nForum/img/hotpic/SchoolEstate_430675.jpg" title="点击查看原帖" /></a>
+            // <br /><a class="board" href="/nForum/board/SchoolEstate">[学区房]</a>
+            // <br /><a class="title" href="/nForum/article/SchoolEstate/430675" title="这个小学排名还算靠谱吧， AO爸爸排的。。。">这个小学排名还算靠谱吧， AO爸爸排的。。。</a>
+            // </li>
+            Elements as = ele.select("a[href]");
+            if(as.size() == 3) {
+                Element a1 = as.get(1);
+                Element a2 = as.get(2);
+
+                String boardChsName = a1.text().replace("]", "").replace("[", "");
+                String boardEngName = getLastStringSegment(a1.attr("href"));
+
+                String title = a2.attr("title");
+                String topicID = getLastStringSegment(a2.attr("href"));
+
+
+                Topic topic = new Topic();
+                topic.setBoardEngName(boardEngName);
+                topic.setBoardChsName(boardChsName);
+                topic.setTopicID(topicID);
+                topic.setTitle(title);
+
+                Log.d(TAG, topic.toString());
+                return topic;
+            }
+
+        }
+        return null;
     }
 
 
     // parse guidance page, to find all hot topics
     public static List<Topic> ParseHotTopicsFromWWW(String content) {
         List<Topic> results = new ArrayList<>();
-        if (content == null) {
+        if (content == null || content.length() == 0) {
             return results;
         }
 
-        Pattern hp = Pattern.compile("<div id=\"top10\">(.*?)</ul></div>", Pattern.DOTALL);
-        Matcher hm = hp.matcher(content);
-        if (hm.find()) {
-            // add category
-            results.add(new Topic("水木十大"));
+        Topic topic = null;
+        Document doc = Jsoup.parse(content);
 
+        // find top10
+        // <div id="top10">
+        Elements top10s = doc.select("div#top10");
+        if(top10s.size() == 1) {
+            // add separator
+            topic = new Topic("本日十大热门话题");
+            results.add(topic);
 
-            String hc = hm.group(1);
-            Pattern boardNamePattern = Pattern.compile("<a href=\"bbsdoc.php\\?board=\\w+\">([^<>]+)</a>");
-            Matcher boardNameMatcher = boardNamePattern.matcher(hc);
+            // parse hot hopic
+            Element top10 = top10s.first();
+            Elements lis = top10.getElementsByTag("li");
 
-            Pattern hip = Pattern.compile("<a href=\"bbstcon.php\\?board=(\\w+)&gid=(\\d+)\">([^<>]+)</a>");
-            Matcher him = hip.matcher(hc);
-            Pattern hIdPattern = Pattern.compile("<a href=\"bbsqry.php\\?userid=(\\w+)\">");
-            Matcher hIdMatcher = hIdPattern.matcher(hc);
-            while (him.find() && hIdMatcher.find()) {
-                // add hot topic
-                Topic topic = new Topic();
-                if (boardNameMatcher.find()) {
-                    topic.setBoardChsName(boardNameMatcher.group(1));
-                }
-                topic.setBoardEngName(him.group(1));
-                topic.setTopicID(him.group(2));
-                String titleString = Html.fromHtml(him.group(3)).toString();
-                topic.setTitle(titleString);
-                topic.setAuthor(hIdMatcher.group(1));
-
+            for(Element li: lis) {
+                Log.d(TAG, li.toString());
+                topic = ParseTopicFromElement(li, "top10");
+                Log.d(TAG, topic.toString());
                 results.add(topic);
             }
         }
 
-        Pattern sp = Pattern.compile(
-                "<span class=\"SectionName\"><a[^<>]+>([^<>]+)</a></span>(.*?)class=\"SecLine\"></td>", Pattern.DOTALL);
-        Matcher sm = sp.matcher(content);
-        while (sm.find()) {
-            String sectionName = sm.group(1);
-            // add section
-            results.add(new Topic(sectionName));
 
-            String sc = sm.group(2);
-            Pattern boardNamePattern = Pattern
-                    .compile("\"SectionItem\">.<a href=\"bbsdoc.php\\?board=\\w+\">([^<>]+)</a>");
-            Matcher boardNameMatcher = boardNamePattern.matcher(sc);
+        // find hotspot
+        // <div id="hotspot" class="block">
+        Elements hotspots = doc.select("div#hotspot div.topics");
+        if(hotspots.size() == 1) {
+            // add separator
+            topic = new Topic("近期热帖");
+            results.add(topic);
 
-            Pattern sip = Pattern.compile("<a href=\"bbstcon.php\\?board=(\\w+)&gid=(\\d+)\">([^<>]+)</a>");
-            Matcher sim = sip.matcher(sc);
-            while (sim.find()) {
-                Topic topic = new Topic();
-                if (boardNameMatcher.find()) {
-                    topic.setBoardChsName(boardNameMatcher.group(1));
-                }
-                topic.setBoardEngName(sim.group(1));
-                topic.setTopicID(sim.group(2));
-                topic.setTitle(sim.group(3));
+            // parse hot hopic
+            Element hotspot = hotspots.first();
+            Elements lis = hotspot.getElementsByTag("li");
+
+            for(Element li: lis) {
+                Log.d(TAG, li.toString());
+                topic = ParseTopicFromElement(li, "hotspot");
+                Log.d(TAG, topic.toString());
                 results.add(topic);
             }
         }
 
-        results.add(new Topic("END."));
+        // find hot picture
+        // <div id="pictures" class="block">
+        Elements pictures = doc.select("div#pictures");
+        for(Element section: pictures) {
+            // add separator
+            Elements sectionNames = section.getElementsByTag("h3");
+            if(sectionNames.size() == 1) {
+                Element sectionName = sectionNames.first();
+                topic = new Topic(sectionName.text());
+                results.add(topic);
+            }
+
+            Elements lis = section.select("div li");
+            for (Element li: lis) {
+                Log.d(TAG, li.toString());
+                topic = ParseTopicFromElement(li, "pictures");
+                if(topic != null) {
+                    Log.d(TAG, topic.toString());
+                    results.add(topic);
+                }
+            }
+        }
+
+        // find hot topics from each section
+        // <div id="hotspot" class="block">
+        Elements sections = doc.select("div.b_section");
+        for(Element section: sections) {
+            // add separator
+            Elements sectionNames = section.getElementsByTag("h3");
+            if(sectionNames.size() == 1) {
+                Element sectionName = sectionNames.first();
+                topic = new Topic(sectionName.text());
+                results.add(topic);
+            }
+
+            Elements lis = section.select("div.topics li");
+            for (Element li: lis) {
+                Log.d(TAG, li.toString());
+                topic = ParseTopicFromElement(li, "sectionhot");
+                if(topic != null) {
+                    Log.d(TAG, topic.toString());
+                    results.add(topic);
+                }
+            }
+        }
 
         return results;
     }

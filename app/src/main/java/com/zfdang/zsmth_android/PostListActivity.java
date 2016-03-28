@@ -103,7 +103,7 @@ public class PostListActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void updateTitles() {
-        setTitle(mTopic.getBoardEngName());
+        setTitle(mTopic.getBoardName());
         mTitle.setText(mTopic.getTitle());
     }
 
@@ -134,7 +134,7 @@ public class PostListActivity extends AppCompatActivity implements View.OnClickL
 
     public void loadPostListByPages () {
         final SMTHHelper helper = SMTHHelper.getInstance();
-        helper.wService.getPostListByPage(mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo)
+        helper.wService.getPostListByPage(mTopic.getTopicURL(), mTopic.getTopicID(), mCurrentPageNo)
                 .flatMap(new Func1<ResponseBody, Observable<Post>>() {
                     @Override
                     public Observable<Post> call(ResponseBody responseBody) {
