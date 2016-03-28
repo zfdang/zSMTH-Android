@@ -41,7 +41,7 @@ import rx.schedulers.Schedulers;
  */
 public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, OnVolumeUpDownListener {
 
-    private final String TAG = "Guidance Fragment";
+    private final String TAG = "HotTopicFragment";
 
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;

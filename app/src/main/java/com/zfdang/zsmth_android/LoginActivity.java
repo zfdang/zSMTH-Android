@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     private EditText m_passwordEditText;
 
     private ProgressDialog pdialog = null;
-    private final String TAG = "Login Activity";
+    private final String TAG = "LoginActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
