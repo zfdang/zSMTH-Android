@@ -219,7 +219,8 @@ public class BoardTopicActivity extends AppCompatActivity
                         Log.d(TAG, e.toString());
                         clearLoadingHints();
 
-                        Toast.makeText(getApplicationContext(), "获取版面帖子失败", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), String.format("获取第%d页的帖子失败", mCurrentPageNo), Toast.LENGTH_LONG).show();
+                        mCurrentPageNo -= 1;
                     }
 
                     @Override

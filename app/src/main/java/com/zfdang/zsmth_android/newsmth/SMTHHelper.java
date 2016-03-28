@@ -122,7 +122,6 @@ public class SMTHHelper {
     public static List<Post> ParsePostListFromWWW(String content, Topic topic) {
         final String TAG = "ParsePostListFromWWW";
         List<Post> results = new ArrayList<>();
-        Log.d("ParsePostListFromWWW", content);
 
         Document doc = Jsoup.parse(content);
 

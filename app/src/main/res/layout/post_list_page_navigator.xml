@@ -55,7 +55,7 @@
         android:layout_weight="1"
         android:layout_marginTop="0dp"
         android:inputType="number"
-        android:text="99"
+        android:text="1"
         android:selectAllOnFocus="true"
         android:singleLine="true"
         android:gravity="center_horizontal"/>
