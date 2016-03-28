@@ -269,14 +269,14 @@ public class PostListActivity extends AppCompatActivity
 
 
         final AlertDialogItem[] menuItems = {
-                new AlertDialogItem(getString(R.string.post_reply_post), android.R.drawable.ic_menu_add),       // 0
-                new AlertDialogItem(getString(R.string.post_reply_mail), android.R.drawable.ic_menu_delete),    // 1
-                new AlertDialogItem(getString(R.string.post_query_author), android.R.drawable.ic_menu_send),    // 2
-                new AlertDialogItem(getString(R.string.post_copy_content), android.R.drawable.ic_menu_send),    // 3
-                new AlertDialogItem(getString(R.string.post_foward_self), android.R.drawable.ic_menu_send),     // 4
-                new AlertDialogItem(getString(R.string.post_foward_external), android.R.drawable.ic_menu_send), // 5
-                new AlertDialogItem(getString(R.string.post_view_in_browser), android.R.drawable.ic_menu_send), // 6
-                new AlertDialogItem(getString(R.string.post_delete_post), android.R.drawable.ic_menu_send),     // 7
+                new AlertDialogItem(getString(R.string.post_reply_post), R.drawable.ic_reply_black_48dp),       // 0
+                new AlertDialogItem(getString(R.string.post_reply_mail), R.drawable.ic_email_black_48dp),    // 1
+                new AlertDialogItem(getString(R.string.post_query_author), R.drawable.ic_person_black_48dp),    // 2
+                new AlertDialogItem(getString(R.string.post_copy_content), R.drawable.ic_content_copy_black_48dp),    // 3
+                new AlertDialogItem(getString(R.string.post_foward_self), R.drawable.ic_send_black_48dp),     // 4
+                new AlertDialogItem(getString(R.string.post_foward_external), R.drawable.ic_forward_black_48dp), // 5
+                new AlertDialogItem(getString(R.string.post_view_in_browser), R.drawable.ic_open_in_browser_black_48dp), // 6
+                new AlertDialogItem(getString(R.string.post_delete_post), R.drawable.ic_delete_black_48dp),     // 7
         };
 
 
