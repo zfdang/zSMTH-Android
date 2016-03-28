@@ -275,7 +275,7 @@ public class SMTHHelper {
                 topic.setTopicID(topicID);
                 topic.setTitle(title);
 
-                Log.d(TAG, topic.toString());
+//                Log.d(TAG, topic.toString());
                 return topic;
             }
         } else if("pictures".equals(type)) {
@@ -304,7 +304,7 @@ public class SMTHHelper {
                 topic.setTopicID(topicID);
                 topic.setTitle(title);
 
-                Log.d(TAG, topic.toString());
+//                Log.d(TAG, topic.toString());
                 return topic;
             }
 
@@ -336,10 +336,11 @@ public class SMTHHelper {
             Elements lis = top10.getElementsByTag("li");
 
             for(Element li: lis) {
-                Log.d(TAG, li.toString());
                 topic = ParseTopicFromElement(li, "top10");
-                Log.d(TAG, topic.toString());
-                results.add(topic);
+                if(topic != null) {
+//                    Log.d(TAG, topic.toString());
+                    results.add(topic);
+                }
             }
         }
 
@@ -357,10 +358,11 @@ public class SMTHHelper {
             Elements lis = hotspot.getElementsByTag("li");
 
             for(Element li: lis) {
-                Log.d(TAG, li.toString());
                 topic = ParseTopicFromElement(li, "hotspot");
-                Log.d(TAG, topic.toString());
-                results.add(topic);
+                if(topic != null) {
+//                    Log.d(TAG, topic.toString());
+                    results.add(topic);
+                }
             }
         }
 
@@ -381,7 +383,7 @@ public class SMTHHelper {
                 Log.d(TAG, li.toString());
                 topic = ParseTopicFromElement(li, "pictures");
                 if(topic != null) {
-                    Log.d(TAG, topic.toString());
+//                    Log.d(TAG, topic.toString());
                     results.add(topic);
                 }
             }
@@ -404,7 +406,7 @@ public class SMTHHelper {
                 Log.d(TAG, li.toString());
                 topic = ParseTopicFromElement(li, "sectionhot");
                 if(topic != null) {
-                    Log.d(TAG, topic.toString());
+//                    Log.d(TAG, topic.toString());
                     results.add(topic);
                 }
             }
