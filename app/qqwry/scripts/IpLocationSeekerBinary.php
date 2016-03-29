@@ -82,7 +82,7 @@ class IpLocationSeekerBinary {
 			$area = str_replace("\t", "", $area);
 			$area = str_replace("\n", "", $area);
 			
-// 			echo long2ip($ip_int), "\t", $country, "\t", $area, "\n";
+			echo long2ip($ip_int), "\t", $country, "\t", $area, "\n";
 			$area = str_replace("'", "", $area);
 			$sql = "insert into qqwry (ip, country) values ({$ip_int}, '{$country}')";
 			$sqlite_seeker->execute($sql);
