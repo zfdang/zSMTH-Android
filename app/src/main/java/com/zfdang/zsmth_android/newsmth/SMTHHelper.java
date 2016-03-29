@@ -194,24 +194,21 @@ public class SMTHHelper {
         // 1. find, parse and remove likes node first
         // <div class="likes">
         Elements nodes = content.select("div.likes");
-        String likeString = "";
         if(nodes.size() == 1) {
             Element node = nodes.first();
             List<String> likes = ParseLikeElementInPostContent(node);
             post.setLikes(likes);
-            node.remove();
         }
 
-        // 2. find and remove add_link button
+        // 2. find post content, the first <p> node in the td.a-content
         // <button class="button add_like"
-        nodes = content.select("button.button");
-        if(nodes.size() == 1) {
+        nodes = content.getElementsByTag("p");
+        if(nodes.size() >= 1) {
             Element node = nodes.first();
-            node.remove();
+            // 2. set post content
+//            post.setContent(node.html());
+            post.setContentFromElement(node);
         }
-
-        // 3. set post content
-        post.setContent(content.html());
     }
 
     // parse like list in post content

@@ -7,6 +7,9 @@ import android.util.Log;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.helpers.StringUtils;
 
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,20 +24,41 @@ import java.util.regex.Pattern;
  * Created by zfdang on 2016-3-14.
  */
 public class Post {
+    public static int ACTION_DEFAULT = 0;
+    public static int ACTION_FIRST_POST_IN_SUBJECT = 1;
+    public static int ACTION_PREVIOUS_POST_IN_SUBJECT = 2;
+    public static int ACTION_NEXT_POST_IN_SUBJECT = 3;
     private String postID;
     private String title;
     private String author;
     private String nickName;
     private Date date;
     private String htmlContent;
-
-
     private List<String> likes;
+    private List<Attachment> attachFiles;
+
+    public Post() {
+        date = new Date();
+    }
+
+    public static String lookupIPLocation(String content) {
+        Pattern myipPattern = Pattern.compile("FROM[: ]*(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.)[\\d\\*]+");
+        Matcher myipMatcher = myipPattern.matcher(content);
+        while (myipMatcher.find()) {
+            String ipl = myipMatcher.group(1);
+            if (ipl.length() > 5) {
+                ipl = "$1\\*(" + SMTHApplication.geoDB.getLocation(ipl + "1") + ")";
+            } else {
+                ipl = "$1\\*";
+            }
+            content = myipMatcher.replaceAll(ipl);
+        }
+        return content;
+    }
+
     public void setLikes(List<String> likes) {
         this.likes = likes;
     }
-
-    private ArrayList<Attachment> attachFiles;
 
     @Override
     public String toString() {
@@ -49,20 +73,10 @@ public class Post {
 
     public void setNickName(String nickName) {
         final int MAX_NICKNAME_LENGTH = 12;
-        if(nickName.length() > MAX_NICKNAME_LENGTH) {
+        if (nickName.length() > MAX_NICKNAME_LENGTH) {
             nickName = nickName.substring(0, MAX_NICKNAME_LENGTH) + "..";
         }
         this.nickName = nickName;
-    }
-
-
-    public static int ACTION_DEFAULT = 0;
-    public static int ACTION_FIRST_POST_IN_SUBJECT = 1;
-    public static int ACTION_PREVIOUS_POST_IN_SUBJECT = 2;
-    public static int ACTION_NEXT_POST_IN_SUBJECT = 3;
-
-    public Post() {
-        date = new Date();
     }
 
     public String getPostID() {
@@ -82,7 +96,7 @@ public class Post {
     }
 
     public String getAuthor() {
-        if(nickName == null || nickName.length() == 0){
+        if (nickName == null || nickName.length() == 0) {
             return this.author;
         } else {
             return String.format("%s(%s)", this.author, this.nickName);
@@ -101,25 +115,11 @@ public class Post {
         return StringUtils.getFormattedString(this.date);
     }
 
-
-    public static String lookupIPLocation(String content) {
-        Pattern myipPattern = Pattern.compile("FROM[: ]*(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.)[\\d\\*]+");
-        Matcher myipMatcher = myipPattern.matcher(content);
-        while (myipMatcher.find()) {
-            String ipl = myipMatcher.group(1);
-            if (ipl.length() > 5) {
-                ipl = "$1\\*("+ SMTHApplication.geoDB.getLocation(ipl + "1") + ")";
-            } else {
-                ipl = "$1\\*";
-            }
-            content = myipMatcher.replaceAll(ipl);
-        }
-        return content;
-    }
-
+    /*
+    the expected input is formatted plain text, no html tag is expected
+    line break by \n, but not <br>
+    */
     private String processPostContent(String content) {
-         Log.d("processPostContent", content);
-
         // &nbsp; is converted as code=160, but not a whitespace (ascii=32)
         // http://stackoverflow.com/questions/4728625/why-trim-is-not-working
         content = content.replace(String.valueOf((char) 160), " ");
@@ -171,7 +171,7 @@ public class Post {
 
             // handle quoted content
             if (line.startsWith(":")) {
-                line = "<font color=#006699>" + line + "</font>";
+                line = "<font color=#00b4ae>" + line + "</font>";
                 sb.append(line).append("<br />");
                 continue;
             }
@@ -204,19 +204,15 @@ public class Post {
             if (line.contains("※ 来源:·")) {
                 // jump out of signature mode
                 signatureMode = 0;
-                line = line.replace("·", "");
-                line = line.replace("http://www.newsmth.net", "");
-                line = line.replace("http://m.newsmth.net", "");
-                line = line.replace("newsmth.net", "");
-                line = lookupIPLocation(line);
+                line = line.replace("·", "").replace("http://www.newsmth.net", "").replace("http://m.newsmth.net", "").replace("newsmth.net", "");
+                line = "<font color=#727272>" + lookupIPLocation(line) + "</font>";
                 sb.append(line).append("<br />");
                 continue;
             } else if (line.contains("※ 修改:·")) {
                 // jump out of signature mode
                 signatureMode = 0;
-                line = line.replace("·", "");
-                line = line.replace("修改本文", "");
-                line = lookupIPLocation(line);
+                line = line.replace("·", "").replace("修改本文", "");
+                line = "<font color=#727272>" + lookupIPLocation(line) + "</font>";
                 sb.append(line).append("<br />");
                 continue;
             }
@@ -235,11 +231,32 @@ public class Post {
         return sb.toString().trim();
     }
 
-    public void setContent(String content) {
-        // content is expected to be HTML segment
-        // element.html()
-        String temp = Html.fromHtml(content).toString();
-        this.htmlContent = this.processPostContent(temp);;
+    public void setContentFromElement(Element content) {
+        Log.d("ContentFromElement", content.html());
+
+        // find all attachment from node
+        // <a target="_blank" href="http://att.newsmth.net/nForum/att/AutoWorld/1939790539/4070982">
+        // <img border="0" title="单击此查看原图" src="http://att.newsmth.net/nForum/att/AutoWorld/1939790539/4070982/large" class="resizeable">
+        // </a>
+        Elements as = content.select("a[href]");
+        for (Element a : as) {
+            Elements imgs = a.select("img[src]");
+            if (imgs.size() == 1) {
+                // find one image attachment
+                String imgsrc = imgs.attr("src");
+                String imgsrc_orig = a.attr("href");
+                Attachment attach = new Attachment(imgsrc_orig);
+
+                this.addAttachFile(attach);
+
+                // replace a[href] with MARK
+                a.html("###ZSMTH_ATTACHMENT###");
+            }
+        }
+
+        // set content
+        String formattedPlainText = Html.fromHtml(content.html()).toString();
+        this.htmlContent = this.processPostContent(formattedPlainText);
     }
 
     public String getRawContent() {
@@ -249,7 +266,7 @@ public class Post {
     public Spanned getSpannedContent() {
         String finalContent = this.htmlContent;
 
-        if(likes != null && likes.size() > 0) {
+        if (likes != null && likes.size() > 0) {
             StringBuilder wordList = new StringBuilder();
             wordList.append("<br/>");
             for (String word : likes) {
@@ -261,11 +278,27 @@ public class Post {
         return Html.fromHtml(finalContent);
     }
 
-    public ArrayList<Attachment> getAttachFiles() {
-        return attachFiles;
+    public void addAttachFile(Attachment attach) {
+        if (attachFiles == null) {
+            attachFiles = new ArrayList<>();
+        }
+        if (attach != null) {
+            attachFiles.add(attach);
+        }
     }
-    public void setAttachFiles(ArrayList<Attachment> attachFiles) {
-        this.attachFiles = attachFiles;
+
+    public int getNumberOfAttachFiles() {
+        if(attachFiles != null) {
+            return attachFiles.size();
+        }
+        return 0;
+    }
+
+    public Attachment getAttachFileByIndex(int index) {
+        if(attachFiles != null && index < attachFiles.size()) {
+            return attachFiles.get(index);
+        }
+        return null;
     }
 
 }
