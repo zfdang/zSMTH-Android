@@ -19,6 +19,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -90,16 +92,22 @@ public class SMTHHelper {
 
         // set your desired log level
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        logging.setLevel(HttpLoggingInterceptor.Level.HEADERS);
 
         // https://github.com/franmontiel/PersistentCookieJar
         // A persistent CookieJar implementation for OkHttp 3 based on SharedPreferences.
         ClearableCookieJar cookieJar =
                 new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
 
+        //设置缓存路径
+        File httpCacheDirectory = new File(SMTHApplication.getAppContext().getCacheDir(), "Responses");
+        int cacheSize = 100 * 1024 * 1024; // 100 MiB
+        Cache cache = new Cache(httpCacheDirectory, cacheSize);
+
         httpClient = new OkHttpClient().newBuilder()
                 .addInterceptor(logging)
                 .cookieJar(cookieJar)
+                .cache(cache)
                 .build();
 
         mRetrofit = new Retrofit.Builder()
