@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
+              android:layout_marginTop="4dp"
               android:orientation="vertical">
 
     <LinearLayout
@@ -15,8 +16,8 @@
             android:layout_height="wrap_content"
             android:paddingLeft="2dp"
             android:text="mozilla"
-            android:textColor="@color/status_text"
-            android:textSize="16sp"
+            android:textColor="@color/colorMainText"
+            android:textSize="18sp"
             android:ellipsize="end"/>
 
         <LinearLayout
@@ -49,7 +50,7 @@
             android:layout_height="wrap_content"
             android:color="@color/colorSecondaryText"
             android:paddingLeft="2dp"
-            android:text="2016-03-27"
+            android:text=""
             android:textSize="16sp"/>
     </LinearLayout>
 
@@ -65,8 +66,8 @@
             android:paddingLeft="2dp"
             android:paddingRight="4dp"
             android:text="Large Text"
-            android:textColor="@color/status_text"
-            android:textSize="16sp"/>
+            android:textColor="@color/colorMainText"
+            android:textSize="18sp"/>
     </LinearLayout>
 
 </LinearLayout>

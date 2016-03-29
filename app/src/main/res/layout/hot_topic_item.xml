@@ -3,10 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="0dp"
-    android:paddingLeft="0dp"
-    android:background="@drawable/recyclerview_item_bg"
-    android:paddingRight="0dp">
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp"
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp"
+    android:background="@drawable/recyclerview_item_bg">
 
     <TextView
         android:id="@+id/category_name"
@@ -16,7 +17,7 @@
         android:paddingLeft="4dp"
         android:background="@color/recycler_view_seperator"
         android:textSize="16dp"
-        android:textColor="@color/status_text" />
+        android:textColor="@color/colorMainText" />
 
     <TextView
         android:id="@+id/topic_title"
@@ -25,15 +26,9 @@
         android:layout_below="@+id/category_name"
         android:paddingLeft="2dp"
         android:text="Topic"
-        android:textColor="@color/status_text"
+        android:textColor="@color/colorMainText"
         android:textSize="19dp"/>
 
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"

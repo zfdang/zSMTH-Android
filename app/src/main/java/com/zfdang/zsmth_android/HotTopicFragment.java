@@ -187,7 +187,7 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
                         clearLoadingHints();
 
                         // show finish toast
-                        Toast.makeText(getActivity(), "刷新完成!", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity(), "刷新完成!", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

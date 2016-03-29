@@ -23,7 +23,7 @@
     <color name="link_color">#FF0066CC</color>
 
     <color name="status_background">#FFA</color>
-    <color name="status_text">#000</color>
+    <color name="colorMainText">#000</color>
 
     <color name="simiple_button_color">#FFF</color>
     <color name="simple_text_color">#FF52991F</color>

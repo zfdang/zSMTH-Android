@@ -2,7 +2,6 @@ package com.zfdang.zsmth_android.models;
 
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Log;
 
 import com.zfdang.zsmth_android.helpers.StringUtils;
 
@@ -12,10 +11,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
+ * Post object.
  * Created by zfdang on 2016-3-14.
  */
 public class Post {
@@ -46,8 +44,9 @@ public class Post {
     }
 
     public void setNickName(String nickName) {
-        if(nickName.length() > 12) {
-            nickName = nickName.substring(0, 12) + "...";
+        final int MAX_NICKNAME_LENGTH = 12;
+        if(nickName.length() > MAX_NICKNAME_LENGTH) {
+            nickName = nickName.substring(0, MAX_NICKNAME_LENGTH) + "..";
         }
         this.nickName = nickName;
     }
@@ -99,30 +98,46 @@ public class Post {
     }
 
 
-    private  String processPostContent(String content) {
-        Log.d("processPostContent", content);
-        content = content.replace("\\n", "\n").replace("\\r", "\r")
-                .replace("\\/", "/").replace("\\\"", "\"").replace("\\'", "'");
+    private String processPostContent(String content) {
+        // Log.d("processPostContent", content);
 
+        // &nbsp; is converted as code=160, but not a whitespace (ascii=32)
+        // http://stackoverflow.com/questions/4728625/why-trim-is-not-working
+        content = content.replace(String.valueOf((char) 160), " ");
+
+        String[] lines = content.split("\n");
+
+        // find signature start line
+        int signatureStartLine = -1;
+        for (int i = lines.length - 1; i >= 0; i--) {
+            String line = lines[i];
+            if (line.startsWith("--")) {
+                // find the first "--" from the last to the first
+                signatureStartLine = i;
+                break;
+            }
+        }
 
         // process content line by line
-        String[] lines = content.split("\n");
         StringBuilder sb = new StringBuilder();
         int linebreak = 0;
-        int linequote = 0;
-        int seperator = 0;
-        for (String line : lines) {
+        int signatureMode = 0;
+        for (int i = 0; i < lines.length; i++) {
+            String line = lines[i];
             if (line.startsWith("发信人:") || line.startsWith("寄信人:")) {
-                // find nickname for author here
+                // find nickname for author here, skip the line
                 // 发信人: schower (schower), 信区: WorkLife
                 String nickName = StringUtils.subStringBetween(line, "(", ")");
-                if(nickName != null && nickName.length() > 0) {
+                if (nickName != null && nickName.length() > 0) {
                     this.setNickName(nickName);
                 }
                 continue;
-            } else if (line.startsWith("标  题:")) {
+            } else if (line.startsWith("标  题:")) {
+                // add this line to content
+                sb.append(line).append("<br />");
                 continue;
             } else if (line.startsWith("发信站:")) {
+                // find post date here, skip the line
                 // <br /> 发信站: 水木社区 (Fri Mar 25 11:52:04 2016), 站内
                 line = StringUtils.subStringBetween(line, "(", ")");
                 SimpleDateFormat simpleFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy", Locale.US);
@@ -134,72 +149,68 @@ public class Post {
                     e1.printStackTrace();
                 }
             }
-            if (line.equals("--")) {
-                if (seperator > 1) {
-                    break;
-                }
 
-                seperator++;
-            } else {
-                if (seperator > 0) {
-                    if (line.length() > 0) {
-                        line = "<font color=#33CC66>" + line + "</font>";
-                    } else {
-                        continue;
-                    }
-                }
+            // handle quoted content
+            if (line.startsWith(":")) {
+                line = "<font color=#006699>" + line + "</font>";
+                sb.append(line).append("<br />");
+                continue;
             }
 
-            if (line.startsWith(":")) {
-                linequote++;
-                if (linequote > 5) {
+            if (line.trim().length() == 0) {
+                linebreak++;
+                if (linebreak >= 2) {
+                    // continuous linebreak, skip extra linebreak
                     continue;
                 } else {
-                    line = "<font color=#006699>" + line + "</font>";
-                }
-            } else {
-                linequote = 0;
-            }
-
-            if (line.equals("")) {
-                linebreak++;
-                if (linebreak > 1) {
+                    sb.append(line).append("<br />");
                     continue;
                 }
             } else {
+                // reset counter
                 linebreak = 0;
+            }
+
+            // handle siguature
+            // we have to make sure "--" is the last one, it might appear in post content body
+            if (i == signatureStartLine) {
+                // entering signature mode
+                signatureMode = 1;
+                sb.append(line).append("<br />");
+                continue;
             }
 
             // ※ 修改:·wpd419 于 Mar 29 09:43:17 2016 修改本文·[FROM: 111.203.75.*]
             // ※ 来源:·水木社区 http://www.newsmth.net·[FROM: 111.203.75.*]
-            if (line.contains("※ 来源:·") || line.contains("※ 修改:·")) {
-                // remove ASCII control first
-                Pattern cPattern = Pattern.compile("※[^\\]]*\\]");
-                Matcher cMatcher = cPattern.matcher(line);
-                if(cMatcher.find()){
-                    line = cMatcher.group(0);
-                }
-
-//                if (aSMApplication.getCurrentApplication().isShowIp()) {
-//                    Pattern myipPattern = Pattern.compile("FROM[: ]*(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.)[\\d\\*]+");
-//                    Matcher myipMatcher = myipPattern.matcher(line);
-//                    while (myipMatcher.find()) {
-//                        String ipl = myipMatcher.group(1);
-//                        if (ipl.length() > 5) {
-//                            ipl = "<font color=\"#c0c0c0\">FROM $1\\*("
-//                                    + aSMApplication.db.getLocation(ipl + "1") + ")<\\/font>";
-//                        } else {
-//                            ipl = "<font color=\"#c0c0c0\">FROM $1\\*<\\/font>";
-//                        }
-//                        line = myipMatcher.replaceAll(ipl);
-//                    }
-//                }
+            if (line.contains("※ 来源:·")) {
+                // jump out of signature mode
+                signatureMode = 0;
+                line = line.replace("·", "");
+                line = line.replace("http://www.newsmth.net", "");
+                line = line.replace("http://m.newsmth.net", "");
+                line = line.replace("newsmth.net", "");
+                sb.append(line).append("<br />");
+                continue;
+            } else if (line.contains("※ 修改:·")) {
+                // jump out of signature mode
+                signatureMode = 0;
+                line = line.replace("·", "");
+                sb.append(line).append("<br />");
+                continue;
             }
+
+            // after handle last part of post content, if it's still in signature mode, add signature
+            if (signatureMode == 1) {
+                line = "<font color=#727272>" + line + "</font>";
+                sb.append(line).append("<br />");
+                continue;
+            }
+
+            // for other normal line, add it directly
             sb.append(line).append("<br />");
         }
 
-        String result = sb.toString().trim();
-        return result;
+        return sb.toString().trim();
     }
 
     public void setContent(String content) {
@@ -211,17 +222,17 @@ public class Post {
 
     public Spanned getSpannedContent() {
         String finalContent = this.htmlContent;
+
         if(likes != null && likes.size() > 0) {
             StringBuilder wordList = new StringBuilder();
+            wordList.append("<br/>");
             for (String word : likes) {
-                wordList.append("<br/>" + word);
+                wordList.append(word).append("<br/>");
             }
-
             finalContent += new String(wordList);
         }
 
-        Spanned result = Html.fromHtml(finalContent);
-        return result;
+        return Html.fromHtml(finalContent);
     }
 
     public ArrayList<Attachment> getAttachFiles() {

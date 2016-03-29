@@ -45,7 +45,7 @@
     <string name="next_page">下页</string>
     <string name="go_page">GO</string>
     <string name="go_and_last_page">GO/末页</string>
-    <string name="post_list_title">文章标题</string>
+    <string name="post_list_title">加载中...</string>
 
     <!-- post相关 -->
     <string name="post_alert_title">请选择操作</string>

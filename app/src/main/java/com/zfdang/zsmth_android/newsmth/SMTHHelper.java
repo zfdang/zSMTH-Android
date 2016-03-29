@@ -131,7 +131,7 @@ public class SMTHHelper {
         if(lis.size() > 0) {
             Element li = lis.first();
             // 贴数:152 分页:
-            Log.d(TAG, li.text());
+//            Log.d(TAG, li.text());
 
             Pattern pattern = Pattern.compile("(\\d+)", Pattern.DOTALL);
             Matcher matcher = pattern.matcher(li.text());
@@ -154,7 +154,7 @@ public class SMTHHelper {
                 Element author = authors.get(0);
                 String authorName = author.text();
                 post.setAuthor(authorName);
-                Log.d(TAG, authorName);
+//                Log.d(TAG, authorName);
             }
 
             // find post id for this post
@@ -163,8 +163,8 @@ public class SMTHHelper {
             if(links.size() > 0){
                 Element link = links.first();
                 String postID = StringUtils.getLastStringSegment(link.attr("href"));
-                Log.d(TAG, postID);
                 post.setPostID(postID);
+//                Log.d(TAG, postID);
             }
 
             // find & parse post content
@@ -172,6 +172,7 @@ public class SMTHHelper {
             if(contents.size() == 1) {
                 ParsePostContentFromWWW(contents.get(0), post);
             }
+            Log.d(TAG, post.toString());
             results.add(post);
         }
 

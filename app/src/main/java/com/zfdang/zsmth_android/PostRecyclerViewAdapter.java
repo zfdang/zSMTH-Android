@@ -48,6 +48,8 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         holder.mPostAuthor.setText(post.getAuthor());
         holder.mPostPublishDate.setText(post.getFormatedDate());
         holder.mPostContent.setText(post.getSpannedContent());
+        // links are not clickable, because it conflicts with recyclerview click
+        // Linkify.addLinks(holder.mPostContent, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
 
         if(mListener != null) {
             int mCurrentPageNo = ((PostListActivity) mListener).mCurrentPageNo;

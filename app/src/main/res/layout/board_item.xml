@@ -32,6 +32,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/CategoryName"
         android:text="[engBoard]chsBoard"
-        android:textColor="@color/status_text"
+        android:textColor="@color/colorMainText"
         android:textSize="20dp"/>
 </RelativeLayout>
