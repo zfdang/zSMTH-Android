@@ -1,7 +1,6 @@
 package com.zfdang.zsmth_android.newsmth;
 
 import android.content.Context;
-import android.text.Html;
 import android.util.Log;
 
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
@@ -25,13 +24,9 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -183,113 +178,35 @@ public class SMTHHelper {
         return results;
     }
 
-
-
-    public static String ParsePostBodyFromWWW(String content, Post post) {
-        Date date = new Date();
-
-        content = content.replace("\\n", "\n").replace("\\r", "\r")
-                .replace("\\/", "/").replace("\\\"", "\"").replace("\\'", "'");
-        String[] lines = content.split("\n");
-        StringBuilder sb = new StringBuilder();
-        int linebreak = 0;
-        int linequote = 0;
-        int seperator = 0;
-        for (String line : lines) {
-            if (line.startsWith("发信人:") || line.startsWith("寄信人:")) {
-                /*
-                 * line = "<font color=#6699FF>" +
-                 * MyUtils.subStringBetween(line, "发信人: ", ", 信区:") + "</font>";
-                 * sb.append(line);
-                 */
-                String nickName = StringUtils.subStringBetween(line, "(", ")");
-                if(nickName != null && nickName.length() > 0) {
-                    post.setNickName(nickName);
-                }
-                continue;
-            } else if (line.startsWith("标  题:")) {
-                continue;
-            } else if (line.startsWith("发信站:")) {
-                line = StringUtils.subStringBetween(line, "(", ")");
-                SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy", Locale.US);
-                try {
-                    date = sdf.parse(line);
-                    post.setDate(date);
-                    continue;
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
-                }
-            }
-            if (line.equals("--")) {
-                if (seperator > 1) {
-                    break;
-                }
-
-                seperator++;
-            } else {
-                if (seperator > 0) {
-                    if (line.length() > 0) {
-                        line = "<font color=#33CC66>" + line + "</font>";
-                    } else {
-                        continue;
-                    }
-                }
-            }
-
-            if (line.startsWith(":")) {
-                linequote++;
-                if (linequote > 5) {
-                    continue;
-                } else {
-                    line = "<font color=#006699>" + line + "</font>";
-                }
-            } else {
-                linequote = 0;
-            }
-
-            if (line.equals("")) {
-                linebreak++;
-                if (linebreak > 1) {
-                    continue;
-                }
-            } else {
-                linebreak = 0;
-            }
-
-            // [36m※ 修改:・mozilla 于 Mar 18 13:42:45 2013 修改本文・[FROM: 220.249.41.*]\r[m\n\r
-            // [m\r[1;31m※ 来源:・水木社区 newsmth.net・[FROM: 220.249.41.*]\r[m\n
-            // ※ 来源:·水木社区 newsmth.net·[FROM: 119.6.200.*]
-            if (line.contains("※ 来源:·") || line.contains("※ 修改:·")) {
-                // remove ASCII control first
-                Pattern cPattern = Pattern.compile("※[^\\]]*\\]");
-                Matcher cMatcher = cPattern.matcher(line);
-                if(cMatcher.find()){
-                    line = cMatcher.group(0);
-                }
-
-//                if (aSMApplication.getCurrentApplication().isShowIp()) {
-//                    Pattern myipPattern = Pattern.compile("FROM[: ]*(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.)[\\d\\*]+");
-//                    Matcher myipMatcher = myipPattern.matcher(line);
-//                    while (myipMatcher.find()) {
-//                        String ipl = myipMatcher.group(1);
-//                        if (ipl.length() > 5) {
-//                            ipl = "<font color=\"#c0c0c0\">FROM $1\\*("
-//                                    + aSMApplication.db.getLocation(ipl + "1") + ")<\\/font>";
-//                        } else {
-//                            ipl = "<font color=\"#c0c0c0\">FROM $1\\*<\\/font>";
-//                        }
-//                        line = myipMatcher.replaceAll(ipl);
-//                    }
-//                }
-            }
-            sb.append(line).append("<br />");
+    // called by ParsePostListFromWWW
+    // this method will call ParseLikeElementInPostContent & ParsePostBodyFromWWW
+    // sample response: assets/post_content_from_www.html
+    public static void ParsePostContentFromWWW(Element content, Post post, Topic topic) {
+        // 1. find, parse and remove likes node first
+        // <div class="likes">
+        Elements nodes = content.select("div.likes");
+        String likeString = "";
+        if(nodes.size() == 1) {
+            Element node = nodes.first();
+            List<String> likes = ParseLikeElementInPostContent(node);
+            post.setLikes(likes);
+            node.remove();
         }
 
-        String result = sb.toString().trim();
-        return result;
+        // 2. find and remove add_link button
+        // <button class="button add_like"
+        nodes = content.select("button.button");
+        if(nodes.size() == 1) {
+            Element node = nodes.first();
+            node.remove();
+        }
+
+        // 3. set post content
+        post.setContent(content.html());
     }
 
-    public static String ParseLikeElementFromWWW(Element like) {
+    // parse like list in post content
+    public static List<String> ParseLikeElementInPostContent(Element like) {
         List<String> likes = new ArrayList<>();
 
         // <div class="like_name">有36位用户评价了这篇文章：</div>
@@ -307,48 +224,9 @@ public class SMTHHelper {
             likes.add(n.text());
         }
 
-        StringBuilder wordList = new StringBuilder();
-        for (String word : likes) {
-            wordList.append("<br/>" + word);
-        }
-        return new String(wordList);
+        return likes;
     }
 
-    // this method will call ParseLikeElementFromWWW & ParsePostBodyFromWWW
-    public static void ParsePostContentFromWWW(Element content, Post post, Topic topic) {
-//        Log.d("ParsePost-1", content.html());
-        // 1. find, parse and remove likes node first
-        // <div class="likes">
-        Elements nodes = content.select("div.likes");
-        String likeString = "";
-        if(nodes.size() == 1) {
-            Element node = nodes.first();
-            likeString = ParseLikeElementFromWWW(node);
-            node.remove();
-        }
-
-        // 2. find and remove add_link button
-        // <button class="button add_like"
-        nodes = content.select("button.button");
-        if(nodes.size() == 1) {
-            Element node = nodes.first();
-            node.remove();
-        }
-
-//        Log.d("ParsePost-2", content.html());
-
-        // 3. parse post body
-        String contentString = Html.fromHtml(content.html()).toString();
-        String contentFinal = ParsePostBodyFromWWW(contentString, post);
-
-        // 4. merge post body and likes
-        if(likeString != null && likeString.length() > 0) {
-            contentFinal += likeString;
-        }
-//        Log.d("ParsePost-3", contentFinal);
-
-        post.setContent(contentFinal);
-    }
 
 
     // [团购]3.28-4.03 花的传说饰品团购(18) ==> 18
