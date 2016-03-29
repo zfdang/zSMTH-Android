@@ -170,7 +170,7 @@ public class SMTHHelper {
             // find & parse post content
             Elements contents = table.select("td.a-content");
             if(contents.size() == 1) {
-                ParsePostContentFromWWW(contents.get(0), post, topic);
+                ParsePostContentFromWWW(contents.get(0), post);
             }
             results.add(post);
         }
@@ -181,7 +181,7 @@ public class SMTHHelper {
     // called by ParsePostListFromWWW
     // this method will call ParseLikeElementInPostContent & ParsePostBodyFromWWW
     // sample response: assets/post_content_from_www.html
-    public static void ParsePostContentFromWWW(Element content, Post post, Topic topic) {
+    public static void ParsePostContentFromWWW(Element content, Post post) {
         // 1. find, parse and remove likes node first
         // <div class="likes">
         Elements nodes = content.select("div.likes");
