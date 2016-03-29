@@ -41,4 +41,5 @@ dependencies {
     compile 'com.github.maksim88:PasswordEditText:v0.6'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'com.thefinestartist:finestwebview:1.2.1'
+    compile 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
 }

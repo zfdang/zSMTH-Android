@@ -57,6 +57,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/post_content_holder"
         android:orientation="vertical">
 
         <include layout="@layout/post_item_content"/>

@@ -3,6 +3,7 @@ package com.zfdang.zsmth_android.models;
 import android.text.Html;
 import android.text.Spanned;
 
+import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.helpers.StringUtils;
 
 import java.text.ParseException;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Post object.
@@ -97,6 +100,21 @@ public class Post {
         return StringUtils.getFormattedString(this.date);
     }
 
+
+    public static String lookupIPLocation(String content) {
+        Pattern myipPattern = Pattern.compile("FROM[: ]*(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.)[\\d\\*]+");
+        Matcher myipMatcher = myipPattern.matcher(content);
+        while (myipMatcher.find()) {
+            String ipl = myipMatcher.group(1);
+            if (ipl.length() > 5) {
+                ipl = "$1\\*("+ SMTHApplication.geoDB.getLocation(ipl + "1") + ")";
+            } else {
+                ipl = "$1\\*";
+            }
+            content = myipMatcher.replaceAll(ipl);
+        }
+        return content;
+    }
 
     private String processPostContent(String content) {
         // Log.d("processPostContent", content);
@@ -189,12 +207,15 @@ public class Post {
                 line = line.replace("http://www.newsmth.net", "");
                 line = line.replace("http://m.newsmth.net", "");
                 line = line.replace("newsmth.net", "");
+                line = lookupIPLocation(line);
                 sb.append(line).append("<br />");
                 continue;
             } else if (line.contains("※ 修改:·")) {
                 // jump out of signature mode
                 signatureMode = 0;
                 line = line.replace("·", "");
+                line = line.replace("修改本文", "");
+                line = lookupIPLocation(line);
                 sb.append(line).append("<br />");
                 continue;
             }
