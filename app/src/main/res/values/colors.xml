@@ -49,4 +49,9 @@
     <color name="recycler_view_item_pressed">#F7F7F7</color>
     <color name="recycler_view_item_sticky">#FFE0B2</color>
 
+    <!--for FinestWebView-->
+    <color name="blackPrimaryDark">#282828</color>
+    <color name="blackPrimary">#2E2E2E</color>
+    <color name="blackPrimaryLight">#8F8F8F</color>
+
 </resources>

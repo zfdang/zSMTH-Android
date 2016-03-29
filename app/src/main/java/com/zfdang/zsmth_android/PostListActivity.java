@@ -334,7 +334,17 @@ public class PostListActivity extends AppCompatActivity
         } else if (which == 5) {
         } else if (which == 6) {
             String url = String.format("http://m.newsmth.net/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
-            new FinestWebView.Builder(this).show(url);
+            new FinestWebView.Builder(this)
+                    .statusBarColorRes(R.color.colorPrimaryDark)
+                    .toolbarColorRes(R.color.colorPrimary)
+                    .titleColorRes(R.color.finestWhite)
+                    .titleDefault(String.format("zSMTH - %s", mTopic.getBoardName()))
+                    .updateTitleFromHtml(false)
+                    .showUrl(false)
+                    .showSwipeRefreshLayout(false)
+                    .progressBarColorRes(R.color.finestWhite)
+                    .progressBarHeight(4)
+                    .show(url);
         } else if (which == 7) {
 
         }
