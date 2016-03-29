@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -266,7 +267,7 @@ public class PostListActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onItemLongClicked(int position, View v) {
+    public boolean onItemLongClicked(final int position, View v) {
         Log.d(TAG, String.format("Post by %s is long clicked", PostListContent.POSTS.get(position).getAuthor()));
 
 
@@ -314,7 +315,7 @@ public class PostListActivity extends AppCompatActivity
                 .setTitle(getString(R.string.post_alert_title))
                 .setAdapter(adapter, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        onPostPopupMenuItem(which);
+                        onPostPopupMenuItem(position, which);
                     }
                 })
                 .show();
@@ -322,7 +323,7 @@ public class PostListActivity extends AppCompatActivity
         return true;
     }
 
-    private void onPostPopupMenuItem(int which) {
+    private void onPostPopupMenuItem(int position, int which) {
         Log.d(TAG, String.format("MenuItem %d was clicked", which));
 
         if(which == 0) {
@@ -330,9 +331,32 @@ public class PostListActivity extends AppCompatActivity
         } else if (which == 1) {
         } else if (which == 2) {
         } else if (which == 3) {
+            // copy post content
+            // http://stackoverflow.com/questions/8056838/dealing-with-deprecated-android-text-clipboardmanager
+            String content = "";
+            Post post = PostListContent.POSTS.get(position);
+            if(post != null) {
+                content = post.getRawContent();
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    final android.content.ClipboardManager clipboardManager = (android.content.ClipboardManager)
+                            getSystemService(Context.CLIPBOARD_SERVICE);
+                    final android.content.ClipData clipData = android.content.ClipData.newPlainText("PostContent", content);
+                    clipboardManager.setPrimaryClip(clipData);
+                } else {
+                    final android.text.ClipboardManager clipboardManager = (android.text.ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+                    clipboardManager.setText(content);
+                }
+                Toast.makeText(PostListActivity.this, "帖子内容已复制到剪贴板", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(PostListActivity.this, "复制失败！", Toast.LENGTH_SHORT).show();
+            }
+
         } else if (which == 4) {
         } else if (which == 5) {
+            //
         } else if (which == 6) {
+            // open post in browser
             String url = String.format("http://m.newsmth.net/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
             new FinestWebView.Builder(this)
                     .statusBarColorRes(R.color.colorPrimaryDark)

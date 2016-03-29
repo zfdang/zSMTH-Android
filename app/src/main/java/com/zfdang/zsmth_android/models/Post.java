@@ -2,6 +2,7 @@ package com.zfdang.zsmth_android.models;
 
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.helpers.StringUtils;
@@ -117,7 +118,7 @@ public class Post {
     }
 
     private String processPostContent(String content) {
-        // Log.d("processPostContent", content);
+         Log.d("processPostContent", content);
 
         // &nbsp; is converted as code=160, but not a whitespace (ascii=32)
         // http://stackoverflow.com/questions/4728625/why-trim-is-not-working
@@ -142,6 +143,7 @@ public class Post {
         int signatureMode = 0;
         for (int i = 0; i < lines.length; i++) {
             String line = lines[i];
+
             if (line.startsWith("发信人:") || line.startsWith("寄信人:")) {
                 // find nickname for author here, skip the line
                 // 发信人: schower (schower), 信区: WorkLife
@@ -150,9 +152,8 @@ public class Post {
                     this.setNickName(nickName);
                 }
                 continue;
-            } else if (line.startsWith("标  题:")) {
-                // add this line to content
-                sb.append(line).append("<br />");
+            } else if (line.startsWith("标  题:")) {
+                // skip this line
                 continue;
             } else if (line.startsWith("发信站:")) {
                 // find post date here, skip the line
@@ -239,6 +240,10 @@ public class Post {
         // element.html()
         String temp = Html.fromHtml(content).toString();
         this.htmlContent = this.processPostContent(temp);;
+    }
+
+    public String getRawContent() {
+        return Html.fromHtml(this.htmlContent).toString();
     }
 
     public Spanned getSpannedContent() {
