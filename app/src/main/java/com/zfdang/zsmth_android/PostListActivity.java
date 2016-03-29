@@ -26,6 +26,7 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jude.swipbackhelper.SwipeBackHelper;
 import com.thefinestartist.finestwebview.FinestWebView;
 import com.zfdang.zsmth_android.models.AlertDialogItem;
 import com.zfdang.zsmth_android.models.Post;
@@ -63,8 +64,22 @@ public class PostListActivity extends AppCompatActivity
     private ProgressDialog pdialog = null;
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SwipeBackHelper.onDestroy(this);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        SwipeBackHelper.onPostCreate(this);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SwipeBackHelper.onCreate(this);
+
         setContentView(R.layout.activity_post_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.post_list_toolbar);
         setSupportActionBar(toolbar);

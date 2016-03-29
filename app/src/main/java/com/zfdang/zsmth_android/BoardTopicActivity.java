@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.jude.swipbackhelper.SwipeBackHelper;
 import com.zfdang.zsmth_android.listeners.EndlessRecyclerOnScrollListener;
 import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
 import com.zfdang.zsmth_android.models.Board;
@@ -64,8 +65,22 @@ public class BoardTopicActivity extends AppCompatActivity
     private RecyclerView mRecyclerView = null;
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SwipeBackHelper.onDestroy(this);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        SwipeBackHelper.onPostCreate(this);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SwipeBackHelper.onCreate(this);
+
         setContentView(R.layout.activity_board_topic);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.board_topic_toolbar);
