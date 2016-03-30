@@ -73,11 +73,16 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
 
 
             Log.d("CreateView", "inflateContentViewGroup: " + attach.getImageSrc());
+            // Glide and ImageView.ScaleType work together
+            // ImageView.ScaleType == CenterInside, so no scale
+            // Glide will fitCenter when it's a image not a GIF
             Glide.with(SMTHApplication.getAppContext())
                     .load(attach.getImageSrc())
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    // there is bug with Glide 3.x, so that loading gif is very slow when strage=ALL
 //                    .placeholder(R.drawable.progress_animation)
                     .error(R.drawable.image_not_found)
+                    .fitCenter()
                     .crossFade()
                     .into(image);
 
