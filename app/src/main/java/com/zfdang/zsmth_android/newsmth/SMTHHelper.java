@@ -11,6 +11,7 @@ import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.BoardListContent;
+import com.zfdang.zsmth_android.models.BoardSection;
 import com.zfdang.zsmth_android.models.Post;
 import com.zfdang.zsmth_android.models.Topic;
 

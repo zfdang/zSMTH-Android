@@ -1,4 +1,4 @@
-package com.zfdang.zsmth_android.newsmth;
+package com.zfdang.zsmth_android.models;
 
 /**
  * Created by zfdang on 2016-3-24.

@@ -106,13 +106,16 @@ public class Post {
         // http://stackoverflow.com/questions/4728625/why-trim-is-not-working
         content = content.replace(String.valueOf((char) 160), " ");
 
+
+        // it's important to know that not all HTML tags are supported by Html.fromHtml, see the supported list
+        // https://commonsware.com/blog/Android/2010/05/26/html-tags-supported-by-textview.html
         String[] lines = content.split("\n");
 
         // find signature start line
         int signatureStartLine = -1;
         for (int i = lines.length - 1; i >= 0; i--) {
             String line = lines[i];
-            if (line.startsWith("--")) {
+            if (line.startsWith("--") && line.length() <=3 ) {
                 // find the first "--" from the last to the first
                 signatureStartLine = i;
                 break;
@@ -201,7 +204,7 @@ public class Post {
 
             // after handle last part of post content, if it's still in signature mode, add signature
             if (signatureMode == 1) {
-                line = "<font color=#727272>" + line + "</font>";
+                line = "<small><font color=#727272>" + line + "</font></small>";
                 sb.append(line).append("<br />");
                 continue;
             }
@@ -245,15 +248,20 @@ public class Post {
         return Html.fromHtml(this.htmlContent).toString();
     }
 
+    // result can be used to TextView.setText() directly
     public Spanned getSpannedContent() {
+        // it's important to know that not all HTML tags are supported by Html.fromHtml, see the supported list
+        // https://commonsware.com/blog/Android/2010/05/26/html-tags-supported-by-textview.html
+        // http://stackoverflow.com/questions/18295881/android-textview-html-font-size-tag
         String finalContent = this.htmlContent;
 
         if (likes != null && likes.size() > 0) {
             StringBuilder wordList = new StringBuilder();
-            wordList.append("<br/>");
+            wordList.append("<br/><cite>");
             for (String word : likes) {
                 wordList.append(word).append("<br/>");
             }
+            wordList.append("</cite>");
             finalContent += new String(wordList);
         }
 
