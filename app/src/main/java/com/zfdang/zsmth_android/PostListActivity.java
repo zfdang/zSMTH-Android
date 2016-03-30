@@ -22,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -129,11 +128,11 @@ public class PostListActivity extends AppCompatActivity
         Log.d(TAG, String.format("Load post list for topic = %s, source = %s", topic.toString(), mFrom));
 
         // set onClick Lisetner for page navigator buttons
-        ((Button)findViewById(R.id.post_list_first_page)).setOnClickListener(this);
-        ((Button)findViewById(R.id.post_list_pre_page)).setOnClickListener(this);
-        ((Button)findViewById(R.id.post_list_next_page)).setOnClickListener(this);
-        ((Button)findViewById(R.id.post_list_last_page)).setOnClickListener(this);
-        ((Button)findViewById(R.id.post_list_go_page)).setOnClickListener(this);
+        findViewById(R.id.post_list_first_page).setOnClickListener(this);
+        findViewById(R.id.post_list_pre_page).setOnClickListener(this);
+        findViewById(R.id.post_list_next_page).setOnClickListener(this);
+        findViewById(R.id.post_list_last_page).setOnClickListener(this);
+        findViewById(R.id.post_list_go_page).setOnClickListener(this);
 
         if(mTopic == null || !mTopic.getTopicID().equals(topic.getTopicID()) || PostListContent.POSTS.size() == 0) {
             // new topic, different topic, or no post loaded
@@ -297,7 +296,7 @@ public class PostListActivity extends AppCompatActivity
                 }
                 break;
             case R.id.post_list_go_page:
-                int pageNo = 1;
+                int pageNo;
                 try{
                     pageNo = Integer.parseInt(mPageNo.getText().toString());
                     if(mCurrentPageNo == pageNo) {
@@ -398,7 +397,7 @@ public class PostListActivity extends AppCompatActivity
         } else if (which == 3) {
             // copy post content
             // http://stackoverflow.com/questions/8056838/dealing-with-deprecated-android-text-clipboardmanager
-            String content = "";
+            String content;
             Post post = PostListContent.POSTS.get(position);
             if(post != null) {
                 content = post.getRawContent();
@@ -435,6 +434,7 @@ public class PostListActivity extends AppCompatActivity
                     .showSwipeRefreshLayout(false)
                     .progressBarColorRes(R.color.finestWhite)
                     .progressBarHeight(4)
+                    .webViewSupportZoom(true)
                     .show(url);
         } else if (which == 7) {
             // post_share
