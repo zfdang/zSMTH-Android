@@ -1,7 +1,6 @@
 package com.zfdang.zsmth_android.models;
 
 import android.text.Html;
-import android.text.Spanned;
 import android.util.Log;
 
 import com.zfdang.zsmth_android.helpers.StringUtils;
@@ -25,21 +24,24 @@ public class Post {
     public static int ACTION_FIRST_POST_IN_SUBJECT = 1;
     public static int ACTION_PREVIOUS_POST_IN_SUBJECT = 2;
     public static int ACTION_NEXT_POST_IN_SUBJECT = 3;
+
+    private static final String ATTACHMENT_MARK = "###ZSMTH_ATTACHMENT###";
+
     private String postID;
     private String title;
     private String author;
     private String nickName;
     private Date date;
-    private String htmlContent;
+
     private List<String> likes;
     private List<Attachment> attachFiles;
 
+    private String htmlContent; // likes are not included
+    //    private String htmlCompleteContent; // likes are included
+    private List<ContentSegment> mSegments;  // parsed from htmlCompleteContent
+
     public Post() {
         date = new Date();
-    }
-
-    public void setLikes(List<String> likes) {
-        this.likes = likes;
     }
 
     @Override
@@ -51,14 +53,6 @@ public class Post {
                 ", author='" + author + '\'' +
                 ", nickName='" + nickName + '\'' +
                 '}';
-    }
-
-    public void setNickName(String nickName) {
-        final int MAX_NICKNAME_LENGTH = 12;
-        if (nickName.length() > MAX_NICKNAME_LENGTH) {
-            nickName = nickName.substring(0, MAX_NICKNAME_LENGTH) + "..";
-        }
-        this.nickName = nickName;
     }
 
     public String getPostID() {
@@ -85,6 +79,14 @@ public class Post {
         }
     }
 
+    public void setNickName(String nickName) {
+        final int MAX_NICKNAME_LENGTH = 12;
+        if (nickName.length() > MAX_NICKNAME_LENGTH) {
+            nickName = nickName.substring(0, MAX_NICKNAME_LENGTH) + "..";
+        }
+        this.nickName = nickName;
+    }
+
     public void setAuthor(String author) {
         this.author = author;
     }
@@ -95,6 +97,100 @@ public class Post {
 
     public String getFormatedDate() {
         return StringUtils.getFormattedString(this.date);
+    }
+
+
+    // set likes and content together, then merge them to htmlCompleteContent, then split it into htmlSegments
+    public void setLikesAndPostContent(List<String> likes, Element content) {
+        // save likes
+        this.likes = likes;
+
+        // Log.d("setLikesAndPostContent", content.html());
+
+        // find all attachment from node
+        // <a target="_blank" href="http://att.newsmth.net/nForum/att/AutoWorld/1939790539/4070982">
+        // <img border="0" title="单击此查看原图" src="http://att.newsmth.net/nForum/att/AutoWorld/1939790539/4070982/large" class="resizeable">
+        // </a>
+        Elements as = content.select("a[href]");
+        for (Element a : as) {
+            Elements imgs = a.select("img[src]");
+            if (imgs.size() == 1) {
+                // find one image attachment
+                String imgsrc = imgs.attr("src");
+                String imgsrc_orig = a.attr("href");
+                Attachment attach = new Attachment(imgsrc_orig);
+
+                this.addAttachFile(attach);
+
+                // replace a[href] with MARK
+                a.html(ATTACHMENT_MARK);
+            }
+        }
+
+        // process pure post content
+        String formattedPlainText = Html.fromHtml(content.html()).toString();
+        this.htmlContent = this.processPostContent(formattedPlainText);
+
+        // it's important to know that not all HTML tags are supported by Html.fromHtml, see the supported list
+        // https://commonsware.com/blog/Android/2010/05/26/html-tags-supported-by-textview.html
+        // http://stackoverflow.com/questions/18295881/android-textview-html-font-size-tag
+        String htmlCompleteContent = this.htmlContent;
+
+        if (likes != null && likes.size() > 0) {
+            StringBuilder wordList = new StringBuilder();
+            wordList.append("<br/><cite>");
+            for (String word : likes) {
+                wordList.append(word).append("<br/>");
+            }
+            wordList.append("</cite>");
+            htmlCompleteContent += new String(wordList);
+        }
+        // now htmlCompleteContent has both post content and likes content
+
+        // parse htmlCompleteContent to htmlSegments
+        parseContentToSegments(htmlCompleteContent);
+    }
+
+    // split complete content with ATTACHMENT_MARK
+    private void parseContentToSegments(String htmlCompleteContent) {
+        if (mSegments == null) {
+            mSegments = new ArrayList<>();
+        }
+        mSegments.clear();
+
+        if (attachFiles == null || attachFiles.size() == 0) {
+            // no attachment, add all content as one segment
+            mSegments.add(new ContentSegment(ContentSegment.SEGMENT_TEXT, htmlCompleteContent));
+        } else {
+            // when there are attachments here, separate them one by one
+            String[] segments = htmlCompleteContent.split(ATTACHMENT_MARK);
+
+            // add segments and attachments together
+            int attachIndex = 0;
+            for (String segment : segments) {
+                // add segment to results
+                mSegments.add(new ContentSegment(ContentSegment.SEGMENT_TEXT, segment));
+
+                // add next image attachment to results
+                if (attachFiles != null && attachIndex < attachFiles.size()) {
+                    Attachment attach = attachFiles.get(attachIndex);
+                    ContentSegment img = new ContentSegment(ContentSegment.SEGMENT_IMAGE, attach.getImageSrc());
+                    img.setImgIndex(attachIndex);
+                    mSegments.add(img);
+                }
+
+                attachIndex++;
+            }
+        }
+
+        Log.d("ContentSegment", String.format("Total segments here: %d", mSegments.size()));
+        for (ContentSegment content : mSegments) {
+            if (content.getType() == ContentSegment.SEGMENT_IMAGE) {
+                Log.d("ContentSegment", String.format("Image %s, index = %d", content.getUrl(), content.getImgIndex()));
+            } else if (content.getType() == ContentSegment.SEGMENT_TEXT) {
+                Log.d("ContentSegment", String.format("Text, %s", content.getSpanned().toString()));
+            }
+        }
     }
 
     /*
@@ -115,7 +211,7 @@ public class Post {
         int signatureStartLine = -1;
         for (int i = lines.length - 1; i >= 0; i--) {
             String line = lines[i];
-            if (line.startsWith("--") && line.length() <=3 ) {
+            if (line.startsWith("--") && line.length() <= 3) {
                 // find the first "--" from the last to the first
                 signatureStartLine = i;
                 break;
@@ -224,56 +320,14 @@ public class Post {
         return sb.toString().trim();
     }
 
-    public void setContentFromElement(Element content) {
-        Log.d("ContentFromElement", content.html());
 
-        // find all attachment from node
-        // <a target="_blank" href="http://att.newsmth.net/nForum/att/AutoWorld/1939790539/4070982">
-        // <img border="0" title="单击此查看原图" src="http://att.newsmth.net/nForum/att/AutoWorld/1939790539/4070982/large" class="resizeable">
-        // </a>
-        Elements as = content.select("a[href]");
-        for (Element a : as) {
-            Elements imgs = a.select("img[src]");
-            if (imgs.size() == 1) {
-                // find one image attachment
-                String imgsrc = imgs.attr("src");
-                String imgsrc_orig = a.attr("href");
-                Attachment attach = new Attachment(imgsrc_orig);
-
-                this.addAttachFile(attach);
-
-                // replace a[href] with MARK
-                a.html("###ZSMTH_ATTACHMENT###");
-            }
-        }
-
-        // set content
-        String formattedPlainText = Html.fromHtml(content.html()).toString();
-        this.htmlContent = this.processPostContent(formattedPlainText);
+    public List<ContentSegment> getContentSegments() {
+        return mSegments;
     }
 
     public String getRawContent() {
+        // used by copy post content menu
         return Html.fromHtml(this.htmlContent).toString();
-    }
-
-    // result can be used to TextView.setText() directly
-    public Spanned getSpannedContent() {
-        // it's important to know that not all HTML tags are supported by Html.fromHtml, see the supported list
-        // https://commonsware.com/blog/Android/2010/05/26/html-tags-supported-by-textview.html
-        // http://stackoverflow.com/questions/18295881/android-textview-html-font-size-tag
-        String finalContent = this.htmlContent;
-
-        if (likes != null && likes.size() > 0) {
-            StringBuilder wordList = new StringBuilder();
-            wordList.append("<br/><cite>");
-            for (String word : likes) {
-                wordList.append(word).append("<br/>");
-            }
-            wordList.append("</cite>");
-            finalContent += new String(wordList);
-        }
-
-        return Html.fromHtml(finalContent);
     }
 
     public void addAttachFile(Attachment attach) {
@@ -285,18 +339,7 @@ public class Post {
         }
     }
 
-    public int getNumberOfAttachFiles() {
-        if(attachFiles != null) {
-            return attachFiles.size();
-        }
-        return 0;
+    public List<Attachment> getAttachFiles() {
+        return attachFiles;
     }
-
-    public Attachment getAttachFileByIndex(int index) {
-        if(attachFiles != null && index < attachFiles.size()) {
-            return attachFiles.get(index);
-        }
-        return null;
-    }
-
 }

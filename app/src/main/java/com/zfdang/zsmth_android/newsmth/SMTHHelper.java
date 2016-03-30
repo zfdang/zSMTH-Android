@@ -195,10 +195,10 @@ public class SMTHHelper {
         // 1. find, parse and remove likes node first
         // <div class="likes">
         Elements nodes = content.select("div.likes");
+        List<String> likes = null;
         if(nodes.size() == 1) {
             Element node = nodes.first();
-            List<String> likes = ParseLikeElementInPostContent(node);
-            post.setLikes(likes);
+            likes = ParseLikeElementInPostContent(node);
         }
 
         // 2. find post content, the first <p> node in the td.a-content
@@ -207,8 +207,7 @@ public class SMTHHelper {
         if(nodes.size() >= 1) {
             Element node = nodes.first();
             // 2. set post content
-//            post.setContent(node.html());
-            post.setContentFromElement(node);
+            post.setLikesAndPostContent(likes, node);
         }
     }
 

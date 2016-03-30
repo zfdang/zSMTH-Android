@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.zfdang.SMTHApplication;
-import com.zfdang.zsmth_android.models.Attachment;
+import com.zfdang.zsmth_android.models.ContentSegment;
 import com.zfdang.zsmth_android.models.Post;
 import com.zfdang.zsmth_android.models.Topic;
 
@@ -53,50 +53,66 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         // remove all child view in viewgroup
         viewGroup.removeAllViews();
 
+        List<ContentSegment> contents = post.getContentSegments();
+        if(contents == null) return;
+
         // the simple case, without any attachment
-        if(post.getNumberOfAttachFiles() == 0) {
+        if(contents.size() == 1) {
             viewGroup.addView(contentView);
-            contentView.setText(post.getSpannedContent());
+            contentView.setText(contents.get(0).getSpanned());
             return;
         }
 
+        // there are multiple segments, add the first contentView first
+        // contentView is always available, we don't have to inflate it again
         viewGroup.addView(contentView);
-        contentView.setText(post.getSpannedContent());
+        contentView.setText(contents.get(0).getSpanned());
 
-        int attachNumber = post.getNumberOfAttachFiles();
         final LayoutInflater inflater = (LayoutInflater) SMTHApplication.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        for(int i = 0; i < attachNumber; i++) {
-            Attachment attach = post.getAttachFileByIndex(i);
+        for(int i = 1; i < contents.size(); i++) {
+            ContentSegment content = contents.get(i);
 
-            // Add the text layout to the parent layout
-            ImageView image = (ImageView) inflater.inflate(R.layout.post_item_imageview, viewGroup, false);
+            if(content.getType() == ContentSegment.SEGMENT_IMAGE) {
+                Log.d("CreateView", "Image: " + content.getUrl());
 
+                // Add the text layout to the parent layout
+                ImageView image = (ImageView) inflater.inflate(R.layout.post_item_imageview, viewGroup, false);
 
-            Log.d("CreateView", "inflateContentViewGroup: " + attach.getImageSrc());
-            // Glide and ImageView.ScaleType work together
-            // ImageView.ScaleType == CenterInside, so no scale
-            // Glide will fitCenter when it's a image not a GIF
-            Glide.with(SMTHApplication.getAppContext())
-                    .load(attach.getImageSrc())
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    // there is bug with Glide 3.x, so that loading gif is very slow when strage=ALL
+                // Glide and ImageView.ScaleType work together
+                // ImageView.ScaleType == CenterInside, so no scale
+                // Glide will fitCenter when it's a image not a GIF
+                Glide.with(SMTHApplication.getAppContext())
+                        .load(content.getUrl())
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                // there is bug with Glide 3.x, so that loading gif is very slow when strage=ALL
 //                    .placeholder(R.drawable.progress_animation)
-                    .error(R.drawable.image_not_found)
-                    .fitCenter()
-                    .crossFade()
-                    .into(image);
+                        .error(R.drawable.image_not_found)
+                        .fitCenter()
+                        .crossFade()
+                        .into(image);
 
-            image.setTag(R.id.image_tag, i);
-            image.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = (int) v.getTag(R.id.image_tag);
-                    Log.d("PostRecylerAdapter", "onClick: " + position + post.toString());
-                }
-            });
+                // set onclicklistener
+                image.setTag(R.id.image_tag, content.getImgIndex());
+                image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int position = (int) v.getTag(R.id.image_tag);
+                        Log.d("PostRecylerAdapter", "onClick: " + position + post.toString());
+                    }
+                });
 
-            // Add the text view to the parent layout
-            viewGroup.addView(image);
+                // Add the text view to the parent layout
+                viewGroup.addView(image);
+            } else if (content.getType() == ContentSegment.SEGMENT_TEXT) {
+                Log.d("CreateView", "Text: " + content.getSpanned().toString());
+
+                // Add the text layout to the parent layout
+                TextView tv = (TextView) inflater.inflate(R.layout.post_item_content, viewGroup, false);
+                tv.setText(content.getSpanned());
+
+                // Add the text view to the parent layout
+                viewGroup.addView(tv);
+            }
         }
 
     }
