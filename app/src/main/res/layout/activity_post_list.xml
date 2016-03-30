@@ -43,22 +43,27 @@
             android:textSize="18sp"/>
 
         <!-- Body -->
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/post_list"
-            android:name="com.zfdang.zsmth_android.TopicListFragment"
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/post_list_swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="0dp"
-            android:layout_weight="1"
-            android:scrollbars="vertical"
-            app:layoutManager="LinearLayoutManager"
+            android:layout_weight="1">
 
-            tools:context=".BoardTopicActivity"
-            tools:listitem="@layout/post_item"/>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/post_list"
+                android:name="com.zfdang.zsmth_android.TopicListFragment"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:scrollbars="vertical"
+                app:layoutManager="LinearLayoutManager"
+                tools:context=".BoardTopicActivity"
+                tools:listitem="@layout/post_item"/>
+        </android.support.v4.widget.SwipeRefreshLayout>
 
         <!-- footer -->
         <include layout="@layout/post_list_page_navigator"/>

@@ -14,6 +14,10 @@ public class SMTHApplication extends Application {
     private static Context context;
     public static String App_Title_Prefix = "zSMTH - ";
 
+    public static final String FROM_BOARD = "From_Board";
+    public static final String FROM_BOARD_HOT = "FROM_HOTTOPICS";
+    public static final String FROM_BOARD_BOARD = "FROM_BOARDTOPICS";
+
     // IP database
     public static GEODatabase geoDB;
 

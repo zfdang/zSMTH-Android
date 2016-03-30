@@ -18,7 +18,7 @@ public class Board implements Externalizable, Parcelable{
 
     // 具体的版面
     // http://www.newsmth.net/nForum/#!board/DrivingStudy
-    private String boardID;
+    private String boardID;        // this field is not longer used in nForum
     private String boardEngName;  // Android
     private String boardChsName;  // 安卓系统设备
     private String categoryName;  // 电脑技术

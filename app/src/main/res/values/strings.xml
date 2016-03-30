@@ -47,21 +47,30 @@
     <string name="go_and_last_page">GO/末页</string>
     <string name="post_list_title">加载中...</string>
 
-    <!-- post相关 -->
-    <string name="post_alert_title">请选择操作</string>
+    <!-- post弹出菜单 -->
+    <string name="post_alert_title">请选择操作:</string>
     <string name="post_reply_post">回复文章</string>
     <string name="post_reply_mail">回信给作者</string>
-    <string name="post_copy_author">复制作者ID</string>
-    <string name="post_query_author">查看作者信息</string>
+    <string name="post_query_author">查询作者信息</string>
     <string name="post_copy_content">复制帖子内容</string>
     <string name="post_foward_self">转寄到自己信箱</string>
     <string name="post_foward_external">转寄到他人/外部邮箱</string>
-    <string name="post_group_foward_external">合集转寄到他人/外部邮箱</string>
     <string name="post_view_in_browser">在浏览器里打开</string>
-    <string name="post_edit_post">修改文章</string>
     <string name="post_delete_post">删除文章</string>
+    <string name="post_share">分享</string>
+
     <string name="write_label_post">发表</string>
     <string name="post_attach">附件</string>
+
+    <!--boardTopic的option menu-->
+    <string name="board_topic_action_search">搜索</string>
+    <string name="board_topic_action_favorite">收藏版面</string>
+    <string name="board_topic_action_sticky">显示/隐藏置顶</string>
+    <string name="board_topic_action_refresh">刷新</string>
+
+    <!--postlist的option menu-->
+    <string name="post_list_action_refresh">刷新</string>
+    <string name="post_list_action_enter_board">进入版面</string>
 
 
 </resources>

@@ -12,11 +12,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.jude.swipbackhelper.SwipeBackHelper;
+import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.listeners.EndlessRecyclerOnScrollListener;
 import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
 import com.zfdang.zsmth_android.models.Board;
@@ -54,7 +56,6 @@ public class BoardTopicActivity extends AppCompatActivity
     private final String TAG = "BoardTopicActivity";
 
     private Board mBoard = null;
-    private String mSource = null;
 
     private ProgressDialog pdialog = null;
     private int mCurrentPageNo = 1;
@@ -130,7 +131,6 @@ public class BoardTopicActivity extends AppCompatActivity
         Intent intent = getIntent();
         Board board = intent.getParcelableExtra("board_object");
         assert board != null;
-        mSource = intent.getStringExtra("source");
         if (mBoard == null || !mBoard.getBoardEngName().equals(board.getBoardEngName())) {
             mBoard = board;
             TopicListContent.clearBoardTopics();
@@ -146,8 +146,8 @@ public class BoardTopicActivity extends AppCompatActivity
     }
 
     public void updateTitle() {
-        String title = mBoard.getBoardName();
-        setTitle(title);
+        String title = mBoard.getBoardChsName();
+        setTitle(title + " - 主题列表");
     }
 
     @Override
@@ -158,6 +158,13 @@ public class BoardTopicActivity extends AppCompatActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.board_topic_menu, menu);
+        return true;
     }
 
     /**
@@ -259,6 +266,7 @@ public class BoardTopicActivity extends AppCompatActivity
         item.setBoardEngName(mBoard.getBoardEngName());
         item.setBoardChsName(mBoard.getBoardChsName());
         intent.putExtra("topic_object", item);
+        intent.putExtra(SMTHApplication.FROM_BOARD, SMTHApplication.FROM_BOARD_BOARD);
         startActivity(intent);
     }
 

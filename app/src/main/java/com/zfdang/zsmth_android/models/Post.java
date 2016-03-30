@@ -189,7 +189,15 @@ public class Post {
             if (line.contains("※ 来源:·")) {
                 // jump out of signature mode
                 signatureMode = 0;
-                line = line.replace("·", "").replace("http://www.newsmth.net", "").replace("http://m.newsmth.net", "").replace("newsmth.net", "");
+                line = line.replace("·", "")
+                        .replace("http://www.newsmth.net", "")
+                        .replace("http://m.newsmth.net", "")
+                        .replace("http://newsmth.net", "")
+                        .replace("newsmth.net", "")
+                        .replace("m.newsmth.net", "")
+                        .replace("官方应用", "")
+                        .replace("客户端", "");
+
                 line = "<font color=#727272>" + StringUtils.lookupIPLocation(line) + "</font>";
                 sb.append(line).append("<br />");
                 continue;

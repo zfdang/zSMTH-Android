@@ -287,7 +287,7 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_refresh) {
+        if (id == R.id.main_action_refresh) {
             if(fragment == hotTopicFragment) {
                 hotTopicFragment.RefreshGuidance();
             } else if (fragment == allBoardFragment) {
@@ -300,11 +300,14 @@ public class MainActivity extends AppCompatActivity
                 toast.show();
             }
             return true;
-        } else if (id == R.id.action_switch_theme) {
+        } else if (id == R.id.main_action_switch_theme) {
+            Toast.makeText(MainActivity.this, "main_action_switch_theme", Toast.LENGTH_SHORT).show();
 
-        } else if (id == R.id.action_login) {
+        } else if (id == R.id.main_action_login) {
+            Toast.makeText(MainActivity.this, "main_action_login", Toast.LENGTH_SHORT).show();
 
-        } else if (id == R.id.action_logout) {
+        } else if (id == R.id.main_action_logout) {
+            Toast.makeText(MainActivity.this, "main_action_logout", Toast.LENGTH_SHORT).show();
 
         } else if (id == android.R.id.home) {
             this.onBackPressed();
@@ -372,6 +375,7 @@ public class MainActivity extends AppCompatActivity
         if(fragment == hotTopicFragment) {
             Intent intent = new Intent(this, PostListActivity.class);
             intent.putExtra("topic_object", item);
+            intent.putExtra(SMTHApplication.FROM_BOARD, SMTHApplication.FROM_BOARD_HOT);
             startActivity(intent);
         }
     }
@@ -387,24 +391,23 @@ public class MainActivity extends AppCompatActivity
         // shared by FavoriteBoard & AllBoard fragment
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         if(fragment == favoriteBoardFragment) {
+            // favorite fragment, we might enter a folder
             if(item.isFolder()) {
                 favoriteBoardFragment.pushFavoritePath(item.getFolderID(), item.getFolderName());
                 favoriteBoardFragment.RefreshFavoriteBoards();
             } else {
-                startBoardTopicActivity(item, "收藏夹");
+                startBoardTopicActivity(item);
             }
 
         } else if(fragment == allBoardFragment) {
-            startBoardTopicActivity(item,  "所有版面");
+            startBoardTopicActivity(item);
         }
     }
 
 
-    public void startBoardTopicActivity(Board board, String source) {
-//        Toast.makeText(this, board.toString() + " is clicked", Toast.LENGTH_LONG).show();
+    public void startBoardTopicActivity(Board board) {
         Intent intent = new Intent(this, BoardTopicActivity.class);
         intent.putExtra("board_object", (Parcelable)board);
-        intent.putExtra("source", source);
         startActivity(intent);
     }
 

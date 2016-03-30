@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/board_topic_action_search"
+        android:orderInCategory="4"
+        android:title="@string/board_topic_action_search"
+        android:icon="@drawable/ic_search_white_24dp"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/board_topic_action_refresh"
+        android:orderInCategory="1"
+        android:title="@string/board_topic_action_refresh"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/board_topic_action_sticky"
+        android:orderInCategory="2"
+        android:title="@string/board_topic_action_sticky"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/board_topic_action_favorite"
+        android:orderInCategory="3"
+        android:title="@string/board_topic_action_favorite"
+        app:showAsAction="never" />
+
+</menu>

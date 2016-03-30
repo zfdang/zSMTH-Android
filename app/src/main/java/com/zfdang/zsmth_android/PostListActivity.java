@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +31,9 @@ import android.widget.Toast;
 
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.thefinestartist.finestwebview.FinestWebView;
+import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.models.AlertDialogItem;
+import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.Post;
 import com.zfdang.zsmth_android.models.PostListContent;
 import com.zfdang.zsmth_android.models.Topic;
@@ -62,6 +67,9 @@ public class PostListActivity extends AppCompatActivity
     private Topic mTopic = null;
 
     private ProgressDialog pdialog = null;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private String mFrom;
+
 
     @Override
     protected void onDestroy() {
@@ -95,6 +103,15 @@ public class PostListActivity extends AppCompatActivity
         mPageNo = (EditText) findViewById(R.id.post_list_page_no);
         assert mPageNo != null;
 
+        // define swipe refresh function
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.post_list_swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                reloadPostList();
+            }
+        });
+
         mRecyclerView = (RecyclerView) findViewById(R.id.post_list);
         assert mRecyclerView != null;
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
@@ -106,7 +123,10 @@ public class PostListActivity extends AppCompatActivity
         Intent intent = getIntent();
         Topic topic = intent.getParcelableExtra("topic_object");
         assert topic != null;
-        Log.d(TAG, String.format("Load post list for topic = %s", topic.toString()));
+        mFrom = intent.getStringExtra(SMTHApplication.FROM_BOARD);
+        // now onCreateOptionsMenu(...) is called again
+//        invalidateOptionsMenu();
+        Log.d(TAG, String.format("Load post list for topic = %s, source = %s", topic.toString(), mFrom));
 
         // set onClick Lisetner for page navigator buttons
         ((Button)findViewById(R.id.post_list_first_page)).setOnClickListener(this);
@@ -120,7 +140,7 @@ public class PostListActivity extends AppCompatActivity
             mTopic = topic;
             reloadPostList();
 
-            setTitle(mTopic.getBoardName());
+            setTitle(mTopic.getBoardChsName() + " - 阅读文章");
         }
     }
 
@@ -140,6 +160,9 @@ public class PostListActivity extends AppCompatActivity
         // disable progress bar
         if(pdialog != null && pdialog.isShowing()){
             showProgress("", false);
+        }
+        if(mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -198,6 +221,22 @@ public class PostListActivity extends AppCompatActivity
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // http://stackoverflow.com/questions/10692755/how-do-i-hide-a-menu-item-in-the-actionbar
+        getMenuInflater().inflate(R.menu.post_list_menu, menu);
+
+        MenuItem item = menu.findItem(R.id.post_list_action_enter_board);
+        if(SMTHApplication.FROM_BOARD_BOARD.equals(mFrom)) {
+            // from BoardTopicActivity
+            item.setVisible(false);
+        } else if (SMTHApplication.FROM_BOARD_HOT.equals(mFrom)) {
+            // from HotTopicFragment
+            item.setVisible(true);
+        }
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
@@ -210,6 +249,13 @@ public class PostListActivity extends AppCompatActivity
             //
             onBackPressed();
             return true;
+        } else if(id == R.id.post_list_action_refresh) {
+            reloadPostList();
+        } else if(id == R.id.post_list_action_enter_board) {
+            Board board = new Board("", mTopic.getBoardChsName(), mTopic.getBoardEngName());
+            Intent intent = new Intent(this, BoardTopicActivity.class);
+            intent.putExtra("board_object", (Parcelable)board);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -294,7 +340,8 @@ public class PostListActivity extends AppCompatActivity
                 new AlertDialogItem(getString(R.string.post_foward_self), R.drawable.ic_send_black_48dp),     // 4
                 new AlertDialogItem(getString(R.string.post_foward_external), R.drawable.ic_forward_black_48dp), // 5
                 new AlertDialogItem(getString(R.string.post_view_in_browser), R.drawable.ic_open_in_browser_black_48dp), // 6
-                new AlertDialogItem(getString(R.string.post_delete_post), R.drawable.ic_delete_black_48dp),     // 7
+                new AlertDialogItem(getString(R.string.post_share), R.drawable.ic_share_black_48dp), // 7
+                new AlertDialogItem(getString(R.string.post_delete_post), R.drawable.ic_delete_black_48dp),     // 8
         };
 
 
@@ -342,9 +389,12 @@ public class PostListActivity extends AppCompatActivity
         Log.d(TAG, String.format("MenuItem %d was clicked", which));
 
         if(which == 0) {
+            // post_reply_post
 
         } else if (which == 1) {
+            // post_reply_mail
         } else if (which == 2) {
+            // post_query_author
         } else if (which == 3) {
             // copy post content
             // http://stackoverflow.com/questions/8056838/dealing-with-deprecated-android-text-clipboardmanager
@@ -368,7 +418,9 @@ public class PostListActivity extends AppCompatActivity
             }
 
         } else if (which == 4) {
+            // post_foward_self
         } else if (which == 5) {
+            // post_foward_external
             //
         } else if (which == 6) {
             // open post in browser
@@ -385,7 +437,10 @@ public class PostListActivity extends AppCompatActivity
                     .progressBarHeight(4)
                     .show(url);
         } else if (which == 7) {
+            // post_share
 
+        } else if (which == 8) {
+            // post_delete_post
         }
 
     }
