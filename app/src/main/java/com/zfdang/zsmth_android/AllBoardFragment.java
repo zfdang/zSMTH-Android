@@ -176,7 +176,7 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(TAG, e.toString());
+                        Log.d(TAG, Log.getStackTraceString(e));
                     }
 
                     @Override

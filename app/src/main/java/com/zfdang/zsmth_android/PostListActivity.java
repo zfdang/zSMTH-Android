@@ -164,7 +164,7 @@ public class PostListActivity extends AppCompatActivity
                             List<Post> posts = SMTHHelper.ParsePostListFromWWW(response, mTopic);
                             return Observable.from(posts);
                         } catch (Exception e) {
-                            Log.d(TAG, e.toString());
+                            Log.d(TAG, Log.getStackTraceString(e));
                         }
                         return null;
                     }
@@ -184,7 +184,7 @@ public class PostListActivity extends AppCompatActivity
                     @Override
                     public void onError(Throwable e) {
                         clearLoadingHints();
-                        Log.d(TAG, e.toString());
+                        Log.d(TAG, Log.getStackTraceString(e));
                         Toast.makeText(PostListActivity.this, "加载失败！", Toast.LENGTH_SHORT).show();
                     }
 

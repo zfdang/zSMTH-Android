@@ -161,7 +161,7 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
                             List<Topic> results = SMTHHelper.ParseHotTopicsFromWWW(response);
                             return Observable.from(results);
                         } catch (Exception e) {
-                            Log.d(TAG, e.toString());
+                            Log.d(TAG, Log.getStackTraceString(e));
                         }
                         return null;
                     }
@@ -192,7 +192,7 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(TAG, e.toString());
+                        Log.d(TAG, Log.getStackTraceString(e));
                         clearLoadingHints();
 
                         Toast.makeText(getActivity(), "获取热帖失败!", Toast.LENGTH_SHORT).show();

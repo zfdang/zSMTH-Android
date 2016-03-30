@@ -4,7 +4,6 @@ import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
 
-import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.helpers.StringUtils;
 
 import org.jsoup.nodes.Element;
@@ -16,8 +15,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Post object.
@@ -39,21 +36,6 @@ public class Post {
 
     public Post() {
         date = new Date();
-    }
-
-    public static String lookupIPLocation(String content) {
-        Pattern myipPattern = Pattern.compile("FROM[: ]*(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.)[\\d\\*]+");
-        Matcher myipMatcher = myipPattern.matcher(content);
-        while (myipMatcher.find()) {
-            String ipl = myipMatcher.group(1);
-            if (ipl.length() > 5) {
-                ipl = "$1\\*(" + SMTHApplication.geoDB.getLocation(ipl + "1") + ")";
-            } else {
-                ipl = "$1\\*";
-            }
-            content = myipMatcher.replaceAll(ipl);
-        }
-        return content;
     }
 
     public void setLikes(List<String> likes) {
@@ -144,7 +126,7 @@ public class Post {
         for (int i = 0; i < lines.length; i++) {
             String line = lines[i];
 
-            if (line.startsWith("发信人:") || line.startsWith("寄信人:")) {
+            if ((line.startsWith("发信人:") || line.startsWith("寄信人:")) && i <= 3) {
                 // find nickname for author here, skip the line
                 // 发信人: schower (schower), 信区: WorkLife
                 String nickName = StringUtils.subStringBetween(line, "(", ")");
@@ -152,10 +134,10 @@ public class Post {
                     this.setNickName(nickName);
                 }
                 continue;
-            } else if (line.startsWith("标  题:")) {
+            } else if (line.startsWith("标  题:") && i <= 3) {
                 // skip this line
                 continue;
-            } else if (line.startsWith("发信站:")) {
+            } else if (line.startsWith("发信站:") && i <= 3) {
                 // find post date here, skip the line
                 // <br /> 发信站: 水木社区 (Fri Mar 25 11:52:04 2016), 站内
                 line = StringUtils.subStringBetween(line, "(", ")");
@@ -205,14 +187,14 @@ public class Post {
                 // jump out of signature mode
                 signatureMode = 0;
                 line = line.replace("·", "").replace("http://www.newsmth.net", "").replace("http://m.newsmth.net", "").replace("newsmth.net", "");
-                line = "<font color=#727272>" + lookupIPLocation(line) + "</font>";
+                line = "<font color=#727272>" + StringUtils.lookupIPLocation(line) + "</font>";
                 sb.append(line).append("<br />");
                 continue;
             } else if (line.contains("※ 修改:·")) {
                 // jump out of signature mode
                 signatureMode = 0;
                 line = line.replace("·", "").replace("修改本文", "");
-                line = "<font color=#727272>" + lookupIPLocation(line) + "</font>";
+                line = "<font color=#727272>" + StringUtils.lookupIPLocation(line) + "</font>";
                 sb.append(line).append("<br />");
                 continue;
             }

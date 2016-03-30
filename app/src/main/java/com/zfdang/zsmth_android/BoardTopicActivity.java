@@ -209,7 +209,7 @@ public class BoardTopicActivity extends AppCompatActivity
                             List<Topic> topics = SMTHHelper.ParseBoardTopicsFromMobile(response);
                             return Observable.from(topics);
                         } catch (Exception e) {
-                            Log.d(TAG, e.toString());
+                            Log.d(TAG, Log.getStackTraceString(e));
                             return null;
                         }
                     }
@@ -233,7 +233,8 @@ public class BoardTopicActivity extends AppCompatActivity
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(TAG, e.toString());
+                        Log.d(TAG, Log.getStackTraceString(e));
+
                         clearLoadingHints();
 
                         Toast.makeText(getApplicationContext(), String.format("获取第%d页的帖子失败", mCurrentPageNo), Toast.LENGTH_LONG).show();
