@@ -26,7 +26,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
 
     private static final String TAG = "FullViewer";
     private static final boolean AUTO_HIDE = true;
-    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
+    private static final int AUTO_HIDE_DELAY_MILLIS = 1000;
 
     private final Handler mHideHandler = new Handler();
     private boolean isFullscreen;

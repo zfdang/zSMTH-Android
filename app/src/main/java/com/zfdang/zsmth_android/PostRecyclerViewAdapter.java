@@ -86,12 +86,14 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                 // Glide will fitCenter when it's a image not a GIF
                 Glide.with(mListener)
                         .load(content.getUrl())
+//                there is bug with Glide 3.x: loading gif is very slow when strage=ALL
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        // there is bug with Glide 3.x, so that loading gif is very slow when strage=ALL
-                        // .placeholder(R.drawable.progress_animation)
+                        .placeholder(R.drawable.progress_animation)
                         .error(R.drawable.image_not_found)
                         .fitCenter()
-                        .crossFade()
+//  https://github.com/bumptech/glide/issues/363, bug with placeholder+crossFade
+//                        .crossFade()
+                        .dontAnimate()
                         .into(image);
 
                 // set onclicklistener

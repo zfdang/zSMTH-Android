@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.Target;
 import com.zfdang.SMTHApplication;
 
 import java.util.List;
@@ -59,6 +60,7 @@ public class FSImagePagerAdapter extends PagerAdapter {
                     ((PhotoViewAttacher.OnPhotoTapListener) mListener).onPhotoTap(view, x, y);
                 }
             }
+
             @Override
             public void onOutsidePhotoTap() {
                 if (mListener != null && mListener instanceof PhotoViewAttacher.OnPhotoTapListener) {
@@ -68,14 +70,16 @@ public class FSImagePagerAdapter extends PagerAdapter {
             }
         });
 
-
+        image.setMaximumScale(12.0f);
         Glide.with(mListener)
                 .load(mURLs.get(position))
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        // there is bug with Glide 3.x, so that loading gif is very slow when strage=ALL
-                        // .placeholder(R.drawable.progress_animation)
+                // there is bug with Glide 3.x, so that loading gif is very slow when strage=ALL
+//                .placeholder(R.drawable.progress_animation)
                 .error(R.drawable.image_not_found)
+                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                 .fitCenter()
+//                .dontAnimate()
                 .crossFade()
                 .into(image);
 
