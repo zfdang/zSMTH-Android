@@ -1,5 +1,7 @@
 package com.zfdang.zsmth_android.helpers;
 
+import android.text.Html;
+
 import com.zfdang.SMTHApplication;
 
 import java.text.SimpleDateFormat;
@@ -62,5 +64,24 @@ public class StringUtils {
             content = myipMatcher.replaceAll(ipl);
         }
         return content;
+    }
+
+
+    public static boolean isEmptyString(String content){
+        // non-empty if it's long enough
+        if(content.length() > 20){
+            return false;
+        }
+
+        String text = Html.fromHtml(content).toString();
+        for(int i = 0; i < text.length(); i++) {
+            int value = Character.codePointAt(text, i);
+            // http://www.utf8-chartable.de/unicode-utf8-table.pl?utf8=dec
+            // 如果value不是控制符(0~31)，value不是SPACE(32)，不是"NO-BREAK SPACE"(160), 则认为是非空的
+            if(value > 32 && value != 160){
+                return false;
+            }
+        }
+        return true;
     }
 }

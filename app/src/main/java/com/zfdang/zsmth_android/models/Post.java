@@ -1,7 +1,6 @@
 package com.zfdang.zsmth_android.models;
 
 import android.text.Html;
-import android.util.Log;
 
 import com.zfdang.zsmth_android.helpers.StringUtils;
 
@@ -123,7 +122,8 @@ public class Post {
                 this.addAttachFile(attach);
 
                 // replace a[href] with MARK
-                a.html(ATTACHMENT_MARK);
+                // we will split the string with MARK, so make sure no two MAKR will stay together
+                a.html(ATTACHMENT_MARK + " ");
             }
         }
 
@@ -168,8 +168,12 @@ public class Post {
             // add segments and attachments together
             int attachIndex = 0;
             for (String segment : segments) {
-                // add segment to results
-                mSegments.add(new ContentSegment(ContentSegment.SEGMENT_TEXT, segment));
+//                Log.d("Splited Result:", String.format("{%s}", segment));
+                // add segment to results if it's not empty,
+                // MARK are seperated by several <br />, we should skip these seperated text
+                if(!StringUtils.isEmptyString(segment)) {
+                    mSegments.add(new ContentSegment(ContentSegment.SEGMENT_TEXT, segment));
+                }
 
                 // add next image attachment to results
                 if (attachFiles != null && attachIndex < attachFiles.size()) {
@@ -183,14 +187,14 @@ public class Post {
             }
         }
 
-        Log.d("ContentSegment", String.format("Total segments here: %d", mSegments.size()));
-        for (ContentSegment content : mSegments) {
-            if (content.getType() == ContentSegment.SEGMENT_IMAGE) {
-                Log.d("ContentSegment", String.format("Image %s, index = %d", content.getUrl(), content.getImgIndex()));
-            } else if (content.getType() == ContentSegment.SEGMENT_TEXT) {
-                Log.d("ContentSegment", String.format("Text, %s", content.getSpanned().toString()));
-            }
-        }
+//        Log.d("ContentSegment", String.format("Total segments here: %d", mSegments.size()));
+//        for (ContentSegment content : mSegments) {
+//            if (content.getType() == ContentSegment.SEGMENT_IMAGE) {
+//                Log.d("ContentSegment", String.format("Image %s, index = %d", content.getUrl(), content.getImgIndex()));
+//            } else if (content.getType() == ContentSegment.SEGMENT_TEXT) {
+//                Log.d("ContentSegment", String.format("Text, {%s}", content.getSpanned().toString()));
+//            }
+//        }
     }
 
     /*
@@ -201,7 +205,6 @@ public class Post {
         // &nbsp; is converted as code=160, but not a whitespace (ascii=32)
         // http://stackoverflow.com/questions/4728625/why-trim-is-not-working
         content = content.replace(String.valueOf((char) 160), " ");
-
 
         // it's important to know that not all HTML tags are supported by Html.fromHtml, see the supported list
         // https://commonsware.com/blog/Android/2010/05/26/html-tags-supported-by-textview.html
@@ -248,6 +251,12 @@ public class Post {
                 } catch (ParseException e1) {
                     e1.printStackTrace();
                 }
+            }
+
+            // handle ATTACH_MARK
+            if(line.contains(ATTACHMENT_MARK)) {
+                sb.append(line);
+                continue;
             }
 
             // handle quoted content
