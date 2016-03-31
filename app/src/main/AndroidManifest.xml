@@ -35,6 +35,9 @@
             android:name="com.zfdang.zsmth_android.helpers.GlideConfiguration"
             android:value="GlideModule"/>
         <meta-data
+            android:name="com.bumptech.glide.integration.okhttp3.OkHttpGlideModule"
+            android:value="GlideModule" />
+        <meta-data
             android:name="UMENG_APPKEY"
             android:value="56e8c05567e58e0a9e0011cc"/>
         <meta-data

@@ -1,15 +1,19 @@
 package com.zfdang.zsmth_android;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.zfdang.SMTHApplication;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import me.relex.circleindicator.CircleIndicator;
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -65,6 +69,30 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // TODO Auto-generated method stub
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, true);
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1, true);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    // http://stackoverflow.com/questions/4500354/control-volume-keys
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        // disable the beep sound when volume up/down is pressed
+        if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP) || (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+
+
+    @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
@@ -109,7 +137,40 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
     @Override
     public boolean onLongClick(View v) {
         Log.d(TAG, "onLongClick: ");
-        return false;
+//        updateImageInfoByIndex();
+
+        // build menu for long click
+        List<String> itemList = new ArrayList<String>();
+        itemList.add(getString(R.string.full_image_information));
+        itemList.add(getString(R.string.full_image_save));
+        itemList.add(getString(R.string.full_image_back));
+        final String[] items = new String[itemList.size()];
+        itemList.toArray(items);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(String.format("图片: %s", "unknown"));
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                switch (item) {
+                    case 0:
+//                        showExifDialog();
+                        break;
+                    case 1:
+//                        saveImage();
+                        break;
+                    case 2:
+                        dialog.dismiss();
+                        break;
+                    default:
+                        break;
+                }
+                dialog.dismiss();
+            }
+        });
+
+        builder.create().show();
+
+        return true;
     }
 
     @Override
@@ -119,6 +180,5 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
 
     @Override
     public void onOutsidePhotoTap() {
-
     }
 }

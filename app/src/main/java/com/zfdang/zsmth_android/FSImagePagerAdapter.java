@@ -61,6 +61,9 @@ public class FSImagePagerAdapter extends PagerAdapter {
             }
             @Override
             public void onOutsidePhotoTap() {
+                if (mListener != null && mListener instanceof PhotoViewAttacher.OnPhotoTapListener) {
+                    ((PhotoViewAttacher.OnPhotoTapListener) mListener).onOutsidePhotoTap();
+                }
 
             }
         });

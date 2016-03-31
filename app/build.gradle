@@ -35,7 +35,9 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     // problem with glide okhttp3 integration
+
     // https://github.com/bumptech/glide/issues/1003
+    compile 'com.github.bumptech.glide:glide:3.7.0'
     compile('com.github.bumptech.glide:okhttp3-integration:1.4.0') {
         exclude group: 'glide-parent'
     }
@@ -56,8 +58,6 @@ dependencies {
     compile 'com.thefinestartist:finestwebview:1.2.1'
     compile 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
     compile 'com.jude:swipebackhelper:2.1.5'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'me.relex:circleindicator:1.1.8@aar'
     compile 'com.commit451:PhotoView:1.2.5'
-
 }

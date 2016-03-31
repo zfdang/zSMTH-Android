@@ -2,6 +2,7 @@ package com.zfdang.zsmth_android;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,10 +15,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.models.Attachment;
 import com.zfdang.zsmth_android.models.ContentSegment;
 import com.zfdang.zsmth_android.models.Post;
 import com.zfdang.zsmth_android.models.Topic;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -97,7 +100,18 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                     @Override
                     public void onClick(View v) {
                         int position = (int) v.getTag(R.id.image_tag);
-                        Log.d("PostRecylerAdapter", "onClick: " + position + post.toString());
+
+                        Intent intent = new Intent(mListener, FSImageViewerActivity.class);
+
+                        ArrayList<String> urls = new ArrayList<>();
+                        List<Attachment> attaches = post.getAttachFiles();
+                        for (Attachment attach: attaches) {
+                            urls.add(attach.getImageSrc());
+                        }
+
+                        intent.putStringArrayListExtra(SMTHApplication.ATTACHMENT_URLS, urls);
+                        intent.putExtra(SMTHApplication.ATTACHMENT_CURRENT_POS, position);
+                        mListener.startActivity(intent);
                     }
                 });
 
