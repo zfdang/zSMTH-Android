@@ -358,24 +358,25 @@ public class SMTHHelper {
 
         // find hotspot
         // <div id="hotspot" class="block">
-        Elements hotspots = doc.select("div#hotspot div.topics");
-        if(hotspots.size() == 1) {
-            // add separator
-            topic = new Topic("近期热帖");
-            results.add(topic);
-
-            // parse hot hopic
-            Element hotspot = hotspots.first();
-            Elements lis = hotspot.getElementsByTag("li");
-
-            for(Element li: lis) {
-                topic = ParseTopicFromElement(li, "hotspot");
-                if(topic != null) {
-//                    Log.d(TAG, topic.toString());
-                    results.add(topic);
-                }
-            }
-        }
+        // skip this part, it's tedious
+//        Elements hotspots = doc.select("div#hotspot div.topics");
+//        if(hotspots.size() == 1) {
+//            // add separator
+//            topic = new Topic("近期热帖");
+//            results.add(topic);
+//
+//            // parse hot hopic
+//            Element hotspot = hotspots.first();
+//            Elements lis = hotspot.getElementsByTag("li");
+//
+//            for(Element li: lis) {
+//                topic = ParseTopicFromElement(li, "hotspot");
+//                if(topic != null) {
+////                    Log.d(TAG, topic.toString());
+//                    results.add(topic);
+//                }
+//            }
+//        }
 
         // find hot picture
         // <div id="pictures" class="block">
@@ -408,7 +409,11 @@ public class SMTHHelper {
             Elements sectionNames = section.getElementsByTag("h3");
             if(sectionNames.size() == 1) {
                 Element sectionName = sectionNames.first();
-                topic = new Topic(sectionName.text());
+                String name = sectionName.text();
+                if(name != null && name.equals("系统与祝福")){
+                    continue;
+                }
+                topic = new Topic(name);
                 results.add(topic);
             }
 

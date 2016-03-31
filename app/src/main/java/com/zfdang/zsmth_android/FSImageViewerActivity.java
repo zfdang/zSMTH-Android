@@ -3,19 +3,22 @@ package com.zfdang.zsmth_android;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+
+import com.zfdang.SMTHApplication;
+
+import java.util.ArrayList;
 
 import me.relex.circleindicator.CircleIndicator;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class FSImageViewerActivity extends AppCompatActivity implements View.OnClickListener{
+public class FSImageViewerActivity extends AppCompatActivity implements PhotoViewAttacher.OnPhotoTapListener, View.OnLongClickListener{
 
     private static final String TAG = "FullViewer";
     private static final boolean AUTO_HIDE = true;
@@ -23,7 +26,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements View.OnC
 
     private final Handler mHideHandler = new Handler();
     private boolean isFullscreen;
-    private ViewPager mViewPager;
+    private HackyViewPager mViewPager;
 
     private final Runnable mHideRunnable = new Runnable() {
         @Override
@@ -31,7 +34,6 @@ public class FSImageViewerActivity extends AppCompatActivity implements View.OnC
             hide();
         }
     };
-    private Button mButton;
     private FSImagePagerAdapter mPagerAdapter;
     private CircleIndicator mIndicator;
 
@@ -43,37 +45,23 @@ public class FSImageViewerActivity extends AppCompatActivity implements View.OnC
         getSupportActionBar().hide();
 
         isFullscreen = false;
-        mViewPager = (ViewPager) findViewById(R.id.fullscreen_image_pager);
+        mViewPager = (HackyViewPager) findViewById(R.id.fullscreen_image_pager);
 
-        mPagerAdapter = new FSImagePagerAdapter(null, this);
+
+        // find paramenters from parent
+        ArrayList<String> URLs = getIntent().getStringArrayListExtra(SMTHApplication.ATTACHMENT_URLS);
+        assert URLs != null;
+        int pos = getIntent().getIntExtra(SMTHApplication.ATTACHMENT_CURRENT_POS, 0);
+        if(pos <0 || pos >= URLs.size()) {
+            pos = 0;
+        }
+
+        mPagerAdapter = new FSImagePagerAdapter(URLs, this);
         mViewPager.setAdapter(mPagerAdapter);
-        mViewPager.setCurrentItem(2);
+        mViewPager.setCurrentItem(pos);
 
         mIndicator = (CircleIndicator) findViewById(R.id.fullscreen_image_indicator);
         mIndicator.setViewPager(mViewPager);
-
-//        mViewPager.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-//            @Override
-//            public void onSystemUiVisibilityChange(int visibility) {
-//                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-//                    Log.d(TAG, "NOT in Full Screen");
-//                    isFullscreen = false;
-//                } else {
-//                    isFullscreen = true;
-//                }
-//            }
-//        });
-
-
-        mButton = (Button) findViewById(R.id.fullscreen_image_switch);
-        // Set up the user interaction to manually show or hide the system UI.
-        mButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick: ");
-                toggle();
-            }
-        });
     }
 
     @Override
@@ -119,7 +107,18 @@ public class FSImageViewerActivity extends AppCompatActivity implements View.OnC
     }
 
     @Override
-    public void onClick(View v) {
+    public boolean onLongClick(View v) {
+        Log.d(TAG, "onLongClick: ");
+        return false;
+    }
+
+    @Override
+    public void onPhotoTap(View view, float x, float y) {
+        toggle();
+    }
+
+    @Override
+    public void onOutsidePhotoTap() {
 
     }
 }

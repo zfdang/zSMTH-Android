@@ -9,11 +9,11 @@
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
          TextureView, etc. -->
-    <android.support.v4.view.ViewPager
+    <com.zfdang.zsmth_android.HackyViewPager
         android:id="@+id/fullscreen_image_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </android.support.v4.view.ViewPager>
+    </com.zfdang.zsmth_android.HackyViewPager>
 
     <me.relex.circleindicator.CircleIndicator
         android:id="@+id/fullscreen_image_indicator"
@@ -28,14 +28,5 @@
         app:ci_drawable="@drawable/green_radius_square"
         android:layout_above="@+id/fullscreen_image_switch"
         android:layout_gravity="bottom|center_horizontal"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/fullscreen_image_switch"
-        android:visibility="gone"
-        android:layout_gravity="bottom|center_horizontal"/>
-
 
 </FrameLayout>

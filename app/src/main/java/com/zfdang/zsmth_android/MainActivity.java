@@ -32,6 +32,8 @@ import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.Topic;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -346,7 +348,16 @@ public class MainActivity extends AppCompatActivity
             title = "关于";
         } else if(id == R.id.nav_test) {
             Intent intent = new Intent(this, FSImageViewerActivity.class);
-//            intent.putExtra("board_object", (Parcelable)board);
+            ArrayList<String> urls = new ArrayList<>(Arrays.asList("http://att.newsmth.net/nForum/att/DSLR/808677066/489",
+                    "http://att.newsmth.net/nForum/att/DSLR/808677066/326538",
+                    "http://att.newsmth.net/nForum/att/DSLR/808677066/634571",
+                    "http://att.newsmth.net/nForum/att/DSLR/808677066/893791",
+                    "http://att.newsmth.net/nForum/att/DSLR/808677066/1507152",
+                    "http://att.newsmth.net/nForum/att/DSLR/808677066/2190180",
+                    "http://att.newsmth.net/nForum/att/DSLR/808677066/2596758",
+                    "http://att.newsmth.net/nForum/att/DSLR/808677066/3205157"));
+            intent.putStringArrayListExtra(SMTHApplication.ATTACHMENT_URLS, urls);
+            intent.putExtra(SMTHApplication.ATTACHMENT_CURRENT_POS, 3);
             startActivity(intent);
         }
 
