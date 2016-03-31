@@ -69,7 +69,7 @@ public class FSImagePagerAdapter extends PagerAdapter {
         });
 
 
-        Glide.with(SMTHApplication.getAppContext())
+        Glide.with(mListener)
                 .load(mURLs.get(position))
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         // there is bug with Glide 3.x, so that loading gif is very slow when strage=ALL
