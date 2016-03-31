@@ -11,6 +11,14 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    signingConfigs {
+        release {
+            storeFile file("zsmth.release.jks")
+            storePassword "zsmthdev"
+            keyAlias "zsmth-release"
+            keyPassword "zsmthdev"
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
