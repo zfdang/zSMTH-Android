@@ -84,8 +84,8 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                 Glide.with(SMTHApplication.getAppContext())
                         .load(content.getUrl())
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                                // there is bug with Glide 3.x, so that loading gif is very slow when strage=ALL
-//                    .placeholder(R.drawable.progress_animation)
+                        // there is bug with Glide 3.x, so that loading gif is very slow when strage=ALL
+                        // .placeholder(R.drawable.progress_animation)
                         .error(R.drawable.image_not_found)
                         .fitCenter()
                         .crossFade()

@@ -72,5 +72,9 @@
     <string name="post_list_action_refresh">刷新</string>
     <string name="post_list_action_enter_board">进入版面</string>
 
+    <string name="title_activity_fullscreen_image_viewer">FullscreenImageViewerActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
 
 </resources>

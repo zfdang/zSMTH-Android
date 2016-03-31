@@ -344,6 +344,10 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_about) {
             fragment = aboutFragment;
             title = "关于";
+        } else if(id == R.id.nav_test) {
+            Intent intent = new Intent(this, FSImageViewerActivity.class);
+//            intent.putExtra("board_object", (Parcelable)board);
+            startActivity(intent);
         }
 
         // switch fragment
