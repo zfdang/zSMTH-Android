@@ -99,24 +99,24 @@ public class Post {
     }
 
 
-    // set likes and content together, then merge them to htmlCompleteContent, then split it into htmlSegments
-    public void setLikesAndPostContent(List<String> likes, Element content) {
-        // save likes
-        this.likes = likes;
+                // set likes and content together, then merge them to htmlCompleteContent, then split it into htmlSegments
+            public void setLikesAndPostContent(List<String> likes, Element content) {
+                // save likes
+                this.likes = likes;
 
-        // Log.d("setLikesAndPostContent", content.html());
+//                Log.d("setLikesAndPostContent", content.html());
 
-        // find all attachment from node
-        // <a target="_blank" href="http://att.newsmth.net/nForum/att/AutoWorld/1939790539/4070982">
-        // <img border="0" title="单击此查看原图" src="http://att.newsmth.net/nForum/att/AutoWorld/1939790539/4070982/large" class="resizeable">
-        // </a>
-        Elements as = content.select("a[href]");
-        for (Element a : as) {
-            Elements imgs = a.select("img[src]");
-            if (imgs.size() == 1) {
-                // find one image attachment
-                String imgsrc = imgs.attr("src");
-                String imgsrc_orig = a.attr("href");
+                // find all attachment from node
+                // <a target="_blank" href="http://att.newsmth.net/nForum/att/AutoWorld/1939790539/4070982">
+                // <img border="0" title="单击此查看原图" src="http://att.newsmth.net/nForum/att/AutoWorld/1939790539/4070982/large" class="resizeable">
+                // </a>
+                Elements as = content.select("a[href]");
+                for (Element a : as) {
+                    Elements imgs = a.select("img[src]");
+                    if (imgs.size() == 1) {
+                        // find one image attachment
+                        String imgsrc = imgs.attr("src");
+                        String imgsrc_orig = a.attr("href");
                 Attachment attach = new Attachment(imgsrc_orig);
 
                 this.addAttachFile(attach);
@@ -171,7 +171,9 @@ public class Post {
 //                Log.d("Splited Result:", String.format("{%s}", segment));
                 // add segment to results if it's not empty,
                 // MARK are seperated by several <br />, we should skip these seperated text
-                if(!StringUtils.isEmptyString(segment)) {
+                if(!StringUtils.isEmptyString(segment) || attachIndex == 0) {
+                    // since we expect there will always be a textview before imageview
+                    // even the first text segment is empty, we still add it
                     mSegments.add(new ContentSegment(ContentSegment.SEGMENT_TEXT, segment));
                 }
 
