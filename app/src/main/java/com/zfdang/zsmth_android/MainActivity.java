@@ -142,6 +142,30 @@ public class MainActivity extends AppCompatActivity
                 });
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+            if(fragment instanceof OnVolumeUpDownListener) {
+                OnVolumeUpDownListener frag = (OnVolumeUpDownListener) fragment;
+                return frag.onVolumeUpDown(keyCode);
+            }
+            return false;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
+    // http://stackoverflow.com/questions/4500354/control-volume-keys
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        // disable the beep sound when volume up/down is pressed
+        if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP) || (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+
     // http://stackoverflow.com/questions/2367484/how-to-override-the-behavior-of-the-volume-buttons-in-an-android-application
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {

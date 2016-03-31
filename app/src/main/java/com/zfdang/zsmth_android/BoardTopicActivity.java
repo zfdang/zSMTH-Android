@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
 import com.zfdang.zsmth_android.listeners.EndlessRecyclerOnScrollListener;
 import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
 import com.zfdang.zsmth_android.models.Board;
@@ -145,6 +147,7 @@ public class BoardTopicActivity extends AppCompatActivity
         }
     }
 
+
     public void updateTitle() {
         String title = mBoard.getBoardChsName();
         setTitle(title + " - 主题列表");
@@ -257,7 +260,24 @@ public class BoardTopicActivity extends AppCompatActivity
                 });
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, keyCode);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
+    // http://stackoverflow.com/questions/4500354/control-volume-keys
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        // disable the beep sound when volume up/down is pressed
+        if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP) || (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
 
 
     @Override

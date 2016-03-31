@@ -70,7 +70,6 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        // TODO Auto-generated method stub
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
             mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, true);
             return true;
