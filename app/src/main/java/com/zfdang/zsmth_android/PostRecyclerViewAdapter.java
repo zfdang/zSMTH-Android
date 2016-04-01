@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,7 +75,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             ContentSegment content = contents.get(i);
 
             if(content.getType() == ContentSegment.SEGMENT_IMAGE) {
-                Log.d("CreateView", "Image: " + content.getUrl());
+                // Log.d("CreateView", "Image: " + content.getUrl());
 
                 // Add the text layout to the parent layout
                 ImageView image = (ImageView) inflater.inflate(R.layout.post_item_imageview, viewGroup, false);
@@ -120,7 +119,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                 // Add the text view to the parent layout
                 viewGroup.addView(image);
             } else if (content.getType() == ContentSegment.SEGMENT_TEXT) {
-                Log.d("CreateView", "Text: " + content.getSpanned().toString());
+                // Log.d("CreateView", "Text: " + content.getSpanned().toString());
 
                 // Add the text layout to the parent layout
                 TextView tv = (TextView) inflater.inflate(R.layout.post_item_content, viewGroup, false);
