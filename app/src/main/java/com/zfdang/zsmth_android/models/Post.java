@@ -99,26 +99,28 @@ public class Post {
     }
 
 
-                // set likes and content together, then merge them to htmlCompleteContent, then split it into htmlSegments
-            public void setLikesAndPostContent(List<String> likes, Element content) {
-                // save likes
-                this.likes = likes;
+    // set likes and content together, then merge them to htmlCompleteContent, then split it into htmlSegments
+    public void setLikesAndPostContent(List<String> likes, Element content) {
+        // save likes
+        this.likes = likes;
 
 //                Log.d("setLikesAndPostContent", content.html());
 
-                // find all attachment from node
-                // <a target="_blank" href="http://att.newsmth.net/nForum/att/AutoWorld/1939790539/4070982">
-                // <img border="0" title="单击此查看原图" src="http://att.newsmth.net/nForum/att/AutoWorld/1939790539/4070982/large" class="resizeable">
-                // </a>
-                Elements as = content.select("a[href]");
-                for (Element a : as) {
-                    Elements imgs = a.select("img[src]");
-                    if (imgs.size() == 1) {
-                        // find one image attachment
-                        String imgsrc = imgs.attr("src");
-                        String imgsrc_orig = a.attr("href");
-                Attachment attach = new Attachment(imgsrc_orig);
+        // find all attachment from node
+        // <a target="_blank" href="http://att.newsmth.net/nForum/att/AutoWorld/1939790539/4070982">
+        // <img border="0" title="单击此查看原图" src="http://att.newsmth.net/nForum/att/AutoWorld/1939790539/4070982/large" class="resizeable">
+        // </a>
+        Elements as = content.select("a[href]");
+        for (Element a : as) {
+            Elements imgs = a.select("img[src]");
+            if (imgs.size() == 1) {
+                // find one image attachment
+                String imgsrc_orig = a.attr("href");
+                if(imgsrc_orig != null && imgsrc_orig.startsWith("/nForum")){
+                    imgsrc_orig = "http://att.newsmth.net" + imgsrc_orig;
+                }
 
+                Attachment attach = new Attachment(imgsrc_orig);
                 this.addAttachFile(attach);
 
                 // replace a[href] with MARK

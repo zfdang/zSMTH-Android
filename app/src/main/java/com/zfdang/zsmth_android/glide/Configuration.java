@@ -1,4 +1,4 @@
-package com.zfdang.zsmth_android.config;
+package com.zfdang.zsmth_android.glide;
 
 import android.content.Context;
 
@@ -12,7 +12,7 @@ import com.bumptech.glide.module.GlideModule;
  * Glide options
  * Created by zfdang on 2016-3-30.
  */
-public class GlideConfiguration  implements GlideModule {
+public class Configuration implements GlideModule {
     @Override
     public void applyOptions(Context context, GlideBuilder builder) {
         // Apply options to the builder here.

@@ -48,7 +48,6 @@ import rx.functions.Func1;
 public class SMTHHelper {
 
     static final private String TAG = "SMTHHelper";
-    private OkHttpClient httpClient = null;
 
     // WWW service of SMTH
     private final String SMTH_WWW_URL = "http://www.newsmth.net";
@@ -105,7 +104,7 @@ public class SMTHHelper {
         int cacheSize = 100 * 1024 * 1024; // 100 MiB
         Cache cache = new Cache(httpCacheDirectory, cacheSize);
 
-        httpClient = new OkHttpClient().newBuilder()
+        OkHttpClient httpClient = new OkHttpClient().newBuilder()
                 .addInterceptor(logging)
                 .cookieJar(cookieJar)
                 .cache(cache)

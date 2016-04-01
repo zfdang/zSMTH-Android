@@ -109,7 +109,7 @@ public class PostListActivity extends AppCompatActivity
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                reloadPostList();
+                reloadPostListWithoutAlert();
             }
         });
 
@@ -167,13 +167,18 @@ public class PostListActivity extends AppCompatActivity
         }
     }
 
-    public void reloadPostList() {
-        showProgress("加载文章中, 请稍候...", true);
-
+    public void reloadPostListWithoutAlert() {
         PostListContent.clear();
         mRecyclerView.getAdapter().notifyDataSetChanged();
 
         loadPostListByPages();
+    }
+
+
+    public void reloadPostList() {
+        showProgress("加载文章中, 请稍候...", true);
+
+        reloadPostListWithoutAlert();
     }
 
 

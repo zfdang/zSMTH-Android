@@ -212,12 +212,32 @@ public class BoardTopicActivity extends AppCompatActivity
 
     }
 
+    // load topics from next page, without alert
+    public void loadMoreItems() {
+        mCurrentPageNo += 1;
+        // Log.d(TAG, mCurrentPageNo + " page is loading now...");
+        LoadBoardTopicsFromMobile();
+    }
 
-    public void RefreshBoardTopoFromPageOne() {
+    @Override
+    public void onRefresh() {
+        // this method is slightly different with RefreshBoardTopoFromPageOne
+        // this method does not alert since it's triggered by SwipeRefreshLayout
         mCurrentPageNo = 1;
         TopicListContent.clearBoardTopics();
         mRecyclerView.getAdapter().notifyDataSetChanged();
-        RefreshBoardTopicsWithoutClear();
+        LoadBoardTopicsFromMobile();
+    }
+
+
+    public void RefreshBoardTopoFromPageOne() {
+        showProgress("刷新版面文章...", true);
+
+        TopicListContent.clearBoardTopics();
+        mRecyclerView.getAdapter().notifyDataSetChanged();
+
+        mCurrentPageNo = 1;
+        LoadBoardTopicsFromMobile();
     }
 
     public void RefreshBoardTopicsWithoutClear() {
@@ -311,19 +331,5 @@ public class BoardTopicActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    // load more topics
-    public void loadMoreItems() {
-        mCurrentPageNo += 1;
-        Log.d(TAG, mCurrentPageNo + " page is loading now...");
-        LoadBoardTopicsFromMobile();
-    }
 
-    @Override
-    public void onRefresh() {
-        this.RefreshBoardTopoFromPageOne();
-        mCurrentPageNo = 1;
-        TopicListContent.clearBoardTopics();
-        mRecyclerView.getAdapter().notifyDataSetChanged();
-        LoadBoardTopicsFromMobile();
-    }
 }
