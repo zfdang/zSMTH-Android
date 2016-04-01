@@ -29,7 +29,6 @@ public class SMTHApplication extends Application {
 
         // init IP lookup database
         geoDB = new GEODatabase(this);
-
     }
 
     public static Context getAppContext() {

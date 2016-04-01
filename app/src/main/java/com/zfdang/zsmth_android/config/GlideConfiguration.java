@@ -1,4 +1,4 @@
-package com.zfdang.zsmth_android.helpers;
+package com.zfdang.zsmth_android.config;
 
 import android.content.Context;
 

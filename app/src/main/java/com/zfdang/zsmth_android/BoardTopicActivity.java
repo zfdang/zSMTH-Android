@@ -67,6 +67,8 @@ public class BoardTopicActivity extends AppCompatActivity
     private EndlessRecyclerOnScrollListener mScrollListener = null;
     private RecyclerView mRecyclerView = null;
 
+    private Settings mSetting;
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -102,8 +104,11 @@ public class BoardTopicActivity extends AppCompatActivity
             }
         });
 
+        mSetting = Settings.getInstance();
+
         // enable pull down to refresh
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        if (mSwipeRefreshLayout == null) throw new AssertionError();
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.board_topic_list);
@@ -143,7 +148,7 @@ public class BoardTopicActivity extends AppCompatActivity
 
         if (TopicListContent.BOARD_TOPICS.size() == 0) {
             // only load boards on the first time
-            RefreshBoardTopics();
+            RefreshBoardTopicsWithoutClear();
         }
     }
 
@@ -159,6 +164,11 @@ public class BoardTopicActivity extends AppCompatActivity
         if (id == android.R.id.home) {
             onBackPressed();
             return true;
+        } else if (id == R.id.board_topic_action_sticky) {
+            mSetting.toggleShowSticky();
+            this.RefreshBoardTopoFromPageOne();
+        } else if (id == R.id.board_topic_action_refresh) {
+            this.RefreshBoardTopoFromPageOne();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -201,7 +211,16 @@ public class BoardTopicActivity extends AppCompatActivity
         }
 
     }
-    public void RefreshBoardTopics() {
+
+
+    public void RefreshBoardTopoFromPageOne() {
+        mCurrentPageNo = 1;
+        TopicListContent.clearBoardTopics();
+        mRecyclerView.getAdapter().notifyDataSetChanged();
+        RefreshBoardTopicsWithoutClear();
+    }
+
+    public void RefreshBoardTopicsWithoutClear() {
         showProgress("加载版面文章...", true);
 
         LoadBoardTopicsFromMobile();
@@ -254,8 +273,10 @@ public class BoardTopicActivity extends AppCompatActivity
                     @Override
                     public void onNext(Topic topic) {
                         // Log.d(TAG, topic.toString());
-                        TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
-                        mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+                        if(!topic.isSticky || (topic.isSticky && mSetting.isShowSticky())) {
+                            TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
+                            mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+                        }
                     }
                 });
     }
@@ -299,6 +320,7 @@ public class BoardTopicActivity extends AppCompatActivity
 
     @Override
     public void onRefresh() {
+        this.RefreshBoardTopoFromPageOne();
         mCurrentPageNo = 1;
         TopicListContent.clearBoardTopics();
         mRecyclerView.getAdapter().notifyDataSetChanged();

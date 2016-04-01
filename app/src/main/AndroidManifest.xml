@@ -34,7 +34,7 @@
             android:label="@string/title_activity_login"/>
 
         <meta-data
-            android:name="com.zfdang.zsmth_android.helpers.GlideConfiguration"
+            android:name="com.zfdang.zsmth_android.config.GlideConfiguration"
             android:value="GlideModule"/>
         <meta-data
             android:name="com.bumptech.glide.integration.okhttp3.OkHttpGlideModule"

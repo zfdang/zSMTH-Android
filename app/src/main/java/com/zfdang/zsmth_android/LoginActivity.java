@@ -44,10 +44,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         setContentView(R.layout.activity_login);
 
         // these two variables should be loaded from preference
-        String username = "zsmthdev";
-        String password = "newsmth2012";
-//        String username = "";
-//        String password = "";
+        String username = Settings.getInstance().getUsername();
+        String password =  Settings.getInstance().getPassword();
 
         m_userNameEditText = (EditText) findViewById(R.id.username_edit);
         m_userNameEditText.setText(username);
@@ -102,6 +100,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 focusView.requestFocus();
                 return;
             } else {
+                Settings.getInstance().setUsername(username);
+                Settings.getInstance().setPassword(password);
                 attemptLoginFromWWW(username, password);
             }
         }
