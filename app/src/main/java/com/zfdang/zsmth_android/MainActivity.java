@@ -241,6 +241,16 @@ public class MainActivity extends AppCompatActivity
                 return;
             }
         }
+
+        if(fragment != hotTopicFragment) {
+            // return to hottopic if we are not there yet
+            String title = "首页导读";
+            FragmentManager fm = getSupportFragmentManager();
+            fm.beginTransaction().replace(R.id.content_frame, hotTopicFragment).commit();
+            setTitle(SMTHApplication.App_Title_Prefix + title);
+            return;
+        }
+
         // for other cases, double back to exit app
         DoubleBackToExit();
 

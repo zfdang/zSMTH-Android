@@ -91,12 +91,15 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
         mSearchView = (SearchView) view.findViewById(R.id.all_board_search);
         mSearchView.setIconifiedByDefault(false);
 //        mSearchView.setSubmitButtonEnabled(true);
-        if( mQueryListner == null) {
+        if (mQueryListner == null) {
             mQueryListner = new QueryTextListner((BoardRecyclerViewAdapter) mRecyclerView.getAdapter());
             mSearchView.setOnQueryTextListener(mQueryListner);
         }
 
-        if(BoardListContent.ALL_BOARDS.size() == 0) {
+        // set focus to recyclerview
+        mRecyclerView.requestFocus();
+
+        if (BoardListContent.ALL_BOARDS.size() == 0) {
             // only load boards on the first time
             LoadAllBoards();
         }

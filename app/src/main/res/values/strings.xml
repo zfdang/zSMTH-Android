@@ -82,6 +82,8 @@
     <string name="full_image_back">返回</string>
     <string name="board_topic_action_newpost">发帖</string>
     <string name="title_activity_compose_post">编辑文章:</string>
+    <string name="compose_post_publish">发表</string>
+    <string name="compose_post_cancel">放弃</string>
 
 
 </resources>

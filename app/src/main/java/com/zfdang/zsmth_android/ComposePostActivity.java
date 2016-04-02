@@ -4,10 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -24,15 +28,17 @@ public class ComposePostActivity extends AppCompatActivity {
     private EditText mAttachments;
     private EditText mContent;
     private ArrayList<String> mPhotos;
+    private TextView mContentCount;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == REQUEST_CODE){
             if (resultCode == RESULT_OK && data != null) {
                 mPhotos = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-                for (String filename: mPhotos) {
-                    Log.d(TAG, "onActivityResult: " + filename);
-                }
+                mAttachments.setText(String.format("共有%d个附件", mPhotos.size()));
+//                for (String filename: mPhotos) {
+//                    Log.d(TAG, "onActivityResult: " + filename);
+//                }
             }
         }
     }
@@ -41,14 +47,20 @@ public class ComposePostActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose_post);
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);;
+
+        mPhotos = new ArrayList<>();
 
         mTitle = (EditText) findViewById(R.id.compose_post_title);
         mAttachments = (EditText) findViewById(R.id.compose_post_attach);
         mContent = (EditText) findViewById(R.id.compose_post_content);
+        mContentCount = (TextView) findViewById(R.id.compose_post_content_label);
 
-        mPhotos = new ArrayList<>();
 
         mButton = (Button) findViewById(R.id.compose_post_attach_button);
         mButton.setOnClickListener(new View.OnClickListener() {
@@ -67,9 +79,43 @@ public class ComposePostActivity extends AppCompatActivity {
             }
         });
 
+        mContent.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mContentCount.setText(String.format("文章字数:%d", s.length()));
+            }
+        });
 
 
 
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.compose_post_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int code = item.getItemId();
+        if(code == android.R.id.home) {
+
+        } else if (code == android.R.id.hint) {
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }
