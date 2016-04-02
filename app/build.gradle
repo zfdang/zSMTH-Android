@@ -35,6 +35,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     // problem with glide okhttp3 integration
+
     // https://github.com/bumptech/glide/issues/1003
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.android.support:appcompat-v7:23.2.1'
@@ -56,4 +57,5 @@ dependencies {
     compile 'com.jude:swipebackhelper:2.1.5'
     compile 'me.relex:circleindicator:1.1.8@aar'
     compile 'com.commit451:PhotoView:1.2.5'
+    compile project(':multi-image-selector')
 }
