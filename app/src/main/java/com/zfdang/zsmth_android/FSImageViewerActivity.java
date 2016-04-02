@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -25,19 +24,10 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 public class FSImageViewerActivity extends AppCompatActivity implements PhotoViewAttacher.OnPhotoTapListener, View.OnLongClickListener{
 
     private static final String TAG = "FullViewer";
-    private static final boolean AUTO_HIDE = true;
-    private static final int AUTO_HIDE_DELAY_MILLIS = 1000;
 
-    private final Handler mHideHandler = new Handler();
     private boolean isFullscreen;
     private HackyViewPager mViewPager;
 
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
     private FSImagePagerAdapter mPagerAdapter;
     private CircleIndicator mIndicator;
 
@@ -66,6 +56,8 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
 
         mIndicator = (CircleIndicator) findViewById(R.id.fullscreen_image_indicator);
         mIndicator.setViewPager(mViewPager);
+
+        hide();
     }
 
     @Override
@@ -91,17 +83,6 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
     }
 
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
-        delayedHide(AUTO_HIDE_DELAY_MILLIS);
-    }
-
-
     private void toggle() {
         if (isFullscreen) {
             show();
@@ -124,14 +105,6 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
         isFullscreen = false;
     }
 
-    /**
-     * Schedules a call to hide() in [delay] milliseconds, canceling any
-     * previously scheduled calls.
-     */
-    private void delayedHide(int delayMillis) {
-        mHideHandler.removeCallbacks(mHideRunnable);
-        mHideHandler.postDelayed(mHideRunnable, delayMillis);
-    }
 
     @Override
     public boolean onLongClick(View v) {

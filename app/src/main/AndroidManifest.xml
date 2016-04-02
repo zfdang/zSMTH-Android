@@ -13,11 +13,11 @@
     <application
         android:name="com.zfdang.SMTHApplication"
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/zsmth"
         android:label="@string/app_name"
-        android:supportsRtl="true"
         android:largeHeap="true"
-        android:hardwareAccelerated="false"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
@@ -70,6 +70,11 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_fullscreen_image_viewer"
             android:theme="@style/FullscreenTheme">
+        </activity>
+        <activity
+            android:name=".ComposePostActivity"
+            android:label="@string/title_activity_compose_post"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 
