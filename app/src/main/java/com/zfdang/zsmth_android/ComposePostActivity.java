@@ -6,16 +6,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
 import java.util.ArrayList;
 
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class ComposePostActivity extends AppCompatActivity {
 
@@ -112,8 +119,28 @@ public class ComposePostActivity extends AppCompatActivity {
         int code = item.getItemId();
         if(code == android.R.id.home) {
 
-        } else if (code == android.R.id.hint) {
+        } else if (code == R.id.compose_post_publish) {
+            SMTHHelper helper = SMTHHelper.getInstance();
+            SMTHHelper.publishPost("Test", "hello world", "this is a good test", "0", "0")
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<String>() {
+                        @Override
+                        public void onCompleted() {
 
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.d(TAG, Log.getStackTraceString(e));
+                        }
+
+                        @Override
+                        public void onNext(String s) {
+                            Toast.makeText(ComposePostActivity.this, s, Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
         }
         return super.onOptionsItemSelected(item);
     }

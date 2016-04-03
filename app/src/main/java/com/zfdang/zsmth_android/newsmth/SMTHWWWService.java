@@ -35,4 +35,12 @@ public interface SMTHWWWService {
 
     @GET("/nForum/mainpage?ajax")
     Observable<ResponseBody> getAllHotTopics();
+
+    @FormUrlEncoded
+    @POST("/nForum/article/{boardEngName}/ajax_post.json")
+    Observable<ResponseBody> publishPost(@Path("boardEngName") String boardEngName,
+                                         @Field("subject") String subject,
+                                         @Field("content") String content,
+                                         @Field("signature") String signature,
+                                         @Field("id") String id);
 }

@@ -23,6 +23,7 @@ import org.jsoup.select.Elements;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
@@ -33,7 +34,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import okhttp3.Cache;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -41,6 +45,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import rx.Observable;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by zfdang on 2016-3-16.
@@ -48,6 +53,7 @@ import rx.functions.Func1;
 public class SMTHHelper {
 
     static final private String TAG = "SMTHHelper";
+    public static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.143 Safari/537.36";
 
     // WWW service of SMTH
     private final String SMTH_WWW_URL = "http://www.newsmth.net";
@@ -106,6 +112,16 @@ public class SMTHHelper {
 
         OkHttpClient httpClient = new OkHttpClient().newBuilder()
                 .addInterceptor(logging)
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        Request request = chain.request()
+                                .newBuilder()
+                                .header("User-Agent", USER_AGENT)
+                                .build();
+                        return chain.proceed(request);
+                    }
+                })
                 .cookieJar(cookieJar)
                 .cache(cache)
                 .build();
@@ -125,6 +141,29 @@ public class SMTHHelper {
                 .client(httpClient)
                 .build();
         wService = wRetrofit.create(SMTHWWWService.class);
+    }
+
+    public static Observable<String> publishPost(String boardEngName,
+                                                 String subject,
+                                                 String content,
+                                                 String signature,
+                                                 String replyPostID){
+        SMTHHelper helper = SMTHHelper.getInstance();
+        return helper.wService.publishPost(boardEngName, subject, content, signature, replyPostID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .map(new Func1<ResponseBody, String>() {
+                    @Override
+                    public String call(ResponseBody responseBody) {
+                        try{
+                            String response = responseBody.string();
+                            return response;
+                        } catch (Exception e) {
+                            Log.d(TAG, Log.getStackTraceString(e));
+                        }
+                        return null;
+                    };
+                });
     }
 
 
