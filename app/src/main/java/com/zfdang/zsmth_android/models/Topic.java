@@ -61,7 +61,11 @@ public class Topic implements Parcelable {
     public void setTotalPostNoFromString(String totalPostNoString) {
         try {
             this.totalPostNo = Integer.parseInt(totalPostNoString);
-            this.totalPageNo = this.totalPostNo / this.POST_PER_PAGE + 1;
+            if(this.totalPostNo % Topic.POST_PER_PAGE == 0) {
+                this.totalPageNo = this.totalPostNo / Topic.POST_PER_PAGE;
+            } else {
+                this.totalPageNo = this.totalPostNo / Topic.POST_PER_PAGE + 1;
+            }
         }catch (Exception e) {
             Log.d("", e.toString());
         }
