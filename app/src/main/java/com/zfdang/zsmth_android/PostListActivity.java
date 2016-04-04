@@ -261,7 +261,7 @@ public class PostListActivity extends AppCompatActivity
         } else if(id == R.id.post_list_action_enter_board) {
             Board board = new Board("", mTopic.getBoardChsName(), mTopic.getBoardEngName());
             Intent intent = new Intent(this, BoardTopicActivity.class);
-            intent.putExtra("board_object", (Parcelable)board);
+            intent.putExtra(SMTHApplication.BOARD_OBJECT, (Parcelable)board);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
