@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    package="com.zfdang.zsmth_android"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest package="com.zfdang.zsmth_android"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -78,8 +77,13 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:configChanges="orientation|screenSize"
-            android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity" />
+            android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"
+            android:configChanges="orientation|screenSize"/>
+        <activity
+            android:name=".QueryUserActivity"
+            android:label="@string/title_activity_query_user"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

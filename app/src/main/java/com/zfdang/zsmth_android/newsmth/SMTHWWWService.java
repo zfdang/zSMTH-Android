@@ -1,10 +1,13 @@
 package com.zfdang.zsmth_android.newsmth;
 
 
+import com.zfdang.zsmth_android.models.UserInfo;
+
 import okhttp3.ResponseBody;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -36,6 +39,11 @@ public interface SMTHWWWService {
     @GET("/nForum/mainpage?ajax")
     Observable<ResponseBody> getAllHotTopics();
 
+    // the header line is important, because newsmth will ignore it without this header
+    @Headers("X-Requested-With:XMLHttpRequest")
+    @GET("/nForum/user/query/{username}.json")
+    Observable<UserInfo> queryUserInformation(@Path("username") String username);
+    
     @FormUrlEncoded
     @POST("/nForum/article/{boardEngName}/ajax_post.json")
     Observable<ResponseBody> publishPost(@Path("boardEngName") String boardEngName,

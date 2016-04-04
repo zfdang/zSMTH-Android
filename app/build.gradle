@@ -58,4 +58,5 @@ dependencies {
     compile 'me.relex:circleindicator:1.1.8@aar'
     compile 'com.commit451:PhotoView:1.2.5'
     compile project(':multi-image-selector')
+    compile 'com.squareup.retrofit2:converter-gson:2.0.1'
 }

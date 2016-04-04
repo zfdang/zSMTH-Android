@@ -42,6 +42,7 @@ import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import rx.Observable;
 import rx.functions.Func1;
@@ -98,7 +99,7 @@ public class SMTHHelper {
 
         // set your desired log level
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.HEADERS);
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         // https://github.com/franmontiel/PersistentCookieJar
         // A persistent CookieJar implementation for OkHttp 3 based on SharedPreferences.
@@ -138,6 +139,7 @@ public class SMTHHelper {
                 .baseUrl(SMTH_WWW_URL)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient)
                 .build();
         wService = wRetrofit.create(SMTHWWWService.class);

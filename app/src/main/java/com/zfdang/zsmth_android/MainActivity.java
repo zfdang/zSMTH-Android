@@ -379,7 +379,7 @@ public class MainActivity extends AppCompatActivity
             fragment = aboutFragment;
             title = "关于";
         } else if(id == R.id.nav_test) {
-            Intent intent = new Intent(this, ComposePostActivity.class);
+            Intent intent = new Intent(this, QueryUserActivity.class);
             intent.putExtra(SMTHApplication.ATTACHMENT_CURRENT_POS, 3);
             startActivity(intent);
         }
