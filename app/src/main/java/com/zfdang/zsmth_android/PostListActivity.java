@@ -419,6 +419,11 @@ public class PostListActivity extends AppCompatActivity
             // post_reply_mail
         } else if (which == 2) {
             // post_query_author
+            Intent intent = new Intent(this, QueryUserActivity.class);
+            Post post = PostListContent.POSTS.get(position);
+            intent.putExtra(SMTHApplication.QUERY_USER_INFO, post.getRawAuthor());
+            startActivity(intent);
+
         } else if (which == 3) {
             // copy post content
             // http://stackoverflow.com/questions/8056838/dealing-with-deprecated-android-text-clipboardmanager

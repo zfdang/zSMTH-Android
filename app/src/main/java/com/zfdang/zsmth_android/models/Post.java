@@ -78,6 +78,10 @@ public class Post {
         }
     }
 
+    public String getRawAuthor() {
+        return this.author;
+    }
+
     public void setNickName(String nickName) {
         final int MAX_NICKNAME_LENGTH = 12;
         if (nickName.length() > MAX_NICKNAME_LENGTH) {

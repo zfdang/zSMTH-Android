@@ -380,7 +380,7 @@ public class MainActivity extends AppCompatActivity
             title = "关于";
         } else if(id == R.id.nav_test) {
             Intent intent = new Intent(this, QueryUserActivity.class);
-            intent.putExtra(SMTHApplication.ATTACHMENT_CURRENT_POS, 3);
+            intent.putExtra(SMTHApplication.QUERY_USER_INFO, "kinty");
             startActivity(intent);
         }
 
@@ -445,7 +445,7 @@ public class MainActivity extends AppCompatActivity
 
     public void startBoardTopicActivity(Board board) {
         Intent intent = new Intent(this, BoardTopicActivity.class);
-        intent.putExtra("board_object", (Parcelable)board);
+        intent.putExtra(SMTHApplication.BOARD_OBJECT, (Parcelable)board);
         startActivity(intent);
     }
 

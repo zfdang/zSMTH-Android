@@ -136,7 +136,7 @@ public class BoardTopicActivity extends AppCompatActivity
 
         // get Board information from launcher
         Intent intent = getIntent();
-        Board board = intent.getParcelableExtra("board_object");
+        Board board = intent.getParcelableExtra(SMTHApplication.BOARD_OBJECT);
         assert board != null;
         if (mBoard == null || !mBoard.getBoardEngName().equals(board.getBoardEngName())) {
             mBoard = board;

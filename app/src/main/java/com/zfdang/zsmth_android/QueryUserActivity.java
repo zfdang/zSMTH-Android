@@ -1,6 +1,7 @@
 package com.zfdang.zsmth_android;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.models.UserInfo;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
@@ -80,7 +82,12 @@ public class QueryUserActivity extends AppCompatActivity {
             }
         });
 
-        mUsername = "mozilla";
+
+        // get Board information from launcher
+        Intent intent = getIntent();
+        String username = intent.getStringExtra(SMTHApplication.QUERY_USER_INFO);
+        assert username != null;
+        mUsername = username;
         LoadUserInfo();
     }
 

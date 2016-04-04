@@ -19,6 +19,9 @@ public class SMTHApplication extends Application {
     public static final String FROM_BOARD_BOARD = "FROM_BOARDTOPICS";
     public static final String ATTACHMENT_URLS = "ATTACHMENT_URLS";
     public static final String ATTACHMENT_CURRENT_POS = "ATTACHMENT_CURRENT_POS";
+    public static final String QUERY_USER_INFO = "QUERY_USER_ID";
+    public static final String BOARD_OBJECT = "BOARD_OBJECT";
+
 
     // IP database
     public static GEODatabase geoDB;
