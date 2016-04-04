@@ -134,7 +134,10 @@ public class ComposePostActivity extends AppCompatActivity {
                 wordList.append(String.format(": %s", lines[i])).append("\n");
             }
             mContent.setText(new String(wordList));
+
+            // focus content, and move cursor to the beginning
             mContent.requestFocus();
+            mContent.setSelection(0);
         } else {
             setTitle(String.format("发表文章@%s", mPostContent.getBoardEngName()));
         }
