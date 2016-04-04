@@ -15,6 +15,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.models.ComposePostContext;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
 import java.util.ArrayList;
@@ -36,6 +38,8 @@ public class ComposePostActivity extends AppCompatActivity {
     private EditText mContent;
     private ArrayList<String> mPhotos;
     private TextView mContentCount;
+
+    private ComposePostContext mPostContent;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -67,7 +71,6 @@ public class ComposePostActivity extends AppCompatActivity {
         mAttachments = (EditText) findViewById(R.id.compose_post_attach);
         mContent = (EditText) findViewById(R.id.compose_post_content);
         mContentCount = (TextView) findViewById(R.id.compose_post_content_label);
-
 
         mButton = (Button) findViewById(R.id.compose_post_attach_button);
         mButton.setOnClickListener(new View.OnClickListener() {
@@ -103,10 +106,36 @@ public class ComposePostActivity extends AppCompatActivity {
             }
         });
 
-
-
-
+        // init widgets from Internt
+        initFromIntent();
     }
+
+    public void initFromIntent() {
+        // get ComposePostContext from caller
+        Intent intent = getIntent();
+        mPostContent = intent.getParcelableExtra(SMTHApplication.COMPOSE_POST_CONTEXT);
+        assert mPostContent != null;
+
+        Log.d(TAG, "initFromIntent: " + mPostContent.toString());
+
+        if(mPostContent.getPostid() != null && mPostContent.getPostid().length() > 0) {
+            setTitle(String.format("回复文章@%s", mPostContent.getBoardEngName()));
+            mTitle.setText(String.format("Re: %s", mPostContent.getPostTitle()));
+
+            String[] lines = mPostContent.getPostContent().split("\n");
+            StringBuilder wordList = new StringBuilder();
+            wordList.append("\n\n");
+            wordList.append(String.format("【 在 %s 的大作中提到: 】", mPostContent.getPostAuthor())).append("\n");
+            for(int i = 0; i < lines.length && i < 5; i++) {
+                wordList.append(String.format(": %s", lines[i])).append("\n");
+            }
+            mContent.setText(new String(wordList));
+            mContent.requestFocus();
+        } else {
+            setTitle(String.format("发表文章@%s", mPostContent.getBoardEngName()));
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -121,7 +150,7 @@ public class ComposePostActivity extends AppCompatActivity {
 
         } else if (code == R.id.compose_post_publish) {
             SMTHHelper helper = SMTHHelper.getInstance();
-            SMTHHelper.publishPost("Test", "hello world", "this is a good test", "0", "0")
+            SMTHHelper.publishPost("Test", "hello world", "this is a good test", "0", "910613")
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<String>() {

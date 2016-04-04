@@ -45,6 +45,7 @@ public interface SMTHWWWService {
     Observable<UserInfo> queryUserInformation(@Path("username") String username);
     
     @FormUrlEncoded
+    @Headers("X-Requested-With:XMLHttpRequest")
     @POST("/nForum/article/{boardEngName}/ajax_post.json")
     Observable<ResponseBody> publishPost(@Path("boardEngName") String boardEngName,
                                          @Field("subject") String subject,

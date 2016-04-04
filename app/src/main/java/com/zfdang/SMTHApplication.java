@@ -22,6 +22,8 @@ public class SMTHApplication extends Application {
     public static final String QUERY_USER_INFO = "QUERY_USER_ID";
     public static final String BOARD_OBJECT = "BOARD_OBJECT";
 
+    public static final String COMPOSE_POST_CONTEXT = "Compose_Post_Context";
+
 
     // IP database
     public static GEODatabase geoDB;

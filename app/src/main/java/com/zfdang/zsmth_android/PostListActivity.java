@@ -35,6 +35,7 @@ import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
 import com.zfdang.zsmth_android.models.AlertDialogItem;
 import com.zfdang.zsmth_android.models.Board;
+import com.zfdang.zsmth_android.models.ComposePostContext;
 import com.zfdang.zsmth_android.models.Post;
 import com.zfdang.zsmth_android.models.PostListContent;
 import com.zfdang.zsmth_android.models.Topic;
@@ -411,16 +412,24 @@ public class PostListActivity extends AppCompatActivity
 
     private void onPostPopupMenuItem(int position, int which) {
         Log.d(TAG, String.format("MenuItem %d was clicked", which));
-
+        Post post = PostListContent.POSTS.get(position);
         if(which == 0) {
             // post_reply_post
+            ComposePostContext postContext = new ComposePostContext();
+            postContext.setBoardEngName(mTopic.getBoardEngName());
+            postContext.setPostid(post.getPostID());
+            postContext.setPostTitle(mTopic.getTitle());
+            postContext.setPostAuthor(post.getRawAuthor());
+            postContext.setPostContent(post.getRawContent());
 
+            Intent intent = new Intent(this, ComposePostActivity.class);
+            intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
+            startActivity(intent);
         } else if (which == 1) {
             // post_reply_mail
         } else if (which == 2) {
             // post_query_author
             Intent intent = new Intent(this, QueryUserActivity.class);
-            Post post = PostListContent.POSTS.get(position);
             intent.putExtra(SMTHApplication.QUERY_USER_INFO, post.getRawAuthor());
             startActivity(intent);
 
@@ -428,7 +437,6 @@ public class PostListActivity extends AppCompatActivity
             // copy post content
             // http://stackoverflow.com/questions/8056838/dealing-with-deprecated-android-text-clipboardmanager
             String content;
-            Post post = PostListContent.POSTS.get(position);
             if(post != null) {
                 content = post.getRawContent();
 

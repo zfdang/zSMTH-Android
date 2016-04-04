@@ -24,6 +24,7 @@ import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
 import com.zfdang.zsmth_android.listeners.EndlessRecyclerOnScrollListener;
 import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
 import com.zfdang.zsmth_android.models.Board;
+import com.zfdang.zsmth_android.models.ComposePostContext;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.models.TopicListContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
@@ -169,6 +170,14 @@ public class BoardTopicActivity extends AppCompatActivity
             this.RefreshBoardTopoFromPageOne();
         } else if (id == R.id.board_topic_action_refresh) {
             this.RefreshBoardTopoFromPageOne();
+        } else if(id == R.id.board_topic_action_newpost) {
+            ComposePostContext postContext = new ComposePostContext();
+            postContext.setBoardEngName(mBoard.getBoardEngName());
+
+            Intent intent = new Intent(this, ComposePostActivity.class);
+            intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
+            startActivity(intent);
+
         }
         return super.onOptionsItemSelected(item);
     }
