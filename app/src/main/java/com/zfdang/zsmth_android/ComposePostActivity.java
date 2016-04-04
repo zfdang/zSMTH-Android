@@ -127,6 +127,10 @@ public class ComposePostActivity extends AppCompatActivity {
             wordList.append("\n\n");
             wordList.append(String.format("【 在 %s 的大作中提到: 】", mPostContent.getPostAuthor())).append("\n");
             for(int i = 0; i < lines.length && i < 5; i++) {
+                if(lines[i].startsWith("--")){
+                    // this might be the start of signature, ignore following lines in quote
+                    break;
+                }
                 wordList.append(String.format(": %s", lines[i])).append("\n");
             }
             mContent.setText(new String(wordList));

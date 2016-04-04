@@ -87,7 +87,7 @@
                     android:inputType="none"
                     android:text="无图片附件"
                     android:focusable="false"
-                    android:gravity="center"/>
+                    android:gravity="left"/>
 
                 <Button
                     android:layout_width="wrap_content"
