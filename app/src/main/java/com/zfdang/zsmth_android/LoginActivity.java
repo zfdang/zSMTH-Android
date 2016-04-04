@@ -100,8 +100,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 focusView.requestFocus();
                 return;
             } else {
-                Settings.getInstance().setUsername(username);
-                Settings.getInstance().setPassword(password);
+                Settings.getInstance().setLastLoginSuccess(false);
                 attemptLoginFromWWW(username, password);
             }
         }
@@ -162,8 +161,13 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                         switch (code) {
                             case 0:
                                 Toast.makeText(getApplicationContext(), "登录成功!", Toast.LENGTH_SHORT).show();
+
+                                // save username & passworld
+                                Settings.getInstance().setUsername(username);
+                                Settings.getInstance().setPassword(password);
+                                Settings.getInstance().setLastLoginSuccess(true);
+
                                 Intent resultIntent = new Intent();
-                                // TODO Add extras or a data URI to this intent as appropriate.
                                 resultIntent.putExtra("username", username);
                                 setResult(Activity.RESULT_OK, resultIntent);
                                 finish();

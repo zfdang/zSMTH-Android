@@ -64,6 +64,19 @@ public class Settings {
     }
 
 
+    private static final String LAST_LOGIN_SUCCESS = "last_login_success";
+    private boolean bLastLoginSuccess;
+    public boolean isLastLoginSuccess() {
+        return bLastLoginSuccess;
+    }
+    public void setLastLoginSuccess(boolean bLastLoginSuccess) {
+        if(this.bLastLoginSuccess != bLastLoginSuccess) {
+            this.bLastLoginSuccess = bLastLoginSuccess;
+            mEditor.putBoolean(LAST_LOGIN_SUCCESS, this.bLastLoginSuccess);
+            mEditor.commit();
+        }
+    }
+
 
     private static final String SHOW_STICKY_TOPIC = "show_sticky_topic";
     private boolean mShowSticky;
@@ -114,6 +127,6 @@ public class Settings {
         mUsername = mPreference.getString(USERNAME_KEY, "");
         mPassword = mPreference.getString(PASSWORD_KEY, "");
 
-
+        bLastLoginSuccess = mPreference.getBoolean(LAST_LOGIN_SUCCESS, false);
     }
 }
