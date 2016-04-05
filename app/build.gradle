@@ -33,7 +33,8 @@ android {
     // http://www.sollyu.com/android-apk-studio-generated-automatically-appends-a-version-number/
     android.applicationVariants.all { variant ->
         variant.outputs.each { output ->
-            output.outputFile = new File(output.outputFile.parent, "zSMTH" + "-" + buildType.name + "-v" + defaultConfig.versionName + "-" + defaultConfig.versionCode + ".apk" );
+//            output.outputFile = new File(output.outputFile.parent, "zSMTH" + "-" + buildType.name + "-v" + defaultConfig.versionName + "-" + defaultConfig.versionCode + ".apk" );
+            output.outputFile = new File(output.outputFile.parent, "zSMTH" + "-" + buildType.name + "-v" + defaultConfig.versionName + ".apk" );
         }
     }
     // ...
