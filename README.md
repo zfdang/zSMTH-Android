@@ -1,5 +1,9 @@
 # zSMTH-Android
 
-this is the readme
+水木社区BBS的开源Android客户端
 
-学习程序
+![zSMTH](zsmth.png)
+
+项目地址：
+
+http://zsmth-android.zfdang.com/
