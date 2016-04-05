@@ -342,9 +342,15 @@ public class Post {
         return mSegments;
     }
 
+    // this method should not be called, unless we set error message
+    public void setRawContent(String rawContent) {
+        this.htmlContent = rawContent;
+        parseContentToSegments(this.htmlContent);
+    }
+
+    // used by copy post content menu, or quoted content while replying
     public String getRawContent() {
-        // used by copy post content menu
-        return Html.fromHtml(this.htmlContent).toString();
+        return Html.fromHtml(this.htmlContent.replace(ATTACHMENT_MARK, "")).toString();
     }
 
     public void addAttachFile(Attachment attach) {

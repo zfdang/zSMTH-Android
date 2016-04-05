@@ -225,6 +225,29 @@ public class SMTHHelper {
             results.add(post);
         }
 
+        if(results.size() == 0) {
+            // there might be some problems with the response
+//            <div class="error">
+//            <h5>产生错误的可能原因：</h5>
+//            <ul>
+//            <li>
+//            <samp class="ico-pos-dot"></samp>指定的文章不存在或链接错误</li>
+//            </ul>
+//            </div>
+            Elements divs = doc.select("div.error");
+            if(divs.size() > 0) {
+                Element div = divs.first();
+
+                Post post = new Post();
+                post.setAuthor("错误信息");
+                post.setRawContent(div.toString());
+                results.add(post);
+            }
+
+
+
+        }
+
         return results;
     }
 
