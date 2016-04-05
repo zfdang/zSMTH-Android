@@ -14,7 +14,7 @@
         android:name="com.zfdang.SMTHApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
-        android:icon="@mipmap/zsmth"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true"
