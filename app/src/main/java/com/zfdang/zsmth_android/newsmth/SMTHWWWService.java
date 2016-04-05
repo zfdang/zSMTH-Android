@@ -51,4 +51,9 @@ public interface SMTHWWWService {
                                          @Field("content") String content,
                                          @Field("signature") String signature,
                                          @Field("id") String id);
+
+    @Headers("X-Requested-With:XMLHttpRequest")
+    @GET("/nForum/user/ajax_session.json")
+    Observable<UserStatus> queryActiveUserStatus();
+
 }

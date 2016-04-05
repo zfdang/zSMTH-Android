@@ -145,6 +145,31 @@ public class SMTHHelper {
         wService = wRetrofit.create(SMTHWWWService.class);
     }
 
+    // query active user status
+    // since wService.queryActiveUserStatus does not return correct faceurl, try to query user information again
+    public static Observable<UserStatus> queryActiveUserStatus() {
+        final SMTHHelper helper = SMTHHelper.getInstance();
+        return helper.wService.queryActiveUserStatus()
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .map(new Func1<UserStatus, UserStatus>() {
+                    @Override
+                    public UserStatus call(UserStatus userStatus) {
+                        String userid = userStatus.getId();
+                        if(userid != null && !userid.equals("guest")) {
+                            // get correct faceURL
+                            List<UserInfo> users = helper.wService.queryUserInformation(userid).toList().toBlocking().single();
+                            if(users.size() == 1) {
+                                UserInfo user = users.get(0);
+                                userStatus.setFace_url(user.getFace_url());
+                            }
+                        }
+                        return userStatus;
+                    }
+                });
+
+    }
+
     public static Observable<String> publishPost(String boardEngName,
                                                  String subject,
                                                  String content,

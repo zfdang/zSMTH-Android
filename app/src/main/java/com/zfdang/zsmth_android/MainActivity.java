@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.umeng.analytics.MobclickAgent;
 import com.zfdang.SMTHApplication;
@@ -31,8 +34,14 @@ import com.zfdang.zsmth_android.listeners.OnVolumeUpDownListener;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.Topic;
+import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+import com.zfdang.zsmth_android.newsmth.UserStatus;
 
 import java.lang.reflect.Field;
+
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -42,6 +51,7 @@ public class MainActivity extends AppCompatActivity
         MailListFragment.OnListFragmentInteractionListener
 //        SettingFragment.OnFragmentInteractionListener,
 {
+    private static final String TAG = "MainActivity";
 
     // guidance fragment: display hot topics
     // this fragment is using RecyclerView to show all hot topics
@@ -75,15 +85,6 @@ public class MainActivity extends AppCompatActivity
         // zsmth_actionbar_size @ dimen ==> ThemeOverlay.ActionBar @ styles ==> theme @ app_bar_main.xml
 //        toolbar.setSubtitle("Hello world");
 //        toolbar.setLogo(R.mipmap.zsmth);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mToggle = new ActionBarDrawerToggle(
@@ -164,24 +165,6 @@ public class MainActivity extends AppCompatActivity
         return super.onKeyUp(keyCode, event);
     }
 
-    // http://stackoverflow.com/questions/2367484/how-to-override-the-behavior-of-the-volume-buttons-in-an-android-application
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        int keyCode = event.getKeyCode();
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_VOLUME_UP:
-            case KeyEvent.KEYCODE_VOLUME_DOWN:
-                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-                if(fragment instanceof OnVolumeUpDownListener) {
-                    OnVolumeUpDownListener frag = (OnVolumeUpDownListener) fragment;
-                    return frag.onVolumeUpDown(keyCode);
-                }
-                return false;
-            default:
-                return super.dispatchKeyEvent(event);
-        }
-    }
-
 
     @Override
     protected void onPause() {
@@ -213,16 +196,47 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == MAIN_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                // get username from data, then update mUsername
-                String username = data.getStringExtra("username");
-                if(username != null && username.length() > 0){
-                    // update displayed user name
-                    mUsername.setText(username);
-
-                    // TODO: update user_avatar
-                }
+                UpdateNavigationViewHeader();
             }
         }
+    }
+
+    // update header view in navigation header
+    public void UpdateNavigationViewHeader() {
+        SMTHHelper helper = SMTHHelper.getInstance();
+        helper.queryActiveUserStatus()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<UserStatus>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(TAG, "onError: " + Log.getStackTraceString(e));
+                    }
+
+                    @Override
+                    public void onNext(UserStatus userStatus) {
+                        Log.d(TAG, "onNext: " + userStatus.toString());
+
+                        String userid = userStatus.getId();
+                        if (userid != null && !userid.equals("guest")) {
+                            mUsername.setText(userid);
+                            Glide.with(MainActivity.this)
+                                    .load(userStatus.getFace_url())
+                                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                    .fitCenter()
+                                    .crossFade()
+                                    .into(mAvatar);
+                        } else {
+                            Toast.makeText(MainActivity.this, "未登录!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
     }
 
     @Override
@@ -379,9 +393,7 @@ public class MainActivity extends AppCompatActivity
             fragment = aboutFragment;
             title = "关于";
         } else if(id == R.id.nav_test) {
-            Intent intent = new Intent(this, ComposePostActivity.class);
-            intent.putExtra(SMTHApplication.QUERY_USER_INFO, "kinty");
-            startActivity(intent);
+
         }
 
         // switch fragment
