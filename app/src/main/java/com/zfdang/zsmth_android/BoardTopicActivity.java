@@ -280,6 +280,7 @@ public class BoardTopicActivity extends AppCompatActivity
                         super.onStart();
 
                         Topic topic = new Topic(String.format("第%d页:", mCurrentPageNo));
+                        topic.isCategory = true;
                         TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
                         mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
                     }
@@ -336,7 +337,7 @@ public class BoardTopicActivity extends AppCompatActivity
         Intent intent = new Intent(this, PostListActivity.class);
         item.setBoardEngName(mBoard.getBoardEngName());
         item.setBoardChsName(mBoard.getBoardChsName());
-        intent.putExtra("topic_object", item);
+        intent.putExtra(SMTHApplication.TOPIC_OBJECT, item);
         intent.putExtra(SMTHApplication.FROM_BOARD, SMTHApplication.FROM_BOARD_BOARD);
         startActivity(intent);
     }

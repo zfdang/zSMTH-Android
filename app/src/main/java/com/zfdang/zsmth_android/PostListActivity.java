@@ -123,7 +123,7 @@ public class PostListActivity extends AppCompatActivity
 
         // get Board information from launcher
         Intent intent = getIntent();
-        Topic topic = intent.getParcelableExtra("topic_object");
+        Topic topic = intent.getParcelableExtra(SMTHApplication.TOPIC_OBJECT);
         assert topic != null;
         mFrom = intent.getStringExtra(SMTHApplication.FROM_BOARD);
         // now onCreateOptionsMenu(...) is called again

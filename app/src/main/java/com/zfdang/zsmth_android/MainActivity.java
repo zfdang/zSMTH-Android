@@ -413,7 +413,7 @@ public class MainActivity extends AppCompatActivity
         if(fragment == hotTopicFragment) {
             if(item.isCategory) return;
             Intent intent = new Intent(this, PostListActivity.class);
-            intent.putExtra("topic_object", item);
+            intent.putExtra(SMTHApplication.TOPIC_OBJECT, item);
             intent.putExtra(SMTHApplication.FROM_BOARD, SMTHApplication.FROM_BOARD_HOT);
             startActivity(intent);
         }

@@ -21,6 +21,7 @@ public class SMTHApplication extends Application {
     public static final String ATTACHMENT_CURRENT_POS = "ATTACHMENT_CURRENT_POS";
     public static final String QUERY_USER_INFO = "QUERY_USER_ID";
     public static final String BOARD_OBJECT = "BOARD_OBJECT";
+    public static final String TOPIC_OBJECT = "TOPIC_OBJECT";
 
     public static final String COMPOSE_POST_CONTEXT = "Compose_Post_Context";
 
