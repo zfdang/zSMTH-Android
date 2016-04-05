@@ -1,8 +1,6 @@
 package com.zfdang.zsmth_android.newsmth;
 
 
-import com.zfdang.zsmth_android.models.UserInfo;
-
 import okhttp3.ResponseBody;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -36,6 +34,7 @@ public interface SMTHWWWService {
     @GET("/nForum/article/{boardEngName}/{topicID}?ajax")
     Observable<ResponseBody> getPostListByPage(@Path("boardEngName") String boardEngName, @Path("topicID") String topicID, @Query("p") int page);
 
+    @Headers("X-Requested-With:XMLHttpRequest")
     @GET("/nForum/mainpage?ajax")
     Observable<ResponseBody> getAllHotTopics();
 
@@ -47,7 +46,7 @@ public interface SMTHWWWService {
     @FormUrlEncoded
     @Headers("X-Requested-With:XMLHttpRequest")
     @POST("/nForum/article/{boardEngName}/ajax_post.json")
-    Observable<ResponseBody> publishPost(@Path("boardEngName") String boardEngName,
+    Observable<AjaxResponse> publishPost(@Path("boardEngName") String boardEngName,
                                          @Field("subject") String subject,
                                          @Field("content") String content,
                                          @Field("signature") String signature,

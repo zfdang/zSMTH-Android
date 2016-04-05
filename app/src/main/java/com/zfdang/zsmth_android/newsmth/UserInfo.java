@@ -1,4 +1,4 @@
-package com.zfdang.zsmth_android.models;
+package com.zfdang.zsmth_android.newsmth;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
+ * this class will be used by Retrofit's API
  * Created by zfdang on 2016-4-4.
  */
 

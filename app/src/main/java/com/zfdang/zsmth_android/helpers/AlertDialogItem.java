@@ -1,4 +1,4 @@
-package com.zfdang.zsmth_android.models;
+package com.zfdang.zsmth_android.helpers;
 
 /**
  * this class is used to build AlertDialog for long press on post item

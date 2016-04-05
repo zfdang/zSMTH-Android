@@ -33,7 +33,7 @@ import com.jude.swipbackhelper.SwipeBackHelper;
 import com.thefinestartist.finestwebview.FinestWebView;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
-import com.zfdang.zsmth_android.models.AlertDialogItem;
+import com.zfdang.zsmth_android.helpers.AlertDialogItem;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.ComposePostContext;
 import com.zfdang.zsmth_android.models.Post;

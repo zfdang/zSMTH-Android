@@ -1,7 +1,10 @@
 package com.zfdang.zsmth_android;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -31,6 +34,7 @@ public class ComposePostActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 653;
     private static final String TAG = "ComposePostActivity";
 
+    private ProgressDialog pdialog = null;
 
     private Button mButton;
     private EditText mTitle;
@@ -139,6 +143,7 @@ public class ComposePostActivity extends AppCompatActivity {
             mContent.requestFocus();
             mContent.setSelection(0);
         } else {
+            mPostContent.setPostid("0");
             setTitle(String.format("发表文章@%s", mPostContent.getBoardEngName()));
         }
     }
@@ -156,29 +161,69 @@ public class ComposePostActivity extends AppCompatActivity {
         if(code == android.R.id.home) {
 
         } else if (code == R.id.compose_post_publish) {
-            SMTHHelper helper = SMTHHelper.getInstance();
-            SMTHHelper.publishPost("Test", "hello world", "this is a good test", "0", "910613")
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Subscriber<String>() {
-                        @Override
-                        public void onCompleted() {
-
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            Log.d(TAG, Log.getStackTraceString(e));
-                        }
-
-                        @Override
-                        public void onNext(String s) {
-                            Toast.makeText(ComposePostActivity.this, s, Toast.LENGTH_SHORT).show();
-
-                        }
-                    });
+            publishPost();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void showProgress(String message, final boolean show) {
+        if(pdialog == null) {
+            pdialog = new ProgressDialog(this);
+        }
+        if (show) {
+            pdialog.setMessage(message);
+            pdialog.show();
+        } else {
+            pdialog.cancel();
+        }
+    }
+
+
+    public void publishPost() {
+        showProgress("发表文章中...", true);
+
+        SMTHHelper helper = SMTHHelper.getInstance();
+        SMTHHelper.publishPost(mPostContent.getBoardEngName(),
+                mTitle.getText().toString(), mContent.getText().toString(),
+                "0", mPostContent.getPostid())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        showProgress(null, false);
+                        Log.d(TAG, Log.getStackTraceString(e));
+                        Toast.makeText(ComposePostActivity.this, Log.getStackTraceString(e), Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        showProgress(null, false);
+
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ComposePostActivity.this);
+                        alertDialogBuilder.setTitle(s)
+                                .setMessage("返回之前界面，或者停留在当前编辑界面？")
+                                .setCancelable(false)
+                                .setPositiveButton("返回", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        // if this button is clicked, close current activity
+                                        ComposePostActivity.this.finish();
+                                    }
+                                })
+                                .setNegativeButton("停留", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        // if this button is clicked, just close the dialog box and do nothing
+                                        dialog.cancel();
+                                    }
+                                }).create().show();
+                    }
+                });
+
     }
 
 }

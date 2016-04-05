@@ -154,11 +154,11 @@ public class SMTHHelper {
         return helper.wService.publishPost(boardEngName, subject, content, signature, replyPostID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
-                .map(new Func1<ResponseBody, String>() {
+                .map(new Func1<AjaxResponse, String>() {
                     @Override
-                    public String call(ResponseBody responseBody) {
+                    public String call(AjaxResponse ajaxResponse) {
                         try{
-                            String response = responseBody.string();
+                            String response = ajaxResponse.getAjax_msg();
                             return response;
                         } catch (Exception e) {
                             Log.d(TAG, Log.getStackTraceString(e));
