@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.umeng.analytics.MobclickAgent;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.listeners.OnBoardFragmentInteractionListener;
@@ -40,7 +41,6 @@ public class MainActivity extends AppCompatActivity
         OnBoardFragmentInteractionListener,
         MailListFragment.OnListFragmentInteractionListener
 //        SettingFragment.OnFragmentInteractionListener,
-//        AboutFragment.OnFragmentInteractionListener
 {
 
     // guidance fragment: display hot topics
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity
     MailListFragment mailListFragment = null;
 
     SettingFragment settingFragment = null;
-    AboutFragment aboutFragment = null;
+    Fragment aboutFragment = null;
 
     private ProgressDialog pdialog = null;
     // used by startActivityForResult
@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity
         mailListFragment = new MailListFragment();
 
         settingFragment = new SettingFragment();
-        aboutFragment = new AboutFragment();
+        aboutFragment = new LibsBuilder().supportFragment();
     }
 
 

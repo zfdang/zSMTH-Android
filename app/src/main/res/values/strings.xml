@@ -88,5 +88,8 @@
     <string name="query_user_action_message">发短消息</string>
     <string name="query_user_action_friend">加为好友</string>
 
-
+    <!--About fragment-->
+    <string name="aboutLibraries_description_showIcon">true</string>
+    <string name="aboutLibraries_description_showVersion">true</string>
+    <string name="aboutLibraries_description_text">"zSMTH是水木社区BBS的一款开源Android客户端。<br />项目地址为http://zSMTH-Android.zfdang.com/。"</string>
 </resources>

@@ -59,4 +59,7 @@ dependencies {
     compile 'com.commit451:PhotoView:1.2.5'
     compile project(':multi-image-selector')
     compile 'com.squareup.retrofit2:converter-gson:2.0.1'
+    compile('com.mikepenz:aboutlibraries:5.6.3@aar') {
+        transitive = true
+    }
 }
