@@ -411,6 +411,7 @@ public class MainActivity extends AppCompatActivity
         // will be triggered in HotTopicFragment
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         if(fragment == hotTopicFragment) {
+            if(item.isCategory) return;
             Intent intent = new Intent(this, PostListActivity.class);
             intent.putExtra("topic_object", item);
             intent.putExtra(SMTHApplication.FROM_BOARD, SMTHApplication.FROM_BOARD_HOT);

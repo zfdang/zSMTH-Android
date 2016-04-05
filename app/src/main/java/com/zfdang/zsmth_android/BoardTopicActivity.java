@@ -332,6 +332,7 @@ public class BoardTopicActivity extends AppCompatActivity
 
     @Override
     public void onTopicFragmentInteraction(Topic item) {
+        if(item.isCategory) return;
         Intent intent = new Intent(this, PostListActivity.class);
         item.setBoardEngName(mBoard.getBoardEngName());
         item.setBoardChsName(mBoard.getBoardChsName());
