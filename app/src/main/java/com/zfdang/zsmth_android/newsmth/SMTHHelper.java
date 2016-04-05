@@ -238,6 +238,8 @@ public class SMTHHelper {
             if(divs.size() > 0) {
                 Element div = divs.first();
 
+                topic.setTotalPostNoFromString("1");
+
                 Post post = new Post();
                 post.setAuthor("错误信息");
                 post.setRawContent(div.toString());
