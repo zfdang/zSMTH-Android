@@ -444,8 +444,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_about) {
             fragment = aboutFragment;
             title = "关于";
-        } else if (id == R.id.nav_test) {
-
         }
 
         // switch fragment
