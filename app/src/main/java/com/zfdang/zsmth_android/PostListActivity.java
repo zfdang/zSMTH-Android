@@ -220,9 +220,9 @@ public class PostListActivity extends AppCompatActivity
 
                     @Override
                     public void onNext(Post post) {
+//                        Log.d(TAG, post.toString());
                         PostListContent.addItem(post);
                         mRecyclerView.getAdapter().notifyItemInserted(PostListContent.POSTS.size() - 1);
-                        Log.d(TAG, post.toString());
                     }
                 });
     }

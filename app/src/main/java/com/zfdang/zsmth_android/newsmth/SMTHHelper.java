@@ -212,7 +212,7 @@ public class SMTHHelper {
             if (matcher.find()) {
                 String totalPostString = matcher.group(0);
                 topic.setTotalPostNoFromString(totalPostString);
-                Log.d(TAG, totalPostString);
+//                Log.d(TAG, totalPostString);
             }
         }
 
@@ -246,7 +246,7 @@ public class SMTHHelper {
             if(contents.size() == 1) {
                 ParsePostContentFromWWW(contents.get(0), post);
             }
-            Log.d(TAG, post.toString());
+//            Log.d(TAG, post.toString());
             results.add(post);
         }
 
