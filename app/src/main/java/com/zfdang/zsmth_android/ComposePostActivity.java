@@ -156,10 +156,15 @@ public class ComposePostActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        onBackAction();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int code = item.getItemId();
         if(code == android.R.id.home) {
-
+            onBackAction();
         } else if (code == R.id.compose_post_publish) {
             publishPost();
         }
@@ -224,6 +229,25 @@ public class ComposePostActivity extends AppCompatActivity {
                     }
                 });
 
+    }
+
+    public void onBackAction() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ComposePostActivity.this);
+        alertDialogBuilder.setTitle("返回确认")
+                .setMessage("返回之前界面，或者停留在当前界面继续编辑？")
+                .setCancelable(false)
+                .setPositiveButton("返回", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // if this button is clicked, close current activity
+                        ComposePostActivity.this.finish();
+                    }
+                })
+                .setNegativeButton("停留", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // if this button is clicked, just close the dialog box and do nothing
+                        dialog.cancel();
+                    }
+                }).create().show();
     }
 
 }

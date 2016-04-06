@@ -61,6 +61,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
         hide();
 
         SwipeBackHelper.onCreate(this);
+        SwipeBackHelper.getCurrentPage(this).setSwipeEdgePercent(0.2f);
     }
 
     @Override
