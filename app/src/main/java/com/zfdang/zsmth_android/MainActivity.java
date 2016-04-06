@@ -54,29 +54,28 @@ public class MainActivity extends AppCompatActivity
         MailListFragment.OnListFragmentInteractionListener
 //        SettingFragment.OnFragmentInteractionListener,
 {
+    // used by startActivityForResult
+    static final int MAIN_ACTIVITY_REQUEST_CODE = 9527;  // The request code
     private static final String TAG = "MainActivity";
-
     // guidance fragment: display hot topics
     // this fragment is using RecyclerView to show all hot topics
     HotTopicFragment hotTopicFragment = null;
     FavoriteBoardFragment favoriteBoardFragment = null;
     AllBoardFragment allBoardFragment = null;
     MailListFragment mailListFragment = null;
-
     SettingFragment settingFragment = null;
     Fragment aboutFragment = null;
-
     private ProgressDialog pdialog = null;
-    // used by startActivityForResult
-    static final int MAIN_ACTIVITY_REQUEST_CODE = 9527;  // The request code
-
     private ImageView mAvatar = null;
     private TextView mUsername = null;
 
     private DrawerLayout mDrawer = null;
-    private  ActionBarDrawerToggle mToggle = null;
+    private ActionBarDrawerToggle mToggle = null;
 
     private UserStatusReceiver mReceiver;
+    // press BACK in 2 seconds, app will quit
+    private boolean mDoubleBackToExit = false;
+    private Handler mHandler = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,7 +163,7 @@ public class MainActivity extends AppCompatActivity
         mReceiver.setReceiver(new UserStatusReceiver.Receiver() {
             @Override
             public void onReceiveResult(int resultCode, Bundle resultData) {
-                if(resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK) {
                     Log.d(TAG, "onReceiveResult: " + "to update navigationview" + SMTHApplication.activeUser.toString());
                     UpdateNavigationViewHeader();
                 }
@@ -172,12 +171,11 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-            if(fragment instanceof OnVolumeUpDownListener) {
+            if (fragment instanceof OnVolumeUpDownListener) {
                 OnVolumeUpDownListener frag = (OnVolumeUpDownListener) fragment;
                 return frag.onVolumeUpDown(keyCode);
             }
@@ -196,7 +194,6 @@ public class MainActivity extends AppCompatActivity
         }
         return super.onKeyUp(keyCode, event);
     }
-
 
     @Override
     protected void onPause() {
@@ -222,11 +219,10 @@ public class MainActivity extends AppCompatActivity
         aboutFragment = new LibsBuilder().supportFragment();
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == MAIN_ACTIVITY_REQUEST_CODE) {
+        if (requestCode == MAIN_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 updateUserStatusNow();
             }
@@ -237,7 +233,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem login = menu.findItem(R.id.main_action_login);
         MenuItem logout = menu.findItem(R.id.main_action_logout);
-        if(SMTHApplication.isValidUser()){
+        if (SMTHApplication.isValidUser()) {
             login.setVisible(false);
             logout.setVisible(true);
         } else {
@@ -285,7 +281,7 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        if(fragment != hotTopicFragment) {
+        if (fragment != hotTopicFragment) {
             // return to hottopic if we are not there yet
             String title = "首页导读";
             FragmentManager fm = getSupportFragmentManager();
@@ -297,17 +293,6 @@ public class MainActivity extends AppCompatActivity
         // for other cases, double back to exit app
         DoubleBackToExit();
 
-    }
-
-
-    // press BACK in 2 seconds, app will quit
-    private boolean mDoubleBackToExit = false;
-    private Handler mHandler = null;
-
-    class PendingDoubleBackToExit implements Runnable {
-        public void run() {
-            mDoubleBackToExit = false;
-        }
     }
 
     private void DoubleBackToExit() {
@@ -369,14 +354,13 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.main_action_refresh) {
-            if(fragment == hotTopicFragment) {
+            if (fragment == hotTopicFragment) {
                 hotTopicFragment.RefreshGuidance();
             } else if (fragment == allBoardFragment) {
                 allBoardFragment.LoadAllBoardsWithoutCache();
-            } else if(fragment == favoriteBoardFragment) {
+            } else if (fragment == favoriteBoardFragment) {
                 favoriteBoardFragment.RefreshFavoriteBoardsWithCache();
-            }
-            else {
+            } else {
                 Toast toast = Toast.makeText(this, "Refresh", Toast.LENGTH_SHORT);
                 toast.show();
             }
@@ -405,7 +389,7 @@ public class MainActivity extends AppCompatActivity
 
     public void onLogout() {
         Settings.getInstance().setUserOnline(false);
-        if(SMTHApplication.activeUser != null) {
+        if (SMTHApplication.activeUser != null) {
             SMTHApplication.activeUser.setId("guest");
         }
         UpdateNavigationViewHeader();
@@ -460,7 +444,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_about) {
             fragment = aboutFragment;
             title = "关于";
-        } else if(id == R.id.nav_test) {
+        } else if (id == R.id.nav_test) {
 
         }
 
@@ -481,7 +465,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_user_avatar || id == R.id.nav_user_name) {
             // 点击图标或者文字，都弹出登录对话框或者profiel对话框
             mDrawer.closeDrawer(GravityCompat.START);
-            if(SMTHApplication.activeUser != null && !SMTHApplication.activeUser.getId().equals("guest")) {
+            if (SMTHApplication.activeUser != null && !SMTHApplication.activeUser.getId().equals("guest")) {
                 Intent intent = new Intent(this, QueryUserActivity.class);
                 intent.putExtra(SMTHApplication.QUERY_USER_INFO, SMTHApplication.activeUser.getId());
                 startActivity(intent);
@@ -495,8 +479,8 @@ public class MainActivity extends AppCompatActivity
     public void onTopicFragmentInteraction(Topic item) {
         // will be triggered in HotTopicFragment
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        if(fragment == hotTopicFragment) {
-            if(item.isCategory) return;
+        if (fragment == hotTopicFragment) {
+            if (item.isCategory) return;
             Intent intent = new Intent(this, PostListActivity.class);
             intent.putExtra(SMTHApplication.TOPIC_OBJECT, item);
             intent.putExtra(SMTHApplication.FROM_BOARD, SMTHApplication.FROM_BOARD_HOT);
@@ -514,25 +498,30 @@ public class MainActivity extends AppCompatActivity
     public void onBoardFragmentInteraction(Board item) {
         // shared by FavoriteBoard & AllBoard fragment
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        if(fragment == favoriteBoardFragment) {
+        if (fragment == favoriteBoardFragment) {
             // favorite fragment, we might enter a folder
-            if(item.isFolder()) {
+            if (item.isFolder()) {
                 favoriteBoardFragment.pushFavoritePath(item.getFolderID(), item.getFolderName());
                 favoriteBoardFragment.RefreshFavoriteBoards();
             } else {
                 startBoardTopicActivity(item);
             }
 
-        } else if(fragment == allBoardFragment) {
+        } else if (fragment == allBoardFragment) {
             startBoardTopicActivity(item);
         }
     }
 
-
     public void startBoardTopicActivity(Board board) {
         Intent intent = new Intent(this, BoardTopicActivity.class);
-        intent.putExtra(SMTHApplication.BOARD_OBJECT, (Parcelable)board);
+        intent.putExtra(SMTHApplication.BOARD_OBJECT, (Parcelable) board);
         startActivity(intent);
+    }
+
+    class PendingDoubleBackToExit implements Runnable {
+        public void run() {
+            mDoubleBackToExit = false;
+        }
     }
 
 }
