@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -43,8 +42,6 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
 
     private final String TAG = "HotTopicFragment";
 
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    private int mColumnCount = 1;
     private OnTopicFragmentInteractionListener mListener;
 
     private RecyclerView mRecyclerView = null;
@@ -57,22 +54,11 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
     public HotTopicFragment() {
     }
 
-    @SuppressWarnings("unused")
-    public static HotTopicFragment newInstance(int columnCount) {
-        HotTopicFragment fragment = new HotTopicFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
     }
 
     @Override
@@ -95,11 +81,7 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
         if (mRecyclerView != null) {
             mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
             Context context = rootView.getContext();
-            if (mColumnCount <= 1) {
-                mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
             mRecyclerView.setAdapter(new HotTopicRecyclerViewAdapter(TopicListContent.HOT_TOPICS, mListener));
         }
@@ -110,11 +92,6 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
             RefreshGuidance();
         }
         return rootView;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -143,13 +120,10 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
     public void RefreshGuidance() {
         // called by onCreate & refresh menu item
         showLoadingHints();
-        RefreshGuidanceFromMobile();
+        RefreshGuidanceFromWWW();
     }
 
-//    final String[] SectionName = {"十大", "推荐", "国内院校", "休闲娱乐", "五湖四海", "游戏运动", "社会信息", "知性感性", "文化人文", "学术科学", "电脑技术"};
-//    final String[] SectionURLPath = {"topTen", "recommend", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
-
-    public void RefreshGuidanceFromMobile() {
+    public void RefreshGuidanceFromWWW() {
         final SMTHHelper helper = SMTHHelper.getInstance();
 
         helper.wService.getAllHotTopics()
@@ -171,8 +145,6 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
                 .subscribe(new Subscriber<Topic>() {
                     @Override
                     public void onStart() {
-                        super.onStart();
-
                         // clearHotTopics current hot topics
                         TopicListContent.clearHotTopics();
                         mRecyclerView.getAdapter().notifyDataSetChanged();
@@ -185,9 +157,6 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
                         mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.HOT_TOPICS.size() - 1);
 
                         clearLoadingHints();
-
-                        // show finish toast
-//                        Toast.makeText(getActivity(), "刷新完成!", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -200,13 +169,11 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
 
                     @Override
                     public void onNext(Topic topic) {
-                        Log.d(TAG, topic.toString());
+//                        Log.d(TAG, topic.toString());
                         TopicListContent.addHotTopic(topic);
                         mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.HOT_TOPICS.size() - 1);
                     }
                 });
-
-
     }
 
 
@@ -234,10 +201,8 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
     public boolean onVolumeUpDown(int keyCode) {
         if(keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
             RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, keyCode);
-//            Toast.makeText(SMTHApplication.getAppContext(), "Volume UP, to scroll up", Toast.LENGTH_SHORT).show();
         } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
             RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, keyCode);
-//            Toast.makeText(SMTHApplication.getAppContext(), "Volume down, to scroll down", Toast.LENGTH_SHORT).show();
         }
         return true;
     }

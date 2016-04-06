@@ -3,7 +3,6 @@ package com.zfdang.zsmth_android;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -34,8 +33,6 @@ import rx.schedulers.Schedulers;
 public class FavoriteBoardFragment extends Fragment {
 
     private final String TAG = "FavoriteBoardFragment";
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    private int mColumnCount = 1;
     private OnBoardFragmentInteractionListener mListener;
 
     private RecyclerView mRecyclerView = null;
@@ -82,23 +79,9 @@ public class FavoriteBoardFragment extends Fragment {
     public FavoriteBoardFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
-    public static FavoriteBoardFragment newInstance(int columnCount) {
-        FavoriteBoardFragment fragment = new FavoriteBoardFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
 
         // set the initial favorite path chain
         mFavoritePaths = new ArrayList<String>();
@@ -117,11 +100,7 @@ public class FavoriteBoardFragment extends Fragment {
 //            http://stackoverflow.com/questions/28713231/recyclerview-item-separator
             mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
             Context context = mRecyclerView.getContext();
-            if (mColumnCount <= 1) {
-                mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
             mRecyclerView.setAdapter(new BoardRecyclerViewAdapter(BoardListContent.FAVORITE_BOARDS, mListener));
         }
 
