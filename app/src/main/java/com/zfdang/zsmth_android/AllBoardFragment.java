@@ -41,7 +41,8 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
     private SearchView mSearchView = null;
     private QueryTextListner mQueryListner = null;
 
-    private OnBoardFragmentInteractionListener mListener;
+    private OnBoardFragmentInteractionListener mListener = null;
+    private BoardRecyclerViewAdapter mAdapter = null;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -65,20 +66,26 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         Context context = view.getContext();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        mRecyclerView.setAdapter(new BoardRecyclerViewAdapter(BoardListContent.ALL_BOARDS, mListener));
+        if(mAdapter == null) {
+            // this is very important, we only create adapter on the first time.
+            // otherwise, BoardListContent.ALL_BOARDS might be filtered result already
+            mAdapter = new BoardRecyclerViewAdapter(BoardListContent.ALL_BOARDS, mListener);
+        }
+        mRecyclerView.setAdapter(mAdapter);
 
         mSearchView = (SearchView) view.findViewById(R.id.all_board_search);
         mSearchView.setIconifiedByDefault(false);
-        if (mQueryListner == null) {
+
+        if(mQueryListner == null) {
             mQueryListner = new QueryTextListner((BoardRecyclerViewAdapter) mRecyclerView.getAdapter());
-            mSearchView.setOnQueryTextListener(mQueryListner);
         }
+        mSearchView.setOnQueryTextListener(mQueryListner);
 
         // set focus to recyclerview
         mRecyclerView.requestFocus();
 
         if (BoardListContent.ALL_BOARDS.size() == 0) {
-            // only load boards on the first time
+            // only load boards on the first timer
             LoadAllBoards();
         }
 
