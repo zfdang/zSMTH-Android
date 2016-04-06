@@ -299,9 +299,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void quitNow() {
-//        finish();
-//        android.os.Process.killProcess(android.os.Process.myPid());
-        System.exit(0);
+        finish();
+        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
     /**
