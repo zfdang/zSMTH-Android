@@ -19,6 +19,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -232,18 +233,28 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem login = menu.findItem(R.id.main_action_login);
+        MenuItem logout = menu.findItem(R.id.main_action_logout);
+        if(SMTHApplication.isValidUser()){
+            login.setVisible(false);
+            logout.setVisible(true);
+        } else {
+            login.setVisible(true);
+            logout.setVisible(false);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
     // update header view in navigation header
     public void UpdateNavigationViewHeader() {
-        // update username & avatar
-        if(SMTHApplication.activeUser == null) {
-            Log.d(TAG, "UpdateNavigationViewHeader: " + "active user is NULL");
-            return;
-        }
+        // update optionMenu
+        getWindow().invalidatePanelMenu(Window.FEATURE_OPTIONS_PANEL);
 
-        String userid = SMTHApplication.activeUser.getId();
-        if (userid != null && !userid.equals("guest")) {
+        if (SMTHApplication.isValidUser()) {
             // update user to login user
-            mUsername.setText(userid);
+            mUsername.setText(SMTHApplication.activeUser.getId());
             Glide.with(MainActivity.this)
                     .load(SMTHApplication.activeUser.getFace_url())
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
@@ -372,17 +383,24 @@ public class MainActivity extends AppCompatActivity
             return true;
         } else if (id == R.id.main_action_switch_theme) {
             Toast.makeText(MainActivity.this, "main_action_switch_theme", Toast.LENGTH_SHORT).show();
+            return true;
         } else if (id == R.id.main_action_login) {
-            Toast.makeText(MainActivity.this, "main_action_login", Toast.LENGTH_SHORT).show();
-
+            onLogin();
+            return true;
         } else if (id == R.id.main_action_logout) {
             onLogout();
+            return true;
         } else if (id == android.R.id.home) {
             this.onBackPressed();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivityForResult(intent, MAIN_ACTIVITY_REQUEST_CODE);
     }
 
     public void onLogout() {
@@ -468,8 +486,7 @@ public class MainActivity extends AppCompatActivity
                 intent.putExtra(SMTHApplication.QUERY_USER_INFO, SMTHApplication.activeUser.getId());
                 startActivity(intent);
             } else {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivityForResult(intent, MAIN_ACTIVITY_REQUEST_CODE);
+                onLogin();
             }
         }
     }

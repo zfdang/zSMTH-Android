@@ -32,6 +32,14 @@ public class SMTHApplication extends Application {
     // IP database
     public static GEODatabase geoDB;
 
+    public static boolean isValidUser() {
+        if(activeUser != null && !activeUser.getId().equals("guest")){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // current logined user
     public static UserStatus activeUser;
 
