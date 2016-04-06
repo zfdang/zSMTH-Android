@@ -51,14 +51,14 @@ public class Settings {
 
 
     private static final String AUTO_LOGIN = "auto_login";
-    private boolean mAutoLogin;
+    private boolean bAutoLogin;
     public boolean isAutoLogin() {
-        return mAutoLogin;
+        return bAutoLogin;
     }
     public void setAutoLogin(boolean mAutoLogin) {
-        if(this.mAutoLogin != mAutoLogin) {
-            this.mAutoLogin = mAutoLogin;
-            mEditor.putBoolean(AUTO_LOGIN, this.mAutoLogin);
+        if(this.bAutoLogin != mAutoLogin) {
+            this.bAutoLogin = mAutoLogin;
+            mEditor.putBoolean(AUTO_LOGIN, this.bAutoLogin);
             mEditor.commit();
         }
     }
@@ -73,6 +73,23 @@ public class Settings {
         if(this.bLastLoginSuccess != bLastLoginSuccess) {
             this.bLastLoginSuccess = bLastLoginSuccess;
             mEditor.putBoolean(LAST_LOGIN_SUCCESS, this.bLastLoginSuccess);
+            mEditor.commit();
+        }
+    }
+
+
+    // after user init login action, set online = true;
+    // after user init logout action, set online = false;
+    // this value will impact autoLogin behaviour of service
+    private static final String USER_ONLINE = "user_online";
+    private boolean bUserOnline;
+    public boolean isUserOnline() {
+        return bUserOnline;
+    }
+    public void setUserOnline(boolean bUserOnline) {
+        if(this.bUserOnline != bUserOnline) {
+            this.bUserOnline = bUserOnline;
+            mEditor.putBoolean(USER_ONLINE, this.bUserOnline);
             mEditor.commit();
         }
     }
@@ -126,7 +143,10 @@ public class Settings {
         mShowSticky = mPreference.getBoolean(SHOW_STICKY_TOPIC, false);
         mUsername = mPreference.getString(USERNAME_KEY, "");
         mPassword = mPreference.getString(PASSWORD_KEY, "");
+        bAutoLogin = mPreference.getBoolean(AUTO_LOGIN, true);
 
         bLastLoginSuccess = mPreference.getBoolean(LAST_LOGIN_SUCCESS, false);
+
+        bUserOnline = mPreference.getBoolean(USER_ONLINE, false);
     }
 }

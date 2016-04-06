@@ -34,10 +34,16 @@ import com.zfdang.zsmth_android.listeners.OnVolumeUpDownListener;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.Topic;
+import com.zfdang.zsmth_android.newsmth.AjaxResponse;
+import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.services.MaintainUserStatusService;
 import com.zfdang.zsmth_android.services.UserStatusReceiver;
 
 import java.lang.reflect.Field;
+
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -139,7 +145,17 @@ public class MainActivity extends AppCompatActivity
 
         // start service to maintain user status
         setupUserStatusReceiver();
+        updateUserStatusNow();
+
+        // schedule the periodical run
         MaintainUserStatusService.schedule(MainActivity.this, mReceiver);
+    }
+
+    private void updateUserStatusNow() {
+        // triger the background service right now
+        Intent intent = new Intent(this, MaintainUserStatusService.class);
+        intent.putExtra(SMTHApplication.USER_SERVICE_RECEIVER, mReceiver);
+        startService(intent);
     }
 
     private void setupUserStatusReceiver() {
@@ -211,7 +227,7 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == MAIN_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                UpdateNavigationViewHeader();
+                updateUserStatusNow();
             }
         }
     }
@@ -356,19 +372,47 @@ public class MainActivity extends AppCompatActivity
             return true;
         } else if (id == R.id.main_action_switch_theme) {
             Toast.makeText(MainActivity.this, "main_action_switch_theme", Toast.LENGTH_SHORT).show();
-
         } else if (id == R.id.main_action_login) {
             Toast.makeText(MainActivity.this, "main_action_login", Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.main_action_logout) {
-            Toast.makeText(MainActivity.this, "main_action_logout", Toast.LENGTH_SHORT).show();
-
+            onLogout();
         } else if (id == android.R.id.home) {
             this.onBackPressed();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onLogout() {
+        Settings.getInstance().setUserOnline(false);
+        if(SMTHApplication.activeUser != null) {
+            SMTHApplication.activeUser.setId("guest");
+        }
+        UpdateNavigationViewHeader();
+
+        SMTHHelper helper = SMTHHelper.getInstance();
+        helper.wService.logout()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<AjaxResponse>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(TAG, "onError: " + Log.getStackTraceString(e));
+                    }
+
+                    @Override
+                    public void onNext(AjaxResponse ajaxResponse) {
+                        Log.d(TAG, "onNext: " + ajaxResponse.toString());
+                        Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -419,7 +463,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_user_avatar || id == R.id.nav_user_name) {
             // 点击图标或者文字，都弹出登录对话框或者profiel对话框
             mDrawer.closeDrawer(GravityCompat.START);
-            if(SMTHApplication.activeUser != null && SMTHApplication.activeUser.is_login()) {
+            if(SMTHApplication.activeUser != null && !SMTHApplication.activeUser.getId().equals("guest")) {
                 Intent intent = new Intent(this, QueryUserActivity.class);
                 intent.putExtra(SMTHApplication.QUERY_USER_INFO, SMTHApplication.activeUser.getId());
                 startActivity(intent);

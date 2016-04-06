@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +34,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
     private EditText m_userNameEditText;
     private EditText m_passwordEditText;
+    private CheckBox mAutoLogin;
 
     private ProgressDialog pdialog = null;
     private final String TAG = "LoginActivity";
@@ -43,13 +45,18 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         setContentView(R.layout.activity_login);
 
         // these two variables should be loaded from preference
-        String username = Settings.getInstance().getUsername();
-        String password =  Settings.getInstance().getPassword();
+        Settings setting = Settings.getInstance();
+        String username = setting.getUsername();
+        String password =  setting.getPassword();
+        boolean autologin = setting.isAutoLogin();
 
         m_userNameEditText = (EditText) findViewById(R.id.username_edit);
         m_userNameEditText.setText(username);
         m_passwordEditText = (EditText) findViewById(R.id.password_edit);
         m_passwordEditText.setText(password);
+
+        mAutoLogin = (CheckBox) findViewById(R.id.auto_login);
+        mAutoLogin.setChecked(autologin);
 
         TextView registerLink = (TextView) findViewById(R.id.register_link);
         registerLink.setMovementMethod(LinkMovementMethod.getInstance());
@@ -97,8 +104,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 // There was an error; don't attempt login and focus the first
                 // form field with an error.
                 focusView.requestFocus();
-                return;
             } else {
+                Settings.getInstance().setAutoLogin(mAutoLogin.isChecked());
                 Settings.getInstance().setLastLoginSuccess(false);
                 attemptLoginFromWWW(username, password);
             }
@@ -111,6 +118,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         showProgress(true);
 
         Log.d(TAG, "start login now...");
+        // use attempt to login, so set userOnline = true
+        Settings.getInstance().setUserOnline(true);
 
         // RxJava & Retrofit: VERY VERY good article
         // http://gank.io/post/560e15be2dca930e00da1083
@@ -165,7 +174,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                                 Settings.getInstance().setLastLoginSuccess(true);
 
                                 Intent resultIntent = new Intent();
-                                resultIntent.putExtra("username", username);
                                 setResult(Activity.RESULT_OK, resultIntent);
                                 finish();
                                 break;

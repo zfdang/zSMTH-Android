@@ -46,8 +46,9 @@ public class MaintainUserStatusService extends IntentService {
         final PendingIntent pIntent = PendingIntent.getService(context, MaintainUserStatusService.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        // run it immediate, and repeat in 3 minutes
-        alarm.setRepeating(AlarmManager.RTC_WAKEUP, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES / 5, pIntent);
+        // run it in 5 seconds, and repeat in 3 minutes
+        long firstMillis = System.currentTimeMillis() + 5000;
+        alarm.setRepeating(AlarmManager.RTC, firstMillis, AlarmManager.INTERVAL_FIFTEEN_MINUTES / 15, pIntent);
     }
 
     public static void unschedule(Context context) {
@@ -105,10 +106,10 @@ public class MaintainUserStatusService extends IntentService {
                         String password = setting.getPassword();
                         boolean bAutoLogin = setting.isAutoLogin();
                         boolean bLastSuccess = setting.isLastLoginSuccess();
+                        boolean bUserOnline = setting.isUserOnline();
                         boolean bLoginSuccess = false;
-                        Log.d(TAG, "call: " + String.format("Autologin: %b, LastSuccess: %b", bAutoLogin, bLastSuccess));
-//                        if (bAutoLogin && bLastSuccess) {
-                        if (bLastSuccess) {
+                        Log.d(TAG, "call: " + String.format("Autologin: %b, LastSuccess: %b, Online: %b", bAutoLogin, bLastSuccess, bUserOnline));
+                        if (bAutoLogin && bLastSuccess && bUserOnline) {
                             List<Integer> results = helper.wService.loginWithKick(username, password, "on")
                                     .map(new Func1<ResponseBody, Integer>() {
                                         @Override
@@ -200,7 +201,7 @@ public class MaintainUserStatusService extends IntentService {
                         String userid = userStatus.getId();
                         if (SMTHApplication.activeUser == null || !userid.equals(SMTHApplication.activeUser.getId())) {
                             // different user
-                            Log.d(TAG, "onNext: " + "4.1 different user, send notification: " );
+                            Log.d(TAG, "onNext: " + "4.1 different user, send notification: ");
                             SMTHApplication.activeUser = userStatus;
 
                             // send  notification to receiver

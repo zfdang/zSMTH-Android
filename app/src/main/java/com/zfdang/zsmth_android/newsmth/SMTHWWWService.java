@@ -25,6 +25,11 @@ public interface SMTHWWWService {
     @POST("/bbslogin.php")
     Observable<ResponseBody> loginWithKick(@Field("id") String username, @Field("passwd") String password, @Field("kick_multi") String kickID);
 
+    // {"ajax_st":1,"ajax_code":"0005","ajax_msg":"操作成功"}
+    @Headers("X-Requested-With:XMLHttpRequest")
+    @GET("/nForum/user/ajax_logout.json")
+    Observable<AjaxResponse> logout();
+
     @GET("/bbsfav.php")
     Observable<ResponseBody> getFavoriteByPath(@Query("select") String path);
 
