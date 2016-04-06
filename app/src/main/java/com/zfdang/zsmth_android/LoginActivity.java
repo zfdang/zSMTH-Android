@@ -20,9 +20,8 @@ import android.widget.Toast;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
 import okhttp3.ResponseBody;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
-import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -133,33 +132,31 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                             // 1. 用户密码错误，请重新登录
                             // 2. 登录过于频繁
                             // 3. unknown reason
-                            Log.d(TAG, resp);
-
-                            if (resp.contains("window.location.href")) {
-                                Log.d(TAG, "login successfully, redirect to mainframe");
-                                return 0;
-                            } else if (resp.contains("用户密码错误，请重新登录")) {
-                                return 1;
-                            } else if(resp.contains("登录过于频繁")){
-                                // successful login, user is redirected to frames.html
-                                return 2;
-                            }
-                            return 3;
+                            return SMTHHelper.parseResultOfLoginFromWWW(resp);
                         } catch (Exception e) {
-                            Log.d(TAG, e.toString());
+                            Log.d(TAG, "call: " + Log.getStackTraceString(e));
                             return 3;
                         }
                     }
                 })
-                        // 自动创建 Subscriber ，并使用 onNextAction、 onErrorAction 和 onCompletedAction 来定义 onNext()、 onError() 和 onCompleted()
-                        // observable.subscribe(onNextAction, onErrorAction, onCompletedAction);
-                .subscribe(new Action1<Integer>() {
-                    // onNextAction
+                .subscribe(new Subscriber<Integer>() {
                     @Override
-                    public void call(Integer code) {
+                    public void onCompleted() {
+                        Log.d(TAG, "onCompleted: ");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(TAG, "call: " + Log.getStackTraceString(e));
                         showProgress(false);
-                        switch (code) {
-                            case 0:
+                        Toast.makeText(getApplicationContext(), "连接错误，请检查网络.", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onNext(Integer integer) {
+                        showProgress(false);
+                        switch (integer) {
+                            case SMTHHelper.LOGIN_RESULT_OK:
                                 Toast.makeText(getApplicationContext(), "登录成功!", Toast.LENGTH_SHORT).show();
 
                                 // save username & passworld
@@ -172,30 +169,16 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                                 setResult(Activity.RESULT_OK, resultIntent);
                                 finish();
                                 break;
-                            case 1:
+                            case SMTHHelper.LOGIN_RESULT_FAILED:
                                 Toast.makeText(getApplicationContext(), "您的用户名并不存在，或者您的密码错误!", Toast.LENGTH_LONG).show();
                                 break;
-                            case 2:
+                            case SMTHHelper.LOGIN_RESULT_TOO_FREQUENT:
                                 Toast.makeText(getApplicationContext(), "请勿频繁登录", Toast.LENGTH_LONG).show();
                                 break;
-                            case 3:
+                            case SMTHHelper.LOGIN_RESULT_UNKNOWN:
                                 Toast.makeText(getApplicationContext(), "未知错误，请稍后重试...", Toast.LENGTH_LONG).show();
                                 break;
                         }
-                    }
-                }, new Action1<Throwable>() {
-                    // onErrorAction
-                    @Override
-                    public void call(Throwable throwable) {
-                        Log.d(TAG, throwable.toString());
-                        showProgress(false);
-                        Toast.makeText(getApplicationContext(), "连接错误，请检查网络.", Toast.LENGTH_LONG).show();
-                    }
-                }, new Action0() {
-                    // onCompletedAction
-                    @Override
-                    public void call() {
-                        Log.d(TAG, "Completed");
                     }
                 });
     }

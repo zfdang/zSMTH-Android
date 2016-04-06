@@ -73,6 +73,11 @@ public class SMTHHelper {
     static private final String ALL_BOARD_CACHE_FILE = "SMTH_ALL_BOARDS_CACHE";
     static private final String FAVORITE_BOARD_CACHE_PREFIX = "SMTH_FAVORITE_CACHE";
 
+    public static final int LOGIN_RESULT_OK = 0;
+    public static final int LOGIN_RESULT_FAILED = 1;
+    public static final int LOGIN_RESULT_TOO_FREQUENT = 2;
+    public static final int LOGIN_RESULT_UNKNOWN = 3;
+
     // singleton
     private static SMTHHelper instance = null;
 
@@ -276,6 +281,20 @@ public class SMTHHelper {
         }
 
         return results;
+    }
+
+    // parse login result from WWW2
+    public static int parseResultOfLoginFromWWW(String resp) {
+        if (resp.contains("window.location.href")) {
+            Log.d(TAG, "login successfully, redirect to mainframe");
+            return LOGIN_RESULT_OK;
+        } else if (resp.contains("用户密码错误，请重新登录")) {
+            return LOGIN_RESULT_FAILED;
+        } else if(resp.contains("登录过于频繁")){
+            // successful login, user is redirected to frames.html
+            return LOGIN_RESULT_TOO_FREQUENT;
+        }
+        return LOGIN_RESULT_UNKNOWN;
     }
 
     // called by ParsePostListFromWWW

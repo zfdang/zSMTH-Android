@@ -34,16 +34,10 @@ import com.zfdang.zsmth_android.listeners.OnVolumeUpDownListener;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.Topic;
-import com.zfdang.zsmth_android.newsmth.SMTHHelper;
-import com.zfdang.zsmth_android.newsmth.UserStatus;
 import com.zfdang.zsmth_android.services.MaintainUserStatusService;
 import com.zfdang.zsmth_android.services.UserStatusReceiver;
 
 import java.lang.reflect.Field;
-
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -154,8 +148,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onReceiveResult(int resultCode, Bundle resultData) {
                 if(resultCode == RESULT_OK) {
-                    String resultValue = resultData.getString("resultValue");
-                    Toast.makeText(MainActivity.this, resultValue, Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onReceiveResult: " + "to update navigationview" + SMTHApplication.activeUser.toString());
+                    UpdateNavigationViewHeader();
                 }
             }
         });
@@ -224,40 +218,27 @@ public class MainActivity extends AppCompatActivity
 
     // update header view in navigation header
     public void UpdateNavigationViewHeader() {
-        SMTHHelper helper = SMTHHelper.getInstance();
-        helper.queryActiveUserStatus()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<UserStatus>() {
-                    @Override
-                    public void onCompleted() {
+        // update username & avatar
+        if(SMTHApplication.activeUser == null) {
+            Log.d(TAG, "UpdateNavigationViewHeader: " + "active user is NULL");
+            return;
+        }
 
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.d(TAG, "onError: " + Log.getStackTraceString(e));
-                    }
-
-                    @Override
-                    public void onNext(UserStatus userStatus) {
-                        Log.d(TAG, "onNext: " + userStatus.toString());
-
-                        String userid = userStatus.getId();
-                        if (userid != null && !userid.equals("guest")) {
-                            mUsername.setText(userid);
-                            Glide.with(MainActivity.this)
-                                    .load(userStatus.getFace_url())
-                                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                                    .fitCenter()
-                                    .crossFade()
-                                    .into(mAvatar);
-                        } else {
-                            Toast.makeText(MainActivity.this, "未登录!", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
+        String userid = SMTHApplication.activeUser.getId();
+        if (userid != null && !userid.equals("guest")) {
+            // update user to login user
+            mUsername.setText(userid);
+            Glide.with(MainActivity.this)
+                    .load(SMTHApplication.activeUser.getFace_url())
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .fitCenter()
+                    .crossFade()
+                    .into(mAvatar);
+        } else {
+            // only user to guest
+            mUsername.setText(getString(R.string.nav_header_click_to_login));
+            mAvatar.setImageResource(R.drawable.ic_person_black_48dp);
+        }
     }
 
     @Override
@@ -320,8 +301,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void quitNow() {
+        // stop background service
+        MaintainUserStatusService.unschedule(MainActivity.this);
+
+        // quit
         finish();
         android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(0);
     }
 
     /**
@@ -413,7 +399,7 @@ public class MainActivity extends AppCompatActivity
             fragment = aboutFragment;
             title = "关于";
         } else if(id == R.id.nav_test) {
-            MaintainUserStatusService.unschedule(MainActivity.this);
+
         }
 
         // switch fragment
@@ -431,10 +417,16 @@ public class MainActivity extends AppCompatActivity
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.nav_user_avatar || id == R.id.nav_user_name) {
-            // 点击图标或者文字，都弹出登录对话框
+            // 点击图标或者文字，都弹出登录对话框或者profiel对话框
             mDrawer.closeDrawer(GravityCompat.START);
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivityForResult(intent, MAIN_ACTIVITY_REQUEST_CODE);
+            if(SMTHApplication.activeUser != null && SMTHApplication.activeUser.is_login()) {
+                Intent intent = new Intent(this, QueryUserActivity.class);
+                intent.putExtra(SMTHApplication.QUERY_USER_INFO, SMTHApplication.activeUser.getId());
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivityForResult(intent, MAIN_ACTIVITY_REQUEST_CODE);
+            }
         }
     }
 

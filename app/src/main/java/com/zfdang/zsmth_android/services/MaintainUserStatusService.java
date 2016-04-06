@@ -8,11 +8,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.ResultReceiver;
+import android.util.Log;
 
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.Settings;
+import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+import com.zfdang.zsmth_android.newsmth.UserInfo;
+import com.zfdang.zsmth_android.newsmth.UserStatus;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.List;
+
+import okhttp3.ResponseBody;
+import rx.Subscriber;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * check login status, if not logined, login automatically if possible
@@ -28,32 +37,6 @@ public class MaintainUserStatusService extends IntentService {
         super(Service_Name);
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        // If a Context object is needed, call getApplicationContext() here.
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onHandleIntent(Intent intent) {
-        // This describes what will happen when service is triggered
-
-        ResultReceiver receiver = intent.getParcelableExtra(SMTHApplication.USER_SERVICE_RECEIVER);
-        if(receiver != null) {
-            Bundle bundle = new Bundle();
-            bundle.putString("resultValue", "My Result Value. Passed in: ");
-            // Here we call send passing a resultCode and the bundle of extras
-            receiver.send(Activity.RESULT_OK, bundle);
-        }
-    }
-
-
-    // this service can be scheduled as periodical service, call the following two methods to achieve this
     public static void schedule(Context context, UserStatusReceiver receiver) {
         // Construct an intent that will execute the AlarmReceiver
         Intent intent = new Intent(context, MaintainUserStatusService.class);
@@ -61,14 +44,10 @@ public class MaintainUserStatusService extends IntentService {
 
         // Create a PendingIntent to be triggered when the alarm goes off
         final PendingIntent pIntent = PendingIntent.getService(context, MaintainUserStatusService.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        // trigger the first alarm in 5 seconds
-        Calendar c = new GregorianCalendar();
-        c.add(Calendar.SECOND, 5);
-        long firstMillis = c.getTimeInMillis();
 
         AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         // run it immediate, and repeat in 3 minutes
-        alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis, AlarmManager.INTERVAL_FIFTEEN_MINUTES / 15, pIntent);
+        alarm.setRepeating(AlarmManager.RTC_WAKEUP, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES / 5, pIntent);
     }
 
     public static void unschedule(Context context) {
@@ -76,6 +55,168 @@ public class MaintainUserStatusService extends IntentService {
         final PendingIntent pIntent = PendingIntent.getService(context, MaintainUserStatusService.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarm.cancel(pIntent);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        // If a Context object is needed, call getApplicationContext() here.
+    }
+
+
+    // this service can be scheduled as periodical service, call the following two methods to achieve this
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onHandleIntent(final Intent intent) {
+        // This describes what will happen when service is triggered
+        // process here:
+        // 1. get user status
+        // 2.1 if it's not guest, go to step 3
+        // 2.2 if it's guest, login;
+        // 2.2.1 if login success, get user status (2.2.1.1) again. go to step 3
+        // 2.2.2 if login failed, go to step 3
+        // 3. check whether user status == SMTHApplication.activeUser
+        // 3.1 if they are same, just return SMTHApplication.activeUser
+        // 3.2 if not, get real face URL
+        // 4. if user status is a different user, send notification to receiver to update navigationView
+
+        final SMTHHelper helper = SMTHHelper.getInstance();
+        Log.d(TAG, "onHandleIntent: 1. Get Current User Status");
+        helper.wService.queryActiveUserStatus()
+                .map(new Func1<UserStatus, UserStatus>() {
+                    // check it's logined user, or guest
+                    @Override
+                    public UserStatus call(UserStatus userStatus) {
+                        if (userStatus != null && userStatus.getId() != null && !userStatus.getId().equals("guest")) {
+                            // logined user, just return the status for next step
+                            Log.d(TAG, "call: 2.1 logined user: " + userStatus.getId());
+                            return userStatus;
+                        }
+
+                        // login first
+                        Log.d(TAG, "call: " + "2.2 try to login now..");
+                        final Settings setting = Settings.getInstance();
+                        String username = setting.getUsername();
+                        String password = setting.getPassword();
+                        boolean bAutoLogin = setting.isAutoLogin();
+                        boolean bLastSuccess = setting.isLastLoginSuccess();
+                        boolean bLoginSuccess = false;
+                        Log.d(TAG, "call: " + String.format("Autologin: %b, LastSuccess: %b", bAutoLogin, bLastSuccess));
+//                        if (bAutoLogin && bLastSuccess) {
+                        if (bLastSuccess) {
+                            List<Integer> results = helper.wService.loginWithKick(username, password, "on")
+                                    .map(new Func1<ResponseBody, Integer>() {
+                                        @Override
+                                        public Integer call(ResponseBody response) { // 参数类型 String
+                                            try {
+                                                String resp = SMTHHelper.DecodeResponseFromWWW(response.bytes());
+                                                // 0. 登陆成功
+                                                // 1. 用户密码错误，请重新登录
+                                                // 2. 登录过于频繁
+                                                // 3. unknown reason
+                                                Log.d(TAG, resp);
+                                                return SMTHHelper.parseResultOfLoginFromWWW(resp);
+                                            } catch (Exception e) {
+                                                Log.d(TAG, "call: " + Log.getStackTraceString(e));
+                                                return 3;
+                                            }
+                                        }
+                                    })
+                                    .toList().toBlocking().single();
+
+                            if (results != null && results.size() == 1) {
+                                int result = results.get(0);
+                                if (result == SMTHHelper.LOGIN_RESULT_OK) {
+                                    // set flag, so that we will query user status again
+                                    Log.d(TAG, "call: 2.2.1. Login success");
+                                    bLoginSuccess = true;
+                                } else if (result == SMTHHelper.LOGIN_RESULT_FAILED) {
+                                    // set flag, so that we will not login again next time
+                                    Log.d(TAG, "call: 2.2.2. Login failed");
+                                    setting.setLastLoginSuccess(false);
+                                }
+                            }
+
+                        } // if (bAutoLogin && bLastSuccess)
+
+                        // try to find new UserStatus only when login success
+                        if (bLoginSuccess) {
+                            Log.d(TAG, "call: " + "2.2.1.1 try to get userstatus again");
+                            List<UserStatus> stats = helper.queryActiveUserStatus().toList().toBlocking().single();
+                            if (stats != null && stats.size() == 1) {
+                                return stats.get(0);
+                            }
+                            return null;
+                        } else {
+                            return userStatus;
+                        }
+                    }
+                })
+                .map(new Func1<UserStatus, UserStatus>() {
+                         // try to find user's real faceurl
+                         @Override
+                         public UserStatus call(UserStatus userStatus) {
+                             String userid = userStatus.getId();
+                             if(userid != null && SMTHApplication.activeUser != null && userid.equals(SMTHApplication.activeUser.getId())) {
+                                 // current user is already cached in SMTHApplication
+                                 Log.d(TAG, "call: " + "3.1 New user is the same with cached user");
+                                 return SMTHApplication.activeUser;
+                             }
+
+                             if (userid != null && !userid.equals("guest")) {
+                                 // get correct faceURL
+                                 Log.d(TAG, "call: " + "3.2 New user is different, try to get real face URL");
+                                 List<UserInfo> users = helper.wService.queryUserInformation(userid).toList().toBlocking().single();
+                                 if (users.size() == 1) {
+                                     UserInfo user = users.get(0);
+                                     userStatus.setFace_url(user.getFace_url());
+                                 }
+                             }
+                             return userStatus;
+                         }
+                     }
+                )
+                .observeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<UserStatus>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(TAG, "onError: " + Log.getStackTraceString(e));
+                    }
+
+                    @Override
+                    public void onNext(UserStatus userStatus) {
+                        if (userStatus == null || userStatus.getId() == null) return;
+
+                        String userid = userStatus.getId();
+                        if (SMTHApplication.activeUser == null || !userid.equals(SMTHApplication.activeUser.getId())) {
+                            // different user
+                            Log.d(TAG, "onNext: " + "4.1 different user, send notification: " );
+                            SMTHApplication.activeUser = userStatus;
+
+                            // send  notification to receiver
+                            ResultReceiver receiver = intent.getParcelableExtra(SMTHApplication.USER_SERVICE_RECEIVER);
+                            if (receiver != null) {
+                                Bundle bundle = new Bundle();
+                                // Here we call send passing a resultCode and the bundle of extras
+                                receiver.send(Activity.RESULT_OK, bundle);
+                            }
+                        } else {
+                            Log.d(TAG, "onNext: " + "4.2 Same user, skip notification!");
+                        }
+
+                    }
+                } // new Subscriber<UserStatus>()
+                ); // .subscribe
     }
 
 

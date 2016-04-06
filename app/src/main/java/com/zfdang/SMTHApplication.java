@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.zfdang.zsmth_android.helpers.GEODatabase;
+import com.zfdang.zsmth_android.newsmth.UserStatus;
 
 /**
  * Created by zfdang on 2016-3-18.
@@ -30,6 +31,9 @@ public class SMTHApplication extends Application {
 
     // IP database
     public static GEODatabase geoDB;
+
+    // current logined user
+    public static UserStatus activeUser;
 
     public void onCreate() {
         super.onCreate();
