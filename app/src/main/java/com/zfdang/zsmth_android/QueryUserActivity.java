@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.newsmth.UserInfo;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
@@ -180,7 +181,7 @@ public class QueryUserActivity extends AppCompatActivity {
                         mUserLife.setText(user.getLifeDesc());
                         mUserScore.setText(user.getScore_user());
                         mUserLogintime.setText(user.getLast_login_time());
-                        mUserLoginip.setText(user.getLast_login_ip());
+                        mUserLoginip.setText(StringUtils.lookupIPLocationInProfile(user.getLast_login_ip()));
                         mUserCurrentstatus.setText(user.getStatus());
 
                         if(user.getFace_url() != null && user.getFace_url().length() > 10) {

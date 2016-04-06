@@ -66,6 +66,21 @@ public class StringUtils {
         return content;
     }
 
+    public static String lookupIPLocationInProfile(String content) {
+        Pattern myipPattern = Pattern.compile("(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.)[\\d\\*]+");
+        Matcher myipMatcher = myipPattern.matcher(content);
+        while (myipMatcher.find()) {
+            String ipl = myipMatcher.group(1);
+            if (ipl.length() > 5) {
+                ipl = "$1\\*(" + SMTHApplication.geoDB.getLocation(ipl + "1") + ")";
+            } else {
+                ipl = "$1\\*";
+            }
+            content = myipMatcher.replaceAll(ipl);
+        }
+        return content;
+    }
+
 
     public static boolean isEmptyString(String content){
         // non-empty if it's long enough

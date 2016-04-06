@@ -110,7 +110,7 @@ public class UserInfo implements Parcelable {
     public String getGender() {
         if("f".equals(this.gender)) {
             return "女生";
-        } else if("m".equals(this.gender) || "n".equals(this.gender)){
+        } else if("m".equals(this.gender)) {
             return "男生";
         } else {
             return "未知";

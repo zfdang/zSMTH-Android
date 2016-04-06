@@ -17,15 +17,16 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <com.makeramen.roundedimageview.RoundedImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/nav_user_avatar"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:paddingTop="@dimen/nav_header_avatar_padding_top"
             android:src="@drawable/ic_person_black_48dp"
-            app:civ_border_width="2dp"
-            app:civ_border_color="@color/colorIcons"
+            app:riv_corner_radius="30dip"
+            app:riv_border_width="2dip"
+            app:riv_border_color="@color/colorIcons"
             android:layout_gravity="bottom|center_horizontal"/>
 
         <TextView

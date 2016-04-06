@@ -16,7 +16,9 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -48,13 +50,18 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp">
 
-            <ImageView
+            <com.makeramen.roundedimageview.RoundedImageView
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:layout_margin="5dp"
+                android:layout_margin="10dp"
                 android:id="@+id/imageView"
+                app:riv_corner_radius="30dip"
+                app:riv_border_width="2dip"
+                app:riv_border_color="@color/colorIcons"
                 android:src="@drawable/ic_account_circle_black_48dp"/>
 
             <TableLayout
@@ -65,8 +72,8 @@
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginBottom="1dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
                     android:layout_height="match_parent">
 
                     <TextView
@@ -84,8 +91,8 @@
                 </TableRow>
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginBottom="1dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
                     android:layout_height="match_parent">
 
                     <TextView
@@ -103,8 +110,8 @@
                 </TableRow>
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginBottom="1dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
                     android:layout_height="match_parent">
 
                     <TextView
@@ -122,8 +129,8 @@
                 </TableRow>
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginBottom="1dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
                     android:layout_height="match_parent">
 
                     <TextView
@@ -141,8 +148,8 @@
                 </TableRow>
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginBottom="1dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
                     android:layout_height="match_parent">
 
                     <TextView
@@ -160,8 +167,8 @@
                 </TableRow>
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginBottom="1dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
                     android:layout_height="match_parent">
 
                     <TextView
@@ -189,12 +196,13 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
                 android:text="论坛属性"
                 android:id="@+id/textView"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:layout_margin="5dp"
+                android:gravity="center_horizontal"/>
         </LinearLayout>
 
         <LinearLayout
@@ -209,8 +217,8 @@
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginBottom="1dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
                     android:layout_height="match_parent">
 
                     <TextView
@@ -228,8 +236,8 @@
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginBottom="1dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
                     android:layout_height="match_parent">
 
                     <TextView
@@ -246,8 +254,8 @@
                 </TableRow>
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginBottom="1dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
                     android:layout_height="match_parent">
 
                     <TextView
@@ -264,8 +272,8 @@
                 </TableRow>
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginBottom="1dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
                     android:layout_height="match_parent">
 
                     <TextView
@@ -282,8 +290,8 @@
                 </TableRow>
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginBottom="1dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
                     android:layout_height="match_parent">
 
                     <TextView
@@ -300,8 +308,8 @@
                 </TableRow>
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginBottom="1dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
                     android:layout_height="match_parent">
 
                     <TextView
@@ -318,15 +326,15 @@
                 </TableRow>
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginBottom="1dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
                     android:layout_height="match_parent">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="最后访问IP:"
-                        android:layout_marginRight="5dp"
+                        android:layout_marginRight="10dp"
                         android:id="@+id/query_user_loginip_label"/>
 
                     <TextView
@@ -337,8 +345,8 @@
                 </TableRow>
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginBottom="1dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
                     android:layout_height="match_parent">
 
                     <TextView

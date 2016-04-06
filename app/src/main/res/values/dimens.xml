@@ -2,7 +2,7 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="nav_header_padding_left">30dp</dimen>
-    <dimen name="nav_header_avatar_padding_top">32dp</dimen>
+    <dimen name="nav_header_avatar_padding_top">10dp</dimen>
     <dimen name="nav_header_vertical_spacing">5dp</dimen>
     <dimen name="nav_header_username_padding_bottom">5dp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
