@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+	<string name="define_android_sqlite_asset_helper"></string>
+	<!-- Author section -->
+	<string name="library_android_sqlite_asset_helper_author">Jeff Gilfelt</string>
+	<string name="library_android_sqlite_asset_helper_authorWebsite">https://github.com/jgilfelt</string>
+	<!-- Library section -->
+	<string name="library_android_sqlite_asset_helper_libraryName">SQLiteAssetHelper</string>
+	<string name="library_android_sqlite_asset_helper_libraryDescription">"An Android helper class to manage database creation and version management using an application's raw asset files"</string>
+	<string name="library_android_sqlite_asset_helper_libraryWebsite">https://github.com/jgilfelt/android-sqlite-asset-helper</string>
+	<string name="library_android_sqlite_asset_helper_libraryVersion"></string>
+	<!-- OpenSource section -->
+	<string name="library_android_sqlite_asset_helper_isOpenSource">true</string>
+	<string name="library_android_sqlite_asset_helper_repositoryLink">https://github.com/jgilfelt/android-sqlite-asset-helper</string>
+	<!-- ClassPath for autoDetect section -->
+	<string name="library_android_sqlite_asset_helper_classPath"></string>
+	<!-- License section -->
+	<string name="library_android_sqlite_asset_helper_licenseId">apache_2_0</string>
+	<!-- Custom variables section -->
+</resources>
