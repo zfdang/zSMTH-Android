@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 
+import com.jude.swipbackhelper.SwipeBackHelper;
 import com.zfdang.SMTHApplication;
 
 import java.util.ArrayList;
@@ -58,6 +59,20 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
         mIndicator.setViewPager(mViewPager);
 
         hide();
+
+        SwipeBackHelper.onCreate(this);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        SwipeBackHelper.onPostCreate(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SwipeBackHelper.onDestroy(this);
     }
 
     @Override
