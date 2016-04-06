@@ -36,6 +36,8 @@ import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.newsmth.UserStatus;
+import com.zfdang.zsmth_android.services.MaintainUserStatusService;
+import com.zfdang.zsmth_android.services.UserStatusReceiver;
 
 import java.lang.reflect.Field;
 
@@ -72,6 +74,8 @@ public class MainActivity extends AppCompatActivity
 
     private DrawerLayout mDrawer = null;
     private  ActionBarDrawerToggle mToggle = null;
+
+    private UserStatusReceiver mReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,13 +129,12 @@ public class MainActivity extends AppCompatActivity
                 new FragmentManager.OnBackStackChangedListener() {
                     public void onBackStackChanged() {
                         //Enable Up button only  if there are entries in the back stack
-                        boolean canback = getSupportFragmentManager().getBackStackEntryCount()>0;
-                        if(canback) {
+                        boolean canback = getSupportFragmentManager().getBackStackEntryCount() > 0;
+                        if (canback) {
                             mToggle.setDrawerIndicatorEnabled(false);
                             getSupportActionBar().setDisplayShowHomeEnabled(true);
                             getSupportActionBar().setHomeButtonEnabled(true);
                             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
                         } else {
                             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                             mToggle.setDrawerIndicatorEnabled(true);
@@ -139,7 +142,25 @@ public class MainActivity extends AppCompatActivity
                         }
                     }
                 });
+
+        // start service to maintain user status
+        setupUserStatusReceiver();
+        MaintainUserStatusService.schedule(MainActivity.this, mReceiver);
     }
+
+    private void setupUserStatusReceiver() {
+        mReceiver = new UserStatusReceiver(new Handler());
+        mReceiver.setReceiver(new UserStatusReceiver.Receiver() {
+            @Override
+            public void onReceiveResult(int resultCode, Bundle resultData) {
+                if(resultCode == RESULT_OK) {
+                    String resultValue = resultData.getString("resultValue");
+                    Toast.makeText(MainActivity.this, resultValue, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -392,7 +413,7 @@ public class MainActivity extends AppCompatActivity
             fragment = aboutFragment;
             title = "关于";
         } else if(id == R.id.nav_test) {
-
+            MaintainUserStatusService.unschedule(MainActivity.this);
         }
 
         // switch fragment
