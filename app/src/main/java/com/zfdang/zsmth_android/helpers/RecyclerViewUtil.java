@@ -14,7 +14,7 @@ public class RecyclerViewUtil {
      */
     public static boolean ScrollRecyclerViewByKey(RecyclerView rv, int keyCode){
         if(rv != null){
-            int offset = (int) (rv.getHeight() * 0.60);
+            int offset = (int) (rv.getHeight() * 0.80);
 //            Log.d("RecyclerViewUtil", "offset is " + rv.getHeight());
             if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
                 rv.smoothScrollBy(0, offset);
