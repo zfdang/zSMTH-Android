@@ -48,7 +48,7 @@ public class MaintainUserStatusService extends IntentService {
         AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         // run it in 5 seconds, and repeat in 3 minutes
         long firstMillis = System.currentTimeMillis() + 5000;
-        alarm.setRepeating(AlarmManager.RTC, firstMillis, AlarmManager.INTERVAL_FIFTEEN_MINUTES / 15, pIntent);
+        alarm.setRepeating(AlarmManager.RTC, firstMillis, AlarmManager.INTERVAL_FIFTEEN_MINUTES / 5, pIntent);
     }
 
     public static void unschedule(Context context) {

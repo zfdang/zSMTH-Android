@@ -35,6 +35,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -109,7 +110,7 @@ public class SMTHHelper {
 
         // set your desired log level
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
 
         // https://github.com/franmontiel/PersistentCookieJar
         // A persistent CookieJar implementation for OkHttp 3 based on SharedPreferences.
@@ -135,6 +136,8 @@ public class SMTHHelper {
                 })
                 .cookieJar(cookieJar)
                 .cache(cache)
+                .readTimeout(15, TimeUnit.SECONDS)
+                .connectTimeout(15, TimeUnit.SECONDS)
                 .build();
 
         mRetrofit = new Retrofit.Builder()
