@@ -1,7 +1,9 @@
 package com.zfdang.zsmth_android.newsmth;
 
 
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -47,7 +49,14 @@ public interface SMTHWWWService {
     @Headers("X-Requested-With:XMLHttpRequest")
     @GET("/nForum/user/query/{username}.json")
     Observable<UserInfo> queryUserInformation(@Path("username") String username);
-    
+
+
+    @Headers({"Content-Type: application/octet-stream", "X-Requested-With:XMLHttpRequest"})
+    @POST("/nForum/att/{boardEngName}/ajax_add.json")
+    Observable<AjaxResponse> uploadAttachment(@Path("boardEngName") String boardEngName,
+                                              @Query("name") String filename, @Body RequestBody fileContent);
+
+
     @FormUrlEncoded
     @Headers("X-Requested-With:XMLHttpRequest")
     @POST("/nForum/article/{boardEngName}/ajax_post.json")

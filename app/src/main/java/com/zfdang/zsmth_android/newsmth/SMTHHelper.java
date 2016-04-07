@@ -1,6 +1,10 @@
 package com.zfdang.zsmth_android.newsmth;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.RectF;
 import android.util.Log;
 
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
@@ -20,6 +24,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -175,27 +180,65 @@ public class SMTHHelper {
 
     }
 
-    public static Observable<String> publishPost(String boardEngName,
-                                                 String subject,
-                                                 String content,
-                                                 String signature,
-                                                 String replyPostID){
+    private static Bitmap loadResizedBitmapFromFile(final String filename, final int targetWidth, final int targetHeight) {
+        try {
+            BitmapFactory.Options option = null;
+            Bitmap bitmap = null;
+
+            // o.inPurgeable = true;
+            bitmap = BitmapFactory.decodeFile(filename, option);
+            Log.d(TAG, "loadResizedBitmapFromFile: " + String.format("Pre-sized bitmap size: (%dx%d).", bitmap.getWidth(), bitmap.getHeight()));
+
+            // create bitmap which matches exactly within the target size
+            // calc exact destination size
+            // http://developer.android.com/reference/android/graphics/Matrix.ScaleToFit.html
+            Matrix m = new Matrix();
+            RectF inRect = new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight());
+            RectF outRect = new RectF(0, 0, targetWidth, targetHeight);
+            m.setRectToRect(inRect, outRect, Matrix.ScaleToFit.CENTER);
+            float[] values = new float[9];
+            m.getValues(values);
+
+            Log.d(TAG, "loadResizedBitmapFromFile: " + String.format("Zoom: (%fx%f).", values[0], values[4]));
+            if (values[0] < 1.0 || values[4] < 1.0) {
+                bitmap = Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * values[0]),
+                        (int) (bitmap.getHeight() * values[4]), true);
+                Log.d(TAG, "loadResizedBitmapFromFile: " + "reduce size");
+            }
+
+            Log.d(TAG, "loadResizedBitmapFromFile: " + String.format("Final bitmap size: (%dx%d).", bitmap.getWidth(), bitmap.getHeight()));
+            return bitmap;
+        } catch (final OutOfMemoryError e) {
+            return null;
+        }
+    }
+
+
+    public static byte[] getBitmapBytesWithResize(final String filename){
+        final SMTHHelper helper = SMTHHelper.getInstance();
+        Log.d(TAG, "getBitmapBytesWithResize: " + filename);
+
+        Bitmap theBitmap = loadResizedBitmapFromFile(filename, 1200, 1200);
+
+        // convert bitmap to byte array
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        theBitmap.compress(Bitmap.CompressFormat.JPEG, 85, stream);
+        byte[] byteArray = stream.toByteArray();
+        Log.d(TAG, "getBitmapBytesWithResize: " + byteArray.length);
+
+        return byteArray;
+    }
+
+
+    public static Observable<AjaxResponse> publishPost(String boardEngName,
+                                           String subject,
+                                           String content,
+                                           String signature,
+                                           String replyPostID) {
         SMTHHelper helper = SMTHHelper.getInstance();
         return helper.wService.publishPost(boardEngName, subject, content, signature, replyPostID)
                 .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .map(new Func1<AjaxResponse, String>() {
-                    @Override
-                    public String call(AjaxResponse ajaxResponse) {
-                        try{
-                            String response = ajaxResponse.getAjax_msg();
-                            return response;
-                        } catch (Exception e) {
-                            Log.d(TAG, Log.getStackTraceString(e));
-                        }
-                        return null;
-                    };
-                });
+                .observeOn(Schedulers.io());
     }
 
 
@@ -519,7 +562,7 @@ public class SMTHHelper {
             if(sectionNames.size() == 1) {
                 Element sectionName = sectionNames.first();
                 String name = sectionName.text();
-                if(name != null && name.equals("系统与祝福")){
+                if(name == null || name.equals("系统与祝福")){
                     continue;
                 }
                 topic = new Topic(name);

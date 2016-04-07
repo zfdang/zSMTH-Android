@@ -19,20 +19,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.models.ComposePostContext;
+import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class ComposePostActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE = 653;
     private static final String TAG = "ComposePostActivity";
+    private final String UPLOAD_TEMPLATE = "[upload=%d][/upload]\n";
 
     private ProgressDialog pdialog = null;
 
@@ -45,6 +53,10 @@ public class ComposePostActivity extends AppCompatActivity {
 
     private ComposePostContext mPostContent;
 
+    // used to show progress while publishing
+    private static int  totalSteps = 1;
+    private static int currentStep = 1;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == REQUEST_CODE){
@@ -54,6 +66,13 @@ public class ComposePostActivity extends AppCompatActivity {
 //                for (String filename: mPhotos) {
 //                    Log.d(TAG, "onActivityResult: " + filename);
 //                }
+
+                String attachments = "";
+                for(int i = 0; i < mPhotos.size(); i ++) {
+                    attachments += String.format(UPLOAD_TEMPLATE, i+1);
+                }
+
+                mContent.setText(attachments + mContent.getText().toString());
             }
         }
     }
@@ -82,9 +101,9 @@ public class ComposePostActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(ComposePostActivity.this, MultiImageSelectorActivity.class);
                 // whether show camera
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, false);
                 // max select image amount
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 9);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 5);
                 // select mode (MultiImageSelectorActivity.MODE_SINGLE OR MultiImageSelectorActivity.MODE_MULTI)
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI);
                 // default select images (support array list)
@@ -184,34 +203,68 @@ public class ComposePostActivity extends AppCompatActivity {
         }
     }
 
+    public class BytesContainer {
+        public String filename;
+        public byte[] bytes;
+
+        public BytesContainer(String filename, byte[] bytes) {
+            this.bytes = bytes;
+            this.filename = filename;
+        }
+    }
 
     public void publishPost() {
-        showProgress("发表文章中...", true);
+        final String progressHint = "发表文章中(%d/%d)...";
+        ComposePostActivity.totalSteps = 1;
+        ComposePostActivity.currentStep = 1;
+        if(mPhotos != null){
+            ComposePostActivity.totalSteps += mPhotos.size();
+        }
 
-        SMTHHelper helper = SMTHHelper.getInstance();
-        SMTHHelper.publishPost(mPostContent.getBoardEngName(),
-                mTitle.getText().toString(), mContent.getText().toString(),
-                "0", mPostContent.getPostid())
+        showProgress(String.format(progressHint, ComposePostActivity.currentStep, ComposePostActivity.totalSteps), true);
+        Log.d(TAG, "publishPost: ");
+
+        final SMTHHelper helper = SMTHHelper.getInstance();
+
+        // update attachments
+        Observable<AjaxResponse> resp1 = Observable.from(mPhotos)
+                .map(new Func1<String, BytesContainer>() {
+                    @Override
+                    public BytesContainer call(String filename) {
+                        byte[] bytes = SMTHHelper.getBitmapBytesWithResize(filename);
+                        return new BytesContainer(filename, bytes);
+                    }
+                })
+                .map(new Func1<BytesContainer, AjaxResponse>() {
+                    @Override
+                    public AjaxResponse call(BytesContainer container) {
+                        RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpeg"), container.bytes);
+                        List<AjaxResponse> resps = helper.wService.uploadAttachment(mPostContent.getBoardEngName(), StringUtils.getLastStringSegment(container.filename), requestBody)
+                                .toList().toBlocking().single();
+                        if (resps != null && resps.size() == 1) {
+                            return resps.get(0);
+                        } else {
+                            Log.d(TAG, "call: " + "failed to upload attachment " + container.filename);
+                            return null;
+                        }
+                    }
+                });
+
+        // publish post
+        Observable<AjaxResponse> resp2 = SMTHHelper.publishPost(mPostContent.getBoardEngName(), mTitle.getText().toString(), mContent.getText().toString(), "0", mPostContent.getPostid());
+
+
+        // process all these tasks one by one
+        Observable.concat(resp1, resp2)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<String>() {
+                .subscribe(new Subscriber<AjaxResponse>() {
                     @Override
                     public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        showProgress(null, false);
-                        Log.d(TAG, Log.getStackTraceString(e));
-                        Toast.makeText(ComposePostActivity.this, Log.getStackTraceString(e), Toast.LENGTH_LONG).show();
-                    }
-
-                    @Override
-                    public void onNext(String s) {
                         showProgress(null, false);
 
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ComposePostActivity.this);
-                        alertDialogBuilder.setTitle(s)
+                        alertDialogBuilder.setTitle("发表成功")
                                 .setMessage("返回之前界面，或者停留在当前编辑界面？")
                                 .setCancelable(false)
                                 .setPositiveButton("返回", new DialogInterface.OnClickListener() {
@@ -226,6 +279,20 @@ public class ComposePostActivity extends AppCompatActivity {
                                         dialog.cancel();
                                     }
                                 }).create().show();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        showProgress(null, false);
+                        Log.d(TAG, "onError: " + Log.getStackTraceString(e));
+                        Toast.makeText(ComposePostActivity.this, "发布失败!", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onNext(AjaxResponse ajaxResponse) {
+                        Log.d(TAG, "onNext: " + ajaxResponse.toString());
+                        ComposePostActivity.currentStep ++;
+                        showProgress(String.format(progressHint, ComposePostActivity.currentStep, ComposePostActivity.totalSteps), true);
                     }
                 });
 
