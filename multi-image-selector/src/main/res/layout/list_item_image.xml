@@ -2,12 +2,18 @@
 <me.nereo.multi_image_selector.view.SquareFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <me.nereo.multi_image_selector.view.SquaredImageView
+    <com.facebook.drawee.view.SimpleDraweeView
+        xmlns:fresco="http://schemas.android.com/apk/res-auto"
         android:id="@+id/image"
-        android:scaleType="centerInside"
-        android:src="@drawable/default_error"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:scaleType="centerInside"
+        android:layout_margin="10dp"
+        fresco:placeholderImage="@drawable/default_error"
+        fresco:placeholderImageScaleType="fitCenter"
+        fresco:roundedCornerRadius="1dp"
+        fresco:viewAspectRatio="1.00"
+        />
 
     <View
         android:visibility="gone"

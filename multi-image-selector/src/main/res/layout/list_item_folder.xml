@@ -8,14 +8,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
+        xmlns:fresco="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/cover"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
-        android:id="@+id/cover"
-        tools:src="@drawable/btn_back"
         android:layout_gravity="center_vertical"
         android:scaleType="centerInside"
-        android:src="@drawable/default_error"
+        fresco:placeholderImage="@drawable/default_error"
+        fresco:placeholderImageScaleType="fitCenter"
+        fresco:roundedCornerRadius="1dp"
         android:layout_width="@dimen/folder_cover_size"
         android:layout_height="@dimen/folder_cover_size" />
 

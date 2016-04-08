@@ -2,6 +2,7 @@ package me.nereo.multi_image_selector.adapter;
 
 import android.content.Context;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,14 @@ import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -18,6 +26,7 @@ import java.util.List;
 
 import me.nereo.multi_image_selector.R;
 import me.nereo.multi_image_selector.bean.Image;
+import me.nereo.multi_image_selector.utils.FileUtils;
 
 /**
  * 图片Adapter
@@ -190,12 +199,12 @@ public class ImageGridAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-        ImageView image;
+        SimpleDraweeView image;
         ImageView indicator;
         View mask;
 
         ViewHolder(View view){
-            image = (ImageView) view.findViewById(R.id.image);
+            image = (SimpleDraweeView) view.findViewById(R.id.image);
             indicator = (ImageView) view.findViewById(R.id.checkmark);
             mask = view.findViewById(R.id.mask);
             view.setTag(this);
@@ -218,19 +227,38 @@ public class ImageGridAdapter extends BaseAdapter {
             }else{
                 indicator.setVisibility(View.GONE);
             }
+
+
+            Uri newURI;
             File imageFile = new File(data.path);
             if (imageFile.exists()) {
-                // 显示图片
-                Glide.with(mContext)
-                        .load(imageFile)
-                        .placeholder(R.drawable.default_error)
-                        .override(mGridWidth, mGridWidth)
-                        .centerCrop()
-                        .into(image);
-            }else{
-                image.setImageResource(R.drawable.default_error);
+                newURI = Uri.fromFile(imageFile);
+            } else {
+                newURI = FileUtils.getUriByResId(R.drawable.default_error);
+            }
+
+            // should we reload the image now?
+            Uri uri = (Uri) (image.getTag(R.id.image_uri_tag));
+            if(uri == null || !uri.equals(newURI)) {
+                // no previous URI, or different URI, load image now
+//                    image.setImageURI(newURI);
+                showThumb(newURI, image);
+                image.setTag(R.id.image_uri_tag, newURI);
             }
         }
     }
 
+    // http://www.jianshu.com/p/5364957dcf49
+    public static void showThumb(Uri uri, SimpleDraweeView draweeView){
+        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+                .setResizeOptions(new ResizeOptions(200, 200))
+                .build();
+
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setImageRequest(request)
+                .setOldController(draweeView.getController())
+                .setControllerListener(new BaseControllerListener<ImageInfo>())
+                .build();
+        draweeView.setController(controller);
+    }
 }

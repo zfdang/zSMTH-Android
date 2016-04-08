@@ -16,22 +16,36 @@ import java.util.ArrayList;
  * Created by Nereo on 2015/4/7.
  * Updated by nereo on 2016/1/19.
  */
-public class MultiImageSelectorActivity extends FragmentActivity implements MultiImageSelectorFragment.Callback{
+public class MultiImageSelectorActivity extends FragmentActivity implements MultiImageSelectorFragment.Callback {
 
-    /** 最大图片选择次数，int类型，默认9 */
+    /**
+     * 最大图片选择次数，int类型，默认9
+     */
     public static final String EXTRA_SELECT_COUNT = "max_select_count";
-    /** 图片选择模式，默认多选 */
+    /**
+     * 图片选择模式，默认多选
+     */
     public static final String EXTRA_SELECT_MODE = "select_count_mode";
-    /** 是否显示相机，默认显示 */
+    /**
+     * 是否显示相机，默认显示
+     */
     public static final String EXTRA_SHOW_CAMERA = "show_camera";
-    /** 选择结果，返回为 ArrayList&lt;String&gt; 图片路径集合  */
+    /**
+     * 选择结果，返回为 ArrayList&lt;String&gt; 图片路径集合
+     */
     public static final String EXTRA_RESULT = "select_result";
-    /** 默认选择集 */
+    /**
+     * 默认选择集
+     */
     public static final String EXTRA_DEFAULT_SELECTED_LIST = "default_list";
 
-    /** 单选 */
+    /**
+     * 单选
+     */
     public static final int MODE_SINGLE = 0;
-    /** 多选 */
+    /**
+     * 多选
+     */
     public static final int MODE_MULTI = 1;
 
     private ArrayList<String> resultList = new ArrayList<>();
@@ -47,7 +61,7 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
         mDefaultCount = intent.getIntExtra(EXTRA_SELECT_COUNT, 9);
         int mode = intent.getIntExtra(EXTRA_SELECT_MODE, MODE_MULTI);
         boolean isShow = intent.getBooleanExtra(EXTRA_SHOW_CAMERA, true);
-        if(mode == MODE_MULTI && intent.hasExtra(EXTRA_DEFAULT_SELECTED_LIST)) {
+        if (mode == MODE_MULTI && intent.hasExtra(EXTRA_DEFAULT_SELECTED_LIST)) {
             resultList = intent.getStringArrayListExtra(EXTRA_DEFAULT_SELECTED_LIST);
         }
 
@@ -72,17 +86,17 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
 
         // 完成按钮
         mSubmitButton = (Button) findViewById(R.id.commit);
-        if(resultList == null || resultList.size()<=0){
+        if (resultList == null || resultList.size() <= 0) {
             mSubmitButton.setText(R.string.action_done);
             mSubmitButton.setEnabled(false);
-        }else{
+        } else {
             updateDoneText();
             mSubmitButton.setEnabled(true);
         }
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(resultList != null && resultList.size() >0){
+                if (resultList != null && resultList.size() > 0) {
                     // 返回已选择的图片数据
                     Intent data = new Intent();
                     data.putStringArrayListExtra(EXTRA_RESULT, resultList);
@@ -93,7 +107,7 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
         });
     }
 
-    private void updateDoneText(){
+    private void updateDoneText() {
         mSubmitButton.setText(String.format("%s(%d/%d)",
                 getString(R.string.action_done), resultList.size(), mDefaultCount));
     }
@@ -109,13 +123,13 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
 
     @Override
     public void onImageSelected(String path) {
-        if(!resultList.contains(path)) {
+        if (!resultList.contains(path)) {
             resultList.add(path);
         }
         // 有图片之后，改变按钮状态
-        if(resultList.size() > 0){
+        if (resultList.size() > 0) {
             updateDoneText();
-            if(!mSubmitButton.isEnabled()){
+            if (!mSubmitButton.isEnabled()) {
                 mSubmitButton.setEnabled(true);
             }
         }
@@ -123,12 +137,12 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
 
     @Override
     public void onImageUnselected(String path) {
-        if(resultList.contains(path)){
+        if (resultList.contains(path)) {
             resultList.remove(path);
         }
         updateDoneText();
         // 当为选择图片时候的状态
-        if(resultList.size() == 0){
+        if (resultList.size() == 0) {
             mSubmitButton.setText(R.string.action_done);
             mSubmitButton.setEnabled(false);
         }
@@ -136,7 +150,7 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
 
     @Override
     public void onCameraShot(File imageFile) {
-        if(imageFile != null) {
+        if (imageFile != null) {
 
             // notify system
             sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(imageFile)));

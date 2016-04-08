@@ -1,6 +1,7 @@
 package me.nereo.multi_image_selector.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import me.nereo.multi_image_selector.R;
 import me.nereo.multi_image_selector.bean.Folder;
+import me.nereo.multi_image_selector.utils.FileUtils;
 
 /**
  * 文件夹Adapter
@@ -81,16 +83,10 @@ public class FolderAdapter extends BaseAdapter {
             if(i == 0){
                 holder.name.setText(R.string.folder_all);
                 holder.path.setText("/sdcard");
-                holder.size.setText(String.format("%d%s",
-                        getTotalImageSize(), mContext.getResources().getString(R.string.photo_unit)));
+                holder.size.setText(String.format("%d%s", getTotalImageSize(), mContext.getResources().getString(R.string.photo_unit)));
                 if(mFolders.size()>0){
                     Folder f = mFolders.get(0);
-                    Glide.with(mContext)
-                            .load(new File(f.cover.path))
-                            .error(R.drawable.default_error)
-                            .override(R.dimen.folder_cover_size, R.dimen.folder_cover_size)
-                            .centerCrop()
-                            .into(holder.cover);
+                    holder.cover.setImageURI(Uri.fromFile(new File(f.cover.path)));
                 }
             }else {
                 holder.bindData(getItem(i));
@@ -126,13 +122,14 @@ public class FolderAdapter extends BaseAdapter {
     }
 
     class ViewHolder{
-        ImageView cover;
+        SimpleDraweeView cover;
         TextView name;
         TextView path;
         TextView size;
         ImageView indicator;
+
         ViewHolder(View view){
-            cover = (ImageView)view.findViewById(R.id.cover);
+            cover = (SimpleDraweeView)view.findViewById(R.id.cover);
             name = (TextView) view.findViewById(R.id.name);
             path = (TextView) view.findViewById(R.id.path);
             size = (TextView) view.findViewById(R.id.size);
@@ -151,17 +148,15 @@ public class FolderAdapter extends BaseAdapter {
             }else{
                 size.setText("*"+mContext.getResources().getString(R.string.photo_unit));
             }
+
             // 显示图片
+            Uri newURI;
             if (data.cover != null) {
-                Glide.with(mContext)
-                        .load(new File(data.cover.path))
-                        .placeholder(R.drawable.default_error)
-                        .override(R.dimen.folder_cover_size, R.dimen.folder_cover_size)
-                        .centerCrop()
-                        .into(cover);
+                newURI = Uri.fromFile(new File(data.cover.path));
             }else{
-                cover.setImageResource(R.drawable.default_error);
+                newURI = FileUtils.getUriByResId(R.drawable.default_error);
             }
+            cover.setImageURI(newURI);
         }
     }
 

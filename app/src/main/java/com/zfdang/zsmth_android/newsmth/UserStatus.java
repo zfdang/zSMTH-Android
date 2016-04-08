@@ -41,8 +41,8 @@ import android.os.Parcelable;
 //        "new_mail": true,
 //        "full_mail": false,
 //        "new_like": 0,
-//        "new_reply": 0,
-//        "new_at": 0,
+//        "new_reply": false,
+//        "new_at": false,
 //        "new_msg": -1,
 //        "ajax_st": 1,
 //        "ajax_code": "0005",
@@ -55,84 +55,20 @@ public class UserStatus implements Parcelable {
     private String id;
     private String face_url;
     private boolean is_login;
+
+    // "new_mail":false,"full_mail":false,"new_like":0,
+    // "new_reply":false,"new_at":false,"new_msg":0,
     private boolean new_mail;
-    private boolean full_mail;
-    private int new_like;
-    private int new_reply;
-    private int new_at;
-    private int new_msg;
+    //    private boolean full_mail;
+//    private int new_like;
+//    private boolean new_reply;  // sometime, this is a boolean, sometime, it is a integer. SMTH is inconsistent
+//    private boolean new_at;
+//    private int new_msg;
     private int ajax_st;
     private String ajax_code;
     private String ajax_msg;
 
-    public UserStatus() {
-    }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.id);
-        dest.writeString(this.face_url);
-        dest.writeByte(is_login ? (byte) 1 : (byte) 0);
-        dest.writeByte(new_mail ? (byte) 1 : (byte) 0);
-        dest.writeByte(full_mail ? (byte) 1 : (byte) 0);
-        dest.writeInt(this.new_like);
-        dest.writeInt(this.new_reply);
-        dest.writeInt(this.new_at);
-        dest.writeInt(this.new_msg);
-        dest.writeInt(this.ajax_st);
-        dest.writeString(this.ajax_code);
-        dest.writeString(this.ajax_msg);
-    }
-
-    protected UserStatus(Parcel in) {
-        this.id = in.readString();
-        this.face_url = in.readString();
-        this.is_login = in.readByte() != 0;
-        this.new_mail = in.readByte() != 0;
-        this.full_mail = in.readByte() != 0;
-        this.new_like = in.readInt();
-        this.new_reply = in.readInt();
-        this.new_at = in.readInt();
-        this.new_msg = in.readInt();
-        this.ajax_st = in.readInt();
-        this.ajax_code = in.readString();
-        this.ajax_msg = in.readString();
-    }
-
-    public static final Creator<UserStatus> CREATOR = new Creator<UserStatus>() {
-        @Override
-        public UserStatus createFromParcel(Parcel source) {
-            return new UserStatus(source);
-        }
-
-        @Override
-        public UserStatus[] newArray(int size) {
-            return new UserStatus[size];
-        }
-    };
-
-    @Override
-    public String toString() {
-        return "UserStatus{" +
-                "ajax_code='" + ajax_code + '\'' +
-                ", id='" + id + '\'' +
-                ", face_url='" + face_url + '\'' +
-                ", is_login=" + is_login +
-                ", new_mail=" + new_mail +
-                ", full_mail=" + full_mail +
-                ", new_like=" + new_like +
-                ", new_reply=" + new_reply +
-                ", new_at=" + new_at +
-                ", new_msg=" + new_msg +
-                ", ajax_st=" + ajax_st +
-                ", ajax_msg='" + ajax_msg + '\'' +
-                '}';
-    }
 
     public String getAjax_code() {
         return ajax_code;
@@ -158,20 +94,16 @@ public class UserStatus implements Parcelable {
         this.ajax_st = ajax_st;
     }
 
+    public static Creator<UserStatus> getCREATOR() {
+        return CREATOR;
+    }
+
     public String getFace_url() {
         return face_url;
     }
 
     public void setFace_url(String face_url) {
         this.face_url = face_url;
-    }
-
-    public boolean isFull_mail() {
-        return full_mail;
-    }
-
-    public void setFull_mail(boolean full_mail) {
-        this.full_mail = full_mail;
     }
 
     public String getId() {
@@ -190,22 +122,6 @@ public class UserStatus implements Parcelable {
         this.is_login = is_login;
     }
 
-    public int getNew_at() {
-        return new_at;
-    }
-
-    public void setNew_at(int new_at) {
-        this.new_at = new_at;
-    }
-
-    public int getNew_like() {
-        return new_like;
-    }
-
-    public void setNew_like(int new_like) {
-        this.new_like = new_like;
-    }
-
     public boolean isNew_mail() {
         return new_mail;
     }
@@ -214,19 +130,57 @@ public class UserStatus implements Parcelable {
         this.new_mail = new_mail;
     }
 
-    public int getNew_msg() {
-        return new_msg;
+    @Override
+    public String toString() {
+        return "UserStatus{" +
+                "ajax_code='" + ajax_code + '\'' +
+                ", id='" + id + '\'' +
+                ", face_url='" + face_url + '\'' +
+                ", is_login=" + is_login +
+                ", new_mail=" + new_mail +
+                ", ajax_st=" + ajax_st +
+                ", ajax_msg='" + ajax_msg + '\'' +
+                '}';
     }
 
-    public void setNew_msg(int new_msg) {
-        this.new_msg = new_msg;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public int getNew_reply() {
-        return new_reply;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.face_url);
+        dest.writeByte(is_login ? (byte) 1 : (byte) 0);
+        dest.writeByte(new_mail ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.ajax_st);
+        dest.writeString(this.ajax_code);
+        dest.writeString(this.ajax_msg);
     }
 
-    public void setNew_reply(int new_reply) {
-        this.new_reply = new_reply;
+    public UserStatus() {
     }
+
+    protected UserStatus(Parcel in) {
+        this.id = in.readString();
+        this.face_url = in.readString();
+        this.is_login = in.readByte() != 0;
+        this.new_mail = in.readByte() != 0;
+        this.ajax_st = in.readInt();
+        this.ajax_code = in.readString();
+        this.ajax_msg = in.readString();
+    }
+
+    public static final Creator<UserStatus> CREATOR = new Creator<UserStatus>() {
+        @Override
+        public UserStatus createFromParcel(Parcel source) {
+            return new UserStatus(source);
+        }
+
+        @Override
+        public UserStatus[] newArray(int size) {
+            return new UserStatus[size];
+        }
+    };
 }

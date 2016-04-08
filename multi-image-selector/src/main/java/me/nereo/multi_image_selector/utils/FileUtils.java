@@ -2,6 +2,7 @@ package me.nereo.multi_image_selector.utils;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Environment;
 import android.text.TextUtils;
 
@@ -125,5 +126,17 @@ public class FileUtils {
         int perm = context.checkCallingOrSelfPermission(EXTERNAL_STORAGE_PERMISSION);
         return perm == PackageManager.PERMISSION_GRANTED;
     }
+
+    public static Uri getUriByResId(int resId) {
+        // 增加对资源id类型的图片类型判断
+//        BitmapFactory.Options opts = new BitmapFactory.Options();
+//        opts.inJustDecodeBounds = true;
+//        BitmapFactory.decodeResource(getResources(), resId, opts);
+//        if (opts.outMimeType.equals("image/png")) {
+//            mImageFormat = ImageFormat.PNG;
+//        }
+        return new Uri.Builder().scheme("res").path(String.valueOf(resId)).build();
+    }
+
 
 }
