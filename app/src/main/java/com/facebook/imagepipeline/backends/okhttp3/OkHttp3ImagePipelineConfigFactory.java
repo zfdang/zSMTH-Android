@@ -15,12 +15,12 @@ import okhttp3.OkHttpClient;
 
 /**
  * Factory for getting an {@link com.facebook.imagepipeline.core.ImagePipelineConfig} that uses
- * {@link OkHttpNetworkFetcher}.
+ * {@link OkHttp3NetworkFetcher}.
  */
-public class OkHttpImagePipelineConfigFactory {
+public class OkHttp3ImagePipelineConfigFactory {
 
   public static ImagePipelineConfig.Builder newBuilder(Context context, OkHttpClient okHttpClient) {
     return ImagePipelineConfig.newBuilder(context)
-        .setNetworkFetcher(new OkHttpNetworkFetcher(okHttpClient));
+        .setNetworkFetcher(new OkHttp3NetworkFetcher(okHttpClient));
   }
 }

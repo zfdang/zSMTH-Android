@@ -33,8 +33,8 @@ import okhttp3.ResponseBody;
 /**
  * Network fetcher that uses OkHttp 3 as a backend.
  */
-public class OkHttpNetworkFetcher extends
-    BaseNetworkFetcher<OkHttpNetworkFetcher.OkHttpNetworkFetchState> {
+public class OkHttp3NetworkFetcher extends
+    BaseNetworkFetcher<OkHttp3NetworkFetcher.OkHttpNetworkFetchState> {
 
   public static class OkHttpNetworkFetchState extends FetchState {
     public long submitTime;
@@ -61,7 +61,7 @@ public class OkHttpNetworkFetcher extends
   /**
    * @param okHttpClient client to use
    */
-  public OkHttpNetworkFetcher(OkHttpClient okHttpClient) {
+  public OkHttp3NetworkFetcher(OkHttpClient okHttpClient) {
     mOkHttpClient = okHttpClient;
     mCancellationExecutor = okHttpClient.dispatcher().executorService();
   }
