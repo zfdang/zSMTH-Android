@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="image_tag" type="id"/>
+
+    <!--drawee-->
+    <item name="uriPath" type="id" />
 </resources>

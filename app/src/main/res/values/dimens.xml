@@ -14,4 +14,8 @@
     <dimen name="zsmth_actionbar_size">42dp</dimen>
     <dimen name="app_bar_height">200dp</dimen>
     <dimen name="item_width">200dp</dimen>
+
+    <!--Drawee overlay text size-->
+    <dimen name="overlay_text_size_16">10sp</dimen>
+
 </resources>
