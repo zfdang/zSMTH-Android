@@ -56,4 +56,6 @@
 
     <color name="black_overlay">#66000000</color>
 
+    <color name="avatar_border_color">#FFFFFF</color>
+
 </resources>

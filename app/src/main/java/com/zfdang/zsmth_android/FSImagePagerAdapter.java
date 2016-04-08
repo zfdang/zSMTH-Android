@@ -8,15 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.Target;
+import com.bzh.mysimplefresco.drawee.MyPhotoView;
 import com.zfdang.SMTHApplication;
 
 import java.util.List;
 import java.util.Map;
 
-import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
@@ -42,7 +39,7 @@ public class FSImagePagerAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         final LayoutInflater inflater = (LayoutInflater) SMTHApplication.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         // Add the text layout to the parent layout
-        PhotoView image = (PhotoView) inflater.inflate(R.layout.image_viewer_pager, container, false);
+        MyPhotoView image = (MyPhotoView) inflater.inflate(R.layout.image_viewer_pager, container, false);
         assert image != null;
         image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -71,17 +68,9 @@ public class FSImagePagerAdapter extends PagerAdapter {
         });
 
         image.setMaximumScale(12.0f);
-        Glide.with(mListener)
-                .load(mURLs.get(position))
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                // there is bug with Glide 3.x, so that loading gif is very slow when strage=ALL
-//                .placeholder(R.drawable.progress_animation)
-                .error(R.drawable.image_not_found)
-                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                .fitCenter()
-//                .dontAnimate()
-                .crossFade()
-                .into(image);
+
+        // use only this method to set image
+        image.setImageUri(mURLs.get(position), null);
 
         container.addView(image, 0);
 

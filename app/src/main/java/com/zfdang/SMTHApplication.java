@@ -3,8 +3,14 @@ package com.zfdang;
 import android.app.Application;
 import android.content.Context;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.zfdang.zsmth_android.helpers.GEODatabase;
+import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.newsmth.UserStatus;
+
+import okhttp3.OkHttpClient;
 
 /**
  * Created by zfdang on 2016-3-18.
@@ -49,6 +55,13 @@ public class SMTHApplication extends Application {
 
         // init IP lookup database
         geoDB = new GEODatabase(this);
+
+        // init Fresco
+        OkHttpClient httpClient = SMTHHelper.getInstance().mHttpClient;
+        ImagePipelineConfig config = OkHttpImagePipelineConfigFactory
+                .newBuilder(context, httpClient)
+                .build();
+        Fresco.initialize(context, config);
     }
 
     public static Context getAppContext() {

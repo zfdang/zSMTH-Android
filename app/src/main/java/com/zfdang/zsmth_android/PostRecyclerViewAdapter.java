@@ -7,13 +7,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
 import com.zfdang.zsmth_android.models.Attachment;
 import com.zfdang.zsmth_android.models.ContentSegment;
 import com.zfdang.zsmth_android.models.Post;
@@ -78,22 +76,9 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                 // Log.d("CreateView", "Image: " + content.getUrl());
 
                 // Add the text layout to the parent layout
-                ImageView image = (ImageView) inflater.inflate(R.layout.post_item_imageview, viewGroup, false);
-
-                // Glide and ImageView.ScaleType work together
-                // ImageView.ScaleType == CenterInside, so no scale
-                // Glide will fitCenter when it's a image not a GIF
-                Glide.with(mListener)
-                        .load(content.getUrl())
-//                there is bug with Glide 3.x: loading gif is very slow when strage=ALL
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        .placeholder(R.drawable.progress_animation)
-                        .error(R.drawable.image_not_found)
-                        .fitCenter()
-//  https://github.com/bumptech/glide/issues/363, bug with placeholder+crossFade
-//                        .crossFade()
-                        .dontAnimate()
-                        .into(image);
+                WrapContentDraweeView image = (WrapContentDraweeView) inflater.inflate(R.layout.post_item_imageview, viewGroup, false);
+//                image.setImageURI(Uri.parse(content.getUrl()));
+                image.setImageFromStringURL(content.getUrl());
 
                 // set onclicklistener
                 image.setTag(R.id.image_tag, content.getImgIndex());

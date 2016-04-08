@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ImageView
-    android:id="@+id/post_attach_image"
+<!--http://frescolib.org/docs/using-drawees-xml.html-->
+<com.zfdang.zsmth_android.fresco.WrapContentDraweeView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_marginTop="2dp"
-    android:layout_marginBottom="2dp"
-    android:layout_marginRight="2dp"
-    android:layout_marginLeft="2dp"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/post_attach_image"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="2dp"
+    android:layout_marginLeft="2dp"
+    android:layout_marginRight="2dp"
+    android:layout_marginTop="2dp"
     android:scaleType="centerInside"
+    fresco:fadeDuration="300"
+    fresco:progressBarImage="@drawable/progress_animation"
+    fresco:progressBarImageScaleType="centerInside"
+    fresco:failureImage="@drawable/image_not_found"
+    fresco:failureImageScaleType="centerInside"
+    fresco:roundAsCircle="false"
+    fresco:roundedCornerRadius="10dp"
     />
