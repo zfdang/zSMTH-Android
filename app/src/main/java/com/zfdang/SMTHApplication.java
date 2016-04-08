@@ -60,7 +60,6 @@ public class SMTHApplication extends Application {
         OkHttpClient httpClient = SMTHHelper.getInstance().mHttpClient;
         ImagePipelineConfig config = OkHttpImagePipelineConfigFactory
                 .newBuilder(context, httpClient)
-                .setDownsampleEnabled(true)
                 .build();
         Fresco.initialize(context, config);
     }

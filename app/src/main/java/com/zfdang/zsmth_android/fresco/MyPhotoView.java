@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import com.bzh.mysimplefresco.drawee.LoadingProgressDrawable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -27,24 +26,6 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 import uk.co.senab.photoview.PhotoView;
 
-/**
- * ========================================================== <br>
- * <b>版权</b>：　　　别志华 版权所有(c) 2015 <br>
- * <b>作者</b>：　　　别志华 biezhihua@163.com<br>
- * <b>创建日期</b>：　2015/11/16 17:19 <br>
- * <b>描述</b>：　　　<br>
- * <b>版本</b>：　   V1.0 <br>
- * <b>修订历史</b>：　<br>
- * 自定义的View，我们就要处理好下面这几个函数，
- * 这样才能保证引用计数的正确性，否则可能就会引起内存泄露。
- * 其实就是要在View移除屏幕或进入屏幕去维护好引用计数了。
- * onAttachedToWindow()
- * onDetacherFromWindow()
- * onStartTemporaryDetach()
- * onFinishTemporaryDetach()
- * onTouchEvent()
- * ========================================================== <br>
- */
 public class MyPhotoView extends PhotoView {
 
     private DraweeHolder<GenericDraweeHierarchy> mDraweeHolder;
@@ -65,7 +46,7 @@ public class MyPhotoView extends PhotoView {
     private void selfInit() {
         if (mDraweeHolder == null) {
             final GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder(getResources())
-                    .setProgressBarImage(new LoadingProgressDrawable(getContext())).build();
+                    .build();
 
             mDraweeHolder = DraweeHolder.create(hierarchy, getContext());
         }
