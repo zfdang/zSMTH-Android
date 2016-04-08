@@ -116,6 +116,7 @@ public class MyPhotoView extends PhotoView {
         final DataSource<CloseableReference<CloseableImage>> dataSource = imagePipeline.fetchDecodedImage(imageRequest, this);
         final AbstractDraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setOldController(mDraweeHolder.getController())
+                .setAutoPlayAnimations(true)
                 .setImageRequest(imageRequest)
                 .setControllerListener(new BaseControllerListener<ImageInfo>() {
                     @Override
@@ -132,7 +133,7 @@ public class MyPhotoView extends PhotoView {
                                     final Bitmap bitmap = closeableStaticBitmap.getUnderlyingBitmap();
                                     if (bitmap != null) {
                                         setImageBitmap(bitmap);
-                                        setScaleType(ScaleType.FIT_CENTER);
+                                        setScaleType(ScaleType.CENTER_INSIDE);
                                     }
                                 }
                             }
