@@ -20,15 +20,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.umeng.analytics.MobclickAgent;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
 import com.zfdang.zsmth_android.listeners.OnBoardFragmentInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnVolumeUpDownListener;
@@ -66,7 +64,7 @@ public class MainActivity extends AppCompatActivity
     SettingFragment settingFragment = null;
     Fragment aboutFragment = null;
     private ProgressDialog pdialog = null;
-    private ImageView mAvatar = null;
+    private WrapContentDraweeView mAvatar = null;
     private TextView mUsername = null;
 
     private DrawerLayout mDrawer = null;
@@ -101,7 +99,7 @@ public class MainActivity extends AppCompatActivity
 
         // http://stackoverflow.com/questions/33161345/android-support-v23-1-0-update-breaks-navigationview-get-find-header
         View headerView = navigationView.getHeaderView(0);
-        mAvatar = (ImageView) headerView.findViewById(R.id.nav_user_avatar);
+        mAvatar = (WrapContentDraweeView) headerView.findViewById(R.id.nav_user_avatar);
         mAvatar.setOnClickListener(this);
 
         mUsername = (TextView) headerView.findViewById(R.id.nav_user_name);
@@ -251,12 +249,7 @@ public class MainActivity extends AppCompatActivity
         if (SMTHApplication.isValidUser()) {
             // update user to login user
             mUsername.setText(SMTHApplication.activeUser.getId());
-            Glide.with(MainActivity.this)
-                    .load(SMTHApplication.activeUser.getFace_url())
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .fitCenter()
-                    .crossFade()
-                    .into(mAvatar);
+            mAvatar.setImageFromStringURL(SMTHApplication.activeUser.getFace_url());
         } else {
             // only user to guest
             mUsername.setText(getString(R.string.nav_header_click_to_login));

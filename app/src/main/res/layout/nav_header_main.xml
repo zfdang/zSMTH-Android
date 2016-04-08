@@ -17,16 +17,18 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom">
 
-        <com.makeramen.roundedimageview.RoundedImageView
+        <com.zfdang.zsmth_android.fresco.WrapContentDraweeView
             xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:fresco="http://schemas.android.com/apk/res-auto"
             android:id="@+id/nav_user_avatar"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:paddingTop="@dimen/nav_header_avatar_padding_top"
             android:src="@drawable/ic_person_black_48dp"
-            app:riv_corner_radius="30dip"
-            app:riv_border_width="2dip"
-            app:riv_border_color="@color/colorIcons"
+            fresco:roundAsCircle="false"
+            fresco:roundedCornerRadius="30dp"
+            fresco:roundingBorderWidth="2dp"
+            fresco:roundingBorderColor="@color/avatar_border_color"
             android:layout_gravity="bottom|center_horizontal"/>
 
         <TextView
