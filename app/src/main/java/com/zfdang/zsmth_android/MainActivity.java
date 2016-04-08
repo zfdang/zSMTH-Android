@@ -23,6 +23,8 @@ import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.core.ImagePipeline;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.umeng.analytics.MobclickAgent;
 import com.zfdang.SMTHApplication;
@@ -452,7 +454,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void testCodes() {
-
+        ImagePipeline imagePipeline = Fresco.getImagePipeline();
+        imagePipeline.clearDiskCaches();
     }
 
 

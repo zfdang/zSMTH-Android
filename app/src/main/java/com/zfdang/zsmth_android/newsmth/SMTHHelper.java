@@ -111,7 +111,7 @@ public class SMTHHelper {
 
         // set your desired log level
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         // https://github.com/franmontiel/PersistentCookieJar
         // A persistent CookieJar implementation for OkHttp 3 based on SharedPreferences.
@@ -120,7 +120,7 @@ public class SMTHHelper {
 
         //设置缓存路径
         File httpCacheDirectory = new File(SMTHApplication.getAppContext().getCacheDir(), "Responses");
-        int cacheSize = 100 * 1024 * 1024; // 100 MiB
+        int cacheSize = 250 * 1024 * 1024; // 100 MiB
         Cache cache = new Cache(httpCacheDirectory, cacheSize);
 
         mHttpClient = new OkHttpClient().newBuilder()
