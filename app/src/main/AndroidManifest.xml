@@ -34,12 +34,6 @@
             android:label="@string/title_activity_login"/>
 
         <meta-data
-            android:name="com.zfdang.zsmth_android.glide.Configuration"
-            android:value="GlideModule"/>
-        <meta-data
-            android:name="com.zfdang.zsmth_android.glide.OkHttp3GlideModule"
-            android:value="GlideModule"/>
-        <meta-data
             android:name="UMENG_APPKEY"
             android:value="56e8c05567e58e0a9e0011cc"/>
         <meta-data
