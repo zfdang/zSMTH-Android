@@ -65,6 +65,7 @@ public class SMTHHelper {
     // WWW service of SMTH
     private final String SMTH_WWW_URL = "http://www.newsmth.net";
     static private final String SMTH_WWW_ENCODING = "GB2312";
+    public OkHttpClient mHttpClient;
     private Retrofit mRetrofit = null;
     public SMTHWWWService wService = null;
 
@@ -122,7 +123,7 @@ public class SMTHHelper {
         int cacheSize = 100 * 1024 * 1024; // 100 MiB
         Cache cache = new Cache(httpCacheDirectory, cacheSize);
 
-        OkHttpClient httpClient = new OkHttpClient().newBuilder()
+        mHttpClient = new OkHttpClient().newBuilder()
                 .addInterceptor(logging)
                 .addInterceptor(new Interceptor() {
                     @Override
@@ -144,7 +145,7 @@ public class SMTHHelper {
                 .baseUrl(SMTH_MOBILE_URL)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(ScalarsConverterFactory.create())
-                .client(httpClient)
+                .client(mHttpClient)
                 .build();
         mService = mRetrofit.create(SMTHMobileService.class);
 
@@ -153,7 +154,7 @@ public class SMTHHelper {
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
-                .client(httpClient)
+                .client(mHttpClient)
                 .build();
         wService = wRetrofit.create(SMTHWWWService.class);
     }
@@ -180,7 +181,6 @@ public class SMTHHelper {
                         return userStatus;
                     }
                 });
-
     }
 
     private static Bitmap loadResizedBitmapFromFile(final String filename, final int targetWidth, final int targetHeight) {
