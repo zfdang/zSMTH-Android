@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bzh.mysimplefresco.drawee.MyPhotoView;
+import com.zfdang.zsmth_android.fresco.MyPhotoView;
 import com.zfdang.SMTHApplication;
 
 import java.util.List;

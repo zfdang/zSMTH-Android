@@ -1,4 +1,4 @@
-package com.bzh.mysimplefresco.drawee;
+package com.zfdang.zsmth_android.fresco;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
+import com.bzh.mysimplefresco.drawee.LoadingProgressDrawable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.Fresco;
