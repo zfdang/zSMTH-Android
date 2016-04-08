@@ -133,7 +133,7 @@ public class MyPhotoView extends PhotoView {
                                     final Bitmap bitmap = closeableStaticBitmap.getUnderlyingBitmap();
                                     if (bitmap != null) {
                                         setImageBitmap(bitmap);
-                                        setScaleType(ScaleType.CENTER_INSIDE);
+                                        setScaleType(ScaleType.FIT_CENTER);
                                     }
                                 }
                             }

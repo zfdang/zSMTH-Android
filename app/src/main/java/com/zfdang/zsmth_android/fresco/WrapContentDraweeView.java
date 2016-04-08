@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.ViewGroup;
 
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -78,6 +79,10 @@ public class WrapContentDraweeView extends SimpleDraweeView {
 
     void updateViewSize(@Nullable ImageInfo imageInfo) {
         if (imageInfo != null) {
+            // since we have placeholder to show loading status, the height is 68dp, we need to reset height to WRAP_CONTENT
+            getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+
+            // set ratio
             setAspectRatio((float) imageInfo.getWidth() / imageInfo.getHeight());
         }
     }
