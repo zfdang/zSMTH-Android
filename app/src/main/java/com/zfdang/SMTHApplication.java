@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.backends.okhttp3.OkHttp3ImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.listener.RequestLoggingListener;
@@ -65,8 +66,8 @@ public class SMTHApplication extends Application {
         requestListeners.add(new RequestLoggingListener());
         // init Fresco
         OkHttpClient httpClient = SMTHHelper.getInstance().mHttpClient;
-        ImagePipelineConfig config = ImagePipelineConfig
-                .newBuilder(context)
+        ImagePipelineConfig config = OkHttp3ImagePipelineConfigFactory
+                .newBuilder(context, httpClient)
                 .setRequestListeners(requestListeners)
                 .build();
         Fresco.initialize(context, config);

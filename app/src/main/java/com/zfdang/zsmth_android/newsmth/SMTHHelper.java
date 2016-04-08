@@ -594,7 +594,7 @@ public class SMTHHelper {
             return results;
         }
 
-        Log.d("ParseBoardTopics", content);
+//        Log.d("ParseBoardTopics", content);
 
         // <a class="plant">1/1272</a> 当前页/总共页
         Pattern pagePattern = Pattern.compile("<a class=\"plant\">(\\d+)/(\\d+)");
@@ -602,7 +602,7 @@ public class SMTHHelper {
         if (pageMatcher.find()) {
             int currentPageNo = Integer.parseInt(pageMatcher.group(1));
             int totalPageNo = Integer.parseInt(pageMatcher.group(2));
-            Log.d("ParseBoardTopics", String.format(" %d of %d", currentPageNo, totalPageNo));
+//            Log.d("ParseBoardTopics", String.format(" %d of %d", currentPageNo, totalPageNo));
         }
 
 //        <ul class="list sec">
