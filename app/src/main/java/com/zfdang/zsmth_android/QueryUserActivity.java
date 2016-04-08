@@ -11,16 +11,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
 import com.zfdang.zsmth_android.helpers.StringUtils;
-import com.zfdang.zsmth_android.newsmth.UserInfo;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+import com.zfdang.zsmth_android.newsmth.UserInfo;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -31,7 +29,7 @@ public class QueryUserActivity extends AppCompatActivity {
     private String mUsername;
     private ProgressDialog pdialog = null;
 
-    private ImageView mImageView;
+    private WrapContentDraweeView mImageView;
 
     private TextView mUserId;
     private TextView mUserNickname;
@@ -94,7 +92,7 @@ public class QueryUserActivity extends AppCompatActivity {
 
 
     private void assignViews() {
-        mImageView = (ImageView) findViewById(R.id.imageView);
+        mImageView = (WrapContentDraweeView) findViewById(R.id.imageView);
 
         mUserId = (TextView) findViewById(R.id.query_user_id);
         mUserNickname = (TextView) findViewById(R.id.query_user_nickname);
@@ -185,12 +183,7 @@ public class QueryUserActivity extends AppCompatActivity {
                         mUserCurrentstatus.setText(user.getStatus());
 
                         if(user.getFace_url() != null && user.getFace_url().length() > 10) {
-                            Glide.with(QueryUserActivity.this)
-                                    .load(user.getFace_url())
-                                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                                    .fitCenter()
-                                    .crossFade()
-                                    .into(mImageView);
+                            mImageView.setImageFromStringURL(user.getFace_url());
                         }
                         showProgress("", false);
 
