@@ -4,74 +4,103 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.core.ImagePipeline;
+import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.helpers.FileLess;
+import com.zfdang.zsmth_android.helpers.FileSizeUtil;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link SettingFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link SettingFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class SettingFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+import java.io.File;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+
+public class SettingFragment extends Fragment implements View.OnClickListener {
+    private static final String TAG = "SettingFragment";
 
     private OnFragmentInteractionListener mListener;
+    private TextView setting_okhttp3_cache;
+    private Button setting_okhttp3_cache_button;
+    private TextView setting_fresco_cache;
+    private Button setting_fresco_cache_button;
 
     public SettingFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SettingFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SettingFragment newInstance(String param1, String param2) {
-        SettingFragment fragment = new SettingFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_setting, container, false);
+        View view = inflater.inflate(R.layout.fragment_setting, container, false);
+        setting_okhttp3_cache = (TextView) view.findViewById(R.id.setting_okhttp3_cache);
+        setting_fresco_cache = (TextView) view.findViewById(R.id.setting_fresco_cache);
+
+        setting_okhttp3_cache_button = (Button) view.findViewById(R.id.setting_okhttp3_cache_button);
+        setting_okhttp3_cache_button.setOnClickListener(this);
+
+        setting_fresco_cache_button = (Button) view.findViewById(R.id.setting_fresco_cache_button);
+        setting_fresco_cache_button.setOnClickListener(this);
+
+        updateOkHttp3Cache();
+        updateFrescoCache();
+        return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    public void updateOkHttp3Cache() {
+        File httpCacheDirectory = new File(SMTHApplication.getAppContext().getCacheDir(), "Responses");
+        updateCacheSize(httpCacheDirectory.getAbsolutePath(), setting_okhttp3_cache);
+    }
+
+    public void updateFrescoCache() {
+        File frescoCacheDirectory = new File(SMTHApplication.getAppContext().getCacheDir(), "image_cache");
+        Log.d(TAG, "updateFrescoCache: " + frescoCacheDirectory.getAbsolutePath());
+        updateCacheSize(frescoCacheDirectory.getAbsolutePath(), setting_fresco_cache);
+    }
+
+
+    public void updateCacheSize(final String folder, final TextView tv) {
+        Observable.just(folder)
+                .map(new Func1<String, String>() {
+                    @Override
+                    public String call(String s) {
+                        return FileSizeUtil.getAutoFileOrFolderSize(s);
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + Log.getStackTraceString(e));
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        Log.d(TAG, "onNext: Folder size = " + s);
+                        tv.setText(s);
+                    }
+                });
+
     }
 
 
@@ -81,16 +110,30 @@ public class SettingFragment extends Fragment {
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         }
-//        else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        if(v == setting_fresco_cache_button) {
+            ImagePipeline imagePipeline = Fresco.getImagePipeline();
+            imagePipeline.clearDiskCaches();
+
+            updateFrescoCache();
+        } else if (v == setting_okhttp3_cache_button) {
+            File cache = new File(SMTHApplication.getAppContext().getCacheDir(), "Responses");
+            FileLess.$del(cache);
+            if (!cache.exists()) {
+                cache.mkdir();
+            }
+            updateOkHttp3Cache();
+        }
     }
 
     /**
@@ -104,7 +147,6 @@ public class SettingFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }

@@ -436,7 +436,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_setting) {
             fragment = settingFragment;
             title = "设置";
-            testCodes();
         } else if (id == R.id.nav_about) {
             fragment = aboutFragment;
             title = "关于";
@@ -454,8 +453,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void testCodes() {
-        ImagePipeline imagePipeline = Fresco.getImagePipeline();
-        imagePipeline.clearDiskCaches();
     }
 
 
