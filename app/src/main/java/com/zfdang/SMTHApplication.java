@@ -3,18 +3,12 @@ package com.zfdang;
 import android.app.Application;
 import android.content.Context;
 
-import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttp3ImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
-import com.facebook.imagepipeline.listener.RequestListener;
-import com.facebook.imagepipeline.listener.RequestLoggingListener;
 import com.zfdang.zsmth_android.helpers.GEODatabase;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.newsmth.UserStatus;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import okhttp3.OkHttpClient;
 
@@ -62,16 +56,18 @@ public class SMTHApplication extends Application {
         // init IP lookup database
         geoDB = new GEODatabase(this);
 
-        Set<RequestListener> requestListeners = new HashSet<>();
-        requestListeners.add(new RequestLoggingListener());
+//        Set<RequestListener> requestListeners = new HashSet<>();
+//        requestListeners.add(new RequestLoggingListener());
         // init Fresco
         OkHttpClient httpClient = SMTHHelper.getInstance().mHttpClient;
         ImagePipelineConfig config = OkHttp3ImagePipelineConfigFactory
                 .newBuilder(context, httpClient)
-                .setRequestListeners(requestListeners)
+//                .setRequestListeners(requestListeners)
+//                .setDownsampleEnabled(true)
+                .setWebpSupportEnabled(true)
                 .build();
         Fresco.initialize(context, config);
-        FLog.setMinimumLoggingLevel(FLog.VERBOSE);
+//        FLog.setMinimumLoggingLevel(FLog.VERBOSE);
     }
 
     public static Context getAppContext() {

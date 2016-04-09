@@ -137,7 +137,7 @@ public class SMTHHelper {
                 })
                 .cookieJar(cookieJar)
                 .cache(cache)
-                .readTimeout(15, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
                 .connectTimeout(15, TimeUnit.SECONDS)
                 .build();
 
