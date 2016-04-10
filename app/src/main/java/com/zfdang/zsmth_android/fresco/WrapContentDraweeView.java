@@ -5,7 +5,6 @@ import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.ViewGroup;
 
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
@@ -15,6 +14,7 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.zfdang.SMTHApplication;
 
 import java.io.File;
 
@@ -46,26 +46,36 @@ public class WrapContentDraweeView extends SimpleDraweeView {
 
     public WrapContentDraweeView(Context context, GenericDraweeHierarchy hierarchy) {
         super(context, hierarchy);
+        InitProgressBar();
     }
 
     public WrapContentDraweeView(Context context) {
         super(context);
+        InitProgressBar();
     }
 
     public WrapContentDraweeView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        InitProgressBar();
     }
 
     public WrapContentDraweeView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        InitProgressBar();
     }
 
     public WrapContentDraweeView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        InitProgressBar();
+    }
+
+    public void InitProgressBar() {
+        getHierarchy().setProgressBarImage(new LoadingProgressDrawable(SMTHApplication.getAppContext()));
     }
 
     @Override
     public void setImageURI(Uri uri, Object callerContext) {
+
         DraweeController controller = ((PipelineDraweeControllerBuilder)getControllerBuilder())
                 .setControllerListener(listener)
                 .setCallerContext(callerContext)
@@ -74,7 +84,8 @@ public class WrapContentDraweeView extends SimpleDraweeView {
                 .setOldController(getController())
                 .build();
         setController(controller);
-        Log.d(TAG, "setImageURI: " + "With Context");
+
+//        Log.d(TAG, "setImageURI: " + "With Context");
     }
 
     void updateViewSize(@Nullable ImageInfo imageInfo) {

@@ -77,8 +77,8 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
 
                 // Add the text layout to the parent layout
                 WrapContentDraweeView image = (WrapContentDraweeView) inflater.inflate(R.layout.post_item_imageview, viewGroup, false);
-//                image.setImageURI(Uri.parse(content.getUrl()));
                 image.setImageFromStringURL(content.getUrl());
+
 
                 // set onclicklistener
                 image.setTag(R.id.image_tag, content.getImgIndex());

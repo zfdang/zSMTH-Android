@@ -1,4 +1,4 @@
-package com.bzh.mysimplefresco.lib;
+package com.zfdang.zsmth_android.fresco;
 
 import android.content.Context;
 import android.graphics.Bitmap;

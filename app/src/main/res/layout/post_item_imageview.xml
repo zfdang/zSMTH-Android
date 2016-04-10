@@ -13,8 +13,6 @@
     android:layout_marginTop="2dp"
     android:scaleType="centerInside"
     fresco:fadeDuration="300"
-    fresco:placeholderImage="@drawable/progress_animation"
-    fresco:placeholderImageScaleType="centerInside"
     fresco:failureImage="@drawable/image_not_found"
     fresco:failureImageScaleType="centerInside"
     fresco:roundAsCircle="false"

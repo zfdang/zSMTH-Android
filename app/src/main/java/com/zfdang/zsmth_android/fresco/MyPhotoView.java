@@ -23,6 +23,7 @@ import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.zfdang.SMTHApplication;
 
 import uk.co.senab.photoview.PhotoView;
 
@@ -46,6 +47,7 @@ public class MyPhotoView extends PhotoView {
     private void selfInit() {
         if (mDraweeHolder == null) {
             final GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder(getResources())
+                    .setProgressBarImage(new LoadingProgressDrawable(SMTHApplication.getAppContext()))
                     .build();
 
             mDraweeHolder = DraweeHolder.create(hierarchy, getContext());
