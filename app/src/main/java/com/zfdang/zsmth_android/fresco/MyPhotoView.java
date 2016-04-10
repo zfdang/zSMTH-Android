@@ -13,6 +13,7 @@ import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.AbstractDraweeController;
 import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.DraweeHolder;
@@ -48,6 +49,7 @@ public class MyPhotoView extends PhotoView {
         if (mDraweeHolder == null) {
             final GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder(getResources())
                     .setProgressBarImage(new LoadingProgressDrawable(SMTHApplication.getAppContext()))
+                    .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER)
                     .build();
 
             mDraweeHolder = DraweeHolder.create(hierarchy, getContext());
@@ -116,7 +118,6 @@ public class MyPhotoView extends PhotoView {
                                     final Bitmap bitmap = closeableStaticBitmap.getUnderlyingBitmap();
                                     if (bitmap != null) {
                                         setImageBitmap(bitmap);
-                                        setScaleType(ScaleType.FIT_CENTER);
                                     }
                                 }
                             }
