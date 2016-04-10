@@ -18,12 +18,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
-import okhttp3.ResponseBody;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 
@@ -117,6 +116,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         // perform the user login attempt.
         showProgress(true);
 
+
         Log.d(TAG, "start login now...");
         // use attempt to login, so set userOnline = true
         Settings.getInstance().setUserOnline(true);
@@ -124,48 +124,32 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         // RxJava & Retrofit: VERY VERY good article
         // http://gank.io/post/560e15be2dca930e00da1083
         SMTHHelper helper = SMTHHelper.getInstance();
-        helper.wService.loginWithKick(username, password, "on")
+        final String cookieDays = "2";
+        helper.wService.login(username, password, cookieDays)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(new Func1<ResponseBody, Integer>() {
-                    // parse response body, and convert it to a flag
-                    // 0: success
-                    // 1: wrong username / password
-                    // 2: decoding exception
-                    // 3. network unreachable  -- this is actually hanndled by onErrorAction of Subscriber
-                    @Override
-                    public Integer call(ResponseBody response) { // 参数类型 String
-                        try {
-                            String resp = SMTHHelper.DecodeResponseFromWWW(response.bytes());
-                            // 0. 登陆成功
-                            // 1. 用户密码错误，请重新登录
-                            // 2. 登录过于频繁
-                            // 3. unknown reason
-                            return SMTHHelper.parseResultOfLoginFromWWW(resp);
-                        } catch (Exception e) {
-                            Log.d(TAG, "call: " + Log.getStackTraceString(e));
-                            return 3;
-                        }
-                    }
-                })
-                .subscribe(new Subscriber<Integer>() {
+                .subscribe(new Subscriber<AjaxResponse>() {
                     @Override
                     public void onCompleted() {
-                        Log.d(TAG, "onCompleted: ");
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(TAG, "call: " + Log.getStackTraceString(e));
                         showProgress(false);
-                        Toast.makeText(getApplicationContext(), "连接错误，请检查网络.", Toast.LENGTH_LONG).show();
+
+                        Log.d(TAG, "onError: " + Log.getStackTraceString(e));
+                        Toast.makeText(LoginActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
-                    public void onNext(Integer integer) {
+                    public void onNext(AjaxResponse ajaxResponse) {
                         showProgress(false);
-                        switch (integer) {
-                            case SMTHHelper.LOGIN_RESULT_OK:
+
+//                        {"ajax_st":0,"ajax_code":"0101","ajax_msg":"您的用户名并不存在，或者您的密码错误"}
+//                        {"ajax_st":0,"ajax_code":"0105","ajax_msg":"请勿频繁登录"}
+//                        {"ajax_st":1,"ajax_code":"0005","ajax_msg":"操作成功"}
+                        switch (ajaxResponse.getAjax_st()) {
+                            case SMTHHelper.AJAX_RESULT_OK:
                                 Toast.makeText(getApplicationContext(), "登录成功!", Toast.LENGTH_SHORT).show();
 
                                 // save username & passworld
@@ -177,14 +161,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                                 setResult(Activity.RESULT_OK, resultIntent);
                                 finish();
                                 break;
-                            case SMTHHelper.LOGIN_RESULT_FAILED:
-                                Toast.makeText(getApplicationContext(), "您的用户名并不存在，或者您的密码错误!", Toast.LENGTH_LONG).show();
-                                break;
-                            case SMTHHelper.LOGIN_RESULT_TOO_FREQUENT:
-                                Toast.makeText(getApplicationContext(), "请勿频繁登录", Toast.LENGTH_LONG).show();
-                                break;
-                            case SMTHHelper.LOGIN_RESULT_UNKNOWN:
-                                Toast.makeText(getApplicationContext(), "未知错误，请稍后重试...", Toast.LENGTH_LONG).show();
+                            default:
+                                Toast.makeText(getApplicationContext(), ajaxResponse.toString(), Toast.LENGTH_LONG).show();
                                 break;
                         }
                     }

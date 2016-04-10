@@ -12,13 +12,13 @@ import android.util.Log;
 
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.Settings;
+import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.newsmth.UserInfo;
 import com.zfdang.zsmth_android.newsmth.UserStatus;
 
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import rx.Subscriber;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -46,9 +46,8 @@ public class MaintainUserStatusService extends IntentService {
         final PendingIntent pIntent = PendingIntent.getService(context, MaintainUserStatusService.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        // run it in 5 seconds, and repeat in 3 minutes
-        long firstMillis = System.currentTimeMillis() + 5000;
-        alarm.setRepeating(AlarmManager.RTC, firstMillis, AlarmManager.INTERVAL_FIFTEEN_MINUTES / 5, pIntent);
+        //repeat in 3 minutes
+        alarm.setRepeating(AlarmManager.RTC, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES / 5, pIntent);
     }
 
     public static void unschedule(Context context) {
@@ -110,33 +109,30 @@ public class MaintainUserStatusService extends IntentService {
                         boolean bLoginSuccess = false;
                         Log.d(TAG, "call: " + String.format("Autologin: %b, LastSuccess: %b, Online: %b", bAutoLogin, bLastSuccess, bUserOnline));
                         if (bAutoLogin && bLastSuccess && bUserOnline) {
-                            List<Integer> results = helper.wService.loginWithKick(username, password, "on")
-                                    .map(new Func1<ResponseBody, Integer>() {
+                            List<Integer> results = helper.wService.login(username, password, "7")
+                                    .map(new Func1<AjaxResponse, Integer>() {
                                         @Override
-                                        public Integer call(ResponseBody response) { // 参数类型 String
-                                            try {
-                                                String resp = SMTHHelper.DecodeResponseFromWWW(response.bytes());
-                                                // 0. 登陆成功
-                                                // 1. 用户密码错误，请重新登录
-                                                // 2. 登录过于频繁
-                                                // 3. unknown reason
-                                                Log.d(TAG, resp);
-                                                return SMTHHelper.parseResultOfLoginFromWWW(resp);
-                                            } catch (Exception e) {
-                                                Log.d(TAG, "call: " + Log.getStackTraceString(e));
-                                                return 3;
+                                        public Integer call(AjaxResponse response) { // 参数类型 String
+                                            if(response.getAjax_st() == 1){
+                                                // {"ajax_st":1,"ajax_code":"0005","ajax_msg":"操作成功"}
+                                                return SMTHHelper.AJAX_RESULT_OK;
+                                            } else if(response.getAjax_code().equals("0005")) {
+                                                // {"ajax_st":0,"ajax_code":"0101","ajax_msg":"您的用户名并不存在，或者您的密码错误"}
+                                                return SMTHHelper.AJAX_RESULT_FAILED;
+
                                             }
+                                            return SMTHHelper.AJAX_RESULT_UNKNOWN;
                                         }
                                     })
                                     .toList().toBlocking().single();
 
                             if (results != null && results.size() == 1) {
                                 int result = results.get(0);
-                                if (result == SMTHHelper.LOGIN_RESULT_OK) {
+                                if (result == SMTHHelper.AJAX_RESULT_OK) {
                                     // set flag, so that we will query user status again
                                     Log.d(TAG, "call: 2.2.1. Login success");
                                     bLoginSuccess = true;
-                                } else if (result == SMTHHelper.LOGIN_RESULT_FAILED) {
+                                } else if (result == SMTHHelper.AJAX_RESULT_FAILED) {
                                     // set flag, so that we will not login again next time
                                     Log.d(TAG, "call: 2.2.2. Login failed");
                                     setting.setLastLoginSuccess(false);

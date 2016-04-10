@@ -40,7 +40,7 @@ public class ComposePostActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE = 653;
     private static final String TAG = "ComposePostActivity";
-    private final String UPLOAD_TEMPLATE = "[upload=%d][/upload]\n";
+    private final String UPLOAD_TEMPLATE = "    [upload=%d][/upload]\n";
 
     private ProgressDialog pdialog = null;
 
@@ -56,6 +56,9 @@ public class ComposePostActivity extends AppCompatActivity {
     // used to show progress while publishing
     private static int  totalSteps = 1;
     private static int currentStep = 1;
+
+    private int postPublishResult = 0;
+    private String postPUblishMessage = null;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -139,7 +142,7 @@ public class ComposePostActivity extends AppCompatActivity {
         mPostContent = intent.getParcelableExtra(SMTHApplication.COMPOSE_POST_CONTEXT);
         assert mPostContent != null;
 
-        Log.d(TAG, "initFromIntent: " + mPostContent.toString());
+//        Log.d(TAG, "initFromIntent: " + mPostContent.toString());
 
         if(mPostContent.getPostid() != null && mPostContent.getPostid().length() > 0) {
             setTitle(String.format("回复文章@%s", mPostContent.getBoardEngName()));
@@ -214,6 +217,10 @@ public class ComposePostActivity extends AppCompatActivity {
     }
 
     public void publishPost() {
+
+        postPublishResult = SMTHHelper.AJAX_RESULT_OK;
+        postPUblishMessage = "";
+
         final String progressHint = "发表文章中(%d/%d)...";
         ComposePostActivity.totalSteps = 1;
         ComposePostActivity.currentStep = 1;
@@ -263,9 +270,16 @@ public class ComposePostActivity extends AppCompatActivity {
                     public void onCompleted() {
                         showProgress(null, false);
 
+                        String dialogTitle = "发表成功";
+                        String dialogMessage = "返回之前界面，或者停留在当前编辑界面？";
+                        if(postPublishResult != SMTHHelper.AJAX_RESULT_OK) {
+                            dialogTitle = "发表失败";
+                            dialogMessage = "错误信息:\n" +postPUblishMessage + "\n" + dialogMessage;
+                        }
+
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ComposePostActivity.this);
-                        alertDialogBuilder.setTitle("发表成功")
-                                .setMessage("返回之前界面，或者停留在当前编辑界面？")
+                        alertDialogBuilder.setTitle(dialogTitle)
+                                .setMessage(dialogMessage)
                                 .setCancelable(false)
                                 .setPositiveButton("返回", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
@@ -291,6 +305,10 @@ public class ComposePostActivity extends AppCompatActivity {
                     @Override
                     public void onNext(AjaxResponse ajaxResponse) {
                         Log.d(TAG, "onNext: " + ajaxResponse.toString());
+                        if(ajaxResponse.getAjax_st() != SMTHHelper.AJAX_RESULT_OK) {
+                            postPublishResult = SMTHHelper.AJAX_RESULT_FAILED;
+                            postPUblishMessage += ajaxResponse.getAjax_msg() + "\n";
+                        }
                         ComposePostActivity.currentStep ++;
                         showProgress(String.format(progressHint, ComposePostActivity.currentStep, ComposePostActivity.totalSteps), true);
                     }

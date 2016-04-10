@@ -3,7 +3,6 @@ package com.zfdang.zsmth_android.helpers;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
@@ -24,8 +23,8 @@ public class GEODatabase extends SQLiteAssetHelper {
         //super(context, DATABASE_NAME, context.getExternalFilesDir(null).getAbsolutePath(), null, DATABASE_VERSION);
         setForcedUpgrade();
 
-        Log.d("GEODatabase", String.format("IP=166.111.8.28 GEO=%s", getLocation("166.111.8.1")));
-        Log.d("GEODatabase", String.format("IP=59.66.211.1 GEO=%s", getLocation("59.66.211.1")));
+//        Log.d("GEODatabase", String.format("IP=166.111.8.28 GEO=%s", getLocation("166.111.8.1")));
+//        Log.d("GEODatabase", String.format("IP=59.66.211.1 GEO=%s", getLocation("59.66.211.1")));
     }
 
     private String Dot2LongIP(String dottedIP) {

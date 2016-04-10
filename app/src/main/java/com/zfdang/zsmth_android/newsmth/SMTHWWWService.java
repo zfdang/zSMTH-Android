@@ -19,13 +19,11 @@ import rx.Observable;
 
 
 public interface SMTHWWWService {
-//    @FormUrlEncoded
-//    @POST("/bbslogin.php")
-//    Observable<ResponseBody> login(@Field("id") String username, @Field("passwd") String password);
 
     @FormUrlEncoded
-    @POST("/bbslogin.php")
-    Observable<ResponseBody> loginWithKick(@Field("id") String username, @Field("passwd") String password, @Field("kick_multi") String kickID);
+    @Headers("X-Requested-With:XMLHttpRequest")
+    @POST("/nForum/user/ajax_login.json")
+    Observable<AjaxResponse> login(@Field("id") String username, @Field("passwd") String password, @Field("CookieDate") String CookieDate);
 
     // {"ajax_st":1,"ajax_code":"0005","ajax_msg":"操作成功"}
     @Headers("X-Requested-With:XMLHttpRequest")
