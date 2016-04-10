@@ -177,11 +177,15 @@ public class UserInfo implements Parcelable {
         this.last_login_ip = last_login_ip;
     }
 
-    public String getLast_login_time() {
-        Date date = new Date(this.last_login_time * 1000L); // *1000 is to convert seconds to milliseconds
+    public String formatUnixTime(long value) {
+        Date date = new Date(value * 1000L); // *1000 is to convert seconds to milliseconds
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // the format of your date
         String formattedDate = sdf.format(date);
         return formattedDate;
+    }
+
+    public String getLast_login_time() {
+        return formatUnixTime(this.last_login_time);
     }
 
     public void setLast_login_time(int last_login_time) {
@@ -297,8 +301,11 @@ public class UserInfo implements Parcelable {
     boolean is_online;// false,
     int post_count;// 896,
 
-    public int getFirst_login_time() {
-        return first_login_time;
+    public String getFirst_login_time() {
+        if(this.first_login_time == 0) {
+            return "";
+        }
+        return formatUnixTime(this.first_login_time);
     }
 
     public void setFirst_login_time(int first_login_time) {

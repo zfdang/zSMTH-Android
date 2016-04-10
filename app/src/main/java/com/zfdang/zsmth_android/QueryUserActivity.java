@@ -11,11 +11,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
+import com.zfdang.zsmth_android.helpers.KeyboardLess;
 import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.newsmth.UserInfo;
@@ -43,7 +45,8 @@ public class QueryUserActivity extends AppCompatActivity {
     private TextView mUserLogincount;
     private TextView mUserLife;
     private TextView mUserScore;
-    private TextView mUserLogintime;
+    private TextView mUserFirstLogintime;
+    private TextView mUserLastLogintime;
     private TextView mUserLoginip;
     private TextView mUserCurrentstatus;
 
@@ -71,10 +74,12 @@ public class QueryUserActivity extends AppCompatActivity {
         findViewById(R.id.query_user_action_query).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TextView tv = (TextView)findViewById(R.id.query_user_input);
+                EditText tv = (EditText) findViewById(R.id.query_user_input);
                 String userid = tv.getText().toString();
                 if(userid.length() > 0) {
                     mUsername = userid;
+                    KeyboardLess.$hide(QueryUserActivity.this, tv);
+                    tv.clearFocus();
                     LoadUserInfo();
                 }
 
@@ -106,7 +111,8 @@ public class QueryUserActivity extends AppCompatActivity {
         mUserLogincount = (TextView) findViewById(R.id.query_user_logincount);
         mUserLife = (TextView) findViewById(R.id.query_user_life);
         mUserScore = (TextView) findViewById(R.id.query_user_score);
-        mUserLogintime = (TextView) findViewById(R.id.query_user_logintime);
+        mUserFirstLogintime = (TextView) findViewById(R.id.query_user_first_logintime);
+        mUserLastLogintime = (TextView) findViewById(R.id.query_user_last_logintime);
         mUserLoginip = (TextView) findViewById(R.id.query_user_loginip);
         mUserCurrentstatus = (TextView) findViewById(R.id.query_user_currentstatus);
 
@@ -178,7 +184,8 @@ public class QueryUserActivity extends AppCompatActivity {
                         mUserLogincount.setText(user.getLogin_count());
                         mUserLife.setText(user.getLifeDesc());
                         mUserScore.setText(user.getScore_user());
-                        mUserLogintime.setText(user.getLast_login_time());
+                        mUserFirstLogintime.setText(user.getFirst_login_time());
+                        mUserLastLogintime.setText(user.getLast_login_time());
                         mUserLoginip.setText(StringUtils.lookupIPLocationInProfile(user.getLast_login_ip()));
                         mUserCurrentstatus.setText(user.getStatus());
 

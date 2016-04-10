@@ -24,43 +24,16 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="查询网友:"
-                android:id="@+id/textView2"/>
-
-            <EditText
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/query_user_input"
-                android:selectAllOnFocus="true"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="查询"
-                android:id="@+id/query_user_action_query"/>
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp">
 
             <com.zfdang.zsmth_android.fresco.WrapContentDraweeView
                 xmlns:fresco="http://schemas.android.com/apk/res-auto"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 android:layout_margin="10dp"
                 android:id="@+id/imageView"
-                fresco:roundedCornerRadius="30dp"
+                fresco:roundedCornerRadius="10dp"
                 fresco:roundingBorderWidth="2dp"
                 fresco:roundingBorderColor="@color/avatar_border_color"
                 android:src="@drawable/ic_account_circle_black_48dp"/>
@@ -209,7 +182,7 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <TableLayout
                 android:layout_width="match_parent"
@@ -316,14 +289,32 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="上次登录:"
-                        android:id="@+id/query_user_logintime_label"/>
+                        android:text="首次登录:"
+                        android:id="@+id/query_user_first_logintime_label"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:id="@+id/query_user_logintime"/>
+                        android:id="@+id/query_user_first_logintime"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="上次登录:"
+                        android:id="@+id/query_user_last_logintime_label"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:id="@+id/query_user_last_logintime"/>
                 </TableRow>
                 <TableRow
                     android:layout_width="match_parent"
@@ -360,11 +351,38 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:id="@+id/query_user_currentstatus"/>
+                        android:id="@+id/query_user_currentstatus"
+                        android:ellipsize="end"/>
                 </TableRow>
             </TableLayout>
         </LinearLayout>
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="查询网友:"
+                android:id="@+id/textView2"/>
+
+            <EditText
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/query_user_input"
+                android:selectAllOnFocus="true"
+                android:gravity="center_horizontal"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="查询"
+                android:id="@+id/query_user_action_query"/>
+        </LinearLayout>
 
     </LinearLayout>
 
