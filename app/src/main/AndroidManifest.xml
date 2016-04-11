@@ -24,21 +24,12 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"/>
-
-        <meta-data
-            android:name="UMENG_APPKEY"
-            android:value="56e8c05567e58e0a9e0011cc"/>
-        <meta-data
-            android:name="UMENG_CHANNEL"
-            android:value="ZFDANG"/>
-
         <activity
             android:name=".BoardTopicActivity"
             android:label="@string/title_topic_list"
@@ -47,22 +38,7 @@
         <activity
             android:name=".PostListActivity"
             android:label="@string/title_topic_detail"
-            android:parentActivityName=".BoardTopicActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".BoardTopicActivity"/>
-        </activity>
-        <activity
-            android:name="com.thefinestartist.finestwebview.FinestWebViewActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="sensor"
-            android:theme="@style/FinestWebViewTheme.Light"/>
-        <activity
-            android:name=".FSImageViewerActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_fullscreen_image_viewer"
-            android:theme="@style/FullscreenTheme">
         </activity>
         <activity
             android:name=".ComposePostActivity"
@@ -70,17 +46,41 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"
-            android:configChanges="orientation|screenSize"/>
-        <activity
             android:name=".QueryUserActivity"
             android:label="@string/title_activity_query_user"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <!--full screen activities-->
+        <activity
+            android:name=".FSImageViewerActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_fullscreen_image_viewer"
+            android:theme="@style/FullscreenTheme">
+        </activity>
 
+        <!--External activities-->
+        <activity
+            android:name="com.thefinestartist.finestwebview.FinestWebViewActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="sensor"
+            android:theme="@style/FinestWebViewTheme.Light"/>
+        <activity
+            android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"
+            android:configChanges="orientation|screenSize"/>
+
+        <!--service-->
         <service
             android:name=".services.MaintainUserStatusService"
             android:exported="false"/>
+
+        <!--meta-data for umeng-->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="56e8c05567e58e0a9e0011cc"/>
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="ZFDANG"/>
+
     </application>
 
 </manifest>

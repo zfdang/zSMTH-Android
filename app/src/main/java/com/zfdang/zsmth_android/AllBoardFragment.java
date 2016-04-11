@@ -63,7 +63,7 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.all_board_list);
         // Set the adapter
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, 0));
         Context context = view.getContext();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         if(mAdapter == null) {

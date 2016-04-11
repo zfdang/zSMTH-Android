@@ -116,7 +116,7 @@ public class PostListActivity extends AppCompatActivity
 
         mRecyclerView = (RecyclerView) findViewById(R.id.post_list);
         assert mRecyclerView != null;
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL, R.drawable.recyclerview_divider_gradient));
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(new PostRecyclerViewAdapter(PostListContent.POSTS, this));

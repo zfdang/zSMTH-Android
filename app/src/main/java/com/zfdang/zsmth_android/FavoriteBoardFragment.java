@@ -98,7 +98,7 @@ public class FavoriteBoardFragment extends Fragment {
         // Set the adapter
         if (mRecyclerView != null) {
 //            http://stackoverflow.com/questions/28713231/recyclerview-item-separator
-            mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+            mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, 0));
             Context context = mRecyclerView.getContext();
             mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
             mRecyclerView.setAdapter(new BoardRecyclerViewAdapter(BoardListContent.FAVORITE_BOARDS, mListener));

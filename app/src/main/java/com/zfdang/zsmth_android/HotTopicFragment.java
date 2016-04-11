@@ -79,7 +79,7 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.guidance_recycler_view);
         // Set the adapter
         if (mRecyclerView != null) {
-            mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+            mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, 0));
             Context context = rootView.getContext();
             mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());

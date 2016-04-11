@@ -10,12 +10,12 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
         <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
-
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
         <!-- Set theme colors from http://www.google.com/design/spec/style/color.html#color-color-palette-->
         <!-- colorPrimary is used for the default action bar background -->
         <item name="android:colorPrimary">@color/colorPrimary</item>
@@ -24,9 +24,27 @@
         <!-- colorAccent is used as the default value for colorControlActivated
              which is used to tint widgets -->
         <item name="android:colorAccent">@color/colorAccent</item>
-        <!-- You can also set colorControlNormal, colorControlActivated
-           colorControlHighlight and colorSwitchThumbNormal. -->
     </style>
+
+    <!--AppBar-->
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <!--Toolbar withtin Appbar-->
+    <style name="ThemeOverlay.ToolBar" parent="ThemeOverlay.AppCompat.ActionBar">
+        <!-- Parent theme sets colorControlNormal to textColorPrimary. -->
+        <!--<item name="android:textColorPrimary">@color/actionbar_title_text</item>-->
+        <item name="android:actionBarSize">@dimen/zsmth_actionbar_size</item>
+        <item name="actionBarSize">@dimen/zsmth_actionbar_size</item>
+    </style>
+
+    <!--title text style in toolbar-->
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <!--popup menu style in toolbar-->
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
 
     <style name="RecyclerViewSeperatorStyle" parent="@android:style/Theme">
         <item name="android:textSize">20sp</item>
@@ -38,22 +56,8 @@
     </style>
 
 
-    <style name="ThemeOverlay.ToolBar" parent="ThemeOverlay.AppCompat.ActionBar">
-        <!-- Parent theme sets colorControlNormal to textColorPrimary. -->
-        <!--<item name="android:textColorPrimary">@color/actionbar_title_text</item>-->
-        <item name="android:actionBarSize">@dimen/zsmth_actionbar_size</item>
-        <item name="actionBarSize">@dimen/zsmth_actionbar_size</item>
-    </style>
-
-    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textSize">20sp</item>
-    </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
-
     <!--http://stackoverflow.com/questions/31204320/how-can-i-change-the-navigationviews-item-text-size-->
+    <!--https://android.googlesource.com/platform/frameworks/support/+/46f5ea64c398ae336c85f3aa3a3d9f36398c3576/design/res/layout/design_drawer_item.xml-->
     <style name="NavigationDrawerStyle">
         <!-- text size in menu-->
         <item name="android:textSize">20sp</item>
