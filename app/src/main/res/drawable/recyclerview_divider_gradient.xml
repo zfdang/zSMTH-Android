@@ -2,7 +2,7 @@
        android:shape="rectangle">
     <gradient
         android:startColor="@color/colorDivider"
-        android:centerColor="@color/colorPrimaryText"
+        android:centerColor="@color/simple_text_color"
         android:endColor="@color/colorDivider"
         android:type="linear"/>
 </shape>
