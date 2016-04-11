@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -156,6 +157,16 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                 return false;
             }
         });
+        holder.mView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(mListener != null && mListener instanceof View.OnTouchListener) {
+                    return ((View.OnTouchListener) mListener).onTouch(v, event);
+                }
+                return false;
+            }
+        });
+
     }
 
     @Override

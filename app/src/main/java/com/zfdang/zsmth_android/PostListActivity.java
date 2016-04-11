@@ -19,7 +19,9 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
@@ -57,7 +59,8 @@ import rx.schedulers.Schedulers;
  * in a {@link BoardTopicActivity}.
  */
 public class PostListActivity extends AppCompatActivity
-        implements View.OnClickListener, PostRecyclerViewAdapter.OnItemClickListener, PostRecyclerViewAdapter.OnItemLongClickListener{
+        implements View.OnClickListener, PostRecyclerViewAdapter.OnItemClickListener,
+        PostRecyclerViewAdapter.OnItemLongClickListener, OnTouchListener{
 
     private static final String TAG = "PostListActivity";
     private RecyclerView mRecyclerView = null;
@@ -72,6 +75,7 @@ public class PostListActivity extends AppCompatActivity
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private String mFrom;
 
+    private int mScreenHeight;
 
     @Override
     protected void onDestroy() {
@@ -99,6 +103,8 @@ public class PostListActivity extends AppCompatActivity
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        mScreenHeight = getWindowManager().getDefaultDisplay().getHeight();
 
         mTitle = (TextView) findViewById(R.id.post_list_title);
         assert  mTitle != null;
@@ -483,4 +489,16 @@ public class PostListActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        int touchY = (int) event.getRawY();
+        if (touchY < mScreenHeight * 0.35) {
+            RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, KeyEvent.KEYCODE_VOLUME_UP);
+            return false;
+        } else if (touchY > mScreenHeight * 0.65) {
+            RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, KeyEvent.KEYCODE_VOLUME_DOWN);
+            return false;
+        }
+        return false;
+    }
 }
