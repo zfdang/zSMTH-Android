@@ -491,14 +491,14 @@ public class PostListActivity extends AppCompatActivity
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        int touchY = (int) event.getRawY();
-        if (touchY < mScreenHeight * 0.35) {
-            RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, KeyEvent.KEYCODE_VOLUME_UP);
-            return false;
-        } else if (touchY > mScreenHeight * 0.65) {
-            RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, KeyEvent.KEYCODE_VOLUME_DOWN);
-            return false;
-        }
+//        int touchY = (int) event.getRawY();
+//        if (touchY < mScreenHeight * 0.35) {
+//            RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, KeyEvent.KEYCODE_VOLUME_UP);
+//            return false;
+//        } else if (touchY > mScreenHeight * 0.65) {
+//            RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, KeyEvent.KEYCODE_VOLUME_DOWN);
+//            return false;
+//        }
         return false;
     }
 }
