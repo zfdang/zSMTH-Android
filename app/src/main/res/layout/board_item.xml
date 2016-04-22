@@ -24,7 +24,7 @@
         android:gravity="right"
         android:maxLength="25"
         android:text="版主"
-        android:textColor="@color/blue_text"/>
+        android:textColor="@color/blue_text_night"/>
 
     <TextView
         android:id="@+id/BoardName"
@@ -32,6 +32,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/CategoryName"
         android:text="[engBoard]chsBoard"
-        android:textColor="@color/colorMainText"
+        android:textColor="@color/status_text_night"
         android:textSize="20dp"/>
 </RelativeLayout>

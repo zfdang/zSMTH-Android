@@ -17,7 +17,7 @@
         android:paddingLeft="4dp"
         android:background="@color/recycler_view_seperator"
         android:textSize="16dp"
-        android:textColor="@color/colorMainText" />
+        android:textColor="@color/status_text_night" />
 
     <TextView
         android:id="@+id/topic_title"
@@ -26,7 +26,7 @@
         android:layout_below="@+id/category_name"
         android:paddingLeft="2dp"
         android:text="Topic"
-        android:textColor="@color/colorMainText"
+        android:textColor="@color/status_text_night"
         android:textSize="19dp"/>
 
 
@@ -45,7 +45,7 @@
             android:text="boardName"
             android:paddingLeft="2dp"
             android:gravity="left"
-            android:textColor="@color/colorPrimary"/>
+            android:textColor="@color/blue_text_night"/>
     </LinearLayout>
 
     <TextView
@@ -56,6 +56,6 @@
         android:text="Author"
         android:paddingRight="8dp"
         android:layout_below="@+id/topic_title"
-        android:textColor="@color/colorPrimary"/>
+        android:textColor="@color/blue_text_night"/>
 
 </RelativeLayout>

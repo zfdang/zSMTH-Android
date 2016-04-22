@@ -15,6 +15,7 @@
             android:layout_height="wrap_content"
             android:id = "@+id/setting_title"
             android:text="@string/setting_fragment"
+            android:textColor="@color/status_text_night"
             android:layout_gravity="center_horizontal"
             android:gravity="center_horizontal"
             android:textSize="22sp"/>
@@ -33,6 +34,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="OkHttp3缓存大小"
+                    android:textColor="@color/status_text_night"
                     android:id="@+id/setting_okhttp3_cache_label"
                     android:layout_marginRight="20dp"/>
 
@@ -40,6 +42,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="150M"
+                    android:textColor="@color/status_text_night"
                     android:id="@+id/setting_okhttp3_cache"/>
 
             </TableRow>
@@ -53,6 +56,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="清除OkHttp3缓存"
+
                     android:id="@+id/setting_okhttp3_cache_button"/>
             </TableRow>
 
@@ -66,12 +70,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Fresco图片缓存大小"
+                    android:textColor="@color/status_text_night"
                     android:id="@+id/setting_fresco_cache_label"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="100M"
+                    android:textColor="@color/status_text_night"
                     android:id="@+id/setting_fresco_cache"/>
 
             </TableRow>

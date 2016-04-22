@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zfdang.SMTHApplication;
@@ -75,6 +76,12 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
 
         mSearchView = (SearchView) view.findViewById(R.id.all_board_search);
         mSearchView.setIconifiedByDefault(false);
+
+        // http://stackoverflow.com/questions/11321129/is-it-possible-to-change-the-textcolor-on-an-android-searchview
+        int id = mSearchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+        TextView textView = (TextView) mSearchView.findViewById(id);
+        textView.setTextColor(getResources().getColor(R.color.status_text_night));
+        textView.setHintTextColor(getResources().getColor(R.color.status_text_night));
 
         if(mQueryListner == null) {
             mQueryListner = new QueryTextListner((BoardRecyclerViewAdapter) mRecyclerView.getAdapter());
