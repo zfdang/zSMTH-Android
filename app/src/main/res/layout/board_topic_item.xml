@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="0dp"
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp"
     android:paddingLeft="0dp"
     android:background="@drawable/recyclerview_item_bg"
     android:paddingRight="0dp">
@@ -16,7 +17,7 @@
         android:paddingLeft="4dp"
         android:background="@color/recycler_view_seperator"
         android:textSize="16dp"
-        android:textColor="@color/colorMainText" />
+        android:textColor="@color/status_text_night" />
 
     <TextView
         android:id="@+id/topic_title"
@@ -26,7 +27,7 @@
         android:paddingLeft="2dp"
         android:paddingRight="8dp"
         android:text="Topic"
-        android:textColor="@color/colorMainText"
+        android:textColor="@color/status_text_night"
         android:textSize="19dp"/>
 
 
@@ -58,7 +59,7 @@
             android:layout_toRightOf="@+id/topic_publish_label"
             android:paddingLeft="2dp"
             android:gravity="left"
-            android:textColor="@color/colorPrimary"/>
+            android:textColor="@color/blue_text_night"/>
 
 
         <TextView
@@ -106,7 +107,7 @@
             android:gravity="left"
             android:layout_below="@+id/topic_author"
             android:layout_toRightOf="@+id/topic_reply_label"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/blue_text_night"
             android:layout_gravity="top|left"/>
 
 
