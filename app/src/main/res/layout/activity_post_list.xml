@@ -40,7 +40,7 @@
             android:paddingLeft="2dp"
             android:paddingRight="4dp"
             android:text="@string/post_list_title"
-            android:textColor="@color/colorMainText"
+            android:textColor="@color/status_text_night"
             android:textSize="18sp"/>
 
         <!-- Body -->

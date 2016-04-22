@@ -10,5 +10,4 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context=".PostListFragment"
     tools:listitem="@layout/post_item"/>

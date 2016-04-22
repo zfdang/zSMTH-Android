@@ -13,8 +13,13 @@
         android:layout_weight="2"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="0dp"
         android:text="@string/first_page"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:textColor="@color/status_text_night"
+        android:background="@drawable/navigation_button_background"
         android:textSize="14sp"/>
 
     <Button
@@ -23,8 +28,13 @@
         android:layout_height="wrap_content"
         android:layout_weight="2"
         android:layout_gravity="center"
-        android:layout_marginTop="0dp"
         android:text="@string/pre_page"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:textColor="@color/status_text_night"
+        android:background="@drawable/navigation_button_background"
         android:textSize="14sp"/>
 
     <Button
@@ -33,8 +43,13 @@
         android:layout_height="wrap_content"
         android:layout_weight="2"
         android:layout_gravity="center"
-        android:layout_marginTop="0dp"
         android:text="@string/next_page"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:textColor="@color/status_text_night"
+        android:background="@drawable/navigation_button_background"
         android:textSize="14sp"/>
 
     <Button
@@ -43,9 +58,14 @@
         android:layout_height="wrap_content"
         android:layout_weight="2"
         android:layout_gravity="center"
-        android:layout_marginTop="0dp"
         android:padding="5dp"
         android:text="@string/last_page"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:textColor="@color/status_text_night"
+        android:background="@drawable/navigation_button_background"
         android:textSize="14sp"/>
 
     <EditText
@@ -67,7 +87,12 @@
         android:layout_height="wrap_content"
         android:layout_weight="2"
         android:layout_gravity="center"
-        android:layout_marginTop="0dp"
         android:text="@string/go_page"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:textColor="@color/status_text_night"
+        android:background="@drawable/navigation_button_background"
         android:textSize="14sp"/>
 </LinearLayout>

@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="4dp"
                 android:text="楼主"
-                android:textColor="@color/blue_text_night"
+                android:textColor="@color/colorPrimary"
                 android:textSize="16sp"
                 />
         </LinearLayout>
@@ -48,7 +48,7 @@
             android:id="@+id/post_publish_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/blue_text_night"
+            android:textColor="@color/colorPrimary"
             android:paddingLeft="2dp"
             android:text=""
             android:textSize="16sp"/>
