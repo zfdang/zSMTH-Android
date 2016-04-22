@@ -209,6 +209,10 @@ public class BoardTopicActivity extends AppCompatActivity
 
     // load topics from next page, without alert
     public void loadMoreItems() {
+        if(mSwipeRefreshLayout.isRefreshing() || pdialog.isShowing()) {
+            return;
+        }
+
         mCurrentPageNo += 1;
         // Log.d(TAG, mCurrentPageNo + " page is loading now...");
         LoadBoardTopicsFromMobile();

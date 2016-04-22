@@ -642,7 +642,7 @@ public class SMTHHelper {
                 }
             }
 
-            Log.d("ParseBoardTopics", topic.toString());
+            // Log.d("ParseBoardTopics", topic.toString());
             results.add(topic);
         }
 
