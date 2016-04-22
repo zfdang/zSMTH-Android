@@ -19,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zfdang.SMTHApplication;
+import com.zfdang.multiple_images_selector.ImagesSelectorActivity;
+import com.zfdang.multiple_images_selector.SelectorSettings;
 import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.models.ComposePostContext;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
@@ -27,7 +29,6 @@ import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import rx.Observable;
@@ -64,7 +65,7 @@ public class ComposePostActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == REQUEST_CODE){
             if (resultCode == RESULT_OK && data != null) {
-                mPhotos = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                mPhotos = data.getStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS);
                 mAttachments.setText(String.format("共有%d个附件", mPhotos.size()));
 //                for (String filename: mPhotos) {
 //                    Log.d(TAG, "onActivityResult: " + filename);
@@ -102,15 +103,17 @@ public class ComposePostActivity extends AppCompatActivity {
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ComposePostActivity.this, MultiImageSelectorActivity.class);
-                // whether show camera
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, false);
-                // max select image amount
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 5);
-                // select mode (MultiImageSelectorActivity.MODE_SINGLE OR MultiImageSelectorActivity.MODE_MULTI)
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI);
-                // default select images (support array list)
-                intent.putStringArrayListExtra(MultiImageSelectorActivity.EXTRA_DEFAULT_SELECTED_LIST, mPhotos);
+                // start multiple photos selector
+                Intent intent = new Intent(ComposePostActivity.this, ImagesSelectorActivity.class);
+                // max number of images to be selected
+                intent.putExtra(SelectorSettings.SELECTOR_MAX_IMAGE_NUMBER, 5);
+                // min size of image which will be shown; to filter tiny images (mainly icons)
+                intent.putExtra(SelectorSettings.SELECTOR_MIN_IMAGE_SIZE, 100000);
+                // show camera or not
+                intent.putExtra(SelectorSettings.SELECTOR_SHOW_CAMERA, true);
+                // pass current selected images as the initial value
+                intent.putStringArrayListExtra(SelectorSettings.SELECTOR_INITIAL_SELECTED_LIST, mPhotos);
+                // start the selector
                 startActivityForResult(intent, REQUEST_CODE);
             }
         });
