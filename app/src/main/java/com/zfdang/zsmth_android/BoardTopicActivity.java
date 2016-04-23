@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -166,9 +167,18 @@ public class BoardTopicActivity extends AppCompatActivity
             intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
             startActivity(intent);
 
+        } else if(id == R.id.board_topic_action_search) {
+            PopupSearchWindow popup = new PopupSearchWindow();
+            popup.initPopupWindow(this);
+            popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, 0);
+
+        } else if(id == R.id.board_topic_action_favorite) {
+            Toast.makeText(BoardTopicActivity.this, "TBD", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
