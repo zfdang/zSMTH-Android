@@ -1,6 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
              xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:background="@android:color/background_dark"
@@ -19,14 +19,14 @@
         android:id="@+id/fullscreen_image_indicator"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:layout_above="@+id/fullscreen_image_switch"
+        android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="30dp"
-        app:ci_width="8dp"
-        app:ci_height="4dp"
-        app:ci_margin="2dp"
         app:ci_animator="@animator/indicator_animator"
         app:ci_animator_reverse="@animator/indicator_animator_reverse"
         app:ci_drawable="@drawable/green_radius_square"
-        android:layout_above="@+id/fullscreen_image_switch"
-        android:layout_gravity="bottom|center_horizontal"/>
+        app:ci_height="4dp"
+        app:ci_margin="2dp"
+        app:ci_width="8dp"/>
 
 </FrameLayout>

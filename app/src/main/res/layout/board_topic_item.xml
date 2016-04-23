@@ -3,21 +3,21 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="2dp"
+    android:background="@drawable/recyclerview_item_bg"
     android:paddingBottom="2dp"
     android:paddingLeft="0dp"
-    android:background="@drawable/recyclerview_item_bg"
-    android:paddingRight="0dp">
+    android:paddingRight="0dp"
+    android:paddingTop="2dp">
 
     <TextView
         android:id="@+id/category_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Category"
-        android:paddingLeft="4dp"
         android:background="@color/recycler_view_seperator"
-        android:textSize="16dp"
-        android:textColor="@color/status_text_night" />
+        android:paddingLeft="4dp"
+        android:text="Category"
+        android:textColor="@color/status_text_night"
+        android:textSize="16dp"/>
 
     <TextView
         android:id="@+id/topic_title"
@@ -32,12 +32,12 @@
 
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:id = "@+id/author_row"
-        android:layout_below="@+id/topic_title"
+        android:id="@+id/author_row"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/topic_title"
         android:layout_marginRight="10dp"
-        android:layout_height="wrap_content">
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/topic_publish_label"
@@ -45,9 +45,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/topic_title"
             android:layout_toLeftOf="@+id/topic_author"
-            android:text="@string/publish_date_label"
-            android:paddingLeft="2dp"
             android:gravity="left"
+            android:paddingLeft="2dp"
+            android:text="@string/publish_date_label"
             android:textColor="@color/colorSecondaryText"/>
 
         <TextView
@@ -55,10 +55,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/topic_title"
-            android:text="作者"
             android:layout_toRightOf="@+id/topic_publish_label"
-            android:paddingLeft="2dp"
             android:gravity="left"
+            android:paddingLeft="2dp"
+            android:text="作者"
             android:textColor="@color/blue_text_night"/>
 
 
@@ -66,35 +66,35 @@
             android:id="@+id/topic_public_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2016-03-24"
-            android:paddingRight="8dp"
             android:layout_below="@+id/topic_title"
-            android:textColor="@color/colorSecondaryText"
             android:layout_gravity="end"
             android:layout_weight="1"
-            android:textAlignment="textEnd"/>
+            android:paddingRight="8dp"
+            android:text="2016-03-24"
+            android:textAlignment="textEnd"
+            android:textColor="@color/colorSecondaryText"/>
 
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:id="@+id/replier_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id = "@+id/replier_row"
+        android:layout_below="@+id/author_row"
         android:layout_marginRight="10dp"
 
-        android:layout_below="@+id/author_row"
+        android:orientation="horizontal"
         >
 
         <TextView
             android:id="@+id/topic_reply_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/reply_date_label"
-            android:paddingLeft="2dp"
-            android:gravity="left"
-            android:layout_toLeftOf="@+id/topic_replier"
             android:layout_below="@+id/topic_title"
+            android:layout_toLeftOf="@+id/topic_replier"
+            android:gravity="left"
+            android:paddingLeft="2dp"
+            android:text="@string/reply_date_label"
             android:textColor="@color/colorSecondaryText"
             />
 
@@ -102,26 +102,26 @@
             android:id="@+id/topic_replier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="回复者"
-            android:paddingLeft="2dp"
-            android:gravity="left"
             android:layout_below="@+id/topic_author"
+            android:layout_gravity="top|left"
             android:layout_toRightOf="@+id/topic_reply_label"
-            android:textColor="@color/blue_text_night"
-            android:layout_gravity="top|left"/>
+            android:gravity="left"
+            android:paddingLeft="2dp"
+            android:text="回复者"
+            android:textColor="@color/blue_text_night"/>
 
 
         <TextView
             android:id="@+id/topic_reply_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2016-03-24"
-            android:paddingRight="8dp"
-            android:gravity="end"
             android:layout_below="@+id/topic_title"
-            android:textColor="@color/colorSecondaryText"
             android:layout_weight="1"
-            android:textAlignment="textEnd"/>
+            android:gravity="end"
+            android:paddingRight="8dp"
+            android:text="2016-03-24"
+            android:textAlignment="textEnd"
+            android:textColor="@color/colorSecondaryText"/>
     </LinearLayout>
 
 

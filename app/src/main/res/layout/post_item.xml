@@ -48,16 +48,16 @@
             android:id="@+id/post_publish_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary"
             android:paddingLeft="2dp"
             android:text=""
+            android:textColor="@color/colorPrimary"
             android:textSize="16sp"/>
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/post_content_holder"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/post_content_holder"
         android:orientation="vertical">
 
         <include layout="@layout/post_item_content"/>

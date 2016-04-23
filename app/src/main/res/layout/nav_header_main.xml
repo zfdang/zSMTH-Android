@@ -1,46 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/side_nav_bar"
-    android:gravity="bottom"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/zsmth_actionbar_size"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/side_nav_bar"
+              android:gravity="bottom"
+              android:orientation="vertical"
+              android:paddingBottom="@dimen/activity_vertical_margin"
+              android:paddingLeft="@dimen/activity_horizontal_margin"
+              android:paddingRight="@dimen/activity_horizontal_margin"
+              android:paddingTop="@dimen/zsmth_actionbar_size"
+              android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom">
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
 
         <com.zfdang.zsmth_android.fresco.WrapContentDraweeView
+            android:id="@+id/nav_user_avatar"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:fresco="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/nav_user_avatar"
             android:layout_width="120dp"
             android:layout_height="120dp"
+            android:layout_gravity="bottom|center_horizontal"
             android:paddingTop="@dimen/nav_header_avatar_padding_top"
             fresco:placeholderImage="@drawable/ic_person_black_48dp"
             fresco:placeholderImageScaleType="fitCenter"
             fresco:roundAsCircle="false"
             fresco:roundedCornerRadius="30dp"
-            fresco:roundingBorderWidth="2dp"
             fresco:roundingBorderColor="@color/avatar_border_color"
-            android:layout_gravity="bottom|center_horizontal"/>
+            fresco:roundingBorderWidth="2dp"/>
 
         <TextView
+            android:id="@+id/nav_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/nav_header_vertical_spacing"
+            android:layout_gravity="center_horizontal"
             android:paddingBottom="@dimen/nav_header_username_padding_bottom"
+            android:paddingTop="@dimen/nav_header_vertical_spacing"
             android:text="@string/nav_header_click_to_login"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:id="@+id/nav_user_name"
-            android:layout_gravity="center_horizontal"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
     </LinearLayout>
 
 </LinearLayout>

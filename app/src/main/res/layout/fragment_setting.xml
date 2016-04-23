@@ -1,23 +1,23 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.zfdang.zsmth_android.SettingFragment">
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.zfdang.zsmth_android.SettingFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
+            android:id="@+id/setting_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id = "@+id/setting_title"
-            android:text="@string/setting_fragment"
-            android:textColor="@color/status_text_night"
             android:layout_gravity="center_horizontal"
             android:gravity="center_horizontal"
+            android:text="@string/setting_fragment"
+            android:textColor="@color/status_text_night"
             android:textSize="22sp"/>
 
         <TableLayout
@@ -31,19 +31,19 @@
                 android:gravity="center_horizontal">
 
                 <TextView
+                    android:id="@+id/setting_okhttp3_cache_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
                     android:text="OkHttp3缓存大小"
-                    android:textColor="@color/status_text_night"
-                    android:id="@+id/setting_okhttp3_cache_label"
-                    android:layout_marginRight="20dp"/>
+                    android:textColor="@color/status_text_night"/>
 
                 <TextView
+                    android:id="@+id/setting_okhttp3_cache"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="150M"
-                    android:textColor="@color/status_text_night"
-                    android:id="@+id/setting_okhttp3_cache"/>
+                    android:textColor="@color/status_text_night"/>
 
             </TableRow>
 
@@ -53,32 +53,32 @@
                 android:gravity="center_horizontal">
 
                 <Button
+                    android:id="@+id/setting_okhttp3_cache_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="清除OkHttp3缓存"
 
-                    android:id="@+id/setting_okhttp3_cache_button"/>
+                    android:text="清除OkHttp3缓存"/>
             </TableRow>
 
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center_horizontal"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="20dp"
+                android:gravity="center_horizontal">
 
                 <TextView
+                    android:id="@+id/setting_fresco_cache_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Fresco图片缓存大小"
-                    android:textColor="@color/status_text_night"
-                    android:id="@+id/setting_fresco_cache_label"/>
+                    android:textColor="@color/status_text_night"/>
 
                 <TextView
+                    android:id="@+id/setting_fresco_cache"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="100M"
-                    android:textColor="@color/status_text_night"
-                    android:id="@+id/setting_fresco_cache"/>
+                    android:textColor="@color/status_text_night"/>
 
             </TableRow>
 
@@ -88,11 +88,11 @@
                 android:gravity="center_horizontal">
 
                 <Button
+                    android:id="@+id/setting_fresco_cache_button"
                     style="?android:attr/buttonStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="清除图片缓存"
-                    android:id="@+id/setting_fresco_cache_button"
                     />
             </TableRow>
         </TableLayout>
