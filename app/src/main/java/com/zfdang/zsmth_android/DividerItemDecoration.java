@@ -16,8 +16,10 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     public static final int HORIZONTAL_LIST = LinearLayoutManager.HORIZONTAL;
     public static final int VERTICAL_LIST = LinearLayoutManager.VERTICAL;
-    private static final int DIVIDER_HEIGHT = 6;
-    private static final int DIVIDER_WIDTH = 6;
+
+    // the following two dimension are used for divider with drawable resource
+    private static final int DIVIDER_HEIGHT = 4;
+    private static final int DIVIDER_WIDTH = 4;
 
     private int mOrientation;
 
