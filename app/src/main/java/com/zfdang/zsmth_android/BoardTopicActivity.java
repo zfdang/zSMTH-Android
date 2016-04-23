@@ -71,6 +71,8 @@ public class BoardTopicActivity extends AppCompatActivity
 
     private Settings mSetting;
 
+    private boolean isSearchMode = false;
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -246,7 +248,7 @@ public class BoardTopicActivity extends AppCompatActivity
 
     // load topics from next page, without alert
     public void loadMoreItems() {
-        if(mSwipeRefreshLayout.isRefreshing() || pdialog.isShowing()) {
+        if(isSearchMode || mSwipeRefreshLayout.isRefreshing() || pdialog.isShowing()) {
             return;
         }
 
@@ -283,6 +285,8 @@ public class BoardTopicActivity extends AppCompatActivity
     }
 
     public void LoadBoardTopicsFromMobile() {
+
+        isSearchMode = false;
         final SMTHHelper helper = SMTHHelper.getInstance();
 
         helper.mService.getBoardTopicsByPage(mBoard.getBoardEngName(), Integer.toString(mCurrentPageNo))
@@ -374,5 +378,53 @@ public class BoardTopicActivity extends AppCompatActivity
     public void OnSearchAction(String keyword, String author, boolean elite, boolean attachment) {
         Log.d(TAG, "OnSearchAction: " + keyword + author + elite + attachment);
 
+        isSearchMode = true;
+        showProgress("加载搜索结果...", true);
+
+        TopicListContent.BOARD_TOPICS.clear();
+        mRecyclerView.getAdapter().notifyDataSetChanged();
+
+        String eliteStr = null;
+        if(elite) eliteStr = "on";
+
+        String attachmentStr = null;
+        if(attachment) attachmentStr = "on";
+
+        SMTHHelper helper = SMTHHelper.getInstance();
+        helper.wService.searchTopicInBoard(keyword, author, eliteStr, attachmentStr, this.mBoard.getBoardEngName())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(new Func1<ResponseBody, Observable<Topic>>() {
+                    @Override
+                    public Observable<Topic> call(ResponseBody responseBody) {
+                        try {
+                            String response = responseBody.string();
+                            List<Topic> topics = SMTHHelper.ParseSearchResultFromWWW(response);
+                            Topic topic = new Topic("搜索模式 - 下拉刷新返回版面列表");
+                            topics.add(0, topic);
+                            return Observable.from(topics);
+                        } catch (Exception e) {
+                            Log.d(TAG, Log.getStackTraceString(e));
+                            return null;
+                        }
+                    }
+                })
+                .subscribe(new Subscriber<Topic>() {
+                    @Override
+                    public void onCompleted() {
+                        showProgress("", false);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + Log.getStackTraceString(e) );
+                    }
+
+                    @Override
+                    public void onNext(Topic topic) {
+                        TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
+                        mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+                    }
+                });
     }
 }

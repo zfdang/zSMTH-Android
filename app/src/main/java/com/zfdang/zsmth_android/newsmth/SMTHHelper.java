@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.RectF;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
@@ -650,6 +651,94 @@ public class SMTHHelper {
         return results;
     }
 
+
+    // parse topics from nForum search results
+//    <tr>
+//    <td class="title_8">1.</td>
+//    <td class="title_14">
+//    <a target="_blank" href="/nForum/article/PocketLife/2217534" title="在新窗口打开此主题">
+//    <samp class="tag ico-pos-article-normal"></samp>
+//    </a>
+//    </td>
+//    <td class="title_9"><a href="/nForum/article/PocketLife/2217534">更改了一下zSMTH&#45;Android的颜色搭配</a></td>
+//    <td class="title_10">08:47:21&emsp;</td>
+//    <td class="title_12">|&ensp;<a href="/nForum/user/query/mozilla" class="c63f">mozilla</a></td>
+//    <td class="title_11 middle">9</td>
+//    <td class="title_10"><a href="/nForum/article/PocketLife/2217534?p=1#a9" title="跳转至最后回复">11:04:03&emsp;</a></td>
+//    <td class="title_12">|&ensp;<a href="/nForum/user/query/mozilla" class="c09f">rasper</a></td>
+//    </tr>
+    public static List<Topic> ParseSearchResultFromWWW(String content) {
+        final String TAG = "ParseSearchResult";
+
+        List<Topic> results = new ArrayList<>();
+        if (content == null) {
+            return results;
+        }
+        // Log.d(TAG, content);
+
+        // parse topics using Jsoup
+        Document doc = Jsoup.parse(content);
+
+        // get all lis
+        Elements divs = doc.select("div.b-content");
+        if(divs.size() == 0) {
+            Log.d(TAG, "ParseSearchResultFromWWW: " + "Did not find div.b-content");
+            return results;
+        }
+        Element div = divs.first();
+
+        Elements trs = div.getElementsByTag("tr");
+        for (Element tr: trs) {
+            // Log.d(TAG, "ParseSearchResultFromWWW: " + tr.toString());
+            Elements tds = tr.getElementsByTag("td");
+            if(tds.size() == 0) {
+                continue;
+            }
+
+            Topic topic = new Topic();
+            String title = "";
+            String author = "";
+            String replier = "";
+            String publishDate = "";
+            String replyDate = "";
+            String topicID = "";
+
+            for(Element td: tds) {
+                if(TextUtils.equals(td.attr("class"), "title_9")){
+                    title = td.text();
+                    Elements As = td.getElementsByTag("A");
+                    if(As.size() > 0) {
+                        Element A = As.first();
+                        topicID = StringUtils.getLastStringSegment(A.attr("href"));
+                    }
+                } else if(TextUtils.equals(td.attr("class"), "title_10")){
+                    if(publishDate.length() == 0) {
+                        publishDate = td.text();
+                    } else {
+                        replyDate = td.text();
+                    }
+                } else if(TextUtils.equals(td.attr("class"), "title_12")){
+                    String person = td.text().replace("|", "").trim();
+                    if(author.length() == 0) {
+                        author = person;
+                    } else {
+                        replier = person;
+                    }
+                }
+            }
+            topic.setAuthor(author);
+            topic.setTopicID(topicID);
+            topic.setTitle(title);
+            topic.setReplier(replier);
+            topic.setPublishDate(publishDate);
+            topic.setReplyDate(replyDate);
+
+            // Log.d(TAG, "ParseSearchResultFromWWW: " + topic.toString());
+            results.add(topic);
+        }
+
+        return results;
+    }
 
 
     public static List<Board> ParseFavoriteBoardsFromWWW(String content) {

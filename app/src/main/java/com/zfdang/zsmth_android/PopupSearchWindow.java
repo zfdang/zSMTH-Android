@@ -63,7 +63,6 @@ public class PopupSearchWindow extends PopupWindow{
         ckAttachment = (CheckBox) contentView.findViewById(R.id.search_attachment);
         ckElite = (CheckBox) contentView.findViewById(R.id.search_elite);
 
-
         // get device size
         Display display = context.getWindowManager().getDefaultDisplay();
         final Point size = new Point();

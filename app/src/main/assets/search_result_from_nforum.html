@@ -1,0 +1,728 @@
+<script type="text/javascript">
+if (!document.getElementById('body')) {
+    var redir = window.location.href.replace('/nForum/', '/nForum/#!');
+    window.location.href = redir;
+}
+</script>
+<style type="text/css">
+    .t-pre,
+    .t-pre-bottom {
+    margin-top: 3px;
+    width: 100%
+    }
+
+    .t-pre-bottom .t-btn {
+    margin-left: 5px
+    }
+
+    .t-btn a {
+    display: inline-block;
+    text-align: center;
+    font-size: 12px;
+    margin-left: 2px;
+    margin-right: 4px;
+    padding: 2px 6px;
+    padding: 3px 6px 1px\9;
+    height: 16px;
+    vertical-align: middle
+    }
+
+    .t-btn a:hover {
+    color: #FFF
+    }
+
+    .t-btn .input {
+    color: #999;
+    font-size: 12px;
+    margin-right: 5px
+    }
+
+    .t-btn .rss {
+    padding: 0;
+    vertical-align: middle
+    }
+
+    .t-btn .rss samp {
+    width: 27px;
+    height: 15px
+    }
+
+    .t-btn label {
+    margin-right: 5px;
+    margin-left: 2px;
+    vertical-align: middle
+    }
+
+    .page {
+    float: right;
+    padding-top: 2px;
+    *padding-top: 0
+    }
+
+    .b-head div a {
+    color: #f0d97f;
+    padding-right: 5px
+    }
+
+    .b-head div a:hover {
+    color: #efdb8d
+    }
+
+    .b-content .middle {
+    text-align: center
+    }
+
+    .t_fewuser {
+    color: #FF0
+    }
+
+    .title_1 {
+    width: 140px;
+    padding-left: 10px
+    }
+
+    .title_2 {
+    width: 100px
+    }
+
+    .title_3 {
+    width: auto
+    }
+
+    .title_4 {
+    width: 45px
+    }
+
+    .title_5 {
+    width: 45px
+    }
+
+    .title_6 {
+    width: 45px
+    }
+
+    .title_7 {
+    width: 45px
+    }
+
+    .board-list thead th.title_8 {
+    padding-left: 7px
+    }
+
+    .title_8 {
+    width: 37px;
+    padding-left: 10px
+    }
+
+    .title_9 {
+    width: auto
+    }
+
+    .title_10 {
+    width: 64px
+    }
+
+    .title_11 {
+    width: 35px
+    }
+
+    .title_12 {
+    width: 97px
+    }
+
+    .title_13 {
+    width: 35px;
+    padding-left: 5px
+    }
+
+    .title_14 {
+    width: 35px
+    }
+
+    .title_15 {
+    width: auto
+    }
+
+    .title_16 {
+    width: 125px
+    }
+
+    .title_17 {
+    width: 80px
+    }
+
+    .middle {
+    text-align: center
+    }
+
+    .board-list .top .title_9 a {
+    color: red
+    }
+
+    .board-list .tag {
+    width: 16px;
+    height: 17px
+    }
+
+    .board-list .tag-att {
+    width: 7px;
+    height: 16px;
+    margin-left: 4px
+    }
+
+    .board-list .threads-tab {
+    font-weight: bold;
+    padding-left: 4px
+    }
+
+    .board-list .threads-tab a {
+    margin: 0 3px
+    }
+
+    #deny_list th.c_op {
+    padding-left: 5px
+    }
+
+    #deny_list .c_num {
+    width: 37px;
+    padding-left: 7px
+    }
+
+    #deny_list .c_userid {
+    width: 120px
+    }
+
+    #deny_list .c_userid input {
+    width: 90px
+    }
+
+    #deny_list .c_reason input {
+    width: 150px;
+    margin-right: 10px
+    }
+
+    #deny_list select {
+    background-color: #ffffff
+    }
+
+    #deny_list .c_desc {
+    width: 160px
+    }
+
+    #deny_list .c_desc input {
+    width: 30px
+    }
+
+    #deny_list .c_op {
+    width: 85px
+    }
+
+    #deny_list .c_op input {
+    margin-left: 5px
+    }
+
+    #m_deny li span {
+    padding-right: 4px;
+    vertical-align: middle
+    }
+
+    #m_deny .input-text {
+    width: 150px;
+    margin-right: 4px
+    }
+
+    #board_banner {
+    margin-top: 12px;
+    text-align: center;
+    font-size: 0
+    }
+
+    #board_banner div.swf_wrapper {
+    z-index: -1;
+    display: inline-block
+    }
+
+    #board_banner div.swf_overlay {
+    z-index: 0;
+    cursor: pointer;
+    background-color: #ffffff;
+    opacity: 0;
+    filter: Alpha(opacity=0);
+    display: inline-block
+    }
+
+    .apptable {
+    width: 100%
+    }
+
+    .apptable td {
+    border-bottom: 1px solid #c9d7f1;
+    vertical-align: center;
+    height: 26px;
+    text-align: center
+    }
+
+    .apptable pre {
+    margin: 0 auto;
+    overflow: scroll;
+    height: 500px;
+    width: 550px;
+    text-align: left
+    }
+
+    .apptable td.sugg {
+    font-size: 14px;
+    font-weight: bold
+    }
+
+    #bm_apply td {
+    text-align: center
+    }
+</style>
+<div class="b-head corner"><span class="n-left">搜索结果</span></div>
+<div class="b-content">
+    <table class="board-list tiz" cellpadding="0" cellspacing="0">
+        <thead>
+        <tr>
+            <th class="title_8">序号</th>
+            <th class="title_14">状态</th>
+            <th class="title_9 middle">主题</th>
+            <th class="title_10">发帖时间</th>
+            <th class="title_12">|&ensp;作者</th>
+            <th class="title_11 middle">回复</th>
+            <th class="title_10">最新回复</th>
+            <th class="title_12">|&ensp;作者</th>
+        </tr>
+        </thead>
+        <tr>
+            <td class="title_8">1.</td>
+            <td class="title_14">
+                <a target="_blank" href="/nForum/article/PocketLife/2217534" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-normal"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/PocketLife/2217534">更改了一下zSMTH&#45;Android的颜色搭配</a></td>
+            <td class="title_10">08:47:21&emsp;</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/mozilla" class="c63f">mozilla</a></td>
+            <td class="title_11 middle">9</td>
+            <td class="title_10"><a href="/nForum/article/PocketLife/2217534?p=1#a9" title="跳转至最后回复">11:04:03&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/mozilla" class="c09f">rasper</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">2.</td>
+            <td class="title_14">
+                <a target="_blank" href="/nForum/article/PocketLife/2207315" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-normal"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/PocketLife/2207315">关于图文混排</a></td>
+            <td class="title_10">2016-04-10</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/mozilla" class="c63f">mozilla</a></td>
+            <td class="title_11 middle">3</td>
+            <td class="title_10"><a href="/nForum/article/PocketLife/2207315?p=1#a3" title="跳转至最后回复">2016-04-10</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/mozilla" class="c09f">iln</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">3.</td>
+            <td class="title_14">
+                <a target="_blank" href="/nForum/article/PocketLife/2071365" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-normal"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/PocketLife/2071365">上几张S6拍的动物模型</a></td>
+            <td class="title_10">2015-08-05</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/mozilla" class="c63f">mozilla</a></td>
+            <td class="title_11 middle">1</td>
+            <td class="title_10"><a href="/nForum/article/PocketLife/2071365?p=1#a1" title="跳转至最后回复">2015-08-05</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/mozilla" class="c09f">noocoo</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">4.</td>
+            <td class="title_14">
+                <a target="_blank" href="/nForum/article/PocketLife/2056070" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-normal"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/PocketLife/2056070">[原创]zSMTH水木社区BBS 客户端升级到1.2版了</a></td>
+            <td class="title_10">2015-06-24</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/mozilla" class="c63f">mozilla</a></td>
+            <td class="title_11 middle">0</td>
+            <td class="title_10"><a href="/nForum/article/PocketLife/2056070?p=1#a0" title="跳转至最后回复">2015-06-24</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/mozilla" class="c09f">mozilla</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">5.</td>
+            <td class="title_14">
+                <a target="_blank" href="/nForum/article/PocketLife/2048037" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-light"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/PocketLife/2048037">S6晚上把我吵醒了，然后一看是低电量</a><span class="threads-tab">[<a href="/nForum/article/PocketLife/2048037?p=2">2</a><a href="/nForum/article/PocketLife/2048037?p=3">3</a><a href="/nForum/article/PocketLife/2048037?p=4">4</a>]</span></td>
+            <td class="title_10">2015-06-06</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/mozilla" class="c63f">mozilla</a></td>
+            <td class="title_11 middle">33</td>
+            <td class="title_10"><a href="/nForum/article/PocketLife/2048037?p=4#a33" title="跳转至最后回复">2015-06-07</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/mozilla" class="c09f">Cut</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">6.</td>
+            <td class="title_14">
+                <a target="_blank" href="/nForum/article/PocketLife/2044576" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-b"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/PocketLife/2044576">[原创]zSMTH 水木社区BBS的开源IOS客户端</a><span class="threads-tab">[<a href="/nForum/article/PocketLife/2044576?p=2">2</a><a href="/nForum/article/PocketLife/2044576?p=3">3</a>]</span></td>
+            <td class="title_10">2015-05-28</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/mozilla" class="c63f">mozilla</a></td>
+            <td class="title_11 middle">23</td>
+            <td class="title_10"><a href="/nForum/article/PocketLife/2044576?p=3#a23" title="跳转至最后回复">2015-06-02</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/mozilla" class="c09f">mozilla</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">7.</td>
+            <td class="title_14">
+                <a target="_blank" href="/nForum/article/PocketLife/2031658" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-normal"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/PocketLife/2031658">又一个ios版的水木客户端</a></td>
+            <td class="title_10">2015-04-23</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/mozilla" class="c63f">mozilla</a></td>
+            <td class="title_11 middle">7</td>
+            <td class="title_10"><a href="/nForum/article/PocketLife/2031658?p=1#a7" title="跳转至最后回复">2015-04-24</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/mozilla" class="c09f">linglingqi</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">8.</td>
+            <td class="title_14">
+                <a target="_blank" href="/nForum/article/PocketLife/2027861" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-normal"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/PocketLife/2027861">三星的s6有入手的么？</a></td>
+            <td class="title_10">2015-04-15</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/mozilla" class="c63f">mozilla</a></td>
+            <td class="title_11 middle">1</td>
+            <td class="title_10"><a href="/nForum/article/PocketLife/2027861?p=1#a1" title="跳转至最后回复">2015-04-15</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/mozilla" class="c09f">Glas</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">9.</td>
+            <td class="title_14">
+                <a target="_blank" href="/nForum/article/PocketLife/586489" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-normal"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/PocketLife/586489">上两张用i9000的照片</a></td>
+            <td class="title_10">2011-03-27</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/mozilla" class="c63f">mozilla</a></td>
+            <td class="title_11 middle">1</td>
+            <td class="title_10"><a href="/nForum/article/PocketLife/586489?p=1#a1" title="跳转至最后回复">2011-03-27</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/mozilla" class="c09f">mozilla</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">10.</td>
+            <td class="title_14">
+                <a target="_blank" href="/nForum/article/PocketLife/357234" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-m"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/PocketLife/357234">宣传一下我在M8上面写的小软件</a></td>
+            <td class="title_10">2010-04-14</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/mozilla" class="c63f">mozilla</a></td>
+            <td class="title_11 middle">1</td>
+            <td class="title_10"><a href="/nForum/article/PocketLife/357234?p=1#a1" title="跳转至最后回复">2010-04-14</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/mozilla" class="c09f">mozilla</a></td>
+        </tr>
+    </table>
+</div>
+<div class="t-pre-bottom">
+    <div class="page">
+        <ul class="pagination">
+            <li class="page-pre">主题数:<i>10</i>&emsp;分页:</li>
+            <li>
+                <ol title="分页列表" class="page-main">
+                    <li class="page-select"><a title="当前页">1</a></li>
+                </ol>
+            </li>
+            <li class="page-suf"></li>
+        </ul>
+    </div>
+</div>
+<script type="text/javascript">
+$('#notice_nav').html('<a href="/nForum/mainpage">水木社区</a>&ensp;>>&ensp;<a href="javascript:void(0)">搜索结果</a>');
+$.setTitle('水木社区-搜索结果');;
+</script>
+<script type="text/javascript">
+$(function() {
+    if (typeof have_topads !== 'undefined' && typeof bName !== 'undefined') {
+        $.getJSON(SYS.base + '/board/' + bName + '/ajax_topads.json', function(data) {
+            var html = '';
+            for (k in data) {
+                var link;
+                if (data[k].url == "") link = 'javascript:void(0);';
+                else link = data[k].url + '" target="_blank';
+                var pos = 'top_' + bName + '_' + k;
+                html += '<tr class="top ad"><td class="title_8"><a _pos="' + pos + '" href="' + link + '"><samp class="tag ico-pos-article-top"></samp></a></td><td class="title_9"><a _pos="' + pos + '" href="' + link + '">' + data[k].title + '</a></td><td class="title_10">' + data[k].date + '</td><td class="title_12">|&ensp;系统广告</td><td class="title_11"></td><td class="title_11"></td><td class="title_11 middle">0</td><td class="title_12"><a _pos="' + pos + '" href="' + link + '">' + data[k].date + '</a></td><td class="title_12">|&ensp;系统广告</td></tr>'
+            }
+            $('.tiz').prepend(html);
+            $('.tiz tr.ad a').click(function() {
+                $(this).pingback()
+            });
+            $('.board-list tbody tr:odd td').addClass('bg-odd')
+        })
+    } else {
+        $('.board-list tbody tr:odd td').addClass('bg-odd')
+    }
+    $('#board_search').submit(function() {
+        BODY.open($(this).attr('action') + '?' + _.map($(this).getPostData(), function(v, k) {
+            v = encodeURIComponent(encodeURIComponent(v));
+            return k + '=' + v
+        }).join('&'));
+        return false
+    });
+    $('#board_search input[placeholder]').placeholder();
+    var validPost = function() {
+        if (!SESSION.get('is_login')) {
+            $('#u_login_id').alertDialog(SYS.code.MSG_LOGIN);
+            return false
+        }
+    };
+    $('#board_search input[placeholder]').placeholder();
+    $('#body').on('click', '.b-post', validPost).on('click', '#b_fav', function() {
+        var self = this;
+        DIALOG.confirmDialog('确认收藏此版面?', function() {
+            var url = SYS.base + "/fav/op/0.json",
+                data = {
+                    ac: 'ab',
+                    v: $(self).attr('_b')
+                };
+            $.post(url, data, function(json) {
+                if (json.ajax_st == 1) APP.renderTree();
+                DIALOG.ajaxDialog(json)
+            }, "json")
+        })
+    });
+    $('#body').on('click', '#apply_switch', function() {
+        $('.apptable').hide();
+        $('#bm_apply').show()
+    });
+    $('#body').on('submit', '#bm_apply', function() {
+        var empty = false;
+        $(this).find('textarea').each(function() {
+            if ($(this).val() == '') {
+                empty = true
+            }
+        });
+        if (empty) {
+            alert('必须回答所有问题!');
+            return false
+        }
+        var btn = $(this).find('input[type="submit"]').loading(true);
+        $.post($(this).attr('action'), $(this).getPostData(), function(json) {
+            btn.loading(false);
+            DIALOG.ajaxDialog(json)
+        }, 'json');
+        return false
+    });
+    if (typeof bName !== 'undefined') {
+        $.getJSON(SYS.base + '/board/' + bName + '/ajax_boardbanner.json', function(data) {
+            if (data) {
+                var pos = 'boardbanner_' + bName;
+                var html = '';
+                if (/\.swf/.test(data.file)) {
+                    html += '<div class="swf_wrapper" _pos="' + pos + '" _file="' + SYS.static + SYS.base + data.file + '" _width="' + data.width + '" _height="' + data.height + '"></div>';
+                    if (data.url.length > 0) {
+                        html += '<div class="swf_overlay" _url="' + data.url + '" style="width:' + data.width + 'px;height:' + data.height + 'px;margin-top:-' + data.height + 'px"></div>'
+                    }
+                } else {
+                    if (data.url == '') {
+                        html += '<a href="javascript:void(0);" _pos="' + pos + '"><img src="' + SYS.static + SYS.base + data.file + '" /></a>'
+                    } else {
+                        html += '<a href="' + data.url + '" target="_blank" _pos="' + pos + '"><img src="' + SYS.static + SYS.base + data.file + '" /></a>'
+                    }
+                }
+                $('#board_banner').html(html);
+                $('#board_banner a').click(function() {
+                    $(this).pingback()
+                });
+                $('#board_banner div.swf_wrapper').each(function() {
+                    var width = $(this).attr('_width');
+                    var height = $(this).attr('_height');
+                    var file = $(this).attr('_file');
+                    $(this).width(width).height(height);
+                    $(this).flash({
+                        swf: file,
+                        height: height,
+                        width: width,
+                        wmode: 'transparent'
+                    });
+                    $(this).mouseup(function() {
+                        $(this).pingback()
+                    })
+                });
+                $('#body').on('click', '#board_banner div.swf_overlay', function() {
+                    $(this).prev().mouseup();
+                    window.open($(this).attr('_url'))
+                })
+            }
+        })
+    }
+    if ($('#deny_list').length > 0) {
+        var b = $('#add_deny').attr('_b'),
+            reason = SYS.cache(b + '_denyreasons');
+        if (reason) {
+            $('#deny_list select').append(_.reduce(reason, function(ret, item) {
+                ret += ('<option value="' + item.desc + '">' + item.desc + '</option>');
+                return ret
+            }, ''))
+        } else {
+            $.get(SYS.base + '/board/' + b + '/ajax_denyreasons.json', function(res) {
+                $('#deny_list select').append(_.reduce(res, function(ret, item) {
+                    ret += ('<option value="' + item.desc + '">' + item.desc + '</option>');
+                    return ret
+                }, ''));
+                SYS.cache(b + '_denyreasons', res)
+            })
+        }
+        $('#deny_list select').on('change', function() {
+            $(this).prev().val($(this).val()).change()
+        });
+        $('#add_deny').click(function() {
+            var tr = $(this).parents('tr:first');
+            var data = {
+                id: tr.find('.c_userid input').val(),
+                reason: tr.find('.c_reason input').val(),
+                day: tr.find('.c_desc input').val()
+            };
+            if (data.id == '' || data.reason == '' || data.day == '') {
+                DIALOG.alertDialog('请输入封禁信息!');
+                return false
+            }
+            DIALOG.confirmDialog('确认封禁 ' + data.id + ' ' + data.day + ' 天?', function() {
+                $.post(SYS.base + '/board/' + b + '/ajax_adddeny.json', data, function(res) {
+                    DIALOG.ajaxDialog(res)
+                }, 'json')
+            });
+            return false
+        });
+        $('.mod_deny').click(function() {
+            var tr = $(this).parents('tr:first');
+            var t = new Date();
+            var now = parseInt(t.getTime() / 1000);
+            var offset = t.getTimezoneOffset() * 60;
+            var free = tr.find('.c_desc span').text();
+            t.setTime(free * 1000);
+            var data = {
+                action: SYS.base + '/board/' + b + '/ajax_moddeny.json',
+                id: tr.find('.c_userid').text(),
+                reason: $.trim(tr.find('.c_reason').text()),
+                freetime: t.getFullYear() + '年' + (t.getMonth() + 1) + '月' + t.getDate() + '日',
+                day: Math.floor((free - offset) / 86400) - Math.floor((now - offset) / 86400),
+                maxday: SESSION.get('is_admin') ? 70 : 14
+            };
+            var d = DIALOG.formDialog(_.template($('#tmpl_denymod').html())(data), {
+                width: 450,
+                buttons: [{
+                    text: SYS.code.COM_SUBMIT,
+                    click: function() {
+                        var f = $(this).find('#m_deny');
+                        $.post(f.attr('action'), f.getPostData(), function(repo) {
+                            DIALOG.ajaxDialog(repo)
+                        });
+                        $(this).dialog('close')
+                    }
+                }, {
+                    text: SYS.code.COM_CANCAL,
+                    click: function() {
+                        $(this).dialog('close')
+                    }
+                }]
+            }).on('change', 'select', function() {
+                $(this).prev().val($(this).val()).change()
+            });
+            d.find('select').html($('#deny_list select').html());
+            return false
+        });
+        $('.del_deny').click(function() {
+            var tr = $(this).parents('tr:first');
+            var id = tr.find('.c_userid').text();
+            DIALOG.confirmDialog('确认解封 ' + id + ' 吗?', function() {
+                $.post(SYS.base + '/board/' + b + '/ajax_deldeny.json', {
+                    id: id
+                }, function(res) {
+                    DIALOG.ajaxDialog(res)
+                }, 'json')
+            });
+            return false
+        });
+        $('#deny_list input[type="button"]').prop('disabled', false)
+    }
+    if ($('#member_list').attr('_b') != undefined) {
+        var b = $('#member_list').attr('_b');
+        $('.quit_member').click(function() {
+            DIALOG.confirmDialog('您确实要取消在【' + b + '】版的驻版吗?', function() {
+                $.post(SYS.base + '/board/' + b + '/ajax_quit_member.json', {}, function(res) {
+                    DIALOG.ajaxDialog(res)
+                })
+            })
+        });
+        $('.join_member').click(function() {
+            $.get(SYS.base + '/board/' + b + '/ajax_member_request.json', {}, function(res) {
+                var tablehtml = '<table class="board-list"><thead><tr><th>驻版要求</th><th>最低值</th><th>当前值</th><th>是否满足</th></tr></thead>';
+                var i = 0;
+                var ok = true;
+                for (i = 0; i < res.length; i++) {
+                    if (res[i].key == 'approve') tablehtml += '<tr><td>' + res[i].name + '</td><td colspan="3">' + (res[i].config ? '是' : '否') + '</td></tr>';
+                    else tablehtml += '<tr><td>' + res[i].name + '</td><td>' + res[i].config + '</td><td>' + res[i].mine + '</td><td>' + (res[i].ok ? 'OK' : '不满足') + '</td></tr>';
+                    if (!res[i].ok) ok = false
+                }
+                tablehtml += '</table>';
+                var data = {
+                    action: SYS.base + '/board/' + b + '/ajax_join_member.json',
+                    requesttable: tablehtml
+                };
+                var btns = [];
+                i = 0;
+                if (ok) btns[i++] = {
+                    text: '申请成为驻版用户',
+                    click: function() {
+                        $(this).dialog('close');
+                        DIALOG.confirmDialog('您确实要申请成为【' + b + '】的驻版用户吗?', function() {
+                            $.post(SYS.base + '/board/' + b + '/ajax_join_member.json', {}, function(res2) {
+                                DIALOG.ajaxDialog(res2)
+                            })
+                        })
+                    }
+                };
+                btns[i] = {
+                    text: SYS.code.COM_CANCAL,
+                    click: function() {
+                        $(this).dialog('close')
+                    }
+                };
+                var d = DIALOG.formDialog(_.template($('#tmpl_member').html())(data), {
+                    width: 600,
+                    buttons: btns
+                })
+            });
+            return false
+        });
+        $('.view_member_flag').click(function() {
+            $.get(SYS.base + '/board/' + b + '/ajax_view_member_flag.json', {}, function(res) {
+                var d = DIALOG.formDialog(_.template($('#tmpl_member_flag').html())({
+                    content: res
+                }), {
+                    width: 700,
+                    buttons: [{
+                        text: '关闭',
+                        click: function() {
+                            $(this).dialog('close')
+                        }
+                    }]
+                })
+            })
+        })
+    }
+});
+</script>

@@ -43,6 +43,15 @@ public interface SMTHWWWService {
     @GET("/nForum/mainpage?ajax")
     Observable<ResponseBody> getAllHotTopics();
 
+    // http://www.newsmth.net/nForum/s/article?ajax&t1=ad&au=ad&m=on&a=on&b=WorkLife
+    @Headers("X-Requested-With:XMLHttpRequest")
+    @GET("/nForum/s/article?ajax")
+    Observable<ResponseBody> searchTopicInBoard(@Query("t1") String keyword,
+                                                @Query("au") String author,
+                                                @Query("m") String elite,
+                                                @Query("a") String attachment,
+                                                @Query("b") String boardEngName);
+
     // the header line is important, because newsmth will ignore it without this header
     @Headers("X-Requested-With:XMLHttpRequest")
     @GET("/nForum/user/query/{username}.json")
