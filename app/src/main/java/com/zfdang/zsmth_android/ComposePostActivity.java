@@ -274,7 +274,7 @@ public class ComposePostActivity extends AppCompatActivity {
                         showProgress(null, false);
 
                         String dialogTitle = "发表成功";
-                        String dialogMessage = "返回之前界面，或者停留在当前编辑界面？";
+                        String dialogMessage = "结束编辑，或者停留在当前界面继续编辑？";
                         if(postPublishResult != SMTHHelper.AJAX_RESULT_OK) {
                             dialogTitle = "发表失败";
                             dialogMessage = "错误信息:\n" +postPUblishMessage + "\n" + dialogMessage;
@@ -284,13 +284,13 @@ public class ComposePostActivity extends AppCompatActivity {
                         alertDialogBuilder.setTitle(dialogTitle)
                                 .setMessage(dialogMessage)
                                 .setCancelable(false)
-                                .setPositiveButton("返回", new DialogInterface.OnClickListener() {
+                                .setPositiveButton("结束编辑", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         // if this button is clicked, close current activity
                                         ComposePostActivity.this.finish();
                                     }
                                 })
-                                .setNegativeButton("停留", new DialogInterface.OnClickListener() {
+                                .setNegativeButton("继续编辑", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         // if this button is clicked, just close the dialog box and do nothing
                                         dialog.cancel();
@@ -321,16 +321,16 @@ public class ComposePostActivity extends AppCompatActivity {
 
     public void onBackAction() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ComposePostActivity.this);
-        alertDialogBuilder.setTitle("返回确认")
-                .setMessage("返回之前界面，或者停留在当前界面继续编辑？")
+        alertDialogBuilder.setTitle("退出确认")
+                .setMessage("结束编辑，或者停留在当前界面继续编辑？")
                 .setCancelable(false)
-                .setPositiveButton("返回", new DialogInterface.OnClickListener() {
+                .setPositiveButton("结束编辑", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // if this button is clicked, close current activity
                         ComposePostActivity.this.finish();
                     }
                 })
-                .setNegativeButton("停留", new DialogInterface.OnClickListener() {
+                .setNegativeButton("继续编辑", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // if this button is clicked, just close the dialog box and do nothing
                         dialog.cancel();
