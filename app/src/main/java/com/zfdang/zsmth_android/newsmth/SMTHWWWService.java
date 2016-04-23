@@ -81,7 +81,7 @@ public interface SMTHWWWService {
     @FormUrlEncoded
     @Headers("X-Requested-With:XMLHttpRequest")
     @POST("/nForum/fav/op/{favid}.json")
-    Observable<AjaxResponse> addFavoriteBoard(@Path("favid") String favid,
-                                         @Field("ac") String action,
-                                         @Field("v") String boardEngName);
+    Observable<AjaxResponse> manageFavoriteBoard(@Path("favid") String favid,
+                                                 @Field("ac") String action,
+                                                 @Field("v") String boardEngName);
 }

@@ -1,6 +1,7 @@
 package com.zfdang.zsmth_android;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -504,6 +506,63 @@ public class MainActivity extends AppCompatActivity
 
         } else if (fragment == allBoardFragment) {
             startBoardTopicActivity(item);
+        }
+    }
+
+    @Override
+    public void onBoardLongClick(final Board board) {
+        // shared by FavoriteBoard & AllBoard fragment
+        // long click to remove board from favorite
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+        if (fragment == favoriteBoardFragment) {
+            // favorite fragment, remove the board
+            if (! board.isFolder() ) {
+                // confirm dialog
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                String title = String.format("将版面\"%s\"从收藏夹中删除么？", board.getBoardName());
+                builder.setTitle("收藏夹操作").setMessage(title);
+
+                builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                        SMTHHelper helper = SMTHHelper.getInstance();
+                        helper.wService.manageFavoriteBoard(favoriteBoardFragment.getCurrentFavoritePath(), "db", board.getBoardEngName())
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Subscriber<AjaxResponse>() {
+                                    @Override
+                                    public void onCompleted() {
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        Log.e(TAG, "onError: " + Log.getStackTraceString(e));
+                                    }
+
+                                    @Override
+                                    public void onNext(AjaxResponse ajaxResponse) {
+                                        Log.d(TAG, "onNext: " + ajaxResponse.toString());
+                                        if(ajaxResponse.getAjax_st() == SMTHHelper.AJAX_RESULT_OK) {
+                                            Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg() + "\n" + "请刷新收藏夹！", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(MainActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
+
+                    }
+                });
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog noticeDialog = builder.create();
+                noticeDialog.show();
+            }
         }
     }
 

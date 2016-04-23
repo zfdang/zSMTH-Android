@@ -178,7 +178,7 @@ public class BoardTopicActivity extends AppCompatActivity
 
         } else if(id == R.id.board_topic_action_favorite) {
             SMTHHelper helper = SMTHHelper.getInstance();
-            helper.wService.addFavoriteBoard("0", "ab", this.mBoard.getBoardEngName())
+            helper.wService.manageFavoriteBoard("0", "ab", this.mBoard.getBoardEngName())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<AjaxResponse>() {
