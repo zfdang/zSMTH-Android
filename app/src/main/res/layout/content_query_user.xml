@@ -54,6 +54,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="ID:"
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_id_label"/>
 
                     <TextView
@@ -61,6 +62,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:text=""
+                        android:textColor="@color/blue_text_night"
                         android:id="@+id/query_user_id"/>
                 </TableRow>
                 <TableRow
@@ -73,6 +75,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="昵称:"
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_nickname_label"/>
 
                     <TextView
@@ -80,6 +83,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:text=""
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_nickname"/>
                 </TableRow>
                 <TableRow
@@ -92,6 +96,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="性别:"
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_gender_label"/>
 
                     <TextView
@@ -99,6 +104,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:text=""
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_gender"/>
                 </TableRow>
                 <TableRow
@@ -111,6 +117,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="星座:"
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_constellation_label"/>
 
                     <TextView
@@ -118,6 +125,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:text=""
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_constellation"/>
                 </TableRow>
                 <TableRow
@@ -130,6 +138,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="QQ:"
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_qq_label"/>
 
                     <TextView
@@ -137,6 +146,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:text=""
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_qq"/>
                 </TableRow>
                 <TableRow
@@ -149,6 +159,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="主页:"
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_homepage_label"/>
 
                     <TextView
@@ -156,6 +167,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:text=""
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_homepage"/>
                 </TableRow>
 
@@ -175,6 +187,7 @@
                 android:text="论坛属性"
                 android:id="@+id/textView"
                 android:textSize="20sp"
+                android:textColor="@color/status_text_night"
                 android:layout_margin="5dp"
                 android:gravity="center_horizontal"/>
         </LinearLayout>
@@ -199,12 +212,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="论坛身份:"
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_level_label"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_level"/>
                 </TableRow>
 
@@ -218,12 +233,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="帖子总数:"
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_totalpost_label"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_totalpost"/>
                 </TableRow>
                 <TableRow
@@ -236,12 +253,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="登录次数:"
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_logincount_label"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_logincount"/>
                 </TableRow>
                 <TableRow
@@ -254,12 +273,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="论坛等级:"
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_life_label"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_life"/>
                 </TableRow>
                 <TableRow
@@ -272,12 +293,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="用户积分:"
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_score_label"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_score"/>
                 </TableRow>
                 <TableRow
@@ -290,12 +313,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="首次登录:"
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_first_logintime_label"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_first_logintime"/>
                 </TableRow>
                 <TableRow
@@ -308,12 +333,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="上次登录:"
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_last_logintime_label"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_last_logintime"/>
                 </TableRow>
                 <TableRow
@@ -326,6 +353,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="最后访问IP:"
+                        android:textColor="@color/status_text_night"
                         android:layout_marginRight="10dp"
                         android:id="@+id/query_user_loginip_label"/>
 
@@ -333,6 +361,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_loginip"/>
                 </TableRow>
                 <TableRow
@@ -345,12 +374,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="当前状态:"
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_currentstatus_label"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
+                        android:textColor="@color/status_text_night"
                         android:id="@+id/query_user_currentstatus"
                         android:ellipsize="end"/>
                 </TableRow>
@@ -368,6 +399,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="查询网友:"
+                android:textColor="@color/status_text_night"
                 android:id="@+id/textView2"/>
 
             <EditText
@@ -375,12 +407,15 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/query_user_input"
                 android:selectAllOnFocus="true"
+                android:textColor="@color/status_text_night"
                 android:gravity="center_horizontal"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="查询"
+                android:textColor="@color/status_text_night"
+                android:background="@drawable/navigation_button_background"
                 android:id="@+id/query_user_action_query"/>
         </LinearLayout>
 

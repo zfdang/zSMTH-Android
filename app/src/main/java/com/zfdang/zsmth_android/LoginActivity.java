@@ -182,7 +182,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
      */
     private void showProgress(final boolean show) {
         if (pdialog == null) {
-            pdialog = new ProgressDialog(this);
+            pdialog = new ProgressDialog(this, R.style.PDialog_MyTheme);
         }
         if (show) {
             pdialog.setMessage("登录中...");

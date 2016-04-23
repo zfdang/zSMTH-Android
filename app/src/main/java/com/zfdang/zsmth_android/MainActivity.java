@@ -23,8 +23,6 @@ import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.imagepipeline.core.ImagePipeline;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.umeng.analytics.MobclickAgent;
 import com.zfdang.SMTHApplication;
@@ -322,7 +320,7 @@ public class MainActivity extends AppCompatActivity
      */
     public void showProgress(String message, final boolean show) {
         if (pdialog == null) {
-            pdialog = new ProgressDialog(this);
+            pdialog = new ProgressDialog(this, R.style.PDialog_MyTheme);
         }
         if (show) {
             pdialog.setMessage(message);

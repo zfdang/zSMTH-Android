@@ -154,7 +154,7 @@ public class PostListActivity extends AppCompatActivity
 
     public void showProgress(String message, final boolean show) {
         if(pdialog == null) {
-            pdialog = new ProgressDialog(this);
+            pdialog = new ProgressDialog(this, R.style.PDialog_MyTheme);
         }
         if (show) {
             pdialog.setMessage(message);
