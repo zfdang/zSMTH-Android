@@ -26,6 +26,7 @@ import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.ComposePostContext;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.models.TopicListContent;
+import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
 import java.util.List;
@@ -174,7 +175,30 @@ public class BoardTopicActivity extends AppCompatActivity
             popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, -80);
 
         } else if(id == R.id.board_topic_action_favorite) {
-            Toast.makeText(BoardTopicActivity.this, "TBD", Toast.LENGTH_SHORT).show();
+            SMTHHelper helper = SMTHHelper.getInstance();
+            helper.wService.addFavoriteBoard("0", "ab", this.mBoard.getBoardEngName())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<AjaxResponse>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.e(TAG, "onError: " + Log.getStackTraceString(e));
+                        }
+
+                        @Override
+                        public void onNext(AjaxResponse ajaxResponse) {
+                            Log.d(TAG, "onNext: " + ajaxResponse.toString());
+                            if(ajaxResponse.getAjax_st() == SMTHHelper.AJAX_RESULT_OK) {
+                                Toast.makeText(BoardTopicActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(BoardTopicActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
         }
         return super.onOptionsItemSelected(item);
     }

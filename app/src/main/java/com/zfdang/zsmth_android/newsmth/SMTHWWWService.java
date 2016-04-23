@@ -68,4 +68,11 @@ public interface SMTHWWWService {
     @GET("/nForum/user/ajax_session.json")
     Observable<UserStatus> queryActiveUserStatus();
 
+
+    @FormUrlEncoded
+    @Headers("X-Requested-With:XMLHttpRequest")
+    @POST("/nForum/fav/op/{favid}.json")
+    Observable<AjaxResponse> addFavoriteBoard(@Path("favid") String favid,
+                                         @Field("ac") String action,
+                                         @Field("v") String boardEngName);
 }
