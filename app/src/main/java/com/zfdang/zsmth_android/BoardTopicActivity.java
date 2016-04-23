@@ -170,7 +170,7 @@ public class BoardTopicActivity extends AppCompatActivity
         } else if(id == R.id.board_topic_action_search) {
             PopupSearchWindow popup = new PopupSearchWindow();
             popup.initPopupWindow(this);
-            popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, 0);
+            popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, 80);
 
         } else if(id == R.id.board_topic_action_favorite) {
             Toast.makeText(BoardTopicActivity.this, "TBD", Toast.LENGTH_SHORT).show();
