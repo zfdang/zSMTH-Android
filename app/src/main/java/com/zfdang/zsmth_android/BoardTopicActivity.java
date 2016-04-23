@@ -47,7 +47,8 @@ import rx.schedulers.Schedulers;
  */
 public class BoardTopicActivity extends AppCompatActivity
         implements OnTopicFragmentInteractionListener,
-        SwipeRefreshLayout.OnRefreshListener
+        SwipeRefreshLayout.OnRefreshListener,
+        PopupSearchWindow.SearchInterface
 {
 
     /**
@@ -170,7 +171,7 @@ public class BoardTopicActivity extends AppCompatActivity
         } else if(id == R.id.board_topic_action_search) {
             PopupSearchWindow popup = new PopupSearchWindow();
             popup.initPopupWindow(this);
-            popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, 80);
+            popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, -80);
 
         } else if(id == R.id.board_topic_action_favorite) {
             Toast.makeText(BoardTopicActivity.this, "TBD", Toast.LENGTH_SHORT).show();
@@ -345,4 +346,9 @@ public class BoardTopicActivity extends AppCompatActivity
     }
 
 
+    @Override
+    public void OnSearchAction(String keyword, String author, boolean elite, boolean attachment) {
+        Log.d(TAG, "OnSearchAction: " + keyword + author + elite + attachment);
+
+    }
 }
