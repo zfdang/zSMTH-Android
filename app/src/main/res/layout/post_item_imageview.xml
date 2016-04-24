@@ -16,5 +16,5 @@
     fresco:failureImage="@drawable/image_not_found"
     fresco:failureImageScaleType="centerInside"
     fresco:roundAsCircle="false"
-    fresco:roundedCornerRadius="10dp"
+    fresco:roundedCornerRadius="4dp"
     />
