@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -24,10 +23,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mikepenz.aboutlibraries.LibsBuilder;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
+import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import com.umeng.analytics.MobclickAgent;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
@@ -54,7 +56,6 @@ public class MainActivity extends AppCompatActivity
         OnTopicFragmentInteractionListener,
         OnBoardFragmentInteractionListener,
         MailListFragment.OnListFragmentInteractionListener
-//        SettingFragment.OnFragmentInteractionListener,
 {
     // used by startActivityForResult
     static final int MAIN_ACTIVITY_REQUEST_CODE = 9527;  // The request code
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity
     // press BACK in 2 seconds, app will quit
     private boolean mDoubleBackToExit = false;
     private Handler mHandler = null;
+    private FloatingActionMenu mActionMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,14 +92,9 @@ public class MainActivity extends AppCompatActivity
         // http://stackoverflow.com/questions/17439683/how-to-change-action-bar-size
         // zsmth_actionbar_size @ dimen ==> ThemeOverlay.ActionBar @ styles ==> theme @ app_bar_main.xml
 
+        // init floating action button & circular action menu
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        initCircularActionMenu(fab);
 
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mToggle = new ActionBarDrawerToggle(
@@ -158,6 +155,70 @@ public class MainActivity extends AppCompatActivity
 
         // schedule the periodical run
         MaintainUserStatusService.schedule(MainActivity.this, mReceiver);
+    }
+
+    private void initCircularActionMenu(FloatingActionButton fab) {
+        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
+
+        ImageView itemIcon1 = new ImageView(this);
+        itemIcon1.setImageDrawable(getResources().getDrawable(R.drawable.ic_whatshot_white_48dp));
+        SubActionButton button1 = itemBuilder.setContentView(itemIcon1)
+                .setBackgroundDrawable(getResources().getDrawable(R.drawable.navigation_button_background))
+                .build();
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActionMenu.close(true);
+                onNavigationItemID(R.id.nav_guidance);
+            }
+        });
+
+        ImageView itemIcon2 = new ImageView(this);
+        itemIcon2.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_white_48dp));
+        SubActionButton button2 = itemBuilder.setContentView(itemIcon2)
+                .setBackgroundDrawable(getResources().getDrawable(R.drawable.navigation_button_background))
+                .build();
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActionMenu.close(true);
+                onNavigationItemID(R.id.nav_favorite);
+            }
+        });
+
+        ImageView itemIcon3 = new ImageView(this);
+        itemIcon3.setImageDrawable(getResources().getDrawable(R.drawable.ic_format_list_bulleted_white_48dp));
+        SubActionButton button3 = itemBuilder.setContentView(itemIcon3)
+                .setBackgroundDrawable(getResources().getDrawable(R.drawable.navigation_button_background))
+                .build();
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActionMenu.close(true);
+                onNavigationItemID(R.id.nav_all_boards);
+            }
+        });
+
+        ImageView itemIcon4 = new ImageView(this);
+        itemIcon4.setImageDrawable(getResources().getDrawable(R.drawable.ic_email_white_48dp));
+        SubActionButton button4 = itemBuilder.setContentView(itemIcon4)
+                .setBackgroundDrawable(getResources().getDrawable(R.drawable.navigation_button_background))
+                .build();
+        button4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActionMenu.close(true);
+                onNavigationItemID(R.id.nav_mail);
+            }
+        });
+
+        mActionMenu = new FloatingActionMenu.Builder(this)
+                .addSubActionView(button1)
+                .addSubActionView(button2)
+                .addSubActionView(button3)
+                .addSubActionView(button4)
+                .attachTo(fab)
+                .build();
     }
 
     private void updateUserStatusNow() {
@@ -424,8 +485,13 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
+        return onNavigationItemID(id);
+    }
+
+    public boolean onNavigationItemID(int menuID) {
+        // Handle navigation view item clicks here.
+        int id = menuID;
 
         Fragment fragment = null;
         String title = "";
@@ -460,6 +526,7 @@ public class MainActivity extends AppCompatActivity
         mDrawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
     public void testCodes() {
     }
