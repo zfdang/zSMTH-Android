@@ -41,6 +41,12 @@ public class FSImagePagerAdapter extends PagerAdapter {
         // Add the text layout to the parent layout
         MyPhotoView image = (MyPhotoView) inflater.inflate(R.layout.image_viewer_pager, container, false);
         assert image != null;
+
+        image.setTag(R.id.fsview_image_index, position);
+        image.setMaximumScale(12.0f);
+        // use only this method to set image
+        image.setImageUri(mURLs.get(position), null);
+
         image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -50,30 +56,24 @@ public class FSImagePagerAdapter extends PagerAdapter {
                 return false;
             }
         });
-        image.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
-            @Override
-            public void onPhotoTap(View view, float x, float y) {
-                if (mListener != null && mListener instanceof PhotoViewAttacher.OnPhotoTapListener) {
-                    ((PhotoViewAttacher.OnPhotoTapListener) mListener).onPhotoTap(view, x, y);
-                }
-            }
-
-            @Override
-            public void onOutsidePhotoTap() {
-                if (mListener != null && mListener instanceof PhotoViewAttacher.OnPhotoTapListener) {
-                    ((PhotoViewAttacher.OnPhotoTapListener) mListener).onOutsidePhotoTap();
-                }
-
-            }
-        });
-
-        image.setMaximumScale(12.0f);
-
-        // use only this method to set image
-        image.setImageUri(mURLs.get(position), null);
+//        image.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+//            @Override
+//            public void onPhotoTap(View view, float x, float y) {
+//                if (mListener != null && mListener instanceof PhotoViewAttacher.OnPhotoTapListener) {
+//                    ((PhotoViewAttacher.OnPhotoTapListener) mListener).onPhotoTap(view, x, y);
+//                }
+//            }
+//
+//            @Override
+//            public void onOutsidePhotoTap() {
+//                if (mListener != null && mListener instanceof PhotoViewAttacher.OnPhotoTapListener) {
+//                    ((PhotoViewAttacher.OnPhotoTapListener) mListener).onOutsidePhotoTap();
+//                }
+//
+//            }
+//        });
 
         container.addView(image, 0);
-
         return image;
     }
 

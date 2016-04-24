@@ -59,7 +59,7 @@ public class FileSizeUtil {
             Log.e(TAG, "getAutoFileOrFolderSize: " + Log.getStackTraceString(e));
             Log.e("获取文件大小", "获取失败!");
         }
-        return FormetFileSize(blockSize);
+        return FormatFileSize(blockSize);
     }
 
     /**
@@ -69,7 +69,7 @@ public class FileSizeUtil {
      * @return
      * @throws Exception
      */
-    private static long getFileSize(File file) throws Exception {
+    public static long getFileSize(File file) throws Exception {
         long size = 0;
         if (file.exists()) {
             FileInputStream fis = null;
@@ -89,7 +89,7 @@ public class FileSizeUtil {
      * @return
      * @throws Exception
      */
-    private static long getFolderSize(File f) throws Exception {
+    public static long getFolderSize(File f) throws Exception {
         long size = 0;
         File flist[] = f.listFiles();
         for (int i = 0; i < flist.length; i++) {
@@ -108,7 +108,7 @@ public class FileSizeUtil {
      * @param fileS
      * @return
      */
-    private static String FormetFileSize(long fileS) {
+    public static String FormatFileSize(long fileS) {
         DecimalFormat df = new DecimalFormat("#.00");
         String fileSizeString = "";
         String wrongSize = "0B";

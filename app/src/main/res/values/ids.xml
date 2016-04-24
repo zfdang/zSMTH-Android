@@ -4,4 +4,6 @@
 
     <!--drawee-->
     <item name="uriPath" type="id" />
+
+    <item name="fsview_image_index" type="id"/>
 </resources>

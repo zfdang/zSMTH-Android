@@ -99,4 +99,24 @@
     <string name="search_confirm_label">搜索</string>
     <string name="search_elite_label">精华帖</string>
     <string name="search_caption_label">搜索帖子</string>
+
+
+    <!--Exit Information-->
+    <string name="image_info_basic">基本信息</string>
+    <string name="image_info_filename">图片地址</string>
+    <string name="image_info_datetime">时间</string>
+    <string name="image_info_width">宽度</string>
+    <string name="image_info_height">高度</string>
+    <string name="image_info_size">文件大小</string>
+    <string name="image_info_capture">拍摄信息</string>
+    <string name="image_info_make">制造商</string>
+    <string name="image_info_model">型号</string>
+    <string name="image_info_focal_length">焦距</string>
+    <string name="image_info_aperture">光圈</string>
+    <string name="image_info_exposure_time">曝光时间</string>
+    <string name="image_info_flash">闪光</string>
+    <string name="image_info_iso">ISO</string>
+    <string name="image_info_white_balance">白平衡</string>
+    <string name="image_info_end">.END.</string>
+
 </resources>

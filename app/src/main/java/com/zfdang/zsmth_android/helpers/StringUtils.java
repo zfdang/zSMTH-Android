@@ -1,6 +1,7 @@
 package com.zfdang.zsmth_android.helpers;
 
 import android.text.Html;
+import android.util.Log;
 
 import com.zfdang.SMTHApplication;
 
@@ -98,5 +99,25 @@ public class StringUtils {
             }
         }
         return true;
+    }
+
+    // ellipsize in the mid
+    public static String getEllipsizedMidString(String content, int maxLen) {
+        if(maxLen < 5) {
+            maxLen = 5;
+        }
+
+        int length = content.length();
+        if(length <= maxLen) {
+            return content;
+        }
+
+        int pos1 = (maxLen - 3) / 2;
+        int pos2 = length - (maxLen - 3 - pos1);
+
+        String result = content.substring(0, pos1) + "..." + content.substring(pos2, length);
+
+        Log.d("Ellipsize", "getEllipsizedMidString: " + content + "==>" + result);
+        return result;
     }
 }
