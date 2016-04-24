@@ -433,6 +433,7 @@ public class PostListActivity extends AppCompatActivity
             startActivity(intent);
         } else if (which == 1) {
             // post_reply_mail
+            Toast.makeText(PostListActivity.this, "回复邮件:TBD", Toast.LENGTH_SHORT).show();
         } else if (which == 2) {
             // post_query_author
             Intent intent = new Intent(this, QueryUserActivity.class);
@@ -462,9 +463,11 @@ public class PostListActivity extends AppCompatActivity
 
         } else if (which == 4) {
             // post_foward_self
+            Toast.makeText(PostListActivity.this, "发回信箱:TBD", Toast.LENGTH_SHORT).show();
+
         } else if (which == 5) {
             // post_foward_external
-            //
+            Toast.makeText(PostListActivity.this, "转发:TBD", Toast.LENGTH_SHORT).show();
         } else if (which == 6) {
             // open post in browser
             String url = String.format("http://m.newsmth.net/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
@@ -482,9 +485,11 @@ public class PostListActivity extends AppCompatActivity
                     .show(url);
         } else if (which == 7) {
             // post_share
+            Toast.makeText(PostListActivity.this, "分享:TBD", Toast.LENGTH_SHORT).show();
 
         } else if (which == 8) {
             // post_delete_post
+            Toast.makeText(PostListActivity.this, "删除:TBD", Toast.LENGTH_SHORT).show();
         }
 
     }
