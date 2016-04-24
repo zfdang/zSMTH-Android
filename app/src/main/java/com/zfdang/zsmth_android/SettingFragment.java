@@ -69,7 +69,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 
     public void updateFrescoCache() {
         File frescoCacheDirectory = new File(SMTHApplication.getAppContext().getCacheDir(), "image_cache");
-        Log.d(TAG, "updateFrescoCache: " + frescoCacheDirectory.getAbsolutePath());
+        // Log.d(TAG, "updateFrescoCache: " + frescoCacheDirectory.getAbsolutePath());
         updateCacheSize(frescoCacheDirectory.getAbsolutePath(), setting_fresco_cache);
     }
 
