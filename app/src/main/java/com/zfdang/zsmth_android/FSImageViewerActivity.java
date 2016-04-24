@@ -3,10 +3,13 @@ package com.zfdang.zsmth_android;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -19,7 +22,11 @@ import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.FrescoUtils;
 import com.zfdang.zsmth_android.helpers.FileSizeUtil;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -172,12 +179,46 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
     public void saveImageToFile(String imagePath) {
         File imageFile = FrescoUtils.getCachedImageOnDisk(Uri.parse(imagePath));
         if(imageFile == null) {
-            Toast.makeText(FSImageViewerActivity.this, "无法读取缓存文件！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(FSImageViewerActivity.this, "无法读取缓存文件！", Toast.LENGTH_LONG).show();
             return;
         }
-        Log.d(TAG, "saveImageToFile: " + imageFile.getAbsolutePath());
+        // Log.d(TAG, "saveImageToFile: " + imageFile.getAbsolutePath());
 
+        // save image to sdcard
+        try {
+            if (TextUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED)) {
+                String path = Environment.getExternalStorageDirectory().getPath() + "/zSMTH/";
+                File dir = new File(path);
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
 
+                final String JPEG_FILE_PREFIX = "zSMTH-";
+                final String JPEG_FILE_SUFFIX = ".jpg";
+                File outFile = File.createTempFile(JPEG_FILE_PREFIX, JPEG_FILE_SUFFIX, dir);
+
+                BufferedInputStream bufr = new BufferedInputStream(new FileInputStream(imageFile));
+                BufferedOutputStream bufw = new BufferedOutputStream(new FileOutputStream(outFile));
+
+                int len = 0;
+                byte[] buf = new byte[1024];
+                while ((len = bufr.read(buf)) != -1) {
+                    bufw.write(buf, 0, len);
+                    bufw.flush();
+                }
+                bufw.close();
+                bufr.close();
+
+                // make sure the new file can be recognized soon
+                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(outFile)));
+
+                Toast.makeText(FSImageViewerActivity.this, "图片已存为: /zSMTH/" + outFile.getName(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "saveImageToFile: " + Log.getStackTraceString(e) );
+            Toast.makeText(FSImageViewerActivity.this, "保存图片失败:\n" + e.toString(), Toast.LENGTH_LONG).show();
+        }
 
     }
 
