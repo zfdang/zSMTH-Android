@@ -12,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.zfdang.SMTHApplication;
@@ -169,8 +170,13 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
     }
 
     public void saveImageToFile(String imagePath) {
-        File file = FrescoUtils.getCachedImageOnDisk(Uri.parse(imagePath));
-        Log.d(TAG, "saveImageToFile: " + file.getAbsolutePath());
+        File imageFile = FrescoUtils.getCachedImageOnDisk(Uri.parse(imagePath));
+        if(imageFile == null) {
+            Toast.makeText(FSImageViewerActivity.this, "无法读取缓存文件！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Log.d(TAG, "saveImageToFile: " + imageFile.getAbsolutePath());
+
 
 
     }
@@ -312,11 +318,16 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
     }
 
     public void showExifDialog(String imagePath) {
+        File imageFile = FrescoUtils.getCachedImageOnDisk(Uri.parse(imagePath));
+        if(imageFile == null) {
+            Toast.makeText(FSImageViewerActivity.this, "无法读取缓存文件！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // show exif information dialog
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.image_exif_info, null);
         try {
-            File imageFile = FrescoUtils.getCachedImageOnDisk(Uri.parse(imagePath));
             String sFileName =  imageFile.getAbsolutePath();
 
             ExifInterface exif = new ExifInterface(sFileName);

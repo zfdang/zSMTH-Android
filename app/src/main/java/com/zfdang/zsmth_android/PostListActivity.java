@@ -35,7 +35,7 @@ import com.jude.swipbackhelper.SwipeBackHelper;
 import com.thefinestartist.finestwebview.FinestWebView;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
-import com.zfdang.zsmth_android.helpers.AlertDialogItem;
+import com.zfdang.zsmth_android.models.PostActionAlertDialogItem;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.ComposePostContext;
 import com.zfdang.zsmth_android.models.Post;
@@ -363,20 +363,20 @@ public class PostListActivity extends AppCompatActivity
         Log.d(TAG, String.format("Post by %s is long clicked", PostListContent.POSTS.get(position).getAuthor()));
 
 
-        final AlertDialogItem[] menuItems = {
-                new AlertDialogItem(getString(R.string.post_reply_post), R.drawable.ic_reply_black_48dp),       // 0
-                new AlertDialogItem(getString(R.string.post_reply_mail), R.drawable.ic_email_black_48dp),    // 1
-                new AlertDialogItem(getString(R.string.post_query_author), R.drawable.ic_person_black_48dp),    // 2
-                new AlertDialogItem(getString(R.string.post_copy_content), R.drawable.ic_content_copy_black_48dp),    // 3
-                new AlertDialogItem(getString(R.string.post_foward_self), R.drawable.ic_send_black_48dp),     // 4
-                new AlertDialogItem(getString(R.string.post_foward_external), R.drawable.ic_forward_black_48dp), // 5
-                new AlertDialogItem(getString(R.string.post_view_in_browser), R.drawable.ic_open_in_browser_black_48dp), // 6
-                new AlertDialogItem(getString(R.string.post_share), R.drawable.ic_share_black_48dp), // 7
-                new AlertDialogItem(getString(R.string.post_delete_post), R.drawable.ic_delete_black_48dp),     // 8
+        final PostActionAlertDialogItem[] menuItems = {
+                new PostActionAlertDialogItem(getString(R.string.post_reply_post), R.drawable.ic_reply_black_48dp),       // 0
+                new PostActionAlertDialogItem(getString(R.string.post_reply_mail), R.drawable.ic_email_black_48dp),    // 1
+                new PostActionAlertDialogItem(getString(R.string.post_query_author), R.drawable.ic_person_black_48dp),    // 2
+                new PostActionAlertDialogItem(getString(R.string.post_copy_content), R.drawable.ic_content_copy_black_48dp),    // 3
+                new PostActionAlertDialogItem(getString(R.string.post_foward_self), R.drawable.ic_send_black_48dp),     // 4
+                new PostActionAlertDialogItem(getString(R.string.post_foward_external), R.drawable.ic_forward_black_48dp), // 5
+                new PostActionAlertDialogItem(getString(R.string.post_view_in_browser), R.drawable.ic_open_in_browser_black_48dp), // 6
+                new PostActionAlertDialogItem(getString(R.string.post_share), R.drawable.ic_share_black_48dp), // 7
+                new PostActionAlertDialogItem(getString(R.string.post_delete_post), R.drawable.ic_delete_black_48dp),     // 8
         };
 
 
-        ListAdapter adapter = new ArrayAdapter<AlertDialogItem>(getApplicationContext(), R.layout.post_popup_menu_item, menuItems) {
+        ListAdapter adapter = new ArrayAdapter<PostActionAlertDialogItem>(getApplicationContext(), R.layout.post_popup_menu_item, menuItems) {
             ViewHolder holder;
             public View getView(int position, View convertView, ViewGroup parent) {
                 final LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
