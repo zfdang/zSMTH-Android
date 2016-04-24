@@ -50,7 +50,7 @@
     <color name="recycler_view_seperator">#666666</color>
     <color name="recycler_view_item_normal">#000000</color>
     <color name="recycler_view_item_pressed">#777777</color>
-    <color name="recycler_view_item_sticky">#330000</color>
+    <color name="recycler_view_item_sticky">#330033</color>
 
     <!--for FinestWebView-->
     <color name="blackPrimaryDark">#282828</color>

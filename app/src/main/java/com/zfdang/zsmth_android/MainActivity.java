@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity
     private boolean mDoubleBackToExit = false;
     private Handler mHandler = null;
     private FloatingActionMenu mActionMenu;
+    private NavigationView mNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,11 +103,11 @@ public class MainActivity extends AppCompatActivity
         mDrawer.addDrawerListener(mToggle);
         mToggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mNavigationView.setNavigationItemSelectedListener(this);
 
         // http://stackoverflow.com/questions/33161345/android-support-v23-1-0-update-breaks-navigationview-get-find-header
-        View headerView = navigationView.getHeaderView(0);
+        View headerView = mNavigationView.getHeaderView(0);
         mAvatar = (WrapContentDraweeView) headerView.findViewById(R.id.nav_user_avatar);
         mAvatar.setOnClickListener(this);
 
@@ -170,6 +171,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 mActionMenu.close(true);
                 onNavigationItemID(R.id.nav_guidance);
+                mNavigationView.setCheckedItem(R.id.nav_guidance);
             }
         });
 
@@ -183,6 +185,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 mActionMenu.close(true);
                 onNavigationItemID(R.id.nav_favorite);
+                mNavigationView.setCheckedItem(R.id.nav_favorite);
             }
         });
 
@@ -196,6 +199,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 mActionMenu.close(true);
                 onNavigationItemID(R.id.nav_all_boards);
+                mNavigationView.setCheckedItem(R.id.nav_all_boards);
             }
         });
 
@@ -209,6 +213,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 mActionMenu.close(true);
                 onNavigationItemID(R.id.nav_mail);
+                mNavigationView.setCheckedItem(R.id.nav_mail);
             }
         });
 
