@@ -42,11 +42,10 @@
                     android:id="@+id/ii_filename"
                     android:layout_width="220dp"
                     android:layout_height="wrap_content"
-                    android:ellipsize="marquee"
+                    android:ellipsize="middle"
+                    android:singleLine="true"
                     android:textColor="@color/status_text_night"
-                    android:scrollHorizontally="true"
-                    android:maxLines="1"
-                    android:inputType="text"/>
+                    />
             </TableRow>
 
             <TableRow
@@ -297,11 +296,11 @@
             android:id="@+id/ii_end_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:gravity="center_horizontal"
             android:text="@string/image_info_end"
             android:textColor="@color/colorPrimary"
-            android:textSize="18sp"
-            android:layout_marginBottom="10dp"/>
+            android:textSize="18sp"/>
 
     </LinearLayout>
 
