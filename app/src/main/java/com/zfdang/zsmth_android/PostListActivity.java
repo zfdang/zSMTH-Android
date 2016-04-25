@@ -507,14 +507,15 @@ public class PostListActivity extends AppCompatActivity
         // prepare information from the post
         String title = String.format("[%s] %s @ 水木社区", mTopic.getBoardChsName(), mTopic.getTitle());
         String postURL = String.format("http://m.newsmth.net/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
-        String content = String.format("[%s]在大作中提到: \n%s; \nLink: %s", post.getAuthor(), post.getRawContent(), postURL);
+        String content = String.format("[%s]在大作中写到: %s\nLink: %s", post.getAuthor(), post.getRawContent(), postURL);
 
-        String imageURL = null;
+        // default: use zSMTH logo
+        String imageURL = "http://zsmth-android.zfdang.com/zsmth.png";
         List<Attachment> attaches = post.getAttachFiles();
         if(attaches != null && attaches.size() > 0) {
+            // use the first attached image
             imageURL = attaches.get(0).getImageSrc();
         }
-
 
         // more information about OnekeyShare
         // http://wiki.mob.com/docs/sharesdk/android/cn/sharesdk/onekeyshare/OnekeyShare.html
@@ -528,13 +529,8 @@ public class PostListActivity extends AppCompatActivity
         // text是分享文本，所有平台都需要这个字段
         oks.setText(content);
 
-        if(imageURL != null) {
-            // imageUrl是图片的网络路径，新浪微博、人人网、QQ空间和Linked-In支持此字段
-            oks.setImageUrl(imageURL);
-        } else {
-            // 设置一个将被截图分享的View , surfaceView是截不了图片的
-            oks.setViewToShare(mRecyclerView);
-        }
+        // imageUrl是图片的网络路径，新浪微博、人人网、QQ空间和Linked-In支持此字段
+        oks.setImageUrl(imageURL);
 
         // url在微信（包括好友、朋友圈收藏）和易信（包括好友和朋友圈）中使用
         oks.setUrl(postURL);

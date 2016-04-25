@@ -85,8 +85,7 @@
     <!-- 
     	Wechat微信和WechatMoments微信朋友圈的appid是一样的；
     
-                       注意：开发者不能用我们这两个平台的appid,否则分享不了
-    
+          注意：开发者不能用我们这两个平台的appid,否则分享不了
        	  微信测试的时候，微信测试需要先签名打包出apk,
 		sample测试微信，要先签名打包，keystore在sample项目中，密码123456
 		
@@ -95,16 +94,16 @@
 		默认值为false。此外，微信收藏不支持此字段。
 	-->
     <Wechat
-        AppId="wx36ad9dc5c082cd70"
-        AppSecret="212c61e82b4e20b893454208afa72bf3"
+        AppId="wxa0a604767238b433"
+        AppSecret="220cf0f4825b84faf07a8ffc633e8eb1"
         BypassApproval="false"
         Enable="true"
         Id="1"
         SortId="1"/>
 
     <WechatMoments
-        AppId="wx36ad9dc5c082cd70"
-        AppSecret="212c61e82b4e20b893454208afa72bf3"
+        AppId="wxa0a604767238b433"
+        AppSecret="220cf0f4825b84faf07a8ffc633e8eb1"
         BypassApproval="false"
         Enable="true"
         Id="2"
