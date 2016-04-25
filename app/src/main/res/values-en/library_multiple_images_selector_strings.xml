@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+	<string name="define_multiple_images_selector"></string>
+	<!-- Author section -->
+	<string name="library_multiple_images_selector_author">Zhengfa Dang</string>
+	<string name="library_multiple_images_selector_authorWebsite">www.zfdang.com</string>
+	<!-- Library section -->
+	<string name="library_multiple_images_selector_libraryName">Multiple Images Selector</string>
+	<string name="library_multiple_images_selector_libraryDescription">Easy-to-use library to select images in Android application</string>
+	<string name="library_multiple_images_selector_libraryWebsite">https://github.com/zfdang/android-multiple-images-selector</string>
+	<string name="library_multiple_images_selector_libraryVersion">1.1.1</string>
+	<!-- OpenSource section -->
+	<string name="library_multiple_images_selector_isOpenSource">true</string>
+	<string name="library_multiple_images_selector_repositoryLink">https://github.com/zfdang/android-multiple-images-selector</string>
+	<!-- ClassPath for autoDetect section -->
+	<string name="library_multiple_images_selector_classPath">com.zfdang.multiple-images-selector</string>
+	<!-- License section -->
+	<string name="library_multiple_images_selector_licenseId">mit</string>
+	<!-- Custom variables section -->
+</resources>

@@ -371,14 +371,15 @@ public class PostListActivity extends AppCompatActivity
 
         final PostActionAlertDialogItem[] menuItems = {
                 new PostActionAlertDialogItem(getString(R.string.post_reply_post), R.drawable.ic_reply_black_48dp),       // 0
-                new PostActionAlertDialogItem(getString(R.string.post_reply_mail), R.drawable.ic_email_black_48dp),    // 1
-                new PostActionAlertDialogItem(getString(R.string.post_query_author), R.drawable.ic_person_black_48dp),    // 2
-                new PostActionAlertDialogItem(getString(R.string.post_copy_content), R.drawable.ic_content_copy_black_48dp),    // 3
-                new PostActionAlertDialogItem(getString(R.string.post_foward_self), R.drawable.ic_send_black_48dp),     // 4
-                new PostActionAlertDialogItem(getString(R.string.post_foward_external), R.drawable.ic_forward_black_48dp), // 5
-                new PostActionAlertDialogItem(getString(R.string.post_view_in_browser), R.drawable.ic_open_in_browser_black_48dp), // 6
-                new PostActionAlertDialogItem(getString(R.string.post_share), R.drawable.ic_share_black_48dp), // 7
-                new PostActionAlertDialogItem(getString(R.string.post_delete_post), R.drawable.ic_delete_black_48dp),     // 8
+                new PostActionAlertDialogItem(getString(R.string.post_like_post), R.drawable.like_black),       // 1
+                new PostActionAlertDialogItem(getString(R.string.post_reply_mail), R.drawable.ic_email_black_48dp),    // 2
+                new PostActionAlertDialogItem(getString(R.string.post_query_author), R.drawable.ic_person_black_48dp),    // 3
+                new PostActionAlertDialogItem(getString(R.string.post_copy_content), R.drawable.ic_content_copy_black_48dp),    // 4
+                new PostActionAlertDialogItem(getString(R.string.post_foward_self), R.drawable.ic_send_black_48dp),     // 5
+                new PostActionAlertDialogItem(getString(R.string.post_foward_external), R.drawable.ic_forward_black_48dp), // 6
+                new PostActionAlertDialogItem(getString(R.string.post_view_in_browser), R.drawable.ic_open_in_browser_black_48dp), // 7
+                new PostActionAlertDialogItem(getString(R.string.post_share), R.drawable.ic_share_black_48dp), // 8
+                new PostActionAlertDialogItem(getString(R.string.post_delete_post), R.drawable.ic_delete_black_48dp),     // 9
         };
 
 
@@ -439,14 +440,17 @@ public class PostListActivity extends AppCompatActivity
             startActivity(intent);
         } else if (which == 1) {
             // post_reply_mail
-            Toast.makeText(PostListActivity.this, "回复邮件:TBD", Toast.LENGTH_SHORT).show();
+            Toast.makeText(PostListActivity.this, "Like:TBD", Toast.LENGTH_SHORT).show();
         } else if (which == 2) {
+            // post_reply_mail
+            Toast.makeText(PostListActivity.this, "回复邮件:TBD", Toast.LENGTH_SHORT).show();
+        } else if (which == 3) {
             // post_query_author
             Intent intent = new Intent(this, QueryUserActivity.class);
             intent.putExtra(SMTHApplication.QUERY_USER_INFO, post.getRawAuthor());
             startActivity(intent);
 
-        } else if (which == 3) {
+        } else if (which == 4) {
             // copy post content
             // http://stackoverflow.com/questions/8056838/dealing-with-deprecated-android-text-clipboardmanager
             String content;
@@ -467,14 +471,14 @@ public class PostListActivity extends AppCompatActivity
                 Toast.makeText(PostListActivity.this, "复制失败！", Toast.LENGTH_SHORT).show();
             }
 
-        } else if (which == 4) {
+        } else if (which == 5) {
             // post_foward_self
             Toast.makeText(PostListActivity.this, "发回信箱:TBD", Toast.LENGTH_SHORT).show();
 
-        } else if (which == 5) {
+        } else if (which == 6) {
             // post_foward_external
             Toast.makeText(PostListActivity.this, "转发:TBD", Toast.LENGTH_SHORT).show();
-        } else if (which == 6) {
+        } else if (which == 7) {
             // open post in browser
             String url = String.format("http://m.newsmth.net/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
             new FinestWebView.Builder(this)
@@ -489,12 +493,12 @@ public class PostListActivity extends AppCompatActivity
                     .progressBarHeight(4)
                     .webViewSupportZoom(true)
                     .show(url);
-        } else if (which == 7) {
+        } else if (which == 8) {
             // post_share
             // Toast.makeText(PostListActivity.this, "分享:TBD", Toast.LENGTH_SHORT).show();
             sharePost(post);
 
-        } else if (which == 8) {
+        } else if (which == 9) {
             // post_delete_post
             Toast.makeText(PostListActivity.this, "删除:TBD", Toast.LENGTH_SHORT).show();
         }

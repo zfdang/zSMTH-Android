@@ -84,4 +84,14 @@ public interface SMTHWWWService {
     Observable<AjaxResponse> manageFavoriteBoard(@Path("favid") String favid,
                                                  @Field("ac") String action,
                                                  @Field("v") String boardEngName);
+
+
+    @FormUrlEncoded
+    @Headers("X-Requested-With:XMLHttpRequest")
+    @POST("/nForum/article/{boardEngName}/ajax_add_like/{topicID}.json")
+    Observable<AjaxResponse> addLike(@Path("boardEngName") String boardEngName,
+                                     @Path("topicID") String topicID,
+                                     @Field("score") String score,
+                                     @Field("msg") String msg,
+                                     @Field("tag") String tag);
 }
