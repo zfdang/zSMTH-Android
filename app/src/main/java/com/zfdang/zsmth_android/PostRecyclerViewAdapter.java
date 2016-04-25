@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -62,7 +61,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         if(contents.size() == 1) {
             viewGroup.addView(contentView);
             contentView.setText(contents.get(0).getSpanned());
-            Linkify.addLinks(contentView, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
+            // Linkify.addLinks(contentView, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
 
             return;
         }
@@ -113,7 +112,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                 // Add the text layout to the parent layout
                 TextView tv = (TextView) inflater.inflate(R.layout.post_item_content, viewGroup, false);
                 tv.setText(content.getSpanned());
-                Linkify.addLinks(tv, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
+                // Linkify.addLinks(tv, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
 
                 // Add the text view to the parent layout
                 viewGroup.addView(tv);
