@@ -61,4 +61,6 @@
 
     <color name="avatar_border_color">#FFFFFF</color>
 
+    <color name="post_title_background">#3a3b3e</color>
+
 </resources>

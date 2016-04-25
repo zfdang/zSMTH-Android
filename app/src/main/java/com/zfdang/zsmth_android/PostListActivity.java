@@ -44,8 +44,11 @@ import com.zfdang.zsmth_android.models.PostListContent;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
+import java.util.HashMap;
 import java.util.List;
 
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 import okhttp3.ResponseBody;
@@ -507,7 +510,12 @@ public class PostListActivity extends AppCompatActivity
         // prepare information from the post
         String title = String.format("[%s] %s @ 水木社区", mTopic.getBoardChsName(), mTopic.getTitle());
         String postURL = String.format("http://m.newsmth.net/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
-        String content = String.format("[%s]在大作中写到: %s\nLink: %s", post.getAuthor(), post.getRawContent(), postURL);
+        String content = String.format("[%s]在大作中写到: %s", post.getAuthor(), post.getRawContent());
+        // the max length of webo is 140
+        if(content.length() + postURL.length() >= 130) {
+            content = content.substring(0, 100);
+        }
+        content += String.format("...\nLink:%s", postURL);
 
         // default: use zSMTH logo
         String imageURL = "http://zsmth-android.zfdang.com/zsmth.png";
@@ -534,6 +542,23 @@ public class PostListActivity extends AppCompatActivity
 
         // url在微信（包括好友、朋友圈收藏）和易信（包括好友和朋友圈）中使用
         oks.setUrl(postURL);
+
+        // set callback functions
+        oks.setCallback(new PlatformActionListener() {
+            @Override
+            public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+                Toast.makeText(PostListActivity.this, "分享成功!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Platform platform, int i, Throwable throwable) {
+                Toast.makeText(PostListActivity.this, "分享失败:" + throwable.toString(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancel(Platform platform, int i) {
+            }
+        });
 
         // 启动分享GUI
         oks.show(this);

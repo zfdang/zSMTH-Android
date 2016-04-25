@@ -37,7 +37,7 @@
             android:id="@+id/post_list_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/recycler_view_seperator"
+            android:background="@color/post_title_background"
             android:paddingLeft="2dp"
             android:paddingRight="4dp"
             android:text="@string/post_list_title"
