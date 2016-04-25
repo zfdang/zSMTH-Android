@@ -79,4 +79,5 @@ dependencies {
         transitive = true
     }
     compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
+    compile files('libs/ShareSDK-Core-2.7.1.jar')
 }
