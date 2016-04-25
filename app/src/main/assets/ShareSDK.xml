@@ -95,16 +95,16 @@
 		默认值为false。此外，微信收藏不支持此字段。
 	-->
     <Wechat
-        AppId="wx4868b35061f87885"
-        AppSecret="64020361b8ec4c99936c0e3999a9f249"
+        AppId="wx36ad9dc5c082cd70"
+        AppSecret="212c61e82b4e20b893454208afa72bf3"
         BypassApproval="false"
         Enable="true"
         Id="1"
         SortId="1"/>
 
     <WechatMoments
-        AppId="wx4868b35061f87885"
-        AppSecret="64020361b8ec4c99936c0e3999a9f249"
+        AppId="wx36ad9dc5c082cd70"
+        AppSecret="212c61e82b4e20b893454208afa72bf3"
         BypassApproval="false"
         Enable="true"
         Id="2"

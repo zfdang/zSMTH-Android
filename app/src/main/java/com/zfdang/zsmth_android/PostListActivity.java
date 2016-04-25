@@ -35,6 +35,7 @@ import com.jude.swipbackhelper.SwipeBackHelper;
 import com.thefinestartist.finestwebview.FinestWebView;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
+import com.zfdang.zsmth_android.models.Attachment;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.ComposePostContext;
 import com.zfdang.zsmth_android.models.Post;
@@ -503,24 +504,40 @@ public class PostListActivity extends AppCompatActivity
         //关闭sso授权
         oks.disableSSOWhenAuthorize();
 
-// 分享时Notification的图标和文字  2.5.9以后的版本不调用此方法
-        //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
-        // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
-        oks.setTitle(getString(R.string.share));
+        // prepare information from the post
+        String title = String.format("[%s] %s @ 水木社区", mTopic.getBoardChsName(), mTopic.getTitle());
+        String postURL = String.format("http://m.newsmth.net/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
+        String content = String.format("[%s]在大作中提到: \n%s; \nLink: %s", post.getAuthor(), post.getRawContent(), postURL);
+
+        String imageURL = null;
+        List<Attachment> attaches = post.getAttachFiles();
+        if(attaches != null && attaches.size() > 0) {
+            imageURL = attaches.get(0).getImageSrc();
+        }
+
+
+        // more information about OnekeyShare
+        // http://wiki.mob.com/docs/sharesdk/android/cn/sharesdk/onekeyshare/OnekeyShare.html
+
+        // title标题，在印象笔记、邮箱、信息、微信（包括好友、朋友圈和收藏）、 易信（包括好友、朋友圈）、人人网和QQ空间使用
+        oks.setTitle(title);
+
         // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
-        oks.setTitleUrl("http://sharesdk.cn");
+        // oks.setTitleUrl("http://sharesdk.cn");
+
         // text是分享文本，所有平台都需要这个字段
-        oks.setText("我是分享文本");
-        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-        //oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
-        // url仅在微信（包括好友和朋友圈）中使用
-        oks.setUrl("http://sharesdk.cn");
-        // comment是我对这条分享的评论，仅在人人网和QQ空间使用
-        oks.setComment("我是测试评论文本");
-        // site是分享此内容的网站名称，仅在QQ空间使用
-        oks.setSite(getString(R.string.app_name));
-        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
-        oks.setSiteUrl("http://sharesdk.cn");
+        oks.setText(content);
+
+        if(imageURL != null) {
+            // imageUrl是图片的网络路径，新浪微博、人人网、QQ空间和Linked-In支持此字段
+            oks.setImageUrl(imageURL);
+        } else {
+            // 设置一个将被截图分享的View , surfaceView是截不了图片的
+            oks.setViewToShare(mRecyclerView);
+        }
+
+        // url在微信（包括好友、朋友圈收藏）和易信（包括好友和朋友圈）中使用
+        oks.setUrl(postURL);
 
         // 启动分享GUI
         oks.show(this);
