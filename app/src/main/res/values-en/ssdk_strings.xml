@@ -13,6 +13,7 @@
     <string name="ssdk_kakaotalk_client_inavailable">KakaoTalk client not exists or the version is too low</string>
     <string name="ssdk_kakaostory_client_inavailable">KakaoStory client not exists or the version is too low</string>
     <string name="ssdk_whatsapp_client_inavailable">WhatsApp client not exists or the version is too low</string>
+    <string name="ssdk_baidutieba_client_inavailable">目前您的百度贴吧版本过低或未安装，需要安装百度贴吧才能使用</string>
     <string name="ssdk_laiwang_client_inavailable">Laiwangs client not exists or the version is too low</string>
     <string name="ssdk_alipay_client_inavailable">Alipay client not exists or the version is too low</string>
     <string name="ssdk_facebookmessenger_client_inavailable">Facebookmessenger client not exists or the version is too low</string>
@@ -61,10 +62,12 @@
     <string name="ssdk_instapaper_logining">Sign In…</string>
     <string name="ssdk_instapager_email_or_password_incorrect">Email or Password incorrect</string>
     <string name="ssdk_facebookmessenger">Facebook Messenger</string>
+    <string name="ssdk_baidutieba">百度贴吧</string>
     <string name="ssdk_laiwang">Laiwang</string>
     <string name="ssdk_laiwangmoments">Laiwang Moments</string>
     <string name="ssdk_alipay">Alipay</string>
 
+    <string name="ssdk_share_to_baidutieba">分享到百度贴吧</string>
     <string name="ssdk_share_to_qzone">Share To QZone</string>
     <string name="ssdk_share_to_qq">Share To QQ</string>
     <string name="ssdk_mingdao_share_content">Share webpage</string>
