@@ -4,7 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.imagepipeline.backends.okhttp3.OkHttp3ImagePipelineConfigFactory;
+import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.zfdang.zsmth_android.helpers.GEODatabase;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
@@ -60,11 +60,10 @@ public class SMTHApplication extends Application {
 //        requestListeners.add(new RequestLoggingListener());
         // init Fresco
         OkHttpClient httpClient = SMTHHelper.getInstance().mHttpClient;
-        ImagePipelineConfig config = OkHttp3ImagePipelineConfigFactory
+        ImagePipelineConfig config = OkHttpImagePipelineConfigFactory
                 .newBuilder(context, httpClient)
 //                .setRequestListeners(requestListeners)
 //                .setDownsampleEnabled(true)
-                .setWebpSupportEnabled(true)
                 .build();
         Fresco.initialize(context, config);
 //        FLog.setMinimumLoggingLevel(FLog.VERBOSE);
