@@ -50,10 +50,16 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.facebook.fresco:fresco:0.10.0'
-    // this does not support okhttp3 yet, so use our own
 
+    compile 'com.facebook.fresco:fresco:0.10.0'
+    // For animated GIF support
+    compile 'com.facebook.fresco:animated-gif:0.10.0'
+    // For WebP support, including animated WebP
+    compile 'com.facebook.fresco:animated-webp:0.10.0'
+    compile 'com.facebook.fresco:webpsupport:0.10.0'
+    // this does not support okhttp3 yet, so use our own
     //    compile "com.facebook.fresco:imagepipeline-okhttp:0.9.0+"
+
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile 'com.android.support:design:23.2.1'
     compile 'com.android.support:support-v4:23.2.1'
@@ -75,7 +81,7 @@ dependencies {
     compile 'me.relex:circleindicator:1.2.0@aar'
     compile 'com.commit451:PhotoView:1.2.5'
     compile 'com.zfdang.multiple-images-selector:multiple-images-selector:1.1.1'
-    compile('com.mikepenz:aboutlibraries:5.6.3@aar') {
+    compile('com.mikepenz:aboutlibraries:5.6.5@aar') {
         transitive = true
     }
     compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
