@@ -540,8 +540,8 @@ public class PostListActivity extends AppCompatActivity
         String postURL = String.format("http://m.newsmth.net/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
         String content = String.format("[%s]在大作中写到: %s", post.getAuthor(), post.getRawContent());
         // the max length of webo is 140
-        if(content.length() + postURL.length() >= 130) {
-            content = content.substring(0, 100);
+        if(content.length() > 110) {
+            content = content.substring(0, 110);
         }
         content += String.format("...\nLink:%s", postURL);
 
