@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -42,6 +43,7 @@ import com.zfdang.zsmth_android.models.Post;
 import com.zfdang.zsmth_android.models.PostActionAlertDialogItem;
 import com.zfdang.zsmth_android.models.PostListContent;
 import com.zfdang.zsmth_android.models.Topic;
+import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
 import java.util.HashMap;
@@ -66,7 +68,7 @@ import rx.schedulers.Schedulers;
  */
 public class PostListActivity extends AppCompatActivity
         implements View.OnClickListener, PostRecyclerViewAdapter.OnItemClickListener,
-        PostRecyclerViewAdapter.OnItemLongClickListener, OnTouchListener{
+        PostRecyclerViewAdapter.OnItemLongClickListener, OnTouchListener, PopupLikeWindow.OnLikeInterface {
 
     private static final String TAG = "PostListActivity";
     private RecyclerView mRecyclerView = null;
@@ -376,10 +378,8 @@ public class PostListActivity extends AppCompatActivity
                 new PostActionAlertDialogItem(getString(R.string.post_query_author), R.drawable.ic_person_black_48dp),    // 3
                 new PostActionAlertDialogItem(getString(R.string.post_copy_content), R.drawable.ic_content_copy_black_48dp),    // 4
                 new PostActionAlertDialogItem(getString(R.string.post_foward_self), R.drawable.ic_send_black_48dp),     // 5
-                new PostActionAlertDialogItem(getString(R.string.post_foward_external), R.drawable.ic_forward_black_48dp), // 6
-                new PostActionAlertDialogItem(getString(R.string.post_view_in_browser), R.drawable.ic_open_in_browser_black_48dp), // 7
-                new PostActionAlertDialogItem(getString(R.string.post_share), R.drawable.ic_share_black_48dp), // 8
-                new PostActionAlertDialogItem(getString(R.string.post_delete_post), R.drawable.ic_delete_black_48dp),     // 9
+                new PostActionAlertDialogItem(getString(R.string.post_view_in_browser), R.drawable.ic_open_in_browser_black_48dp), // 6
+                new PostActionAlertDialogItem(getString(R.string.post_share), R.drawable.ic_share_black_48dp), // 7
         };
 
 
@@ -439,11 +439,14 @@ public class PostListActivity extends AppCompatActivity
             intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
             startActivity(intent);
         } else if (which == 1) {
-            // post_reply_mail
-            Toast.makeText(PostListActivity.this, "Like:TBD", Toast.LENGTH_SHORT).show();
+            // like
+            // Toast.makeText(PostListActivity.this, "Like:TBD", Toast.LENGTH_SHORT).show();
+            PopupLikeWindow popup = new PopupLikeWindow();
+            popup.initPopupWindow(this);
+            popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 100);
         } else if (which == 2) {
             // post_reply_mail
-            Toast.makeText(PostListActivity.this, "回复邮件:TBD", Toast.LENGTH_SHORT).show();
+            Toast.makeText(PostListActivity.this, "回复到作者信箱:TBD", Toast.LENGTH_SHORT).show();
         } else if (which == 3) {
             // post_query_author
             Intent intent = new Intent(this, QueryUserActivity.class);
@@ -473,12 +476,9 @@ public class PostListActivity extends AppCompatActivity
 
         } else if (which == 5) {
             // post_foward_self
-            Toast.makeText(PostListActivity.this, "发回信箱:TBD", Toast.LENGTH_SHORT).show();
+            Toast.makeText(PostListActivity.this, "转寄信箱:TBD", Toast.LENGTH_SHORT).show();
 
         } else if (which == 6) {
-            // post_foward_external
-            Toast.makeText(PostListActivity.this, "转发:TBD", Toast.LENGTH_SHORT).show();
-        } else if (which == 7) {
             // open post in browser
             String url = String.format("http://m.newsmth.net/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
             new FinestWebView.Builder(this)
@@ -493,16 +493,12 @@ public class PostListActivity extends AppCompatActivity
                     .progressBarHeight(4)
                     .webViewSupportZoom(true)
                     .show(url);
-        } else if (which == 8) {
+        } else if (which == 7) {
             // post_share
             // Toast.makeText(PostListActivity.this, "分享:TBD", Toast.LENGTH_SHORT).show();
             sharePost(post);
 
-        } else if (which == 9) {
-            // post_delete_post
-            Toast.makeText(PostListActivity.this, "删除:TBD", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     public void sharePost(Post post) {
@@ -579,5 +575,36 @@ public class PostListActivity extends AppCompatActivity
 //            return false;
 //        }
         return false;
+    }
+
+    @Override
+    public void OnLikeAction(String score, String msg) {
+        Log.d(TAG, "OnLikeAction: " + score + msg);
+
+        SMTHHelper helper = SMTHHelper.getInstance();
+        helper.wService.addLike(mTopic.getBoardEngName(), mTopic.getTopicID(), score, msg, "")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<AjaxResponse>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + Log.getStackTraceString(e));
+                    }
+
+                    @Override
+                    public void onNext(AjaxResponse ajaxResponse) {
+                        Log.d(TAG, "onNext: " + ajaxResponse.toString());
+                        if(ajaxResponse.getAjax_st() == SMTHHelper.AJAX_RESULT_OK) {
+                            Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg() + "\n请刷新查看结果！", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+
     }
 }
