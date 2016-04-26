@@ -94,4 +94,11 @@ public interface SMTHWWWService {
                                      @Field("score") String score,
                                      @Field("msg") String msg,
                                      @Field("tag") String tag);
+
+    @FormUrlEncoded
+    @Headers("X-Requested-With:XMLHttpRequest")
+    @POST("/nForum/article/{boardEngName}/ajax_forward/{postID}.json")
+    Observable<AjaxResponse> forwardPost(@Path("boardEngName") String boardEngName,
+                                     @Path("postID") String postID,
+                                     @Field("target") String target);
 }

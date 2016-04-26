@@ -476,8 +476,8 @@ public class PostListActivity extends AppCompatActivity
 
         } else if (which == 5) {
             // post_foward_self
-            Toast.makeText(PostListActivity.this, "转寄信箱:TBD", Toast.LENGTH_SHORT).show();
-
+            // Toast.makeText(PostListActivity.this, "转寄信箱:TBD", Toast.LENGTH_SHORT).show();
+            forwardPostToMailbox(post);
         } else if (which == 6) {
             // open post in browser
             String url = String.format("http://m.newsmth.net/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
@@ -499,6 +499,34 @@ public class PostListActivity extends AppCompatActivity
             sharePost(post);
 
         }
+    }
+
+    public void forwardPostToMailbox(Post post) {
+        SMTHHelper helper = SMTHHelper.getInstance();
+        helper.wService.forwardPost(mTopic.getBoardEngName(), post.getPostID(), SMTHApplication.activeUser.getId())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<AjaxResponse>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        // Log.e(TAG, "onError: " + Log.getStackTraceString(e));
+                        Toast.makeText(PostListActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onNext(AjaxResponse ajaxResponse) {
+                        Log.d(TAG, "onNext: " + ajaxResponse.toString());
+                        if(ajaxResponse.getAjax_st() == SMTHHelper.AJAX_RESULT_OK) {
+                            Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
     }
 
     public void sharePost(Post post) {
