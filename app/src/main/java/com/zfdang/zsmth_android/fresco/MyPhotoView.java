@@ -31,6 +31,7 @@ import uk.co.senab.photoview.PhotoView;
 public class MyPhotoView extends PhotoView {
 
     private DraweeHolder<GenericDraweeHierarchy> mDraweeHolder;
+    private boolean isAnimation = false;
 
     public MyPhotoView(Context context) {
         this(context, null);
@@ -108,6 +109,11 @@ public class MyPhotoView extends PhotoView {
                     public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
 
+                        // set flag if this is an animated image
+                        if(animatable != null) {
+                            isAnimation = true;
+                        }
+
                         CloseableReference<CloseableImage> imageCloseableReference = null;
                         try {
                             imageCloseableReference = dataSource.getResult();
@@ -130,5 +136,9 @@ public class MyPhotoView extends PhotoView {
                 .build();
         mDraweeHolder.setController(controller);
         setImageDrawable(mDraweeHolder.getTopLevelDrawable());
+    }
+
+    public boolean isAnimation() {
+        return isAnimation;
     }
 }

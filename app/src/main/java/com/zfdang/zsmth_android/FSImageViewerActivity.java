@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.FrescoUtils;
+import com.zfdang.zsmth_android.fresco.MyPhotoView;
 import com.zfdang.zsmth_android.helpers.FileSizeUtil;
 
 import java.io.BufferedInputStream;
@@ -138,7 +139,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
 
 
     @Override
-    public boolean onLongClick(View v) {
+    public boolean onLongClick(final View v) {
         int position = (int) v.getTag(R.id.fsview_image_index);
         final String imagePath = mURLs.get(position);
         Log.d(TAG, "onLongClick: " + position + imagePath);
@@ -160,7 +161,12 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
                         showExifDialog(imagePath);
                         break;
                     case 1:
-                        saveImageToFile(imagePath);
+                        boolean isAnimation = false;
+                        if(v instanceof MyPhotoView) {
+                            MyPhotoView photoView = (MyPhotoView) v;
+                            isAnimation = photoView.isAnimation();
+                        }
+                        saveImageToFile(imagePath, isAnimation);
                         break;
                     case 2:
                         break;
@@ -176,7 +182,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
         return true;
     }
 
-    public void saveImageToFile(String imagePath) {
+    public void saveImageToFile(String imagePath, boolean isAnimation) {
         File imageFile = FrescoUtils.getCachedImageOnDisk(Uri.parse(imagePath));
         if(imageFile == null) {
             Toast.makeText(FSImageViewerActivity.this, "无法读取缓存文件！", Toast.LENGTH_LONG).show();
@@ -193,9 +199,12 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
                     dir.mkdirs();
                 }
 
-                final String JPEG_FILE_PREFIX = "zSMTH-";
-                final String JPEG_FILE_SUFFIX = ".jpg";
-                File outFile = File.createTempFile(JPEG_FILE_PREFIX, JPEG_FILE_SUFFIX, dir);
+                String IMAGE_FILE_PREFIX = "zSMTH-";
+                String IMAGE_FILE_SUFFIX = ".jpg";
+                if(isAnimation) {
+                    IMAGE_FILE_SUFFIX = ".gif";
+                }
+                File outFile = File.createTempFile(IMAGE_FILE_PREFIX, IMAGE_FILE_SUFFIX, dir);
 
                 BufferedInputStream bufr = new BufferedInputStream(new FileInputStream(imageFile));
                 BufferedOutputStream bufw = new BufferedOutputStream(new FileOutputStream(outFile));
