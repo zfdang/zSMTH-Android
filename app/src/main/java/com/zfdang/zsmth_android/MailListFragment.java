@@ -3,15 +3,27 @@ package com.zfdang.zsmth_android;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.MailListContent;
+import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+
+import java.util.List;
+
+import okhttp3.ResponseBody;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * A fragment representing a list of Items.
@@ -19,13 +31,24 @@ import com.zfdang.zsmth_android.models.MailListContent;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class MailListFragment extends Fragment {
+public class MailListFragment extends Fragment implements View.OnClickListener{
 
-    // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
-    private int mColumnCount = 1;
+    private static final String TAG = "MailListFragment";
+    private static final String INBOX_LABEL = "inbox";
+    private static final String OUTBOX_LABEL = "outbox";
+    private static final String DELETED_LABEL = "deleted";
+
     private OnListFragmentInteractionListener mListener;
+    private RecyclerView recyclerView;
+
+    private Button btInbox;
+    private Button btOutbox;
+    private Button btTrashbox;
+
+
+    private String currentFolder;
+    private int currentPage;
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -34,23 +57,10 @@ public class MailListFragment extends Fragment {
     public MailListFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
-    public static MailListFragment newInstance(int columnCount) {
-        MailListFragment fragment = new MailListFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
     }
 
     @Override
@@ -58,18 +68,83 @@ public class MailListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mail_list, container, false);
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new MailRecyclerViewAdapter(MailListContent.ITEMS, mListener));
-        }
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_mail_contents);
+        Context context = view.getContext();
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, 0));
+        recyclerView.setAdapter(new MailRecyclerViewAdapter(MailListContent.MAILS, mListener));
+
+
+        btInbox = (Button) view.findViewById(R.id.mail_button_inbox);
+        btInbox.setOnClickListener(this);
+        btOutbox = (Button) view.findViewById(R.id.mail_button_outbox);
+        btOutbox.setOnClickListener(this);
+        btTrashbox = (Button) view.findViewById(R.id.mail_button_trashbox);
+        btTrashbox.setOnClickListener(this);
+
+        currentFolder = INBOX_LABEL;
+        currentPage = 1;
+        LoadMails();
+
         return view;
+    }
+
+    public void LoadMails() {
+
+        SMTHHelper helper = SMTHHelper.getInstance();
+
+        helper.wService.getUserMails(currentFolder, Integer.toString(currentPage))
+                .flatMap(new Func1<ResponseBody, Observable<Mail>>() {
+                    @Override
+                    public Observable<Mail> call(ResponseBody responseBody) {
+                        try {
+                            String response = responseBody.string();
+                            List<Mail> results = SMTHHelper.ParseMailsFromWWW(response);
+                            return Observable.from(results);
+                        } catch (Exception e) {
+                            Log.d(TAG, Log.getStackTraceString(e));
+                        }
+                        return null;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Mail>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + Log.getStackTraceString(e) );
+                        Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onNext(Mail mail) {
+                        Log.d(TAG, "onNext: " + mail.toString());
+
+                    }
+                });
+
+    }
+
+
+    public void showLoadingHints() {
+        MainActivity activity = (MainActivity)getActivity();
+        activity.showProgress("加载信件中...", true);
+    }
+
+    public void clearLoadingHints () {
+        // disable progress bar
+        MainActivity activity = (MainActivity) getActivity();
+        if(activity != null) {
+            activity.showProgress("", false);
+        }
+
+        // disable SwipeFreshLayout
+//        mSwipeRefreshLayout.setRefreshing(false);
     }
 
 
@@ -88,6 +163,23 @@ public class MailListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v == btInbox) {
+            btInbox.setTextColor(getResources().getColor(R.color.blue_text_night));
+            btOutbox.setTextColor(getResources().getColor(R.color.status_text_night));
+            btTrashbox.setTextColor(getResources().getColor(R.color.status_text_night));
+        } else if(v == btOutbox) {
+            btInbox.setTextColor(getResources().getColor(R.color.status_text_night));
+            btOutbox.setTextColor(getResources().getColor(R.color.blue_text_night));
+            btTrashbox.setTextColor(getResources().getColor(R.color.status_text_night));
+        } else if (v == btTrashbox) {
+            btInbox.setTextColor(getResources().getColor(R.color.status_text_night));
+            btOutbox.setTextColor(getResources().getColor(R.color.status_text_night));
+            btTrashbox.setTextColor(getResources().getColor(R.color.blue_text_night));
+        }
     }
 
     /**

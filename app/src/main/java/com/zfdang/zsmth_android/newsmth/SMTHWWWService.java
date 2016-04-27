@@ -101,4 +101,10 @@ public interface SMTHWWWService {
     Observable<AjaxResponse> forwardPost(@Path("boardEngName") String boardEngName,
                                      @Path("postID") String postID,
                                      @Field("target") String target);
+
+    // http://www.newsmth.net/nForum/mail/inbox?ajax&p=2
+    @Headers("X-Requested-With:XMLHttpRequest")
+    @GET("/nForum/mail/{folder}?ajax")
+    Observable<ResponseBody> getUserMails(@Path("folder") String folder,
+                                          @Query("p") String page);
 }

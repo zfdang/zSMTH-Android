@@ -17,6 +17,7 @@ import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.BoardListContent;
 import com.zfdang.zsmth_android.models.BoardSection;
+import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.Post;
 import com.zfdang.zsmth_android.models.Topic;
 
@@ -779,6 +780,42 @@ public class SMTHHelper {
         }
 
         return boards;
+    }
+
+    public static List<Mail> ParseMailsFromWWW(String content) {
+        List<Mail> mails = new ArrayList<>();
+        Log.d(TAG, "ParseMailsFromWWW: " + content);
+
+//        // 先提取目录
+//        Pattern pattern = Pattern.compile("o\\.f\\((\\d+),'([^']+)',\\d+,''\\);");
+//        Matcher matcher = pattern.matcher(content);
+////        List<String> list = new ArrayList<String>();
+//        while (matcher.find()) {
+////            list.add(matcher.group(1));
+//            Board board = new Board(matcher.group(1), matcher.group(2));
+//            mails.add(board);
+//        }
+//
+//        // 再提取收藏的版面
+//        // o.o(false,1,998,22156,'[站务]','Ask','新用户疑难解答','haning BJH',733,997,0);
+//        pattern = Pattern.compile("o\\.o\\(\\w+,\\d+,(\\d+),\\d+,'\\[([^']+)\\]','([^']+)','([^']+)','([^']*)',\\d+,\\d+,\\d+\\)");
+//        matcher = pattern.matcher(content);
+//        while (matcher.find()) {
+//            String boardID = matcher.group(1);
+//            String category = matcher.group(2);
+//            String engName = matcher.group(3);
+//            String chsName = matcher.group(4);
+//            String moderator = matcher.group(5);
+//            if (moderator.length() > 25) {
+//                moderator = moderator.substring(0, 21) + "...";
+//            }
+//            Board board = new Board(boardID, chsName, engName);
+//            board.setModerator(moderator);
+//            board.setCategoryName(category);
+//            mails.add(board);
+//        }
+
+        return mails;
     }
 
     /*
