@@ -25,6 +25,7 @@ import java.io.File;
  * Created by zfdang on 2016-4-8.
  */
 // http://stackoverflow.com/questions/33955510/facebook-fresco-using-wrap-conent/34075281#34075281
+
 /**
  * Works when either height or width is set to wrap_content
  * The view is resized based on the image fetched
@@ -42,6 +43,9 @@ public class WrapContentDraweeView extends SimpleDraweeView {
 
         @Override
         public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
+            if (imageInfo == null) {
+                return;
+            }
             updateViewSize(imageInfo);
         }
     };
@@ -82,7 +86,7 @@ public class WrapContentDraweeView extends SimpleDraweeView {
                 .setAutoRotateEnabled(true)
                 .build();
 
-        DraweeController controller = ((PipelineDraweeControllerBuilder)getControllerBuilder())
+        DraweeController controller = ((PipelineDraweeControllerBuilder) getControllerBuilder())
                 .setImageRequest(request)
                 .setControllerListener(listener)
                 .setCallerContext(callerContext)
@@ -95,13 +99,11 @@ public class WrapContentDraweeView extends SimpleDraweeView {
     }
 
     void updateViewSize(@Nullable ImageInfo imageInfo) {
-        if (imageInfo != null) {
-            // since we have placeholder to show loading status, the height is 68dp, we need to reset height to WRAP_CONTENT
-            getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        // since we have placeholder to show loading status, the height is 68dp, we need to reset height to WRAP_CONTENT
+        getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
 
-            // set ratio
-            setAspectRatio((float) imageInfo.getWidth() / imageInfo.getHeight());
-        }
+        // set ratio
+        setAspectRatio((float) imageInfo.getWidth() / imageInfo.getHeight());
     }
 
     // load image from string URL
@@ -113,7 +115,4 @@ public class WrapContentDraweeView extends SimpleDraweeView {
     public void setImageFromLocalFilename(final String filename) {
         this.setImageURI(Uri.fromFile(new File(filename)));
     }
-
-
-
 }
