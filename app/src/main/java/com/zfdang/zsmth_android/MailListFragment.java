@@ -125,6 +125,8 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
                     public void onNext(Mail mail) {
                         Log.d(TAG, "onNext: " + mail.toString());
 
+                        MailListContent.addItem(mail);
+                        recyclerView.getAdapter().notifyItemChanged(MailListContent.MAILS.size() -1 );
                     }
                 });
 
@@ -171,15 +173,20 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
             btInbox.setTextColor(getResources().getColor(R.color.blue_text_night));
             btOutbox.setTextColor(getResources().getColor(R.color.status_text_night));
             btTrashbox.setTextColor(getResources().getColor(R.color.status_text_night));
+            currentFolder = INBOX_LABEL;
         } else if(v == btOutbox) {
             btInbox.setTextColor(getResources().getColor(R.color.status_text_night));
             btOutbox.setTextColor(getResources().getColor(R.color.blue_text_night));
             btTrashbox.setTextColor(getResources().getColor(R.color.status_text_night));
+            currentFolder = OUTBOX_LABEL;
         } else if (v == btTrashbox) {
             btInbox.setTextColor(getResources().getColor(R.color.status_text_night));
             btOutbox.setTextColor(getResources().getColor(R.color.status_text_night));
             btTrashbox.setTextColor(getResources().getColor(R.color.blue_text_night));
+            currentFolder = DELETED_LABEL;
         }
+
+        LoadMails();
     }
 
     /**

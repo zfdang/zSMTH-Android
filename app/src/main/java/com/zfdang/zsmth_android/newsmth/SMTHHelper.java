@@ -786,34 +786,65 @@ public class SMTHHelper {
         List<Mail> mails = new ArrayList<>();
         Log.d(TAG, "ParseMailsFromWWW: " + content);
 
-//        // 先提取目录
-//        Pattern pattern = Pattern.compile("o\\.f\\((\\d+),'([^']+)',\\d+,''\\);");
-//        Matcher matcher = pattern.matcher(content);
-////        List<String> list = new ArrayList<String>();
-//        while (matcher.find()) {
-////            list.add(matcher.group(1));
-//            Board board = new Board(matcher.group(1), matcher.group(2));
-//            mails.add(board);
-//        }
-//
-//        // 再提取收藏的版面
-//        // o.o(false,1,998,22156,'[站务]','Ask','新用户疑难解答','haning BJH',733,997,0);
-//        pattern = Pattern.compile("o\\.o\\(\\w+,\\d+,(\\d+),\\d+,'\\[([^']+)\\]','([^']+)','([^']+)','([^']*)',\\d+,\\d+,\\d+\\)");
-//        matcher = pattern.matcher(content);
-//        while (matcher.find()) {
-//            String boardID = matcher.group(1);
-//            String category = matcher.group(2);
-//            String engName = matcher.group(3);
-//            String chsName = matcher.group(4);
-//            String moderator = matcher.group(5);
-//            if (moderator.length() > 25) {
-//                moderator = moderator.substring(0, 21) + "...";
-//            }
-//            Board board = new Board(boardID, chsName, engName);
-//            board.setModerator(moderator);
-//            board.setCategoryName(category);
-//            mails.add(board);
-//        }
+        Document doc = Jsoup.parse(content);
+
+        // <div class="error"><h5>产生错误的可能原因：</h5><ul><li><samp class="ico-pos-dot"></samp>请勿频繁登录</li></ul></div>
+        Elements errors = doc.select("div.error");
+        if(errors.size() > 0 ){
+            Element error = errors.first();
+            Mail mail = new Mail(error.text());
+            mails.add(mail);
+            return mails;
+        }
+
+        // <li class="page-select"><a title="当前页">1</a></li>
+        Elements lis = doc.select("div.page li.page-select");
+        if(lis.size() > 0) {
+            // find
+            Element li = lis.first();
+            String page = li.text();
+            Mail mail = new Mail(String.format("第%s页", page));
+            mails.add(mail);
+        }
+
+        Elements trs = doc.select("table.m-table tr");
+//        <tr class="no-read">
+//        <td class="title_1">
+//        <input type="checkbox" name="m_175" class="mail-item" />
+//        </td>
+//        <td class="title_2"><a href="/nForum/user/query/mozilla">mozilla</a></td>
+//        <td class="title_3"><a href="/nForum/mail/inbox/175.json" class="mail-detail">Re: 求助，dish的机顶盒到货了，锅怎么办？？？&#40;转寄&#41;</a></td>
+//        <td class="title_4">2016-04-27 16:38:54</td>
+//        </tr>
+        for (Element tr: trs) {
+            Mail mail = new Mail();
+
+            if(TextUtils.equals(tr.attr("class"), "no_read")) {
+                mail.isNew = true;
+            }
+
+            Elements tds = tr.getElementsByTag("td");
+            for (Element td: tds) {
+                if (TextUtils.equals(td.attr("class"), "title_2")) {
+
+                } else if (TextUtils.equals(td.attr("class"), "title_2")) {
+                    mail.author = td.text();
+                } else if (TextUtils.equals(td.attr("class"), "title_3")) {
+                    mail.title = td.text();
+                    Elements as = td.getElementsByTag("a");
+                    if(as.size() > 0) {
+                        Element a = as.first();
+                        mail.url = a.attr("href");
+                    }
+
+                } else if (TextUtils.equals(td.attr("class"), "title_4")) {
+                    mail.date = td.text();
+                }
+
+            }
+
+            mails.add(mail);
+        }
 
         return mails;
     }
