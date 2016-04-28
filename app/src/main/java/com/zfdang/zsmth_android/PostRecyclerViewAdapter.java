@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.zfdang.zsmth_android.models.Attachment;
 import com.zfdang.zsmth_android.models.ContentSegment;
 import com.zfdang.zsmth_android.models.Post;
 import com.zfdang.zsmth_android.models.Topic;
+import com.zfdang.zsmth_android.view.LinkTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +63,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         if(contents.size() == 1) {
             viewGroup.addView(contentView);
             contentView.setText(contents.get(0).getSpanned());
-            // Linkify.addLinks(contentView, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
+            Linkify.addLinks(contentView, Linkify.WEB_URLS);
 
             return;
         }
@@ -110,9 +112,9 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                 // Log.d("CreateView", "Text: " + content.getSpanned().toString());
 
                 // Add the text layout to the parent layout
-                TextView tv = (TextView) inflater.inflate(R.layout.post_item_content, viewGroup, false);
+                LinkTextView tv = (LinkTextView) inflater.inflate(R.layout.post_item_content, viewGroup, false);
                 tv.setText(content.getSpanned());
-                // Linkify.addLinks(tv, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
+                Linkify.addLinks(tv, Linkify.WEB_URLS);
 
                 // Add the text view to the parent layout
                 viewGroup.addView(tv);
@@ -183,7 +185,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         public final TextView mPostIndex;
         public final TextView mPostPublishDate;
         private final LinearLayout mViewGroup;
-        public final TextView mPostContent;
+        public final LinkTextView mPostContent;
         public Post mPost;
 
         public ViewHolder(View view) {
@@ -193,7 +195,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             mPostIndex = (TextView) view.findViewById(R.id.post_index);
             mPostPublishDate = (TextView) view.findViewById(R.id.post_publish_date);
             mViewGroup = (LinearLayout) view.findViewById(R.id.post_content_holder);
-            mPostContent = (TextView) view.findViewById(R.id.post_content);
+            mPostContent = (LinkTextView) view.findViewById(R.id.post_content);
         }
 
         @Override
