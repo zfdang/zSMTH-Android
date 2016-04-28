@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity
         View.OnClickListener,
         OnTopicFragmentInteractionListener,
         OnBoardFragmentInteractionListener,
-        MailListFragment.OnListFragmentInteractionListener
+        MailListFragment.OnMailInteractionListener
 {
     // used by startActivityForResult
     static final int MAIN_ACTIVITY_REQUEST_CODE = 9527;  // The request code
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity
     MailListFragment mailListFragment = null;
     SettingFragment settingFragment = null;
     Fragment aboutFragment = null;
-    private ProgressDialog pdialog = null;
+    public ProgressDialog pdialog = null;
     private WrapContentDraweeView mAvatar = null;
     private TextView mUsername = null;
 
@@ -568,7 +568,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(Mail item) {
+    public void onMailInteraction(Mail item) {
         // MailListFragment
         Toast.makeText(this, item.toString() + " is clicked", Toast.LENGTH_LONG).show();
     }

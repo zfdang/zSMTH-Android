@@ -18,6 +18,7 @@ import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.BoardListContent;
 import com.zfdang.zsmth_android.models.BoardSection;
 import com.zfdang.zsmth_android.models.Mail;
+import com.zfdang.zsmth_android.models.MailListContent;
 import com.zfdang.zsmth_android.models.Post;
 import com.zfdang.zsmth_android.models.Topic;
 
@@ -797,8 +798,18 @@ public class SMTHHelper {
             return mails;
         }
 
+        // <li class="page-pre">邮件总数:<i>177</i>&emsp;分页:</li>
+        Elements is = doc.select("div.page li.page-pre i");
+        if(is.size() > 0) {
+            Element i = is.first();
+            String totalMails = i.text();
+            Log.d(TAG, "ParseMailsFromWWW: " + totalMails);
+            MailListContent.setTotalMails(Integer.parseInt(totalMails));
+        }
+
         // <li class="page-select"><a title="当前页">1</a></li>
         Elements lis = doc.select("div.page li.page-select");
+        Log.d(TAG, "ParseMailsFromWWW: " + lis.toString());
         if(lis.size() > 0) {
             // find
             Element li = lis.first();

@@ -7,23 +7,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.zfdang.zsmth_android.MailListFragment.OnListFragmentInteractionListener;
 import com.zfdang.zsmth_android.models.Mail;
 
 import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Mail} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
+ * specified {@link MailListFragment.OnMailInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerViewAdapter.ViewHolder> {
 
     private static final String TAG = "MailAdapter";
     private final List<Mail> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    private final MailListFragment.OnMailInteractionListener mListener;
 
-    public MailRecyclerViewAdapter(List<Mail> items, OnListFragmentInteractionListener listener) {
+    public MailRecyclerViewAdapter(List<Mail> items, MailListFragment.OnMailInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -66,7 +65,7 @@ public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerVi
                     if (null != mListener) {
                         // Notify the active callbacks interface (the activity, if the
                         // fragment is attached to one) that an item has been selected.
-                        mListener.onListFragmentInteraction(holder.mItem);
+                        mListener.onMailInteraction(holder.mItem);
                     }
                 }
             });

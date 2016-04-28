@@ -1,5 +1,6 @@
 package com.zfdang.zsmth_android;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,7 +30,7 @@ import rx.schedulers.Schedulers;
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link OnMailInteractionListener}
  * interface.
  */
 public class MailListFragment extends Fragment implements View.OnClickListener{
@@ -39,7 +40,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
     private static final String OUTBOX_LABEL = "outbox";
     private static final String DELETED_LABEL = "deleted";
 
-    private OnListFragmentInteractionListener mListener;
+    private OnMailInteractionListener mListener;
     private RecyclerView recyclerView;
     private EndlessRecyclerOnScrollListener mScrollListener = null;
 
@@ -102,6 +103,25 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
 
 
     public void LoadMoreMails() {
+        // LoadMore will be re-enabled in clearLoadingHints.
+        // if we return here, loadMore will not be triggered again
+
+        ProgressDialog pdialog = ((MainActivity)getActivity()).pdialog;
+        if(pdialog != null && pdialog.isShowing())
+        {
+            // loading in progress, do nothing
+            return;
+        }
+
+        if(currentPage >= MailListContent.totalPages){
+            // reach the last page, do nothing
+            Mail mail = new Mail(".END.");
+            MailListContent.addItem(mail);
+
+            recyclerView.getAdapter().notifyItemChanged(MailListContent.MAILS.size());
+            return;
+        }
+
         currentPage += 1;
         LoadMails();
     }
@@ -116,6 +136,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
     }
 
     public void LoadMails() {
+        Log.d(TAG, "LoadMails: " + currentPage);
         SMTHHelper helper = SMTHHelper.getInstance();
 
         helper.wService.getUserMails(currentFolder, Integer.toString(currentPage))
@@ -151,10 +172,9 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
                         Log.d(TAG, "onNext: " + mail.toString());
 
                         MailListContent.addItem(mail);
-                        recyclerView.getAdapter().notifyItemChanged(MailListContent.MAILS.size() -1 );
+                        recyclerView.getAdapter().notifyItemChanged(MailListContent.MAILS.size() - 1);
                     }
                 });
-
     }
 
 
@@ -170,19 +190,21 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
             activity.showProgress("", false);
         }
 
-        // disable SwipeFreshLayout
-//        mSwipeRefreshLayout.setRefreshing(false);
+        // re-enable endless load
+        if(mScrollListener != null) {
+            mScrollListener.setLoading(false);
+        }
     }
 
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+        if (context instanceof OnMailInteractionListener) {
+            mListener = (OnMailInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
+                    + " must implement OnMailInteractionListener");
         }
     }
 
@@ -214,18 +236,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
         LoadMailsFromBeginning();
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(Mail item);
+    public interface OnMailInteractionListener {
+        void onMailInteraction(Mail item);
     }
 }
