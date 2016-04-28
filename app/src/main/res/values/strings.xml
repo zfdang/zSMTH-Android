@@ -120,9 +120,9 @@
     <string name="image_info_end">.END.</string>
     <string name="share">社会化分享</string>
     <string name="post_like_post">Like文章</string>
+
     <string name="mail_item_author_label">来自:</string>
     <string name="mail_button_inbox_label">收件箱</string>
     <string name="mail_button_outbox_label">发件箱</string>
     <string name="mail_button_trashbox_label">回收站</string>
-
 </resources>
