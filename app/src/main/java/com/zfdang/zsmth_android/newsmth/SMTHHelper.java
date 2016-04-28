@@ -826,8 +826,6 @@ public class SMTHHelper {
             Elements tds = tr.getElementsByTag("td");
             for (Element td: tds) {
                 if (TextUtils.equals(td.attr("class"), "title_2")) {
-
-                } else if (TextUtils.equals(td.attr("class"), "title_2")) {
                     mail.author = td.text();
                 } else if (TextUtils.equals(td.attr("class"), "title_3")) {
                     mail.title = td.text();
@@ -836,7 +834,6 @@ public class SMTHHelper {
                         Element a = as.first();
                         mail.url = a.attr("href");
                     }
-
                 } else if (TextUtils.equals(td.attr("class"), "title_4")) {
                     mail.date = td.text();
                 }

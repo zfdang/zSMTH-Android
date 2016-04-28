@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.zfdang.zsmth_android.listeners.EndlessRecyclerOnScrollListener;
 import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.MailListContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
@@ -40,6 +41,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
 
     private OnListFragmentInteractionListener mListener;
     private RecyclerView recyclerView;
+    private EndlessRecyclerOnScrollListener mScrollListener = null;
 
     private Button btInbox;
     private Button btOutbox;
@@ -70,10 +72,20 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_mail_contents);
         Context context = view.getContext();
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, 0));
         recyclerView.setAdapter(new MailRecyclerViewAdapter(MailListContent.MAILS, mListener));
 
+        // enable endless loading
+        mScrollListener = new EndlessRecyclerOnScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int current_page) {
+                // do something...
+                LoadMoreMails();
+            }
+        };
+        recyclerView.addOnScrollListener(mScrollListener);
 
         btInbox = (Button) view.findViewById(R.id.mail_button_inbox);
         btInbox.setOnClickListener(this);
@@ -83,14 +95,27 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
         btTrashbox.setOnClickListener(this);
 
         currentFolder = INBOX_LABEL;
-        currentPage = 1;
-        LoadMails();
+        LoadMailsFromBeginning();
 
         return view;
     }
 
-    public void LoadMails() {
 
+    public void LoadMoreMails() {
+        currentPage += 1;
+        LoadMails();
+    }
+
+    public void LoadMailsFromBeginning() {
+        currentPage = 1;
+        MailListContent.clear();
+        recyclerView.getAdapter().notifyDataSetChanged();
+
+        showLoadingHints();
+        LoadMails();
+    }
+
+    public void LoadMails() {
         SMTHHelper helper = SMTHHelper.getInstance();
 
         helper.wService.getUserMails(currentFolder, Integer.toString(currentPage))
@@ -112,7 +137,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
                 .subscribe(new Subscriber<Mail>() {
                     @Override
                     public void onCompleted() {
-
+                        clearLoadingHints();
                     }
 
                     @Override
@@ -186,7 +211,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
             currentFolder = DELETED_LABEL;
         }
 
-        LoadMails();
+        LoadMailsFromBeginning();
     }
 
     /**
