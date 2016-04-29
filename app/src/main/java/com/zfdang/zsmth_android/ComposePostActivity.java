@@ -261,7 +261,8 @@ public class ComposePostActivity extends AppCompatActivity {
                 });
 
         // publish post
-        Observable<AjaxResponse> resp2 = SMTHHelper.publishPost(mPostContent.getBoardEngName(), mTitle.getText().toString(), mContent.getText().toString(), "0", mPostContent.getPostid());
+        String postContent = mContent.getText().toString() + "\n" + String.format("#发自zSMTH@%s", Settings.getInstance().getSignature());
+        Observable<AjaxResponse> resp2 = SMTHHelper.publishPost(mPostContent.getBoardEngName(), mTitle.getText().toString(), postContent, "0", mPostContent.getPostid());
 
 
         // process all these tasks one by one

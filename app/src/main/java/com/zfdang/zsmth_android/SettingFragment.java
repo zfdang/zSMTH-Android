@@ -9,7 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipeline;
@@ -33,6 +35,8 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     private Button setting_okhttp3_cache_button;
     private TextView setting_fresco_cache;
     private Button setting_fresco_cache_button;
+    private EditText setting_signature;
+    private Button setting_signature_button;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -56,6 +60,18 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 
         setting_fresco_cache_button = (Button) view.findViewById(R.id.setting_fresco_cache_button);
         setting_fresco_cache_button.setOnClickListener(this);
+
+        setting_signature= (EditText) view.findViewById(R.id.setting_device_signature);
+        setting_signature.setText(Settings.getInstance().getSignature());
+        setting_signature_button = (Button) view.findViewById(R.id.setting_device_signature_confirm);
+        setting_signature_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String signature = setting_signature.getText().toString();
+                Settings.getInstance().setSignature(signature);
+                Toast.makeText(getActivity(), "设备签名已保存: " + signature, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         updateOkHttp3Cache();
         updateFrescoCache();

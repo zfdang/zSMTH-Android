@@ -36,6 +36,23 @@ public class Settings {
     }
 
 
+    private static final String DEVICE_SIGNATURE = "device_signature";
+    private String mSignature;
+    public String getSignature() {
+        if(mSignature!= null && mSignature.length() > 0) {
+            return mSignature;
+        } else {
+            return "Android";
+        }
+    }
+    public void setSignature(String signature) {
+        if(this.mSignature == null || !this.mSignature.equals(signature)){
+            this.mSignature = signature;
+            mEditor.putString(DEVICE_SIGNATURE, this.mSignature);
+            mEditor.commit();
+        }
+    }
+
     private static final String PASSWORD_KEY = "password";
     private String mPassword;
     public String getPassword() {
@@ -146,6 +163,8 @@ public class Settings {
         bAutoLogin = mPreference.getBoolean(AUTO_LOGIN, true);
 
         bLastLoginSuccess = mPreference.getBoolean(LAST_LOGIN_SUCCESS, false);
+
+        mSignature = mPreference.getString(DEVICE_SIGNATURE, "Android");
 
         bUserOnline = mPreference.getBoolean(USER_ONLINE, false);
     }
