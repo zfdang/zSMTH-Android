@@ -68,7 +68,9 @@ import rx.schedulers.Schedulers;
  */
 public class PostListActivity extends AppCompatActivity
         implements View.OnClickListener, PostRecyclerViewAdapter.OnItemClickListener,
-        PostRecyclerViewAdapter.OnItemLongClickListener, OnTouchListener, PopupLikeWindow.OnLikeInterface {
+        PostRecyclerViewAdapter.OnItemLongClickListener, OnTouchListener,
+        PopupLikeWindow.OnLikeInterface,
+        PopupForwardWindow.OnForwardInterface {
 
     private static final String TAG = "PostListActivity";
     private RecyclerView mRecyclerView = null;
@@ -377,7 +379,7 @@ public class PostListActivity extends AppCompatActivity
                 new PostActionAlertDialogItem(getString(R.string.post_reply_mail), R.drawable.ic_email_black_48dp),    // 2
                 new PostActionAlertDialogItem(getString(R.string.post_query_author), R.drawable.ic_person_black_48dp),    // 3
                 new PostActionAlertDialogItem(getString(R.string.post_copy_content), R.drawable.ic_content_copy_black_48dp),    // 4
-                new PostActionAlertDialogItem(getString(R.string.post_foward_self), R.drawable.ic_send_black_48dp),     // 5
+                new PostActionAlertDialogItem(getString(R.string.post_foward), R.drawable.ic_send_black_48dp),     // 5
                 new PostActionAlertDialogItem(getString(R.string.post_view_in_browser), R.drawable.ic_open_in_browser_black_48dp), // 6
                 new PostActionAlertDialogItem(getString(R.string.post_share), R.drawable.ic_share_black_48dp), // 7
         };
@@ -477,7 +479,9 @@ public class PostListActivity extends AppCompatActivity
         } else if (which == 5) {
             // post_foward_self
             // Toast.makeText(PostListActivity.this, "转寄信箱:TBD", Toast.LENGTH_SHORT).show();
-            forwardPostToMailbox(post);
+            PopupForwardWindow popup = new PopupForwardWindow();
+            popup.initPopupWindow(this, post);
+            popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 100);
         } else if (which == 6) {
             // open post in browser
             String url = String.format("http://m.newsmth.net/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
@@ -502,31 +506,6 @@ public class PostListActivity extends AppCompatActivity
     }
 
     public void forwardPostToMailbox(Post post) {
-        SMTHHelper helper = SMTHHelper.getInstance();
-        helper.wService.forwardPost(mTopic.getBoardEngName(), post.getPostID(), SMTHApplication.activeUser.getId())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<AjaxResponse>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        // Log.e(TAG, "onError: " + Log.getStackTraceString(e));
-                        Toast.makeText(PostListActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onNext(AjaxResponse ajaxResponse) {
-                        Log.d(TAG, "onNext: " + ajaxResponse.toString());
-                        if(ajaxResponse.getAjax_st() == SMTHHelper.AJAX_RESULT_OK) {
-                            Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
     }
 
     public void sharePost(Post post) {
@@ -633,6 +612,46 @@ public class PostListActivity extends AppCompatActivity
                         }
                     }
                 });
+
+    }
+
+    @Override
+    public void OnForwardAction(Post post, String target, boolean threads, boolean noref, boolean noatt) {
+        Log.d(TAG, "OnForwardAction: ");
+
+        String strThreads = null;
+        if(threads) strThreads = "on";
+        String strNoref = null;
+        if(noref) strNoref = "on";
+        String strNoatt = null;
+        if(noatt) strNoatt = "on";
+
+        SMTHHelper helper = SMTHHelper.getInstance();
+        helper.wService.forwardPost(mTopic.getBoardEngName(), post.getPostID(), target, strThreads, strNoref, strNoatt)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<AjaxResponse>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        // Log.e(TAG, "onError: " + Log.getStackTraceString(e));
+                        Toast.makeText(PostListActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onNext(AjaxResponse ajaxResponse) {
+                        Log.d(TAG, "onNext: " + ajaxResponse.toString());
+                        if(ajaxResponse.getAjax_st() == SMTHHelper.AJAX_RESULT_OK) {
+                            Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+
 
     }
 }

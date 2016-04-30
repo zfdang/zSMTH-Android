@@ -99,8 +99,11 @@ public interface SMTHWWWService {
     @Headers("X-Requested-With:XMLHttpRequest")
     @POST("/nForum/article/{boardEngName}/ajax_forward/{postID}.json")
     Observable<AjaxResponse> forwardPost(@Path("boardEngName") String boardEngName,
-                                     @Path("postID") String postID,
-                                     @Field("target") String target);
+                                         @Path("postID") String postID,
+                                         @Field("target") String target,
+                                         @Field("threads") String threads,
+                                         @Field("noref") String noref,
+                                         @Field("noatt") String noatt);
 
     // http://www.newsmth.net/nForum/mail/inbox?ajax&p=2
     @Headers("X-Requested-With:XMLHttpRequest")
