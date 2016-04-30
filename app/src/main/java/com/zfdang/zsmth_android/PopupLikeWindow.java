@@ -81,7 +81,7 @@ public class PopupLikeWindow extends PopupWindow {
         // http://stackoverflow.com/questions/12232724/popupwindow-dismiss-when-clicked-outside
         // this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         // this.setOutsideTouchable(true);
-        // this.setFocusable(true);
+        this.setFocusable(true);
     }
 
     static public interface OnLikeInterface {

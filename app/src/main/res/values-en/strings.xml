@@ -54,7 +54,7 @@
     <string name="post_query_author">查询作者信息</string>
     <string name="post_copy_content">复制帖子内容</string>
     <string name="post_foward_self">转寄到自己信箱</string>
-    <string name="post_foward_external">转寄到他人/外部邮箱</string>
+    <string name="post_foward_external">文章转寄...</string>
     <string name="post_view_in_browser">在浏览器里打开</string>
     <string name="post_delete_post">删除文章</string>
     <string name="post_share">分享</string>

@@ -27,6 +27,7 @@
             android:gravity="top"
             android:hint="输入你的Like评论"
             android:inputType="textMultiLine"
+            android:textColor="@color/status_text_night"
             android:textColorHint="@color/status_text_night"/>
 
     </LinearLayout>
