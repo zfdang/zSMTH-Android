@@ -103,7 +103,8 @@ public interface SMTHWWWService {
                                          @Field("target") String target,
                                          @Field("threads") String threads,
                                          @Field("noref") String noref,
-                                         @Field("noatt") String noatt);
+                                         @Field("noatt") String noatt,
+                                         @Field("noansi") String noansi);
 
     // http://www.newsmth.net/nForum/mail/inbox?ajax&p=2
     @Headers("X-Requested-With:XMLHttpRequest")

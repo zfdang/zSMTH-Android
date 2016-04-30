@@ -625,9 +625,11 @@ public class PostListActivity extends AppCompatActivity
         if(noref) strNoref = "on";
         String strNoatt = null;
         if(noatt) strNoatt = "on";
+        String strNoansi = null;
+        if(target.contains("@")) strNoansi = "on";
 
         SMTHHelper helper = SMTHHelper.getInstance();
-        helper.wService.forwardPost(mTopic.getBoardEngName(), post.getPostID(), target, strThreads, strNoref, strNoatt)
+        helper.wService.forwardPost(mTopic.getBoardEngName(), post.getPostID(), target, strThreads, strNoref, strNoatt, strNoansi)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<AjaxResponse>() {
