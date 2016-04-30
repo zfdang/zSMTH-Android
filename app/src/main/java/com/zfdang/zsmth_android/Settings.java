@@ -36,23 +36,6 @@ public class Settings {
     }
 
 
-    private static final String DEVICE_SIGNATURE = "device_signature";
-    private String mSignature;
-    public String getSignature() {
-        if(mSignature!= null && mSignature.length() > 0) {
-            return mSignature;
-        } else {
-            return "Android";
-        }
-    }
-    public void setSignature(String signature) {
-        if(this.mSignature == null || !this.mSignature.equals(signature)){
-            this.mSignature = signature;
-            mEditor.putString(DEVICE_SIGNATURE, this.mSignature);
-            mEditor.commit();
-        }
-    }
-
     private static final String PASSWORD_KEY = "password";
     private String mPassword;
     public String getPassword() {
@@ -112,6 +95,24 @@ public class Settings {
     }
 
 
+    private static final String DEVICE_SIGNATURE = "device_signature";
+    private String mSignature;
+    public String getSignature() {
+        if(mSignature!= null && mSignature.length() > 0) {
+            return mSignature;
+        } else {
+            return "Android";
+        }
+    }
+    public void setSignature(String signature) {
+        if(this.mSignature == null || !this.mSignature.equals(signature)){
+            this.mSignature = signature;
+            mEditor.putString(DEVICE_SIGNATURE, this.mSignature);
+            mEditor.commit();
+        }
+    }
+
+
     private static final String SHOW_STICKY_TOPIC = "show_sticky_topic";
     private boolean mShowSticky;
     public boolean isShowSticky() {
@@ -128,6 +129,20 @@ public class Settings {
         this.mShowSticky = !this.mShowSticky;
         mEditor.putBoolean(SHOW_STICKY_TOPIC, this.mShowSticky);
         mEditor.commit();
+    }
+
+
+    private static final String FORWARD_TAEGET = "forward_target";
+    private String mTarget;
+    public String getTarget() {
+        return mTarget;
+    }
+    public void setTarget(String target) {
+        if(this.mTarget == null || !this.mTarget.equals(target)){
+            this.mTarget = target;
+            mEditor.putString(FORWARD_TAEGET, this.mTarget);
+            mEditor.commit();
+        }
     }
 
 
@@ -165,6 +180,7 @@ public class Settings {
         bLastLoginSuccess = mPreference.getBoolean(LAST_LOGIN_SUCCESS, false);
 
         mSignature = mPreference.getString(DEVICE_SIGNATURE, "Android");
+        mTarget = mPreference.getString(FORWARD_TAEGET, "");
 
         bUserOnline = mPreference.getBoolean(USER_ONLINE, false);
     }

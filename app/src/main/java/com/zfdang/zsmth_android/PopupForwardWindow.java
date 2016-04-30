@@ -91,6 +91,7 @@ public class PopupForwardWindow extends PopupWindow {
         mTargetSelf.setChecked(true);
         mTargetOther.setChecked(false);
         mTargetOtherContent.setEnabled(false);
+        mTargetOtherContent.setText(Settings.getInstance().getTarget());
         mThread.setChecked(false);
         mNoRef.setEnabled(false);
 
@@ -113,6 +114,7 @@ public class PopupForwardWindow extends PopupWindow {
                     }
                     if(mTargetOther.isChecked()) {
                         target = mTargetOtherContent.getText().toString().trim();
+                        Settings.getInstance().setTarget(target);
                     }
                     mListener.OnForwardAction(PopupForwardWindow.post, target, mThread.isChecked(), mNoRef.isChecked(), mNoAtt.isChecked());
                 }

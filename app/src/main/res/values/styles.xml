@@ -26,6 +26,10 @@
         <item name="android:colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppTheme.NoActionBar.MainActivity" parent="AppTheme.NoActionBar">
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
+
     <!--AppBar-->
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
