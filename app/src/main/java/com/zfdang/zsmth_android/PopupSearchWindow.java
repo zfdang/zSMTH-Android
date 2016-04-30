@@ -72,9 +72,9 @@ public class PopupSearchWindow extends PopupWindow{
         this.setWidth((int)(size.x * 0.8));
         this.setHeight((int)(size.y * 0.4));
         // http://stackoverflow.com/questions/12232724/popupwindow-dismiss-when-clicked-outside
-//        this.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.recyclerview_sticky_item_bg));
-//        this.setOutsideTouchable(true);
-        this.setFocusable(true);
+        // this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        // this.setOutsideTouchable(true);
+        // this.setFocusable(true);
     }
 
     static public interface SearchInterface {

@@ -1,56 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
               android:layout_width="match_parent"
-              android:background="@color/colorPrimaryDark"
               android:layout_height="match_parent"
-              android:gravity="center_vertical|center_horizontal">
+              android:background="@color/colorPrimaryDark"
+              android:gravity="center_vertical|center_horizontal"
+              android:orientation="vertical">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp">
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
 
         <com.wx.wheelview.widget.WheelView
             android:id="@+id/like_score"
             android:layout_width="40dp"
-            android:layout_height="150dp" />
+            android:layout_height="150dp"/>
 
         <EditText
+            android:id="@+id/like_message"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="textMultiLine"
-            android:ems="10"
-            android:hint="输入你的Like评论"
-            android:id="@+id/like_message"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:gravity="top"/>
+            android:ems="10"
+            android:gravity="top"
+            android:hint="输入你的Like评论"
+            android:inputType="textMultiLine"
+            android:textColorHint="@color/status_text_night"/>
 
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="10dp"
         android:gravity="center_horizontal"
-        android:layout_margin="10dp">
+        android:orientation="horizontal">
 
         <Button
+            android:id="@+id/like_cancel"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="取消"
-            android:id="@+id/like_cancel"
-            android:layout_marginRight="20dp"/>
+            android:layout_marginRight="20dp"
+            android:text="取消"/>
 
         <Button
+            android:id="@+id/like_add"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Like"
-            android:id="@+id/like_add"
             />
     </LinearLayout>
 </LinearLayout>
