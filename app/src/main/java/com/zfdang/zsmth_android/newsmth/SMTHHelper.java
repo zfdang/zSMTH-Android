@@ -794,7 +794,7 @@ public class SMTHHelper {
 
     public static List<Mail> ParseMailsFromWWW(String content) {
         List<Mail> mails = new ArrayList<>();
-        Log.d(TAG, "ParseMailsFromWWW: " + content);
+        // Log.d(TAG, "ParseMailsFromWWW: " + content);
 
         Document doc = Jsoup.parse(content);
 
@@ -812,13 +812,13 @@ public class SMTHHelper {
         if(is.size() > 0) {
             Element i = is.first();
             String totalMails = i.text();
-            Log.d(TAG, "ParseMailsFromWWW: " + totalMails);
+            // Log.d(TAG, "ParseMailsFromWWW: " + totalMails);
             MailListContent.setTotalMails(Integer.parseInt(totalMails));
         }
 
         // <li class="page-select"><a title="当前页">1</a></li>
         Elements lis = doc.select("div.page li.page-select");
-        Log.d(TAG, "ParseMailsFromWWW: " + lis.toString());
+        // Log.d(TAG, "ParseMailsFromWWW: " + lis.toString());
         if(lis.size() > 0) {
             // find
             Element li = lis.first();
@@ -937,8 +937,8 @@ public class SMTHHelper {
                             List<Board> boards = SMTHHelper.ParseFavoriteBoardsFromWWW(response);
                             return Observable.from(boards);
                         } catch (Exception e) {
-                            Log.d(TAG, "Failed to load favorite {" + path + "}");
-                            Log.d(TAG, e.toString());
+                            Log.e(TAG, "Failed to load favorite {" + path + "}");
+                            Log.e(TAG, Log.getStackTraceString(e));
                             return null;
                         }
                     }
@@ -1023,7 +1023,7 @@ public class SMTHHelper {
                             return Observable.from(boards);
 
                         } catch (Exception e) {
-                            Log.d(TAG, e.toString());
+                            Log.e(TAG, Log.getStackTraceString(e));
                             return null;
                         }
                     }

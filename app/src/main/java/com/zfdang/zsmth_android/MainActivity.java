@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity
 
         // start service to maintain user status
         setupUserStatusReceiver();
-        // updateUserStatusNow();
+        updateUserStatusNow();
 
         // schedule the periodical run
         MaintainUserStatusService.schedule(MainActivity.this, mReceiver);
@@ -271,6 +271,8 @@ public class MainActivity extends AppCompatActivity
 
         Intent notificationIntent = new Intent(MainActivity.this, MainActivity.class);
         notificationIntent.putExtra(SMTHApplication.MAIN_TARGET_FRAGMENT, "MAIL");
+        // http://stackoverflow.com/questions/26608627/how-to-open-fragment-page-when-pressed-a-notification-in-android
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP );
         PendingIntent resultPendingIntent = PendingIntent.getActivity(MainActivity.this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
@@ -316,6 +318,16 @@ public class MainActivity extends AppCompatActivity
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        FragmentManager fm = getSupportFragmentManager();
+        Bundle bundle = intent.getExtras();
+        if(bundle != null && bundle.getString(SMTHApplication.MAIN_TARGET_FRAGMENT) != null) {
+            // this activity is launched by notification, show mail fragment now
+            fm.beginTransaction().replace(R.id.content_frame, mailListFragment).commit();
+        }
     }
 
     @Override
