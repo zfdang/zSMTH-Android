@@ -571,6 +571,9 @@ public class MainActivity extends AppCompatActivity
     public void onMailInteraction(Mail item) {
         // MailListFragment
         Toast.makeText(this, item.toString() + " is clicked", Toast.LENGTH_LONG).show();
+
+        Intent intent = new Intent(this, MailContentActivity.class);
+        startActivity(intent);
     }
 
     @Override
