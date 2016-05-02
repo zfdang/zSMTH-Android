@@ -272,7 +272,7 @@ public class MainActivity extends AppCompatActivity
         Intent notificationIntent = new Intent(MainActivity.this, MainActivity.class);
         notificationIntent.putExtra(SMTHApplication.MAIN_TARGET_FRAGMENT, "MAIL");
         // http://stackoverflow.com/questions/26608627/how-to-open-fragment-page-when-pressed-a-notification-in-android
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP );
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(MainActivity.this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
@@ -326,7 +326,9 @@ public class MainActivity extends AppCompatActivity
         Bundle bundle = intent.getExtras();
         if(bundle != null && bundle.getString(SMTHApplication.MAIN_TARGET_FRAGMENT) != null) {
             // this activity is launched by notification, show mail fragment now
-            fm.beginTransaction().replace(R.id.content_frame, mailListFragment).commit();
+            // http://www.androiddesignpatterns.com/2013/08/fragment-transaction-commit-state-loss.html
+            // http://stackoverflow.com/questions/7575921/illegalstateexception-can-not-perform-this-action-after-onsaveinstancestate-wit
+            fm.beginTransaction().replace(R.id.content_frame, mailListFragment).commitAllowingStateLoss();
         }
     }
 
