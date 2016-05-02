@@ -3,7 +3,7 @@ package com.zfdang.zsmth_android.models;
 /**
  * Created by zfdang on 2016-3-15.
  */
-public  class Mail {
+public class Mail {
     public String url;
     public String title;
     public String author;

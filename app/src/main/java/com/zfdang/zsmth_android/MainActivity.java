@@ -34,6 +34,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
 import com.zfdang.zsmth_android.listeners.OnBoardFragmentInteractionListener;
+import com.zfdang.zsmth_android.listeners.OnMailInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnVolumeUpDownListener;
 import com.zfdang.zsmth_android.models.Board;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity
         View.OnClickListener,
         OnTopicFragmentInteractionListener,
         OnBoardFragmentInteractionListener,
-        MailListFragment.OnMailInteractionListener
+        OnMailInteractionListener
 {
     // used by startActivityForResult
     static final int MAIN_ACTIVITY_REQUEST_CODE = 9527;  // The request code
@@ -568,11 +569,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onMailInteraction(Mail item) {
-        // MailListFragment
-        Toast.makeText(this, item.toString() + " is clicked", Toast.LENGTH_LONG).show();
+    public void onMailInteraction(Mail item, int position) {
+        // mark item as readed
+        mailListFragment.markMailAsReaded(position);
 
+        // MailListFragment
         Intent intent = new Intent(this, MailContentActivity.class);
+        intent.putExtra(SMTHApplication.MAIL_URL_OBJECT, item.url);
         startActivity(intent);
     }
 

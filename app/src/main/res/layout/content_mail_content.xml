@@ -13,4 +13,8 @@
     tools:context="com.zfdang.zsmth_android.MailContentActivity"
     tools:showIn="@layout/activity_mail_content">
 
+    <WebView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/mail_content_webview"/>
 </RelativeLayout>

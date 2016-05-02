@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.zfdang.zsmth_android.listeners.EndlessRecyclerOnScrollListener;
+import com.zfdang.zsmth_android.listeners.OnMailInteractionListener;
 import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.MailListContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
@@ -118,7 +119,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
             Mail mail = new Mail(".END.");
             MailListContent.addItem(mail);
 
-            recyclerView.getAdapter().notifyItemChanged(MailListContent.MAILS.size());
+            recyclerView.getAdapter().notifyItemChanged(MailListContent.MAILS.size() - 1);
             return;
         }
 
@@ -196,6 +197,13 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
         }
     }
 
+    public void markMailAsReaded(int position) {
+        if(position < MailListContent.MAILS.size()) {
+            Mail mail = MailListContent.MAILS.get(position);
+            mail.isNew = false;
+            recyclerView.getAdapter().notifyItemChanged(position);
+        }
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -234,9 +242,5 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
         }
 
         LoadMailsFromBeginning();
-    }
-
-    public interface OnMailInteractionListener {
-        void onMailInteraction(Mail item);
     }
 }

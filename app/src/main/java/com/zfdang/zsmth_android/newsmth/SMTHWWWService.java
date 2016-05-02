@@ -111,4 +111,11 @@ public interface SMTHWWWService {
     @GET("/nForum/mail/{folder}?ajax")
     Observable<ResponseBody> getUserMails(@Path("folder") String folder,
                                           @Query("p") String page);
+
+    // http://www.newsmth.net/nForum/mail/inbox/8.json
+    @Headers("X-Requested-With:XMLHttpRequest")
+    @GET("{mail_url}")
+    Observable<AjaxResponse> getMailContent(@Path("mail_url") String mail_url);
+
+
 }

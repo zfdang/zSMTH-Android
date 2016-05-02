@@ -830,7 +830,7 @@ public class SMTHHelper {
         for (Element tr: trs) {
             Mail mail = new Mail();
 
-            if(TextUtils.equals(tr.attr("class"), "no_read")) {
+            if(TextUtils.equals(tr.attr("class"), "no-read")) {
                 mail.isNew = true;
             }
 

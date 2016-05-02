@@ -7,22 +7,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.zfdang.zsmth_android.listeners.OnMailInteractionListener;
 import com.zfdang.zsmth_android.models.Mail;
 
 import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Mail} and makes a call to the
- * specified {@link MailListFragment.OnMailInteractionListener}.
+ * specified {@link OnMailInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerViewAdapter.ViewHolder> {
 
     private static final String TAG = "MailAdapter";
     private final List<Mail> mValues;
-    private final MailListFragment.OnMailInteractionListener mListener;
+    private final OnMailInteractionListener mListener;
 
-    public MailRecyclerViewAdapter(List<Mail> items, MailListFragment.OnMailInteractionListener listener) {
+    public MailRecyclerViewAdapter(List<Mail> items, OnMailInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -35,7 +36,7 @@ public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerVi
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         Mail mail = mValues.get(position);
         holder.mItem = mail;
         Log.d(TAG, "onBindViewHolder: " + mail.toString());
@@ -59,13 +60,20 @@ public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerVi
             holder.mTopic.setText(mail.title);
             holder.mDate.setText(mail.date);
 
+            if(mail.isNew) {
+                Log.d(TAG, "onBindViewHolder: " + "mail is new");
+                holder.mView.setBackgroundResource(R.drawable.recyclerview_new_item_bg);
+            } else {
+                holder.mView.setBackgroundResource(R.drawable.recyclerview_item_bg);
+            }
+
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (null != mListener) {
                         // Notify the active callbacks interface (the activity, if the
                         // fragment is attached to one) that an item has been selected.
-                        mListener.onMailInteraction(holder.mItem);
+                        mListener.onMailInteraction(holder.mItem, position);
                     }
                 }
             });

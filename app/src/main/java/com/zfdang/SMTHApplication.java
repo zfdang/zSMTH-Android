@@ -30,6 +30,8 @@ public class SMTHApplication extends Application {
     public static final String BOARD_OBJECT = "BOARD_OBJECT";
     public static final String TOPIC_OBJECT = "TOPIC_OBJECT";
 
+    public static final String MAIL_URL_OBJECT = "MAIL_URL_OBJECT";
+
     public static final String USER_SERVICE_RECEIVER = "USER_SERVICE_RECEIVER";
 
     public static final String COMPOSE_POST_CONTEXT = "Compose_Post_Context";
