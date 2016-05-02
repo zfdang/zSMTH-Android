@@ -77,7 +77,7 @@ dependencies {
     compile 'org.jsoup:jsoup:1.9.1'
     compile 'com.thefinestartist:finestwebview:1.2.5'
     compile 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
-    compile 'com.jude:swipebackhelper:3.0.1'
+    compile 'com.jude:swipebackhelper:2.1.5'
     compile 'me.relex:circleindicator:1.2.0@aar'
     compile 'com.commit451:PhotoView:1.2.5'
     compile 'com.zfdang.multiple-images-selector:multiple-images-selector:1.1.2'
