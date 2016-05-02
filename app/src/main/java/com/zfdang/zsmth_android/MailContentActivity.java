@@ -1,29 +1,51 @@
 package com.zfdang.zsmth_android;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.util.Linkify;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.webkit.WebView;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
+import com.zfdang.zsmth_android.models.Attachment;
+import com.zfdang.zsmth_android.models.ContentSegment;
+import com.zfdang.zsmth_android.models.Post;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+import com.zfdang.zsmth_android.view.LinkTextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class MailContentActivity extends AppCompatActivity {
 
     private static final String TAG = "MailContent";
     private String mail_url;
-    private WebView webview;
+    private Post mPost;
+
+    public TextView mPostAuthor;
+    public TextView mPostIndex;
+    public TextView mPostPublishDate;
+    private LinearLayout mViewGroup;
+    public LinkTextView mPostContent;
 
     @Override
     protected void onDestroy() {
@@ -44,9 +66,12 @@ public class MailContentActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_mail_content);
 
-        // init webview
-        webview = (WebView) findViewById(R.id.mail_content_webview);
-        webview.loadData("加载中...", "text/html; charset=utf-8", "UTF-8");
+        // init post widget
+        mPostAuthor = (TextView) findViewById(R.id.post_author);
+        mPostIndex = (TextView) findViewById(R.id.post_index);
+        mPostPublishDate = (TextView) findViewById(R.id.post_publish_date);
+        mViewGroup = (LinearLayout) findViewById(R.id.post_content_holder);
+        mPostContent = (LinkTextView) findViewById(R.id.post_content);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -66,9 +91,15 @@ public class MailContentActivity extends AppCompatActivity {
     public void loadMailContent() {
         SMTHHelper helper = SMTHHelper.getInstance();
         helper.wService.getMailContent(mail_url)
+                .map(new Func1<AjaxResponse, Post>() {
+                    @Override
+                    public Post call(AjaxResponse ajaxResponse) {
+                        return SMTHHelper.ParseMailContentFromWWW(ajaxResponse.getContent());
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<AjaxResponse>() {
+                .subscribe(new Subscriber<Post>() {
                     @Override
                     public void onCompleted() {
 
@@ -77,14 +108,98 @@ public class MailContentActivity extends AppCompatActivity {
                     @Override
                     public void onError(Throwable e) {
                         Log.e(TAG, "onError: " + Log.getStackTraceString(e) );
+                        mPostContent.setText(Log.getStackTraceString(e));
                     }
 
                     @Override
-                    public void onNext(AjaxResponse ajaxResponse) {
-                        Log.d(TAG, "onNext: " + ajaxResponse.getContent());
-                        webview.loadData(ajaxResponse.getContent(), "text/html; charset=utf-8", "UTF-8");
+                    public void onNext(Post post) {
+                        mPost = post;
+                        updateViewFromPost();
                     }
                 });
+
+    }
+
+    public void updateViewFromPost() {
+        if(mPost != null) {
+            mPostAuthor.setVisibility(View.GONE);
+            mPostIndex.setVisibility(View.GONE);
+            mPostPublishDate.setText(mPost.getFormatedDate());
+
+            inflateContentViewGroup(mViewGroup, mPostContent, mPost);
+        }
+    }
+
+
+    //    copied from PostRecyclerViewAdapter.inflateContentViewGroup, almost the same code
+    public void inflateContentViewGroup(ViewGroup viewGroup, TextView contentView, final Post post) {
+        // remove all child view in viewgroup
+        viewGroup.removeAllViews();
+
+        List<ContentSegment> contents = post.getContentSegments();
+        if(contents == null) return;
+
+        // the simple case, without any attachment
+        if(contents.size() == 1) {
+            viewGroup.addView(contentView);
+            contentView.setText(contents.get(0).getSpanned());
+            Linkify.addLinks(contentView, Linkify.WEB_URLS);
+
+            return;
+        }
+
+        // there are multiple segments, add the first contentView first
+        // contentView is always available, we don't have to inflate it again
+        viewGroup.addView(contentView);
+        contentView.setText(contents.get(0).getSpanned());
+
+        final LayoutInflater inflater = (LayoutInflater) SMTHApplication.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        for(int i = 1; i < contents.size(); i++) {
+            ContentSegment content = contents.get(i);
+
+            if(content.getType() == ContentSegment.SEGMENT_IMAGE) {
+                // Log.d("CreateView", "Image: " + content.getUrl());
+
+                // Add the text layout to the parent layout
+                WrapContentDraweeView image = (WrapContentDraweeView) inflater.inflate(R.layout.post_item_imageview, viewGroup, false);
+                image.setImageFromStringURL(content.getUrl());
+
+
+                // set onclicklistener
+                image.setTag(R.id.image_tag, content.getImgIndex());
+                image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int position = (int) v.getTag(R.id.image_tag);
+
+                        Intent intent = new Intent(MailContentActivity.this, FSImageViewerActivity.class);
+
+                        ArrayList<String> urls = new ArrayList<>();
+                        List<Attachment> attaches = post.getAttachFiles();
+                        for (Attachment attach: attaches) {
+                            urls.add(attach.getImageSrc());
+                        }
+
+                        intent.putStringArrayListExtra(SMTHApplication.ATTACHMENT_URLS, urls);
+                        intent.putExtra(SMTHApplication.ATTACHMENT_CURRENT_POS, position);
+                        startActivity(intent);
+                    }
+                });
+
+                // Add the text view to the parent layout
+                viewGroup.addView(image);
+            } else if (content.getType() == ContentSegment.SEGMENT_TEXT) {
+                // Log.d("CreateView", "Text: " + content.getSpanned().toString());
+
+                // Add the text layout to the parent layout
+                LinkTextView tv = (LinkTextView) inflater.inflate(R.layout.post_item_content, viewGroup, false);
+                tv.setText(content.getSpanned());
+                Linkify.addLinks(tv, Linkify.WEB_URLS);
+
+                // Add the text view to the parent layout
+                viewGroup.addView(tv);
+            }
+        }
 
     }
 

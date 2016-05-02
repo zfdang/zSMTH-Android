@@ -246,6 +246,15 @@ public class SMTHHelper {
                 .observeOn(Schedulers.io());
     }
 
+    public static Post ParseMailContentFromWWW(String content) {
+        Post post = new Post();
+
+        List<String> likes = new ArrayList<>();
+        Document doc = Jsoup.parse(content);
+        post.setLikesAndPostContent(likes, doc);
+
+        return post;
+    }
 
     public static List<Post> ParsePostListFromWWW(String content, Topic topic) {
         final String TAG = "ParsePostListFromWWW";

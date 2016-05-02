@@ -9,12 +9,17 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/body_background_night"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.zfdang.zsmth_android.MailContentActivity"
     tools:showIn="@layout/activity_mail_content">
 
-    <WebView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/mail_content_webview"/>
+        android:id="@+id/scrollView">
+
+        <include layout="@layout/post_item"/>
+    </ScrollView>
+
 </RelativeLayout>
