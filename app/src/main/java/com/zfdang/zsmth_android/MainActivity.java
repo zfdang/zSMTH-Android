@@ -328,6 +328,7 @@ public class MainActivity extends AppCompatActivity
             // this activity is launched by notification, show mail fragment now
             // http://www.androiddesignpatterns.com/2013/08/fragment-transaction-commit-state-loss.html
             // http://stackoverflow.com/questions/7575921/illegalstateexception-can-not-perform-this-action-after-onsaveinstancestate-wit
+            // java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
             fm.beginTransaction().replace(R.id.content_frame, mailListFragment).commitAllowingStateLoss();
         }
     }
