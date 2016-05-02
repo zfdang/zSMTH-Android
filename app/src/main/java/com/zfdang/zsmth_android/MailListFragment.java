@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -76,6 +77,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
         Context context = view.getContext();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, 0));
         recyclerView.setAdapter(new MailRecyclerViewAdapter(MailListContent.MAILS, mListener));
 
@@ -160,6 +162,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
                     @Override
                     public void onCompleted() {
                         clearLoadingHints();
+                        recyclerView.smoothScrollToPosition(0);
                     }
 
                     @Override
