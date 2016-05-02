@@ -36,7 +36,7 @@ public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerVi
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         Mail mail = mValues.get(position);
         holder.mItem = mail;
         Log.d(TAG, "onBindViewHolder: " + mail.toString());
@@ -73,7 +73,7 @@ public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerVi
                     if (null != mListener) {
                         // Notify the active callbacks interface (the activity, if the
                         // fragment is attached to one) that an item has been selected.
-                        mListener.onMailInteraction(holder.mItem, position);
+                        mListener.onMailInteraction(holder.mItem, holder.getPosition());
                     }
                 }
             });
