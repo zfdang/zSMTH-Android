@@ -1,7 +1,6 @@
 package com.zfdang.zsmth_android;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +38,6 @@ public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerVi
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Mail mail = mValues.get(position);
         holder.mItem = mail;
-        Log.d(TAG, "onBindViewHolder: " + mail.toString());
 
         if(mail.isCategory) {
             holder.mPage.setVisibility(View.VISIBLE);
@@ -61,7 +59,7 @@ public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerVi
             holder.mDate.setText(mail.date);
 
             if(mail.isNew) {
-                Log.d(TAG, "onBindViewHolder: " + "mail is new");
+                // Log.d(TAG, "onBindViewHolder: " + "mail is new");
                 holder.mView.setBackgroundResource(R.drawable.recyclerview_new_item_bg);
             } else {
                 holder.mView.setBackgroundResource(R.drawable.recyclerview_item_bg);

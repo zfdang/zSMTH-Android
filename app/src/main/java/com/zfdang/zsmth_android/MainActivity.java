@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity
 
         // start service to maintain user status
         setupUserStatusReceiver();
-        updateUserStatusNow();
+        // updateUserStatusNow();
 
         // schedule the periodical run
         MaintainUserStatusService.schedule(MainActivity.this, mReceiver);
@@ -254,10 +254,11 @@ public class MainActivity extends AppCompatActivity
             public void onReceiveResult(int resultCode, Bundle resultData) {
                 if (resultCode == RESULT_OK) {
                     // Log.d(TAG, "onReceiveResult: " + "to update navigationview" + SMTHApplication.activeUser.toString());
+                    UpdateNavigationViewHeader();
+
+                    // show notification if necessary
                     String message = resultData.getString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE);
-                    if(message == null) {
-                        UpdateNavigationViewHeader();
-                    } else {
+                    if(message != null) {
                         showNotification(message);
                     }
                 }
@@ -268,21 +269,21 @@ public class MainActivity extends AppCompatActivity
 
     private void showNotification(String text) {
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle("zSMTH提醒")
-                        .setWhen(System.currentTimeMillis())
-                        .setContentText(text);
-
         Intent notificationIntent = new Intent(MainActivity.this, MainActivity.class);
         notificationIntent.putExtra(SMTHApplication.MAIN_TARGET_FRAGMENT, "MAIL");
         PendingIntent resultPendingIntent = PendingIntent.getActivity(MainActivity.this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(resultPendingIntent);
 
-        mBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
-        mBuilder.setAutoCancel(true).setOnlyAlertOnce(true);
-
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle("zSMTH提醒")
+                .setWhen(System.currentTimeMillis())
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
+                .setDefaults(Notification.DEFAULT_VIBRATE)
+                .setContentText(text)
+                .setContentIntent(resultPendingIntent);
         Notification notification = mBuilder.build();
+
         NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mNotifyMgr.notify(notificationID, notification);
     }

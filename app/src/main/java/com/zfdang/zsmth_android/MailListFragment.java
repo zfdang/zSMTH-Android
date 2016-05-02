@@ -173,7 +173,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
 
                     @Override
                     public void onNext(Mail mail) {
-                        Log.d(TAG, "onNext: " + mail.toString());
+                        // Log.d(TAG, "onNext: " + mail.toString());
 
                         MailListContent.addItem(mail);
                         recyclerView.getAdapter().notifyItemChanged(MailListContent.MAILS.size() - 1);
