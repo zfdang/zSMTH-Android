@@ -32,9 +32,14 @@ public class SMTHApplication extends Application {
 
     public static final String MAIL_URL_OBJECT = "MAIL_URL_OBJECT";
 
+    public static final String MAIN_TARGET_FRAGMENT = "MAIN_TARGET_FRAGMENT";
+    public static final String SERVICE_NOTIFICATION_MESSAGE = "SERVICE_NOTIFICATION_MESSAGE";
+
+
     public static final String USER_SERVICE_RECEIVER = "USER_SERVICE_RECEIVER";
 
     public static final String COMPOSE_POST_CONTEXT = "Compose_Post_Context";
+
 
 
     // IP database

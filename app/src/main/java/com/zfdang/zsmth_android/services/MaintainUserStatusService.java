@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.ResultReceiver;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.zfdang.SMTHApplication;
@@ -47,7 +48,7 @@ public class MaintainUserStatusService extends IntentService {
 
         AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         //repeat in 3 minutes
-        alarm.setRepeating(AlarmManager.RTC, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES / 5, pIntent);
+        alarm.setRepeating(AlarmManager.RTC, 0, AlarmManager.INTERVAL_FIFTEEN_MINUTES / 10, pIntent);
     }
 
     public static void unschedule(Context context) {
@@ -195,8 +196,8 @@ public class MaintainUserStatusService extends IntentService {
                         if (userStatus == null || userStatus.getId() == null) return;
 
                         String userid = userStatus.getId();
-                        if (SMTHApplication.activeUser == null || !userid.equals(SMTHApplication.activeUser.getId())) {
-                            // different user
+                        if (SMTHApplication.activeUser == null || !TextUtils.equals(SMTHApplication.activeUser.getId(), userid)) {
+                            // different user or new user
                             Log.d(TAG, "onNext: " + "4.1 different user, send notification: ");
                             SMTHApplication.activeUser = userStatus;
 
@@ -204,13 +205,25 @@ public class MaintainUserStatusService extends IntentService {
                             ResultReceiver receiver = intent.getParcelableExtra(SMTHApplication.USER_SERVICE_RECEIVER);
                             if (receiver != null) {
                                 Bundle bundle = new Bundle();
+                                if(userStatus.isNew_mail()) {
+                                    // set new mail flag here
+                                    bundle.putString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE, "你有新邮件!");
+                                }
+                                // Here we call send passing a resultCode and the bundle of extras
+                                receiver.send(Activity.RESULT_OK, bundle);
+                            }
+                        } else if(userStatus.isNew_mail()) {
+                            // the same user, but with new mail coming
+                            ResultReceiver receiver = intent.getParcelableExtra(SMTHApplication.USER_SERVICE_RECEIVER);
+                            if (receiver != null) {
+                                Bundle bundle = new Bundle();
+                                bundle.putString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE, "你有新邮件!");
                                 // Here we call send passing a resultCode and the bundle of extras
                                 receiver.send(Activity.RESULT_OK, bundle);
                             }
                         } else {
-                            Log.d(TAG, "onNext: " + "4.2 Same user, skip notification!");
+                            Log.d(TAG, "onNext: " + "4.2 Same user without new mail, skip notification!");
                         }
-
                     }
                 } // new Subscriber<UserStatus>()
                 ); // .subscribe

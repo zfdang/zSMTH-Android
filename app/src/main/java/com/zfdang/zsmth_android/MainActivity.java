@@ -1,5 +1,8 @@
 package com.zfdang.zsmth_android;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +13,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -83,6 +87,8 @@ public class MainActivity extends AppCompatActivity
     private FloatingActionMenu mActionMenu;
     private NavigationView mNavigationView;
 
+    private static final int notificationID = 273;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,7 +138,13 @@ public class MainActivity extends AppCompatActivity
         initFragments();
 
         FragmentManager fm = getSupportFragmentManager();
-        fm.beginTransaction().replace(R.id.content_frame, hotTopicFragment).commit();
+        Bundle bundle = getIntent().getExtras();
+        if(bundle != null && bundle.getString(SMTHApplication.MAIN_TARGET_FRAGMENT) != null) {
+            // this activity is launched by notification, show mail fragment
+            fm.beginTransaction().replace(R.id.content_frame, mailListFragment).commit();
+        } else {
+            fm.beginTransaction().replace(R.id.content_frame, hotTopicFragment).commit();
+        }
 
         getSupportFragmentManager().addOnBackStackChangedListener(
                 new FragmentManager.OnBackStackChangedListener() {
@@ -242,10 +254,37 @@ public class MainActivity extends AppCompatActivity
             public void onReceiveResult(int resultCode, Bundle resultData) {
                 if (resultCode == RESULT_OK) {
                     // Log.d(TAG, "onReceiveResult: " + "to update navigationview" + SMTHApplication.activeUser.toString());
-                    UpdateNavigationViewHeader();
+                    String message = resultData.getString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE);
+                    if(message == null) {
+                        UpdateNavigationViewHeader();
+                    } else {
+                        showNotification(message);
+                    }
                 }
             }
         });
+    }
+
+
+    private void showNotification(String text) {
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle("zSMTH提醒")
+                        .setWhen(System.currentTimeMillis())
+                        .setContentText(text);
+
+        Intent notificationIntent = new Intent(MainActivity.this, MainActivity.class);
+        notificationIntent.putExtra(SMTHApplication.MAIN_TARGET_FRAGMENT, "MAIL");
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(MainActivity.this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingIntent);
+
+        mBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
+        mBuilder.setAutoCancel(true).setOnlyAlertOnce(true);
+
+        Notification notification = mBuilder.build();
+        NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotifyMgr.notify(notificationID, notification);
     }
 
     @Override
