@@ -22,6 +22,7 @@ import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
 import com.zfdang.zsmth_android.models.Attachment;
 import com.zfdang.zsmth_android.models.ContentSegment;
+import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.Post;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
@@ -38,7 +39,7 @@ import rx.schedulers.Schedulers;
 public class MailContentActivity extends AppCompatActivity {
 
     private static final String TAG = "MailContent";
-    private String mail_url;
+    private Mail mail;
     private Post mPost;
 
     public TextView mPostAuthor;
@@ -84,13 +85,13 @@ public class MailContentActivity extends AppCompatActivity {
 
         // load mail content
         Bundle bundle = getIntent().getExtras();
-        mail_url = bundle.getString(SMTHApplication.MAIL_URL_OBJECT);
+        mail = (Mail) bundle.getParcelable(SMTHApplication.MAIL_OBJECT);
         loadMailContent();
     }
 
     public void loadMailContent() {
         SMTHHelper helper = SMTHHelper.getInstance();
-        helper.wService.getMailContent(mail_url)
+        helper.wService.getMailContent(mail.url)
                 .map(new Func1<AjaxResponse, Post>() {
                     @Override
                     public Post call(AjaxResponse ajaxResponse) {
@@ -114,6 +115,7 @@ public class MailContentActivity extends AppCompatActivity {
                     @Override
                     public void onNext(Post post) {
                         mPost = post;
+                        mPost.setAuthor(mail.author);
                         updateViewFromPost();
                     }
                 });
@@ -122,7 +124,7 @@ public class MailContentActivity extends AppCompatActivity {
 
     public void updateViewFromPost() {
         if(mPost != null) {
-            mPostAuthor.setVisibility(View.GONE);
+            mPostAuthor.setText(mPost.getRawAuthor());
             mPostIndex.setVisibility(View.GONE);
             mPostPublishDate.setText(mPost.getFormatedDate());
 

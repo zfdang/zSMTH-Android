@@ -67,9 +67,6 @@ public class ComposePostActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK && data != null) {
                 mPhotos = data.getStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS);
                 mAttachments.setText(String.format("共有%d个附件", mPhotos.size()));
-//                for (String filename: mPhotos) {
-//                    Log.d(TAG, "onActivityResult: " + filename);
-//                }
 
                 String attachments = "";
                 for(int i = 0; i < mPhotos.size(); i ++) {
@@ -135,7 +132,7 @@ public class ComposePostActivity extends AppCompatActivity {
             }
         });
 
-        // init widgets from Intent
+        // init controls from Intent
         initFromIntent();
     }
 

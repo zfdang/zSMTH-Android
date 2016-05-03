@@ -631,7 +631,7 @@ public class MainActivity extends AppCompatActivity
 
         // MailListFragment
         Intent intent = new Intent(this, MailContentActivity.class);
-        intent.putExtra(SMTHApplication.MAIL_URL_OBJECT, item.url);
+        intent.putExtra(SMTHApplication.MAIL_OBJECT, (Parcelable) item);
         startActivity(intent);
     }
 

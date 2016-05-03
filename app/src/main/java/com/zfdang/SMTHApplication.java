@@ -30,7 +30,7 @@ public class SMTHApplication extends Application {
     public static final String BOARD_OBJECT = "BOARD_OBJECT";
     public static final String TOPIC_OBJECT = "TOPIC_OBJECT";
 
-    public static final String MAIL_URL_OBJECT = "MAIL_URL_OBJECT";
+    public static final String MAIL_OBJECT = "MAIL_OBJECT";
 
     public static final String MAIN_TARGET_FRAGMENT = "MAIN_TARGET_FRAGMENT";
     public static final String SERVICE_NOTIFICATION_MESSAGE = "SERVICE_NOTIFICATION_MESSAGE";
