@@ -7,32 +7,22 @@ import android.os.Parcelable;
  * Created by zfdang on 2016-4-4.
  */
 public class ComposePostContext implements Parcelable {
-    public static final Creator<ComposePostContext> CREATOR = new Creator<ComposePostContext>() {
-        @Override
-        public ComposePostContext createFromParcel(Parcel source) {
-            return new ComposePostContext(source);
-        }
-
-        @Override
-        public ComposePostContext[] newArray(int size) {
-            return new ComposePostContext[size];
-        }
-    };
     private String boardEngName;
     private String postTitle;
     private String postid;
     private String postContent;
     private String postAuthor;
+    private boolean throughMail;
 
     public ComposePostContext() {
     }
 
-    protected ComposePostContext(Parcel in) {
-        this.boardEngName = in.readString();
-        this.postTitle = in.readString();
-        this.postid = in.readString();
-        this.postContent = in.readString();
-        this.postAuthor = in.readString();
+    public boolean isThroughMail() {
+        return throughMail;
+    }
+
+    public void setThroughMail(boolean throughMail) {
+        this.throughMail = throughMail;
     }
 
     public String getBoardEngName() {
@@ -87,7 +77,29 @@ public class ComposePostContext implements Parcelable {
         dest.writeString(this.postid);
         dest.writeString(this.postContent);
         dest.writeString(this.postAuthor);
+        dest.writeByte(throughMail ? (byte) 1 : (byte) 0);
     }
+
+    protected ComposePostContext(Parcel in) {
+        this.boardEngName = in.readString();
+        this.postTitle = in.readString();
+        this.postid = in.readString();
+        this.postContent = in.readString();
+        this.postAuthor = in.readString();
+        this.throughMail = in.readByte() != 0;
+    }
+
+    public static final Creator<ComposePostContext> CREATOR = new Creator<ComposePostContext>() {
+        @Override
+        public ComposePostContext createFromParcel(Parcel source) {
+            return new ComposePostContext(source);
+        }
+
+        @Override
+        public ComposePostContext[] newArray(int size) {
+            return new ComposePostContext[size];
+        }
+    };
 
     @Override
     public String toString() {
@@ -97,6 +109,7 @@ public class ComposePostContext implements Parcelable {
                 ", postid='" + postid + '\'' +
                 ", postContent='" + postContent + '\'' +
                 ", postAuthor='" + postAuthor + '\'' +
+                ", throughMail=" + throughMail +
                 '}';
     }
 }

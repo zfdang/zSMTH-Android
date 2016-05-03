@@ -52,7 +52,7 @@ public class ComposePostActivity extends AppCompatActivity {
     private ArrayList<String> mPhotos;
     private TextView mContentCount;
 
-    private ComposePostContext mPostContent;
+    private ComposePostContext mPostContext;
 
     // used to show progress while publishing
     private static int  totalSteps = 1;
@@ -135,26 +135,32 @@ public class ComposePostActivity extends AppCompatActivity {
             }
         });
 
-        // init widgets from Internt
+        // init widgets from Intent
         initFromIntent();
     }
 
     public void initFromIntent() {
         // get ComposePostContext from caller
         Intent intent = getIntent();
-        mPostContent = intent.getParcelableExtra(SMTHApplication.COMPOSE_POST_CONTEXT);
-        assert mPostContent != null;
+        mPostContext = intent.getParcelableExtra(SMTHApplication.COMPOSE_POST_CONTEXT);
+        assert mPostContext != null;
 
-//        Log.d(TAG, "initFromIntent: " + mPostContent.toString());
+//        Log.d(TAG, "initFromIntent: " + mPostContext.toString());
 
-        if(mPostContent.getPostid() != null && mPostContent.getPostid().length() > 0) {
-            setTitle(String.format("回复文章@%s", mPostContent.getBoardEngName()));
-            mTitle.setText(String.format("Re: %s", mPostContent.getPostTitle()));
+        if(mPostContext.getPostid() != null && mPostContext.getPostid().length() > 0) {
+            // have valid post information
+            if(mPostContext.isThroughMail()) {
+                setTitle(String.format("回信给作者@%s", mPostContext.getPostAuthor()));
+                mButton.setEnabled(false);
+            } else {
+                setTitle(String.format("回复文章@%s", mPostContext.getBoardEngName()));
+            }
+            mTitle.setText(String.format("Re: %s", mPostContext.getPostTitle()));
 
-            String[] lines = mPostContent.getPostContent().split("\n");
+            String[] lines = mPostContext.getPostContent().split("\n");
             StringBuilder wordList = new StringBuilder();
             wordList.append("\n\n");
-            wordList.append(String.format("【 在 %s 的大作中提到: 】", mPostContent.getPostAuthor())).append("\n");
+            wordList.append(String.format("【 在 %s 的大作中提到: 】", mPostContext.getPostAuthor())).append("\n");
             for(int i = 0; i < lines.length && i < 5; i++) {
                 if(lines[i].startsWith("--")){
                     // this might be the start of signature, ignore following lines in quote
@@ -168,8 +174,8 @@ public class ComposePostActivity extends AppCompatActivity {
             mContent.requestFocus();
             mContent.setSelection(0);
         } else {
-            mPostContent.setPostid("0");
-            setTitle(String.format("发表文章@%s", mPostContent.getBoardEngName()));
+            mPostContext.setPostid("0");
+            setTitle(String.format("发表文章@%s", mPostContext.getBoardEngName()));
         }
     }
 
@@ -249,7 +255,7 @@ public class ComposePostActivity extends AppCompatActivity {
                     @Override
                     public AjaxResponse call(BytesContainer container) {
                         RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpeg"), container.bytes);
-                        List<AjaxResponse> resps = helper.wService.uploadAttachment(mPostContent.getBoardEngName(), StringUtils.getLastStringSegment(container.filename), requestBody)
+                        List<AjaxResponse> resps = helper.wService.uploadAttachment(mPostContext.getBoardEngName(), StringUtils.getLastStringSegment(container.filename), requestBody)
                                 .toList().toBlocking().single();
                         if (resps != null && resps.size() == 1) {
                             return resps.get(0);
@@ -262,8 +268,12 @@ public class ComposePostActivity extends AppCompatActivity {
 
         // publish post
         String postContent = mContent.getText().toString() + "\n" + String.format("#发自zSMTH@%s", Settings.getInstance().getSignature());
-        Observable<AjaxResponse> resp2 = SMTHHelper.publishPost(mPostContent.getBoardEngName(), mTitle.getText().toString(), postContent, "0", mPostContent.getPostid());
-
+        Observable<AjaxResponse> resp2;
+        if(mPostContext.isThroughMail()){
+            resp2 = SMTHHelper.sendMail(mPostContext.getPostAuthor(), mTitle.getText().toString(), postContent);
+        } else {
+            resp2 = SMTHHelper.publishPost(mPostContext.getBoardEngName(), mTitle.getText().toString(), postContent, "0", mPostContext.getPostid());
+        }
 
         // process all these tasks one by one
         Observable.concat(resp1, resp2)
@@ -275,6 +285,9 @@ public class ComposePostActivity extends AppCompatActivity {
                         showProgress(null, false);
 
                         String dialogTitle = "发表成功";
+                        if(mPostContext.isThroughMail()) {
+                            dialogTitle = "发信成功";
+                        }
                         String dialogMessage = "结束编辑，或者停留在当前界面继续编辑？";
                         if(postPublishResult != SMTHHelper.AJAX_RESULT_OK) {
                             dialogTitle = "发表失败";

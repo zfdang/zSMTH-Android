@@ -246,6 +246,18 @@ public class SMTHHelper {
                 .observeOn(Schedulers.io());
     }
 
+
+    public static Observable<AjaxResponse> sendMail(String userid,
+                                                       String title,
+                                                       String content
+                                                       ) {
+        SMTHHelper helper = SMTHHelper.getInstance();
+        return helper.wService.sendMail("NULL", userid, title, content, "0", "on", "")
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io());
+    }
+
+
     public static Post ParseMailContentFromWWW(String content) {
         Post post = new Post();
 

@@ -436,6 +436,7 @@ public class PostListActivity extends AppCompatActivity
             postContext.setPostTitle(mTopic.getTitle());
             postContext.setPostAuthor(post.getRawAuthor());
             postContext.setPostContent(post.getRawContent());
+            postContext.setThroughMail(false);
 
             Intent intent = new Intent(this, ComposePostActivity.class);
             intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
@@ -448,7 +449,18 @@ public class PostListActivity extends AppCompatActivity
             popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 100);
         } else if (which == 2) {
             // post_reply_mail
-            Toast.makeText(PostListActivity.this, "回复到作者信箱:TBD", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(PostListActivity.this, "回复到作者信箱:TBD", Toast.LENGTH_SHORT).show();
+            ComposePostContext postContext = new ComposePostContext();
+            postContext.setBoardEngName(mTopic.getBoardEngName());
+            postContext.setPostid(post.getPostID());
+            postContext.setPostTitle(mTopic.getTitle());
+            postContext.setPostAuthor(post.getRawAuthor());
+            postContext.setPostContent(post.getRawContent());
+            postContext.setThroughMail(true);
+
+            Intent intent = new Intent(this, ComposePostActivity.class);
+            intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
+            startActivity(intent);
         } else if (which == 3) {
             // post_query_author
             Intent intent = new Intent(this, QueryUserActivity.class);
@@ -503,9 +515,6 @@ public class PostListActivity extends AppCompatActivity
             sharePost(post);
 
         }
-    }
-
-    public void forwardPostToMailbox(Post post) {
     }
 
     public void sharePost(Post post) {

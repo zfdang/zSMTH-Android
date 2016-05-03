@@ -166,6 +166,7 @@ public class BoardTopicActivity extends AppCompatActivity
         } else if(id == R.id.board_topic_action_newpost) {
             ComposePostContext postContext = new ComposePostContext();
             postContext.setBoardEngName(mBoard.getBoardEngName());
+            postContext.setThroughMail(false);
 
             Intent intent = new Intent(this, ComposePostActivity.class);
             intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);

@@ -73,6 +73,18 @@ public interface SMTHWWWService {
                                          @Field("signature") String signature,
                                          @Field("id") String id);
 
+    @FormUrlEncoded
+    @Headers("X-Requested-With:XMLHttpRequest")
+    @POST("/nForum/mail/{mailid}/ajax_send.json")
+    Observable<AjaxResponse> sendMail(@Path("mailid") String mailid,
+                                      @Field("id") String userid,
+                                      @Field("title") String title,
+                                      @Field("content") String content,
+                                      @Field("signature") String signature,
+                                      @Field("backup") String backup,
+                                      @Field("num") String num);
+
+
     @Headers("X-Requested-With:XMLHttpRequest")
     @GET("/nForum/user/ajax_session.json")
     Observable<UserStatus> queryActiveUserStatus();
