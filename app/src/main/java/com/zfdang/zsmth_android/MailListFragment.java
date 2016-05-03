@@ -251,6 +251,8 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
             intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
             startActivity(intent);
             return true;
+        } else if (id == R.id.main_action_refresh) {
+            Toast.makeText(getActivity(), "Refresh", Toast.LENGTH_SHORT).show();
         }
 
         return super.onOptionsItemSelected(item);
