@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity
     FavoriteBoardFragment favoriteBoardFragment = null;
     AllBoardFragment allBoardFragment = null;
     MailListFragment mailListFragment = null;
-    SettingFragment settingFragment = null;
+    MyPreferenceFragment preferenceFragment = null;
     Fragment aboutFragment = null;
     public ProgressDialog pdialog = null;
     private WrapContentDraweeView mAvatar = null;
@@ -347,7 +347,7 @@ public class MainActivity extends AppCompatActivity
         allBoardFragment = new AllBoardFragment();
         mailListFragment = new MailListFragment();
 
-        settingFragment = new SettingFragment();
+        preferenceFragment = new MyPreferenceFragment();
         aboutFragment = new LibsBuilder().supportFragment();
     }
 
@@ -571,7 +571,8 @@ public class MainActivity extends AppCompatActivity
             fragment = mailListFragment;
             title = "邮件";
         } else if (id == R.id.nav_setting) {
-            fragment = settingFragment;
+//            fragment = settingFragment;
+            fragment =  preferenceFragment;
             title = "设置";
         } else if (id == R.id.nav_about) {
             fragment = aboutFragment;

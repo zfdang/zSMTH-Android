@@ -87,4 +87,6 @@ dependencies {
     compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
     compile files('libs/ShareSDK-Core-2.7.1.jar')
     compile 'com.wx.wheelview:wheelview:1.3.4'
+    // https://guides.codepath.com/android/Settings-with-PreferenceFragment
+    compile 'com.github.machinarius:preferencefragment:0.1.1'
 }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="缓存管理">
+        <Preference
+            android:key="setting_fresco_cache"
+            android:summary="缓存大小:0B"
+            android:title="清除图片缓存"/>
+        <Preference
+            android:key="setting_okhttp3_cache"
+            android:summary="缓存大小:0B"
+            android:title="清除帖子缓存"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="设备签名">
+        <CheckBoxPreference
+            android:defaultValue="on"
+            android:key="setting_signature_control"
+            android:summaryOff="不使用签名"
+            android:summaryOn="使用签名"
+            android:title="发帖时添加设备签名"/>
+        <EditTextPreference
+            android:dialogTitle="输入设备型号"
+            android:key="setting_signature_content"
+            android:summary=""
+            android:title="设备型号"
+            />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="图片加载">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="setting_image_control"
+            android:summaryOff="在WIFI和移动网络下"
+            android:summaryOn="仅在WIFI下"
+            android:title="自动加载图片"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="更多">
+        <Preference
+            android:key="setting_app_version"
+            android:summary="版本号: 未知"
+            android:title="检查更新"/>
+    </PreferenceCategory>
+</PreferenceScreen>
