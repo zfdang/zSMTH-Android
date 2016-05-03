@@ -56,6 +56,7 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override

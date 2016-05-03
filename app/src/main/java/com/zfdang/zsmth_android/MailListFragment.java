@@ -72,6 +72,8 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // http://stackoverflow.com/questions/8308695/android-options-menu-in-fragment
         setHasOptionsMenu(true);
     }
 
