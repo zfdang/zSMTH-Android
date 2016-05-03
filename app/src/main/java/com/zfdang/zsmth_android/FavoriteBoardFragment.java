@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -236,5 +237,15 @@ public class FavoriteBoardFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-    
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.main_action_refresh) {
+            RefreshFavoriteBoardsWithCache();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
@@ -200,6 +201,16 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.main_action_refresh) {
+            LoadAllBoardsWithoutCache();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public class QueryTextListner implements  SearchView.OnQueryTextListener {

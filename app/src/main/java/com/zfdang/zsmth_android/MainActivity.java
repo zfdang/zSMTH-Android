@@ -477,22 +477,7 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.main_action_refresh) {
-            if (fragment == hotTopicFragment) {
-                hotTopicFragment.RefreshGuidance();
-            } else if (fragment == allBoardFragment) {
-                allBoardFragment.LoadAllBoardsWithoutCache();
-            } else if (fragment == favoriteBoardFragment) {
-                favoriteBoardFragment.RefreshFavoriteBoardsWithCache();
-            } else {
-                Toast toast = Toast.makeText(this, "Refresh", Toast.LENGTH_SHORT);
-                toast.show();
-            }
-            return true;
-        } else if (id == R.id.main_action_login) {
+        if (id == R.id.main_action_login) {
             onLogin();
             return true;
         } else if (id == R.id.main_action_logout) {
