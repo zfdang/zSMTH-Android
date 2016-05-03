@@ -22,7 +22,7 @@ public class ComposePostContext implements Parcelable {
     }
 
     public boolean isValidPost() {
-        return postid != null && postid.length() > 0;
+        return postTitle != null && postTitle.length() > 0;
     }
 
     public void setThroughMail(boolean throughMail) {

@@ -213,6 +213,7 @@ public class MailContentActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.mail_content_reply) {
             ComposePostContext postContext = new ComposePostContext();
+            // TODO: pass the right post ID
             postContext.setPostid(mPost.getPostID());
             postContext.setPostTitle(mPost.getTitle());
             postContext.setPostAuthor(mPost.getRawAuthor());
