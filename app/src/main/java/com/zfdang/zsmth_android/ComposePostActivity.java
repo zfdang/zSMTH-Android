@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +47,8 @@ public class ComposePostActivity extends AppCompatActivity {
     private ProgressDialog pdialog = null;
 
     private Button mButton;
+    private LinearLayout mUserRow;
+    private EditText mUserID;
     private EditText mTitle;
     private EditText mAttachments;
     private EditText mContent;
@@ -91,6 +94,8 @@ public class ComposePostActivity extends AppCompatActivity {
 
         mPhotos = new ArrayList<>();
 
+        mUserRow = (LinearLayout) findViewById(R.id.compose_post_userid_row);
+        mUserID = (EditText) findViewById(R.id.compose_post_userid);
         mTitle = (EditText) findViewById(R.id.compose_post_title);
         mAttachments = (EditText) findViewById(R.id.compose_post_attach);
         mContent = (EditText) findViewById(R.id.compose_post_content);
@@ -144,14 +149,41 @@ public class ComposePostActivity extends AppCompatActivity {
 
 //        Log.d(TAG, "initFromIntent: " + mPostContext.toString());
 
-        if(mPostContext.getPostid() != null && mPostContext.getPostid().length() > 0) {
-            // have valid post information
-            if(mPostContext.isThroughMail()) {
-                setTitle(String.format("回信给作者@%s", mPostContext.getPostAuthor()));
-                mButton.setEnabled(false);
-            } else {
+        // there are totally 5 different cases:
+        // 1. new post:   invalid post && !isThroughMail
+        // 2. reply post: valid post && !isThroughMail
+        // 3. reply post through mail: valid post && isThroughMail
+        // 4. reply mail: valid post && isThroughMail
+        // 5. write new mail: invalid post && isThroughMail
+        if(! mPostContext.isThroughMail()) {
+            // hide user row, and enable attachment button
+            mUserRow.setVisibility(View.GONE);
+            mButton.setEnabled(true);
+            if(mPostContext.isValidPost()) {
+                // reply post
                 setTitle(String.format("回复文章@%s", mPostContext.getBoardEngName()));
+            } else {
+                // write new post
+                setTitle(String.format("发表文章@%s", mPostContext.getBoardEngName()));
             }
+        } else {
+            mUserRow.setVisibility(View.VISIBLE);
+            mButton.setEnabled(false);
+
+            if(mPostContext.isValidPost()) {
+                // reply post
+                setTitle("回复信件");
+                mUserID.setText(mPostContext.getPostAuthor());
+                mUserID.setEnabled(false);
+            } else {
+                // write new post
+                setTitle("写新信件");
+                mUserID.setEnabled(true);
+            }
+        }
+
+        if(mPostContext.isValidPost()) {
+            // have valid post information
             mTitle.setText(String.format("Re: %s", mPostContext.getPostTitle()));
 
             String[] lines = mPostContext.getPostContent().split("\n");
@@ -170,9 +202,6 @@ public class ComposePostActivity extends AppCompatActivity {
             // focus content, and move cursor to the beginning
             mContent.requestFocus();
             mContent.setSelection(0);
-        } else {
-            mPostContext.setPostid("0");
-            setTitle(String.format("发表文章@%s", mPostContext.getBoardEngName()));
         }
     }
 

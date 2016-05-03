@@ -2,6 +2,7 @@ package com.zfdang.zsmth_android;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -9,13 +10,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.listeners.EndlessRecyclerOnScrollListener;
 import com.zfdang.zsmth_android.listeners.OnMailInteractionListener;
+import com.zfdang.zsmth_android.models.ComposePostContext;
 import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.MailListContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
@@ -66,6 +72,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -223,6 +230,30 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        MenuItem item = menu.findItem(R.id.mail_list_fragment_newmail);
+        item.setVisible(true);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.mail_list_fragment_newmail) {
+            // write new mail
+            ComposePostContext postContext = new ComposePostContext();
+            postContext.setThroughMail(true);
+
+            Intent intent = new Intent(getActivity(), ComposePostActivity.class);
+            intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

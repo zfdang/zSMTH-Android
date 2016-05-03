@@ -7,11 +7,4 @@
         android:title="@string/compose_post_publish"
         android:icon="@drawable/ic_send_white_24dp"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/compose_post_cancel"
-        android:orderInCategory="2"
-        android:title="@string/compose_post_cancel"
-        android:icon="@drawable/ic_search_white_24dp"
-        app:showAsAction="never" />
-
 </menu>

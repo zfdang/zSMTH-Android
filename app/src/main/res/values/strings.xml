@@ -126,4 +126,5 @@
     <string name="mail_button_trashbox_label">回收站</string>
     <string name="title_activity_mail_content">阅读邮件</string>
     <string name="mail_content_menu_reply">回复邮件</string>
+    <string name="mail_list_fragment_newmail">发信</string>
 </resources>

@@ -21,6 +21,10 @@ public class ComposePostContext implements Parcelable {
         return throughMail;
     }
 
+    public boolean isValidPost() {
+        return postid != null && postid.length() > 0;
+    }
+
     public void setThroughMail(boolean throughMail) {
         this.throughMail = throughMail;
     }

@@ -15,12 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
 import com.zfdang.zsmth_android.models.Attachment;
+import com.zfdang.zsmth_android.models.ComposePostContext;
 import com.zfdang.zsmth_android.models.ContentSegment;
 import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.Post;
@@ -212,7 +212,16 @@ public class MailContentActivity extends AppCompatActivity {
             onBackPressed();
             return true;
         } else if (id == R.id.mail_content_reply) {
-            Toast.makeText(MailContentActivity.this, "Reply", Toast.LENGTH_SHORT).show();
+            ComposePostContext postContext = new ComposePostContext();
+            postContext.setPostid(mPost.getPostID());
+            postContext.setPostTitle(mPost.getTitle());
+            postContext.setPostAuthor(mPost.getRawAuthor());
+            postContext.setPostContent(mPost.getRawContent());
+            postContext.setThroughMail(true);
+
+            Intent intent = new Intent(this, ComposePostActivity.class);
+            intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

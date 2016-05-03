@@ -492,9 +492,6 @@ public class MainActivity extends AppCompatActivity
                 toast.show();
             }
             return true;
-        } else if (id == R.id.main_action_switch_theme) {
-            Toast.makeText(MainActivity.this, "main_action_switch_theme", Toast.LENGTH_SHORT).show();
-            return true;
         } else if (id == R.id.main_action_login) {
             onLogin();
             return true;

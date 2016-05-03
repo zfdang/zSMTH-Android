@@ -8,11 +8,12 @@
         android:icon="@drawable/ic_refresh_white_24dp"
         app:showAsAction="never" />
     <item
-        android:id="@+id/main_action_switch_theme"
-        android:orderInCategory="2"
-        android:title="@string/action_switch_theme"
+        android:id="@+id/mail_list_fragment_newmail"
+        android:icon="@drawable/ic_note_add_white_24dp"
+        android:orderInCategory="1"
+        android:title="@string/mail_list_fragment_newmail"
         android:visible="false"
-        app:showAsAction="never" />
+        app:showAsAction="always"/>
     <item
         android:id="@+id/main_action_login"
         android:orderInCategory="3"
