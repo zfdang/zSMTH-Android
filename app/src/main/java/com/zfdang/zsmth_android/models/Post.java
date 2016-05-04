@@ -19,18 +19,17 @@ import java.util.Locale;
  * Created by zfdang on 2016-3-14.
  */
 public class Post {
+    private static final String ATTACHMENT_MARK = "###ZSMTH_ATTACHMENT###";
     public static int ACTION_DEFAULT = 0;
     public static int ACTION_FIRST_POST_IN_SUBJECT = 1;
     public static int ACTION_PREVIOUS_POST_IN_SUBJECT = 2;
     public static int ACTION_NEXT_POST_IN_SUBJECT = 3;
-
-    private static final String ATTACHMENT_MARK = "###ZSMTH_ATTACHMENT###";
-
     private String postID;
     private String title;
     private String author;
     private String nickName;
     private Date date;
+    private String position;
 
     private List<String> likes;
     private List<Attachment> attachFiles;
@@ -41,17 +40,6 @@ public class Post {
 
     public Post() {
         date = new Date();
-    }
-
-    @Override
-    public String toString() {
-        return "Post{" +
-                ", postID='" + postID + '\'' +
-                ", title='" + title + '\'' +
-                ", date=" + date +
-                ", author='" + author + '\'' +
-                ", nickName='" + nickName + '\'' +
-                '}';
     }
 
     public String getPostID() {
@@ -78,6 +66,10 @@ public class Post {
         }
     }
 
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
     public String getRawAuthor() {
         return this.author;
     }
@@ -90,16 +82,21 @@ public class Post {
         this.nickName = nickName;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
     public void setDate(Date date) {
         this.date = date;
     }
 
     public String getFormatedDate() {
         return StringUtils.getFormattedString(this.date);
+    }
+
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 
 
@@ -120,7 +117,7 @@ public class Post {
             if (imgs.size() == 1) {
                 // find one image attachment
                 String imgsrc_orig = a.attr("href");
-                if(imgsrc_orig != null && imgsrc_orig.startsWith("/nForum")){
+                if (imgsrc_orig != null && imgsrc_orig.startsWith("/nForum")) {
                     imgsrc_orig = "http://att.newsmth.net" + imgsrc_orig;
                 }
 
@@ -177,7 +174,7 @@ public class Post {
 //                Log.d("Splited Result:", String.format("{%s}", segment));
                 // add segment to results if it's not empty,
                 // MARK are seperated by several <br />, we should skip these seperated text
-                if(!StringUtils.isEmptyString(segment) || attachIndex == 0) {
+                if (!StringUtils.isEmptyString(segment) || attachIndex == 0) {
                     // since we expect there will always be a textview before imageview
                     // even the first text segment is empty, we still add it
                     mSegments.add(new ContentSegment(ContentSegment.SEGMENT_TEXT, segment));
@@ -262,7 +259,7 @@ public class Post {
             }
 
             // handle ATTACH_MARK
-            if(line.contains(ATTACHMENT_MARK)) {
+            if (line.contains(ATTACHMENT_MARK)) {
                 sb.append(line);
                 continue;
             }
@@ -342,15 +339,15 @@ public class Post {
         return mSegments;
     }
 
+    // used by copy post content menu, or quoted content while replying
+    public String getRawContent() {
+        return Html.fromHtml(this.htmlContent.replace(ATTACHMENT_MARK, "")).toString();
+    }
+
     // this method should not be called, unless we set error message
     public void setRawContent(String rawContent) {
         this.htmlContent = rawContent;
         parseContentToSegments(this.htmlContent);
-    }
-
-    // used by copy post content menu, or quoted content while replying
-    public String getRawContent() {
-        return Html.fromHtml(this.htmlContent.replace(ATTACHMENT_MARK, "")).toString();
     }
 
     public void addAttachFile(Attachment attach) {
@@ -364,5 +361,17 @@ public class Post {
 
     public List<Attachment> getAttachFiles() {
         return attachFiles;
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "postID='" + postID + '\'' +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", date=" + date +
+                ", position='" + position + '\'' +
+                '}';
     }
 }

@@ -190,15 +190,6 @@ public class Topic implements Parcelable {
         }
     }
 
-    public static String getPostIndex(int mCurrentPageNo, int position) {
-        if(mCurrentPageNo == 1 && position == 0) {
-            return "楼主";
-        }
-        int index = (mCurrentPageNo - 1) * POST_PER_PAGE + position;
-        return String.format("第%d楼", index);
-    }
-
-
     @Override
     public int describeContents() {
         return 0;

@@ -302,7 +302,6 @@ public class SMTHHelper {
                 Element author = authors.get(0);
                 String authorName = author.text();
                 post.setAuthor(authorName);
-//                Log.d(TAG, authorName);
             }
 
             // find post id for this post
@@ -312,8 +311,16 @@ public class SMTHHelper {
                 Element link = links.first();
                 String postID = StringUtils.getLastStringSegment(link.attr("href"));
                 post.setPostID(postID);
-//                Log.d(TAG, postID);
             }
+
+            // find post position
+            // <span class="a-pos">第1楼</span>
+            Elements positions = table.select("span.a-pos");
+            if(positions.size() > 0){
+                Element position = positions.first();
+                post.setPosition(position.text());
+            }
+
 
             // find & parse post content
             Elements contents = table.select("td.a-content");

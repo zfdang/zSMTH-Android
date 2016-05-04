@@ -17,7 +17,6 @@ import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
 import com.zfdang.zsmth_android.models.Attachment;
 import com.zfdang.zsmth_android.models.ContentSegment;
 import com.zfdang.zsmth_android.models.Post;
-import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.view.LinkTextView;
 
 import java.util.ArrayList;
@@ -130,14 +129,9 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
 
         holder.mPostAuthor.setText(post.getAuthor());
         holder.mPostPublishDate.setText(post.getFormatedDate());
+        holder.mPostIndex.setText(post.getPosition());
 
         inflateContentViewGroup(holder.mViewGroup, holder.mPostContent, post);
-
-
-        if(mListener != null) {
-            int mCurrentPageNo = ((PostListActivity) mListener).mCurrentPageNo;
-            holder.mPostIndex.setText(Topic.getPostIndex(mCurrentPageNo, position));
-        }
 
         // http://stackoverflow.com/questions/4415528/how-to-pass-the-onclick-event-to-its-parent-on-android
         // http://stackoverflow.com/questions/24885223/why-doesnt-recyclerview-have-onitemclicklistener-and-how-recyclerview-is-dif
