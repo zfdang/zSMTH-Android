@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -254,7 +255,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
             startActivity(intent);
             return true;
         } else if (id == R.id.main_action_refresh) {
-            Toast.makeText(getActivity(), "Refresh", Toast.LENGTH_SHORT).show();
+            LoadMailsFromBeginning();
         }
 
         return super.onOptionsItemSelected(item);
@@ -263,16 +264,19 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         if(v == btInbox) {
+            if(TextUtils.equals(currentFolder, INBOX_LABEL)) return;
             btInbox.setTextColor(getResources().getColor(R.color.blue_text_night));
             btOutbox.setTextColor(getResources().getColor(R.color.status_text_night));
             btTrashbox.setTextColor(getResources().getColor(R.color.status_text_night));
             currentFolder = INBOX_LABEL;
         } else if(v == btOutbox) {
+            if(TextUtils.equals(currentFolder, OUTBOX_LABEL)) return;
             btInbox.setTextColor(getResources().getColor(R.color.status_text_night));
             btOutbox.setTextColor(getResources().getColor(R.color.blue_text_night));
             btTrashbox.setTextColor(getResources().getColor(R.color.status_text_night));
             currentFolder = OUTBOX_LABEL;
         } else if (v == btTrashbox) {
+            if(TextUtils.equals(currentFolder, DELETED_LABEL)) return;
             btInbox.setTextColor(getResources().getColor(R.color.status_text_night));
             btOutbox.setTextColor(getResources().getColor(R.color.status_text_night));
             btTrashbox.setTextColor(getResources().getColor(R.color.blue_text_night));

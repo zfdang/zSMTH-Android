@@ -3,6 +3,9 @@ package com.zfdang.zsmth_android.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Created by zfdang on 2016-3-15.
  */
@@ -23,6 +26,19 @@ public class Mail implements Parcelable {
 
     public Mail() {
         isCategory = false;
+    }
+
+    public String getMailIDFromURL(){
+        if(url != null && url.length() > 0){
+            // '/nForum/mail/inbox/192.json'
+            Pattern pattern = Pattern.compile("(\\d+)", Pattern.DOTALL);
+            Matcher matcher = pattern.matcher(url);
+            if (matcher.find()) {
+                String mailid = matcher.group(0);
+                return mailid;
+            }
+        }
+        return "";
     }
 
     @Override

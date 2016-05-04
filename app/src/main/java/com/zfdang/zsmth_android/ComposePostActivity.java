@@ -42,7 +42,7 @@ public class ComposePostActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE = 653;
     private static final String TAG = "ComposePostActivity";
-    private final String UPLOAD_TEMPLATE = "    [upload=%d][/upload]\n";
+    private final String UPLOAD_TEMPLATE = "  [upload=%d][/upload]  ";
 
     private ProgressDialog pdialog = null;
 
@@ -50,6 +50,7 @@ public class ComposePostActivity extends AppCompatActivity {
     private LinearLayout mUserRow;
     private EditText mUserID;
     private EditText mTitle;
+    private LinearLayout mAttachRow;
     private EditText mAttachments;
     private EditText mContent;
     private ArrayList<String> mPhotos;
@@ -63,6 +64,23 @@ public class ComposePostActivity extends AppCompatActivity {
 
     private int postPublishResult = 0;
     private String postPUblishMessage = null;
+
+
+    public void startImageSelector() {
+        // start multiple photos selector
+        Intent intent = new Intent(ComposePostActivity.this, ImagesSelectorActivity.class);
+        // max number of images to be selected
+        intent.putExtra(SelectorSettings.SELECTOR_MAX_IMAGE_NUMBER, 5);
+        // min size of image which will be shown; to filter tiny images (mainly icons)
+        intent.putExtra(SelectorSettings.SELECTOR_MIN_IMAGE_SIZE, 100000);
+        // show camera or not
+        intent.putExtra(SelectorSettings.SELECTOR_SHOW_CAMERA, false);
+        // pass current selected images as the initial value
+        intent.putStringArrayListExtra(SelectorSettings.SELECTOR_INITIAL_SELECTED_LIST, mPhotos);
+        // start the selector
+        startActivityForResult(intent, REQUEST_CODE);
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -97,6 +115,7 @@ public class ComposePostActivity extends AppCompatActivity {
         mUserRow = (LinearLayout) findViewById(R.id.compose_post_userid_row);
         mUserID = (EditText) findViewById(R.id.compose_post_userid);
         mTitle = (EditText) findViewById(R.id.compose_post_title);
+        mAttachRow = (LinearLayout) findViewById(R.id.compose_post_attach_row);
         mAttachments = (EditText) findViewById(R.id.compose_post_attach);
         mContent = (EditText) findViewById(R.id.compose_post_content);
         mContentCount = (TextView) findViewById(R.id.compose_post_content_label);
@@ -105,31 +124,16 @@ public class ComposePostActivity extends AppCompatActivity {
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // start multiple photos selector
-                Intent intent = new Intent(ComposePostActivity.this, ImagesSelectorActivity.class);
-                // max number of images to be selected
-                intent.putExtra(SelectorSettings.SELECTOR_MAX_IMAGE_NUMBER, 5);
-                // min size of image which will be shown; to filter tiny images (mainly icons)
-                intent.putExtra(SelectorSettings.SELECTOR_MIN_IMAGE_SIZE, 100000);
-                // show camera or not
-                intent.putExtra(SelectorSettings.SELECTOR_SHOW_CAMERA, false);
-                // pass current selected images as the initial value
-                intent.putStringArrayListExtra(SelectorSettings.SELECTOR_INITIAL_SELECTED_LIST, mPhotos);
-                // start the selector
-                startActivityForResult(intent, REQUEST_CODE);
+                startImageSelector();
             }
         });
 
         mContent.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -146,19 +150,19 @@ public class ComposePostActivity extends AppCompatActivity {
         Intent intent = getIntent();
         mPostContext = intent.getParcelableExtra(SMTHApplication.COMPOSE_POST_CONTEXT);
         assert mPostContext != null;
-
 //        Log.d(TAG, "initFromIntent: " + mPostContext.toString());
 
-        // there are totally 5 different cases:
+        // there are totally 5 different cases: ( 3 & 4 can be handled in the same way)
         // 1. new post:   invalid post && !isThroughMail
         // 2. reply post: valid post && !isThroughMail
         // 3. reply post through mail: valid post && isThroughMail
         // 4. reply mail: valid post && isThroughMail
         // 5. write new mail: invalid post && isThroughMail
+
+        // set title, hide userRow / attachRow if necessary
         if(! mPostContext.isThroughMail()) {
             // hide user row, and enable attachment button
             mUserRow.setVisibility(View.GONE);
-            mButton.setEnabled(true);
             if(mPostContext.isValidPost()) {
                 // reply post
                 setTitle(String.format("回复文章@%s", mPostContext.getBoardEngName()));
@@ -167,8 +171,7 @@ public class ComposePostActivity extends AppCompatActivity {
                 setTitle(String.format("发表文章@%s", mPostContext.getBoardEngName()));
             }
         } else {
-            mUserRow.setVisibility(View.VISIBLE);
-            mButton.setEnabled(false);
+            mAttachRow.setVisibility(View.GONE);
 
             if(mPostContext.isValidPost()) {
                 // reply post
@@ -178,10 +181,10 @@ public class ComposePostActivity extends AppCompatActivity {
             } else {
                 // write new post
                 setTitle("写新信件");
-                mUserID.setEnabled(true);
             }
         }
 
+        // set post title & content
         if(mPostContext.isValidPost()) {
             // have valid post information
             mTitle.setText(String.format("Re: %s", mPostContext.getPostTitle()));
@@ -264,7 +267,6 @@ public class ComposePostActivity extends AppCompatActivity {
         }
 
         showProgress(String.format(progressHint, ComposePostActivity.currentStep, ComposePostActivity.totalSteps), true);
-        Log.d(TAG, "publishPost: ");
 
         final SMTHHelper helper = SMTHHelper.getInstance();
 
@@ -296,7 +298,8 @@ public class ComposePostActivity extends AppCompatActivity {
         String postContent = mContent.getText().toString() + "\n" + String.format("#发自zSMTH@%s", Settings.getInstance().getSignature());
         Observable<AjaxResponse> resp2;
         if(mPostContext.isThroughMail()){
-            resp2 = SMTHHelper.sendMail(mPostContext.getPostAuthor(), mTitle.getText().toString(), postContent);
+            String userid = mUserID.getText().toString().trim();
+            resp2 = SMTHHelper.sendMail(userid, mTitle.getText().toString(), postContent);
         } else {
             resp2 = SMTHHelper.publishPost(mPostContext.getBoardEngName(), mTitle.getText().toString(), postContent, "0", mPostContext.getPostid());
         }
@@ -342,7 +345,7 @@ public class ComposePostActivity extends AppCompatActivity {
                     public void onError(Throwable e) {
                         showProgress(null, false);
                         Log.d(TAG, "onError: " + Log.getStackTraceString(e));
-                        Toast.makeText(ComposePostActivity.this, "发布失败!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ComposePostActivity.this, "发布失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

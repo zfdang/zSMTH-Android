@@ -39,6 +39,13 @@ public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerVi
         Mail mail = mValues.get(position);
         holder.mItem = mail;
 
+        if(mail.isNew) {
+            // Log.d(TAG, "onBindViewHolder: " + "mail is new");
+            holder.mView.setBackgroundResource(R.drawable.recyclerview_new_item_bg);
+        } else {
+            holder.mView.setBackgroundResource(R.drawable.recyclerview_item_bg);
+        }
+
         if(mail.isCategory) {
             holder.mPage.setVisibility(View.VISIBLE);
             holder.mAuthorLabel.setVisibility(View.GONE);
@@ -57,13 +64,6 @@ public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerVi
             holder.mAuthor.setText(mail.author);
             holder.mTopic.setText(mail.title);
             holder.mDate.setText(mail.date);
-
-            if(mail.isNew) {
-                // Log.d(TAG, "onBindViewHolder: " + "mail is new");
-                holder.mView.setBackgroundResource(R.drawable.recyclerview_new_item_bg);
-            } else {
-                holder.mView.setBackgroundResource(R.drawable.recyclerview_item_bg);
-            }
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override

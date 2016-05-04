@@ -39,7 +39,7 @@ import rx.schedulers.Schedulers;
 public class MailContentActivity extends AppCompatActivity {
 
     private static final String TAG = "MailContent";
-    private Mail mail;
+    private Mail mMail;
     private Post mPost;
 
     public TextView mPostAuthor;
@@ -70,6 +70,7 @@ public class MailContentActivity extends AppCompatActivity {
         // init post widget
         mPostAuthor = (TextView) findViewById(R.id.post_author);
         mPostIndex = (TextView) findViewById(R.id.post_index);
+        mPostIndex.setVisibility(View.GONE);
         mPostPublishDate = (TextView) findViewById(R.id.post_publish_date);
         mViewGroup = (LinearLayout) findViewById(R.id.post_content_holder);
         mPostContent = (LinkTextView) findViewById(R.id.post_content);
@@ -83,15 +84,15 @@ public class MailContentActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        // load mail content
+        // load mMail content
         Bundle bundle = getIntent().getExtras();
-        mail = (Mail) bundle.getParcelable(SMTHApplication.MAIL_OBJECT);
+        mMail = (Mail) bundle.getParcelable(SMTHApplication.MAIL_OBJECT);
         loadMailContent();
     }
 
     public void loadMailContent() {
         SMTHHelper helper = SMTHHelper.getInstance();
-        helper.wService.getMailContent(mail.url)
+        helper.wService.getMailContent(mMail.url)
                 .map(new Func1<AjaxResponse, Post>() {
                     @Override
                     public Post call(AjaxResponse ajaxResponse) {
@@ -115,23 +116,19 @@ public class MailContentActivity extends AppCompatActivity {
                     @Override
                     public void onNext(Post post) {
                         mPost = post;
-                        mPost.setAuthor(mail.author);
-                        updateViewFromPost();
+
+                        // copy some attr from mail to post
+                        mPost.setAuthor(mMail.author);
+                        mPost.setTitle(mMail.title);
+                        mPost.setPostID(mMail.getMailIDFromURL());
+
+                        mPostAuthor.setText(mPost.getRawAuthor());
+                        mPostPublishDate.setText(mPost.getFormatedDate());
+                        inflateContentViewGroup(mViewGroup, mPostContent, mPost);
                     }
                 });
 
     }
-
-    public void updateViewFromPost() {
-        if(mPost != null) {
-            mPostAuthor.setText(mPost.getRawAuthor());
-            mPostIndex.setVisibility(View.GONE);
-            mPostPublishDate.setText(mPost.getFormatedDate());
-
-            inflateContentViewGroup(mViewGroup, mPostContent, mPost);
-        }
-    }
-
 
     //    copied from PostRecyclerViewAdapter.inflateContentViewGroup, almost the same code
     public void inflateContentViewGroup(ViewGroup viewGroup, TextView contentView, final Post post) {
@@ -213,7 +210,6 @@ public class MailContentActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.mail_content_reply) {
             ComposePostContext postContext = new ComposePostContext();
-            // TODO: pass the right post ID
             postContext.setPostid(mPost.getPostID());
             postContext.setPostTitle(mPost.getTitle());
             postContext.setPostAuthor(mPost.getRawAuthor());
