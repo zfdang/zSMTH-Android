@@ -36,8 +36,12 @@ public interface SMTHWWWService {
     @GET("/nForum/section/{section}?ajax")
     Observable<ResponseBody> getBoardsBySection(@Path("section") String section);
 
+    @Headers("X-Requested-With:XMLHttpRequest")
     @GET("/nForum/article/{boardEngName}/{topicID}?ajax")
-    Observable<ResponseBody> getPostListByPage(@Path("boardEngName") String boardEngName, @Path("topicID") String topicID, @Query("p") int page);
+    Observable<ResponseBody> getPostListByPage(@Path("boardEngName") String boardEngName,
+                                               @Path("topicID") String topicID,
+                                               @Query("p") int page,
+                                               @Query("au") String author);
 
     @Headers("X-Requested-With:XMLHttpRequest")
     @GET("/nForum/mainpage?ajax")
