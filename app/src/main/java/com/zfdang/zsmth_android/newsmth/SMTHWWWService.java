@@ -134,4 +134,11 @@ public interface SMTHWWWService {
     @Headers("X-Requested-With:XMLHttpRequest")
     @POST("/nForum/friend/ajax_add.json")
     Observable<AjaxResponse> addFriend(@Field("id") String userid);
+
+
+    // http://www.newsmth.net/bbsdel.php?board=Test&id=910916
+    @GET("/bbsdel.php")
+    Observable<ResponseBody> deletePost(@Query("board") String boardEngName,
+                                        @Query("id") String postID);
+
 }

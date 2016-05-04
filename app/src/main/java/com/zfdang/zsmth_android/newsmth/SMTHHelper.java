@@ -878,6 +878,34 @@ public class SMTHHelper {
         return mails;
     }
 
+    // sample response: assets/deletion_response.html
+    public static String parseDeleteResponse(String response) {
+        String result = "";
+        Document doc = Jsoup.parse(response);
+        Elements bodies = doc.getElementsByTag("body");
+
+        if(bodies != null && bodies.size() > 0) {
+            Element body = bodies.first();
+
+            Elements divs = body.select("div.nav");
+            for (Element div: divs) {
+                div.remove();
+            }
+
+            Elements as = body.getElementsByTag("a");
+            for(Element a : as) {
+                a.remove();
+            }
+
+            result = body.text();
+        }
+
+        result = result.replaceAll("用户名：", "");
+        result = result.replaceAll("密　码：", "");
+        return result;
+    }
+
+
     /*
     * All Boards related methods
     * Starts here

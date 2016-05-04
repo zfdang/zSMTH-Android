@@ -516,10 +516,48 @@ public class PostListActivity extends AppCompatActivity
             sharePost(post);
         } else if (which == 8) {
             // delete post
-            Toast.makeText(PostListActivity.this, "TBD", Toast.LENGTH_SHORT).show();
-
+            deletePost(post);
         }
     }
+
+    public void deletePost(Post post) {
+        SMTHHelper helper = SMTHHelper.getInstance();
+
+        helper.wService.deletePost(mTopic.getBoardEngName(), post.getPostID())
+                .map(new Func1<ResponseBody, String>() {
+                    @Override
+                    public String call(ResponseBody responseBody) {
+                        try {
+                            String response = SMTHHelper.DecodeResponseFromWWW(responseBody.bytes());
+                            return SMTHHelper.parseDeleteResponse(response);
+                        } catch (Exception e) {
+                            Log.e(TAG, "call: " + Log.getStackTraceString(e) );
+                        }
+                        return null;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + Log.getStackTraceString(e) );
+                        Toast.makeText(PostListActivity.this, "发生错误:" + e.toString(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onNext(String result) {
+                        Toast.makeText(PostListActivity.this, result, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+    }
+
 
     public void sharePost(Post post) {
         ShareSDK.initSDK(this);
