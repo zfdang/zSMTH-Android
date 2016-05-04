@@ -130,4 +130,8 @@ public interface SMTHWWWService {
     Observable<AjaxResponse> getMailContent(@Path("mail_url") String mail_url);
 
 
+    @FormUrlEncoded
+    @Headers("X-Requested-With:XMLHttpRequest")
+    @POST("/nForum/friend/ajax_add.json")
+    Observable<AjaxResponse> addFriend(@Field("id") String userid);
 }

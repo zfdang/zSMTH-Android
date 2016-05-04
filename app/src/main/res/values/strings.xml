@@ -84,7 +84,7 @@
     <string name="compose_post_publish">发表</string>
     <string name="compose_post_cancel">放弃</string>
     <string name="title_activity_query_user">查询网友</string>
-    <string name="query_user_action_message">发短消息</string>
+    <string name="query_user_action_message">发站内信</string>
     <string name="query_user_action_friend">加为好友</string>
 
     <!--About fragment-->

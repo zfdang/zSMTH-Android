@@ -176,12 +176,12 @@ public class ComposePostActivity extends AppCompatActivity {
             if(mPostContext.isValidPost()) {
                 // reply post
                 setTitle("回复信件");
-                mUserID.setText(mPostContext.getPostAuthor());
                 mUserID.setEnabled(false);
             } else {
                 // write new post
                 setTitle("写新信件");
             }
+            mUserID.setText(mPostContext.getPostAuthor());
         }
 
         // set post title & content

@@ -17,6 +17,8 @@ import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
 import com.zfdang.zsmth_android.helpers.KeyboardLess;
 import com.zfdang.zsmth_android.helpers.StringUtils;
+import com.zfdang.zsmth_android.models.ComposePostContext;
+import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.newsmth.UserInfo;
 
@@ -108,7 +110,7 @@ public class QueryUserActivity extends AppCompatActivity {
 
     public void showProgress(String message, final boolean show) {
         if(pdialog == null) {
-            pdialog = new ProgressDialog(this);
+            pdialog = new ProgressDialog(this, R.style.PDialog_MyTheme);
         }
         if (show) {
             pdialog.setMessage(message);
@@ -130,11 +132,46 @@ public class QueryUserActivity extends AppCompatActivity {
         int code = item.getItemId();
         if(code == android.R.id.home) {
             onBackPressed();
+        } else if (code == R.id.query_user_action_message) {
+            // write mail to current user
+            ComposePostContext postContext = new ComposePostContext();
+            postContext.setThroughMail(true);
+            postContext.setPostAuthor(mUserId.getText().toString());
+
+            Intent intent = new Intent(this, ComposePostActivity.class);
+            intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
+            startActivity(intent);
+            return true;
+        } else if(code == R.id.query_user_action_friend) {
+            addFriend(mUserId.getText().toString());
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    public void addFriend(String userid) {
+        SMTHHelper helper = SMTHHelper.getInstance();
+        helper.wService.addFriend(userid)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<AjaxResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + Log.getStackTraceString(e) );
+                        Toast.makeText(QueryUserActivity.this, "发生错误:" + e.toString(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onNext(AjaxResponse ajaxResponse) {
+                        Toast.makeText(QueryUserActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
 
     public void LoadUserInfo() {
 
