@@ -196,7 +196,7 @@ public class MaintainUserStatusService extends IntentService {
                     public void onNext(UserStatus userStatus) {
                         if (userStatus == null || userStatus.getId() == null) return;
 
-                        // Log.d(TAG, "onNext: " + userStatus.toString());
+                         Log.d(TAG, "onNext: " + userStatus.toString());
 
                         String userid = userStatus.getId();
                         if(SMTHApplication.activeUser != null && TextUtils.equals(SMTHApplication.activeUser.getId(), userid) && userStatus.isNew_mail()) {

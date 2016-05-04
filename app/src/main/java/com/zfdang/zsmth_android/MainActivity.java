@@ -383,7 +383,10 @@ public class MainActivity extends AppCompatActivity
         if (SMTHApplication.isValidUser()) {
             // update user to login user
             mUsername.setText(SMTHApplication.activeUser.getId());
-            mAvatar.setImageFromStringURL(SMTHApplication.activeUser.getFace_url());
+            String faceURL = SMTHApplication.activeUser.getFace_url();
+            if(faceURL != null){
+                mAvatar.setImageFromStringURL(faceURL);
+            }
         } else {
             // only user to guest
             mUsername.setText(getString(R.string.nav_header_click_to_login));
