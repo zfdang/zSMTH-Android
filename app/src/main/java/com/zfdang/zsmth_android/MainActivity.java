@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity
         OnMailInteractionListener
 {
     // used by startActivityForResult
-    static final int MAIN_ACTIVITY_REQUEST_CODE = 9527;  // The request code
+    static final int LOGIN_ACTIVITY_REQUEST_CODE = 9527;  // The request code
     private static final String TAG = "MainActivity";
     // guidance fragment: display hot topics
     // this fragment is using RecyclerView to show all hot topics
@@ -240,8 +240,8 @@ public class MainActivity extends AppCompatActivity
                 .build();
     }
 
+    // triger the background service right now
     private void updateUserStatusNow() {
-        // triger the background service right now
         Intent intent = new Intent(this, MaintainUserStatusService.class);
         intent.putExtra(SMTHApplication.USER_SERVICE_RECEIVER, mReceiver);
         startService(intent);
@@ -354,7 +354,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == MAIN_ACTIVITY_REQUEST_CODE) {
+        if (requestCode == LOGIN_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 updateUserStatusNow();
             }
@@ -496,7 +496,7 @@ public class MainActivity extends AppCompatActivity
 
     public void onLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
-        startActivityForResult(intent, MAIN_ACTIVITY_REQUEST_CODE);
+        startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
     }
 
     public void onLogout() {
