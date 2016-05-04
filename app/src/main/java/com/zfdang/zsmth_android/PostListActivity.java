@@ -382,6 +382,7 @@ public class PostListActivity extends AppCompatActivity
                 new PostActionAlertDialogItem(getString(R.string.post_foward), R.drawable.ic_send_black_48dp),     // 5
                 new PostActionAlertDialogItem(getString(R.string.post_view_in_browser), R.drawable.ic_open_in_browser_black_48dp), // 6
                 new PostActionAlertDialogItem(getString(R.string.post_share), R.drawable.ic_share_black_48dp), // 7
+                new PostActionAlertDialogItem(getString(R.string.post_delete_post), R.drawable.ic_delete_black_48dp), // 8
         };
 
 
@@ -513,6 +514,9 @@ public class PostListActivity extends AppCompatActivity
             // post_share
             // Toast.makeText(PostListActivity.this, "分享:TBD", Toast.LENGTH_SHORT).show();
             sharePost(post);
+        } else if (which == 8) {
+            // delete post
+            Toast.makeText(PostListActivity.this, "TBD", Toast.LENGTH_SHORT).show();
 
         }
     }

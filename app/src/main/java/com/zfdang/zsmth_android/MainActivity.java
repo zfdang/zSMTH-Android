@@ -459,11 +459,13 @@ public class MainActivity extends AppCompatActivity
         if (pdialog == null) {
             pdialog = new ProgressDialog(this, R.style.PDialog_MyTheme);
         }
-        if (show) {
-            pdialog.setMessage(message);
-            pdialog.show();
-        } else {
-            pdialog.cancel();
+        if(pdialog != null) {
+            if (show) {
+                pdialog.setMessage(message);
+                pdialog.show();
+            } else {
+                pdialog.cancel();
+            }
         }
     }
 

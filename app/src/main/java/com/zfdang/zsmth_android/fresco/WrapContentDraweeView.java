@@ -108,6 +108,8 @@ public class WrapContentDraweeView extends SimpleDraweeView {
 
     // load image from string URL
     public void setImageFromStringURL(final String url) {
+        if(url == null || url.length() == 0)
+            return;
         this.setImageURI(Uri.parse(url));
     }
 
