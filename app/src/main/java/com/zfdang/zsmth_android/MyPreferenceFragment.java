@@ -37,7 +37,6 @@ public class MyPreferenceFragment extends PreferenceFragment {
     Preference okhttp3_cache;
     Preference signature_control;
     Preference signature_content;
-    Preference image_control;
     Preference app_version;
 
 
@@ -94,8 +93,6 @@ public class MyPreferenceFragment extends PreferenceFragment {
                 return true;
             }
         });
-
-        image_control = findPreference("setting_image_control");
 
         app_version = findPreference("setting_app_version");
         app_version.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

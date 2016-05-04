@@ -26,14 +26,6 @@
             android:title="设备型号"
             />
     </PreferenceCategory>
-    <PreferenceCategory android:title="图片加载">
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="setting_image_control"
-            android:summaryOff="在WIFI和移动网络下"
-            android:summaryOn="仅在WIFI下"
-            android:title="自动加载图片"/>
-    </PreferenceCategory>
     <PreferenceCategory android:title="更多">
         <Preference
             android:key="setting_app_version"
