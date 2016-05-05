@@ -122,7 +122,9 @@ public class FavoriteBoardFragment extends Fragment {
     public void clearLoadingHints () {
         // disable progress bar
         MainActivity activity = (MainActivity) getActivity();
-        activity.showProgress("", false);
+        if (activity != null){
+            activity.showProgress("", false);
+        }
     }
 
     public void RefreshFavoriteBoardsWithCache() {

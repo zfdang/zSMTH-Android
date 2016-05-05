@@ -109,7 +109,8 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
     public void clearLoadingHints () {
         // disable progress bar
         MainActivity activity = (MainActivity) getActivity();
-        activity.showProgress("", false);
+        if(activity != null)
+            activity.showProgress("", false);
     }
 
     public void LoadAllBoardsWithoutCache() {
