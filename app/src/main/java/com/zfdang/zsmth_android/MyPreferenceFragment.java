@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
@@ -35,8 +36,9 @@ public class MyPreferenceFragment extends PreferenceFragment {
     private static final String TAG = "PreferenceFragment";
     Preference fresco_cache;
     Preference okhttp3_cache;
-    Preference signature_control;
+    CheckBoxPreference signature_control;
     Preference signature_content;
+    private CheckBoxPreference image_quality_control;
     Preference app_version;
 
 
@@ -75,7 +77,8 @@ public class MyPreferenceFragment extends PreferenceFragment {
             }
         });
 
-        signature_control = findPreference("setting_signature_control");
+        signature_control = (CheckBoxPreference) findPreference("setting_signature_control");
+        // ignore signature_control at the moment
 
         signature_content = findPreference("setting_signature_content");
         signature_content.setSummary(Settings.getInstance().getSignature());
@@ -93,6 +96,23 @@ public class MyPreferenceFragment extends PreferenceFragment {
                 return true;
             }
         });
+
+
+        image_quality_control = (CheckBoxPreference) findPreference("setting_image_quality_control");
+        image_quality_control.setChecked(Settings.getInstance().isLoadOriginalImage());
+        image_quality_control.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                boolean bLoadOriginalImage = Settings.getInstance().isLoadOriginalImage();
+                if(newValue instanceof Boolean){
+                    Boolean boolVal = (Boolean) newValue;
+                    bLoadOriginalImage = boolVal;
+                }
+                Settings.getInstance().setLoadOriginalImage(bLoadOriginalImage);
+                return true;
+            }
+        });
+
 
         app_version = findPreference("setting_app_version");
         app_version.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

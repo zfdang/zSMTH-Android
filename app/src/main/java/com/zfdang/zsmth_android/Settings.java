@@ -146,6 +146,20 @@ public class Settings {
     }
 
 
+    // load original image in post list, or load resized image
+    // FS image viewer will always load original image
+    private static final String LOAD_ORIGINAL_IMAGE = "LOAD_ORIGINAL_IMAGE";
+    private boolean bLoadOriginalImage;
+    public boolean isLoadOriginalImage() {
+        return bLoadOriginalImage;
+    }
+    public void setLoadOriginalImage(boolean bLoadOriginalImage) {
+        if(this.bLoadOriginalImage != bLoadOriginalImage) {
+            this.bLoadOriginalImage = bLoadOriginalImage;
+            mEditor.putBoolean(LOAD_ORIGINAL_IMAGE, this.bLoadOriginalImage);
+            mEditor.commit();
+        }
+    }
 
 
     private static final String LAST_LAUNCH_VERSION = "last_launch_version";
@@ -183,5 +197,7 @@ public class Settings {
         mTarget = mPreference.getString(FORWARD_TAEGET, "");
 
         bUserOnline = mPreference.getBoolean(USER_ONLINE, false);
+
+        bLoadOriginalImage = mPreference.getBoolean(LOAD_ORIGINAL_IMAGE, true);
     }
 }

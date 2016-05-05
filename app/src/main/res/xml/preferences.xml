@@ -26,6 +26,16 @@
             android:title="设备型号"
             />
     </PreferenceCategory>
+
+    <PreferenceCategory android:title="图片控制">
+        <CheckBoxPreference
+            android:defaultValue="on"
+            android:key="setting_image_quality_control"
+            android:summaryOff="仅在全屏看图时加载原图(GIF不会直接播放)"
+            android:summaryOn="总是加载原图(原图容易加载失败)"
+            android:title="图片质量"/>
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="更多">
         <Preference
             android:key="setting_app_version"
