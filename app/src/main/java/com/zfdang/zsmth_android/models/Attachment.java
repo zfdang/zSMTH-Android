@@ -6,20 +6,20 @@ package com.zfdang.zsmth_android.models;
 public class Attachment {
     public static int ATTACHMENT_TYPE_IMAGE = 1;
     public static int ATTACHMENT_TYPE_DOWNLOADABLE = 2;
-    private String imageSrc;
+    private String mOriginalImageSource;
+    private String mResizedImageSource;
     private int type;
 
-    public Attachment(String imageSrc) {
-        this.imageSrc = imageSrc;
-    }
-    public Attachment() {
-    }
-
-    public String getImageSrc() {
-        return imageSrc;
+    public Attachment(String originalImgSrc, String resizedImageSrc) {
+        this.mOriginalImageSource = originalImgSrc;
+        this.mResizedImageSource = resizedImageSrc;
     }
 
-    public void setImageSrc(String imageSrc) {
-        this.imageSrc = imageSrc;
+    public String getOriginalImageSource() {
+        return mOriginalImageSource;
+    }
+
+    public String getResizedImageSource() {
+        return mResizedImageSource;
     }
 }

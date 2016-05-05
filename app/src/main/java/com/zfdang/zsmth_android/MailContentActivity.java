@@ -176,7 +176,7 @@ public class MailContentActivity extends AppCompatActivity {
                         ArrayList<String> urls = new ArrayList<>();
                         List<Attachment> attaches = post.getAttachFiles();
                         for (Attachment attach: attaches) {
-                            urls.add(attach.getImageSrc());
+                            urls.add(attach.getOriginalImageSource());
                         }
 
                         intent.putStringArrayListExtra(SMTHApplication.ATTACHMENT_URLS, urls);

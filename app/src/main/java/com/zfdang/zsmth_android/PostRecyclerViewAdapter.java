@@ -88,7 +88,8 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                         ArrayList<String> urls = new ArrayList<>();
                         List<Attachment> attaches = post.getAttachFiles();
                         for (Attachment attach: attaches) {
-                            urls.add(attach.getImageSrc());
+                            // load original image in FS image viewer
+                            urls.add(attach.getOriginalImageSource());
                         }
 
                         intent.putStringArrayListExtra(SMTHApplication.ATTACHMENT_URLS, urls);

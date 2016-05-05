@@ -590,7 +590,7 @@ public class PostListActivity extends AppCompatActivity
         List<Attachment> attaches = post.getAttachFiles();
         if(attaches != null && attaches.size() > 0) {
             // use the first attached image
-            imageURL = attaches.get(0).getImageSrc();
+            imageURL = attaches.get(0).getResizedImageSource();
         }
 
         // more information about OnekeyShare

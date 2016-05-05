@@ -2,6 +2,7 @@ package com.zfdang.zsmth_android.models;
 
 import android.text.Html;
 
+import com.zfdang.zsmth_android.Settings;
 import com.zfdang.zsmth_android.helpers.StringUtils;
 
 import org.jsoup.nodes.Element;
@@ -116,12 +117,18 @@ public class Post {
             Elements imgs = a.select("img[src]");
             if (imgs.size() == 1) {
                 // find one image attachment
-                String imgsrc_orig = a.attr("href");
-                if (imgsrc_orig != null && imgsrc_orig.startsWith("/nForum")) {
-                    imgsrc_orig = "http://att.newsmth.net" + imgsrc_orig;
+                String origImageSrc = a.attr("href");
+                if (origImageSrc != null && origImageSrc.startsWith("/nForum")) {
+                    origImageSrc = "http://att.newsmth.net" + origImageSrc;
                 }
 
-                Attachment attach = new Attachment(imgsrc_orig);
+                Element img = imgs.first();
+                String resizedImageSrc = img.attr("src");
+                if (resizedImageSrc != null && resizedImageSrc.startsWith("/nForum")) {
+                    resizedImageSrc = "http://att.newsmth.net" + resizedImageSrc;
+                }
+
+                Attachment attach = new Attachment(origImageSrc, resizedImageSrc);
                 this.addAttachFile(attach);
 
                 // replace a[href] with MARK
@@ -183,7 +190,13 @@ public class Post {
                 // add next image attachment to results
                 if (attachFiles != null && attachIndex < attachFiles.size()) {
                     Attachment attach = attachFiles.get(attachIndex);
-                    ContentSegment img = new ContentSegment(ContentSegment.SEGMENT_IMAGE, attach.getImageSrc());
+                    String imageURL = null;
+                    if(Settings.getInstance().isLoadOriginalImage()) {
+                        imageURL = attach.getOriginalImageSource();
+                    } else {
+                        imageURL = attach.getResizedImageSource();
+                    }
+                    ContentSegment img = new ContentSegment(ContentSegment.SEGMENT_IMAGE, imageURL);
                     img.setImgIndex(attachIndex);
                     mSegments.add(img);
                 }
