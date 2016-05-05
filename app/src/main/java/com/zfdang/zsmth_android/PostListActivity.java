@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -67,13 +68,14 @@ import rx.schedulers.Schedulers;
  * in a {@link BoardTopicActivity}.
  */
 public class PostListActivity extends AppCompatActivity
-        implements View.OnClickListener, PostRecyclerViewAdapter.OnItemClickListener,
-        PostRecyclerViewAdapter.OnItemLongClickListener, OnTouchListener,
+        implements View.OnClickListener,
+        OnTouchListener,
+        RecyclerViewGestureListener.OnItemLongClickListener,
         PopupLikeWindow.OnLikeInterface,
-        PopupForwardWindow.OnForwardInterface {
+        PopupForwardWindow.OnForwardInterface{
 
     private static final String TAG = "PostListActivity";
-    private RecyclerView mRecyclerView = null;
+    public RecyclerView mRecyclerView = null;
     private TextView mTitle = null;
     private EditText mPageNo = null;
 
@@ -86,7 +88,7 @@ public class PostListActivity extends AppCompatActivity
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private String mFrom;
 
-    private int mScreenHeight;
+    private GestureDetector mGestureDetector;
 
     @Override
     protected void onDestroy() {
@@ -115,8 +117,6 @@ public class PostListActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mScreenHeight = getWindowManager().getDefaultDisplay().getHeight();
-
         mTitle = (TextView) findViewById(R.id.post_list_title);
         assert  mTitle != null;
         mPageNo = (EditText) findViewById(R.id.post_list_page_no);
@@ -137,6 +137,9 @@ public class PostListActivity extends AppCompatActivity
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(new PostRecyclerViewAdapter(PostListContent.POSTS, this));
+
+        //  holder.mView.setOnTouchListener(this)
+        mGestureDetector = new GestureDetector(mRecyclerView.getContext(), new RecyclerViewGestureListener(this, mRecyclerView));
 
         // get Board information from launcher
         Intent intent = getIntent();
@@ -361,13 +364,6 @@ public class PostListActivity extends AppCompatActivity
             return true;
         }
         return super.onKeyUp(keyCode, event);
-    }
-
-    @Override
-    public void onItemClicked(int position, View v) {
-
-        Log.d(TAG, String.format("Topic information: %s", mTopic.getTopicID()));
-        Log.d(TAG, String.format("Post [%s] by %s is clicked", PostListContent.POSTS.get(position).getPostID(), PostListContent.POSTS.get(position).getAuthor()));
     }
 
     @Override
@@ -638,14 +634,7 @@ public class PostListActivity extends AppCompatActivity
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-//        int touchY = (int) event.getRawY();
-//        if (touchY < mScreenHeight * 0.35) {
-//            RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, KeyEvent.KEYCODE_VOLUME_UP);
-//            return false;
-//        } else if (touchY > mScreenHeight * 0.65) {
-//            RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, KeyEvent.KEYCODE_VOLUME_DOWN);
-//            return false;
-//        }
+        mGestureDetector.onTouchEvent(event);
         return false;
     }
 
