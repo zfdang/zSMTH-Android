@@ -33,7 +33,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="#333E4B"
-            android:gravity="center|right"
+            android:gravity="center"
             android:text="@string/mail_button_inbox_label"
             android:textColor="@color/blue_text_night"
             android:textSize="12sp"
@@ -57,8 +57,55 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="#333E4B"
-            android:gravity="left|center"
+            android:gravity="center"
             android:text="@string/mail_button_trashbox_label"
+            android:textColor="@color/status_text_night"
+            android:textSize="12sp"
+            />
+
+        <Button
+            android:id="@+id/mail_button_at"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#333E4B"
+            android:gravity="center"
+            android:text="@string/mail_button_at_label"
+            android:textColor="@color/status_text_night"
+            android:textSize="12sp"
+            />
+
+        <Button
+            android:id="@+id/mail_button_reply"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#333E4B"
+            android:gravity="center"
+            android:text="@string/mail_button_reply_label"
+            android:textColor="@color/status_text_night"
+            android:textSize="12sp"
+            />
+
+        <Button
+            android:id="@+id/mail_button_like"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#333E4B"
+            android:gravity="center"
+            android:text="@string/mail_button_like_label"
+            android:textColor="@color/status_text_night"
+            android:textSize="12sp"
+            />
+
+        <Button
+            android:id="@+id/mail_button_dummy"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#333E4B"
+            android:gravity="center"
             android:textColor="@color/status_text_night"
             android:textSize="12sp"
             />

@@ -128,4 +128,7 @@
     <string name="mail_content_menu_reply">回复邮件</string>
     <string name="mail_list_fragment_newmail">发信</string>
     <string name="post_filter_author">只看此ID/所有人</string>
+    <string name="mail_button_at_label">\@我</string>
+    <string name="mail_button_reply_label">回复我</string>
+    <string name="mail_button_like_label">Like我</string>
 </resources>

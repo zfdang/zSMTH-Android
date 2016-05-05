@@ -131,6 +131,13 @@ public interface SMTHWWWService {
     Observable<ResponseBody> getUserMails(@Path("folder") String folder,
                                           @Query("p") String page);
 
+    // http://www.newsmth.net/nForum/refer/like?ajax&p=2
+    @Headers("X-Requested-With:XMLHttpRequest")
+    @GET("/nForum/refer/{folder}?ajax")
+    Observable<ResponseBody> getReferPosts(@Path("folder") String folder,
+                                          @Query("p") String page);
+
+
     // http://www.newsmth.net/nForum/mail/inbox/8.json
     @Headers("X-Requested-With:XMLHttpRequest")
     @GET("{mail_url}")
@@ -147,7 +154,6 @@ public interface SMTHWWWService {
     @GET("/bbsdel.php")
     Observable<ResponseBody> deletePost(@Query("board") String boardEngName,
                                         @Query("id") String postID);
-
 
     // http://www.newsmth.net/nForum/mail/inbox/ajax_delete.json
     // m<mail_id>=on
