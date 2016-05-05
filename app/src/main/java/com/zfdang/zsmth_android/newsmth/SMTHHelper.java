@@ -1051,7 +1051,16 @@ public class SMTHHelper {
             section.sectionName = board.getFolderName();
             section.parentName = board.getCategoryName();
 
-            return SMTHHelper.loadBoardsInSectionFromWWW(section);
+            // load recruisively
+            return SMTHHelper.loadBoardsInSectionFromWWW(section)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.io())
+                    .flatMap(new Func1<Board, Observable<Board>>() {
+                        @Override
+                        public Observable<Board> call(Board board) {
+                            return loadChildBoardsRecursivelyFromWWW(board);
+                        }
+                    });
         } else {
             return Observable.just(board);
         }
