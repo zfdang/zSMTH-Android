@@ -208,7 +208,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
         }
 
         currentPage += 1;
-        LoadMails();
+        LoadMailsOrReferPosts();
     }
 
     public void LoadMailsFromBeginning() {
@@ -217,18 +217,66 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
         recyclerView.getAdapter().notifyDataSetChanged();
 
         showLoadingHints();
+        LoadMailsOrReferPosts();
+    }
+
+    public void LoadMailsOrReferPosts() {
         if(TextUtils.equals(currentFolder, INBOX_LABEL) || TextUtils.equals(currentFolder, OUTBOX_LABEL)
                 || TextUtils.equals(currentFolder, DELETED_LABEL)){
             // Load mails
             LoadMails();
         } else {
             // Load refer posts
-            Toast.makeText(getActivity(), currentFolder, Toast.LENGTH_SHORT).show();
+            LoadReferPosts();
         }
     }
 
+    public void LoadReferPosts() {
+        // Log.d(TAG, "LoadReferPosts: " + currentPage);
+        SMTHHelper helper = SMTHHelper.getInstance();
+
+        helper.wService.getReferPosts(currentFolder, Integer.toString(currentPage))
+                .flatMap(new Func1<ResponseBody, Observable<Mail>>() {
+                    @Override
+                    public Observable<Mail> call(ResponseBody responseBody) {
+                        try {
+                            String response = responseBody.string();
+                            List<Mail> results = SMTHHelper.ParseMailsFromWWW(response);
+                            return Observable.from(results);
+                        } catch (Exception e) {
+                            Log.d(TAG, Log.getStackTraceString(e));
+                        }
+                        return null;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Mail>() {
+                    @Override
+                    public void onCompleted() {
+                        clearLoadingHints();
+                        recyclerView.smoothScrollToPosition(0);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + Log.getStackTraceString(e) );
+                        Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onNext(Mail mail) {
+                        // Log.d(TAG, "onNext: " + mail.toString());
+
+                        MailListContent.addItem(mail);
+                        recyclerView.getAdapter().notifyItemChanged(MailListContent.MAILS.size() - 1);
+                    }
+                });
+
+    }
+
     public void LoadMails() {
-        Log.d(TAG, "LoadMails: " + currentPage);
+        // Log.d(TAG, "LoadMails: " + currentPage);
         SMTHHelper helper = SMTHHelper.getInstance();
 
         helper.wService.getUserMails(currentFolder, Integer.toString(currentPage))
