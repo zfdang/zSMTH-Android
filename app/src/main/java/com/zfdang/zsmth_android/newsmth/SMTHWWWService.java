@@ -1,10 +1,13 @@
 package com.zfdang.zsmth_android.newsmth;
 
 
+import java.util.Map;
+
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
+import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
@@ -144,5 +147,14 @@ public interface SMTHWWWService {
     @GET("/bbsdel.php")
     Observable<ResponseBody> deletePost(@Query("board") String boardEngName,
                                         @Query("id") String postID);
+
+
+    // http://www.newsmth.net/nForum/mail/inbox/ajax_delete.json
+    // m<mail_id>=on
+    @FormUrlEncoded
+    @Headers("X-Requested-With:XMLHttpRequest")
+    @POST("/nForum/mail/{folder}/ajax_delete.json")
+    Observable<AjaxResponse> deleteMail(@Path("folder") String folder,
+                                        @FieldMap Map<String, String> mail);
 
 }

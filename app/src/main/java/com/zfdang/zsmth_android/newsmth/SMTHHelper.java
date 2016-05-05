@@ -83,10 +83,6 @@ public class SMTHHelper {
     static private final String ALL_BOARD_CACHE_FILE = "SMTH_ALL_BOARDS_CACHE";
     static private final String FAVORITE_BOARD_CACHE_PREFIX = "SMTH_FAVORITE_CACHE";
 
-    public static final int AJAX_RESULT_OK = 1;
-    public static final int AJAX_RESULT_FAILED = 0;
-    public static final int AJAX_RESULT_UNKNOWN = 2;
-
     // singleton
     private static SMTHHelper instance = null;
 
@@ -879,6 +875,13 @@ public class SMTHHelper {
 
             }
 
+            if(mail.author != null && mail.author.length() > 0) {
+                mails.add(mail);
+            }
+        }
+
+        if(mails.size() == 0) {
+            Mail mail = new Mail(".无信件.");
             mails.add(mail);
         }
 

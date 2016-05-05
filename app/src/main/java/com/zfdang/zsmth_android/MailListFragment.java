@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,9 +26,12 @@ import com.zfdang.zsmth_android.listeners.OnMailInteractionListener;
 import com.zfdang.zsmth_android.models.ComposePostContext;
 import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.MailListContent;
+import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.ResponseBody;
 import rx.Observable;
@@ -101,6 +105,9 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
         };
         recyclerView.addOnScrollListener(mScrollListener);
 
+        // enable swipe to delete mail
+        initItemHelper();
+
         btInbox = (Button) view.findViewById(R.id.mail_button_inbox);
         btInbox.setOnClickListener(this);
         btOutbox = (Button) view.findViewById(R.id.mail_button_outbox);
@@ -114,6 +121,58 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
         return view;
     }
 
+    public void initItemHelper() {
+        //0则不执行拖动或者滑动
+        ItemTouchHelper.Callback mCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                Mail mail = MailListContent.MAILS.get(position);
+                if(!mail.isCategory) {
+                    Map<String, String> mails = new HashMap<String, String>();
+                    String mailKey = String.format("m_%s", mail.getMailIDFromURL());
+                    Log.d(TAG, "onSwiped: " + mailKey);
+                    mails.put(mailKey, "on");
+
+                    SMTHHelper helper = SMTHHelper.getInstance();
+                    helper.wService.deleteMail(currentFolder, mails)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Subscriber<AjaxResponse>() {
+                                @Override
+                                public void onCompleted() {
+
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    Log.e(TAG, "onError: " + Log.getStackTraceString(e) );
+                                    Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onNext(AjaxResponse ajaxResponse) {
+                                    Log.d(TAG, "onNext: " + ajaxResponse.toString());
+
+                                    if(ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
+                                        MailListContent.MAILS.remove(viewHolder.getAdapterPosition());
+                                        recyclerView.getAdapter().notifyItemRemoved(viewHolder.getAdapterPosition());
+                                    }
+                                    Toast.makeText(getActivity(), ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(mCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+    }
 
     public void LoadMoreMails() {
         // LoadMore will be re-enabled in clearLoadingHints.
