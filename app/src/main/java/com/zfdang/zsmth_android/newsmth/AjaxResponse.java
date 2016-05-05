@@ -24,6 +24,10 @@ import android.os.Parcelable;
 //}
 
 public class AjaxResponse implements Parcelable {
+    public static final int AJAX_RESULT_OK = 1;
+    public static final int AJAX_RESULT_FAILED = 0;
+    public static final int AJAX_RESULT_UNKNOWN = 2;
+
     private int ajax_st;
     private String ajax_code;
     private String ajax_msg;

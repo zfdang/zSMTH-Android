@@ -119,13 +119,13 @@ public class MaintainUserStatusService extends IntentService {
                                         public Integer call(AjaxResponse response) { // 参数类型 String
                                             if(response.getAjax_st() == 1){
                                                 // {"ajax_st":1,"ajax_code":"0005","ajax_msg":"操作成功"}
-                                                return SMTHHelper.AJAX_RESULT_OK;
+                                                return AjaxResponse.AJAX_RESULT_OK;
                                             } else if(response.getAjax_code().equals("0005")) {
                                                 // {"ajax_st":0,"ajax_code":"0101","ajax_msg":"您的用户名并不存在，或者您的密码错误"}
-                                                return SMTHHelper.AJAX_RESULT_FAILED;
+                                                return AjaxResponse.AJAX_RESULT_FAILED;
 
                                             }
-                                            return SMTHHelper.AJAX_RESULT_UNKNOWN;
+                                            return AjaxResponse.AJAX_RESULT_UNKNOWN;
                                         }
                                     })
                                     .toList().toBlocking().single();
@@ -133,11 +133,11 @@ public class MaintainUserStatusService extends IntentService {
                             Log.d(TAG, "call: 2.2.2 " + results.size());
                             if (results != null && results.size() == 1) {
                                 int result = results.get(0);
-                                if (result == SMTHHelper.AJAX_RESULT_OK) {
+                                if (result == AjaxResponse.AJAX_RESULT_OK) {
                                     // set flag, so that we will query user status again
                                     Log.d(TAG, "call: 2.2.3. Login success");
                                     bLoginSuccess = true;
-                                } else if (result == SMTHHelper.AJAX_RESULT_FAILED) {
+                                } else if (result == AjaxResponse.AJAX_RESULT_FAILED) {
                                     // set flag, so that we will not login again next time
                                     Log.d(TAG, "call: 2.2.4. Login failed");
                                     setting.setLastLoginSuccess(false);

@@ -675,7 +675,7 @@ public class MainActivity extends AppCompatActivity
                                     @Override
                                     public void onNext(AjaxResponse ajaxResponse) {
                                         Log.d(TAG, "onNext: " + ajaxResponse.toString());
-                                        if(ajaxResponse.getAjax_st() == SMTHHelper.AJAX_RESULT_OK) {
+                                        if(ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
                                             Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg() + "\n" + "请刷新收藏夹！", Toast.LENGTH_SHORT).show();
                                         } else {
                                             Toast.makeText(MainActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();

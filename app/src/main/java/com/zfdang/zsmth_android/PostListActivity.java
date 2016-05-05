@@ -659,7 +659,7 @@ public class PostListActivity extends AppCompatActivity
                     @Override
                     public void onNext(AjaxResponse ajaxResponse) {
                         Log.d(TAG, "onNext: " + ajaxResponse.toString());
-                        if(ajaxResponse.getAjax_st() == SMTHHelper.AJAX_RESULT_OK) {
+                        if(ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
                             Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg() + "\n请刷新查看结果！", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
@@ -700,7 +700,7 @@ public class PostListActivity extends AppCompatActivity
                     @Override
                     public void onNext(AjaxResponse ajaxResponse) {
                         Log.d(TAG, "onNext: " + ajaxResponse.toString());
-                        if(ajaxResponse.getAjax_st() == SMTHHelper.AJAX_RESULT_OK) {
+                        if(ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
                             Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();

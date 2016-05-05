@@ -256,7 +256,7 @@ public class ComposePostActivity extends AppCompatActivity {
 
     public void publishPost() {
 
-        postPublishResult = SMTHHelper.AJAX_RESULT_OK;
+        postPublishResult = AjaxResponse.AJAX_RESULT_OK;
         postPUblishMessage = "";
 
         final String progressHint = "发表文章中(%d/%d)...";
@@ -319,7 +319,7 @@ public class ComposePostActivity extends AppCompatActivity {
                             dialogTitle = "发信成功";
                         }
                         String dialogMessage = "结束编辑，或者停留在当前界面继续编辑？";
-                        if(postPublishResult != SMTHHelper.AJAX_RESULT_OK) {
+                        if(postPublishResult != AjaxResponse.AJAX_RESULT_OK) {
                             dialogTitle = "发表失败";
                             dialogMessage = "错误信息:\n" +postPUblishMessage + "\n" + dialogMessage;
                         }
@@ -352,8 +352,8 @@ public class ComposePostActivity extends AppCompatActivity {
                     @Override
                     public void onNext(AjaxResponse ajaxResponse) {
                         Log.d(TAG, "onNext: " + ajaxResponse.toString());
-                        if(ajaxResponse.getAjax_st() != SMTHHelper.AJAX_RESULT_OK) {
-                            postPublishResult = SMTHHelper.AJAX_RESULT_FAILED;
+                        if(ajaxResponse.getAjax_st() != AjaxResponse.AJAX_RESULT_OK) {
+                            postPublishResult = AjaxResponse.AJAX_RESULT_FAILED;
                             postPUblishMessage += ajaxResponse.getAjax_msg() + "\n";
                         }
                         ComposePostActivity.currentStep ++;

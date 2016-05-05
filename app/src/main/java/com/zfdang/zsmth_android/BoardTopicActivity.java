@@ -195,7 +195,7 @@ public class BoardTopicActivity extends AppCompatActivity
                         @Override
                         public void onNext(AjaxResponse ajaxResponse) {
                             Log.d(TAG, "onNext: " + ajaxResponse.toString());
-                            if(ajaxResponse.getAjax_st() == SMTHHelper.AJAX_RESULT_OK) {
+                            if(ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
                                 Toast.makeText(BoardTopicActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(BoardTopicActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();

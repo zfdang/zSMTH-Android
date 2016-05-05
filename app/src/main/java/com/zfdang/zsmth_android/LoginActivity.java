@@ -149,7 +149,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 //                        {"ajax_st":0,"ajax_code":"0105","ajax_msg":"请勿频繁登录"}
 //                        {"ajax_st":1,"ajax_code":"0005","ajax_msg":"操作成功"}
                         switch (ajaxResponse.getAjax_st()) {
-                            case SMTHHelper.AJAX_RESULT_OK:
+                            case AjaxResponse.AJAX_RESULT_OK:
                                 Toast.makeText(getApplicationContext(), "登录成功!", Toast.LENGTH_SHORT).show();
 
                                 // save username & passworld
