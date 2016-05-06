@@ -1,5 +1,6 @@
 package com.zfdang.zsmth_android;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -166,7 +167,10 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
                                 @Override
                                 public void onError(Throwable e) {
                                     Log.e(TAG, "onError: " + Log.getStackTraceString(e) );
-                                    Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+                                    Activity activity = getActivity();
+                                    if(activity != null) {
+                                        Toast.makeText(activity, e.toString(), Toast.LENGTH_SHORT).show();
+                                    }
                                 }
 
                                 @Override
