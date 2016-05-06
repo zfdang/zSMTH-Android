@@ -368,8 +368,10 @@ public class PostListActivity extends AppCompatActivity
 
     @Override
     public boolean onItemLongClicked(final int position, View v) {
-        Log.d(TAG, String.format("Post by %s is long clicked", PostListContent.POSTS.get(position).getAuthor()));
+        if(position == RecyclerView.NO_POSITION || position >= PostListContent.POSTS.size())
+            return false;
 
+        Log.d(TAG, String.format("Post by %s is long clicked", PostListContent.POSTS.get(position).getAuthor()));
 
         final PostActionAlertDialogItem[] menuItems = {
                 new PostActionAlertDialogItem(getString(R.string.post_reply_post), R.drawable.ic_reply_black_48dp),       // 0
