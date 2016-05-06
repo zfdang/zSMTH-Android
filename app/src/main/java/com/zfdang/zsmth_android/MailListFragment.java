@@ -149,13 +149,19 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
                 int position = viewHolder.getAdapterPosition();
                 Mail mail = MailListContent.MAILS.get(position);
                 if(!mail.isCategory) {
+                    String type = "mail";
+                    String mailId = mail.getMailIDFromURL();
+                    if(mail.referIndex != null && mail.referIndex.length() > 0) {
+                        type = "refer";
+                        mailId = mail.referIndex;
+                    }
+
                     Map<String, String> mails = new HashMap<String, String>();
-                    String mailKey = String.format("m_%s", mail.getMailIDFromURL());
-                    Log.d(TAG, "onSwiped: " + mailKey);
+                    String mailKey = String.format("m_%s", mailId);
                     mails.put(mailKey, "on");
 
                     SMTHHelper helper = SMTHHelper.getInstance();
-                    helper.wService.deleteMail(currentFolder, mails)
+                    helper.wService.deleteMailOrReferPost(type, currentFolder, mails)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Subscriber<AjaxResponse>() {

@@ -164,11 +164,13 @@ public interface SMTHWWWService {
                                         @Query("id") String postID);
 
     // http://www.newsmth.net/nForum/mail/inbox/ajax_delete.json
+    // http://www.newsmth.net/nForum/refer/reply/ajax_delete.json
     // m<mail_id>=on
     @FormUrlEncoded
     @Headers("X-Requested-With:XMLHttpRequest")
-    @POST("/nForum/mail/{folder}/ajax_delete.json")
-    Observable<AjaxResponse> deleteMail(@Path("folder") String folder,
+    @POST("/nForum/{type}/{folder}/ajax_delete.json")
+    Observable<AjaxResponse> deleteMailOrReferPost(@Path("type") String type,
+                                        @Path("folder") String folder,
                                         @FieldMap Map<String, String> mail);
 
 }
