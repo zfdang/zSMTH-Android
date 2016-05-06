@@ -110,7 +110,7 @@ public class MailContentActivity extends AppCompatActivity {
                     @Override
                     public void onError(Throwable e) {
                         Log.e(TAG, "onError: " + Log.getStackTraceString(e) );
-                        mPostContent.setText(Log.getStackTraceString(e));
+                        mPostContent.setText("读取内容失败: \n" + Log.getStackTraceString(e));
                     }
 
                     @Override
@@ -118,7 +118,7 @@ public class MailContentActivity extends AppCompatActivity {
                         mPost = post;
 
                         // copy some attr from mail to post
-                        mPost.setAuthor(mMail.author);
+                        mPost.setAuthor(mMail.getFrom());
                         mPost.setTitle(mMail.title);
                         mPost.setPostID(mMail.getMailIDFromURL());
 

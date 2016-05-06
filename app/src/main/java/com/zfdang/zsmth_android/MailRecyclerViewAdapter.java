@@ -61,7 +61,7 @@ public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerVi
             holder.mTopic.setVisibility(View.VISIBLE);
             holder.mDate.setVisibility(View.VISIBLE);
 
-            holder.mAuthor.setText(mail.author);
+            holder.mAuthor.setText(mail.getFrom());
             holder.mTopic.setText(mail.title);
             holder.mDate.setText(mail.date);
 

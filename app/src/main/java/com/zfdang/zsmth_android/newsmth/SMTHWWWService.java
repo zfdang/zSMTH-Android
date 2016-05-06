@@ -138,6 +138,14 @@ public interface SMTHWWWService {
                                           @Query("p") String page);
 
 
+    // http://www.newsmth.net/nForum/refer/reply/ajax_read.json
+    @FormUrlEncoded
+    @Headers("X-Requested-With:XMLHttpRequest")
+    @POST("/nForum/refer/{folder}/ajax_read.json")
+    Observable<AjaxResponse> readReferPosts(@Path("folder") String folder,
+                                           @Field("index") String mailId);
+
+
     // http://www.newsmth.net/nForum/mail/inbox/8.json
     @Headers("X-Requested-With:XMLHttpRequest")
     @GET("{mail_url}")

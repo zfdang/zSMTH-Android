@@ -1,0 +1,438 @@
+<script type="text/javascript">
+if (!document.getElementById('body')) {
+    var redir = window.location.href.replace('/nForum/', '/nForum/#!');
+    window.location.href = redir;
+}
+</script>
+<style type="text/css">
+    .friend-list,
+    .mail-list {
+    border-top: 1px solid #c9d7f1
+    }
+
+    .title_1 {
+    width: 20px;
+    padding-left: 12px
+    }
+
+    @media screen and (-webkit-min-device-pixel-ratio:0) {
+    .title_1 {
+    width: 30px
+    }
+    }
+
+    .title_2 {
+    width: 100px;
+    padding-left: 12px
+    }
+
+    .title_3 {
+    width: auto;
+    padding-left: 12px;
+    font-size: 12px
+    }
+
+    .title_4 {
+    width: 150px;
+    padding-left: 12px;
+    color: #717171
+    }
+
+    .title_5 {
+    width: 250px;
+    padding-left: 12px;
+    color: #717171
+    }
+
+    .title_6 {
+    width: 60px;
+    padding-left: 12px;
+    color: #717171
+    }
+
+    .title_7 {
+    width: 30px;
+    padding-left: 12px;
+    color: #717171
+    }
+
+    .no-read a {
+    color: #598ede;
+    font-weight: bold
+    }
+
+    .middle {
+    text-align: center padding-left: 0
+    }
+
+    .t-btn {
+    float: left;
+    padding-left: 12px
+    }
+
+    .t-btn input {
+    margin-right: 5px
+    }
+
+    .t-btn .mail-select {
+    padding-top: 0;
+    padding-bottom: 0
+    }
+
+    .page {
+    float: right
+    }
+
+    .t-pre,
+    .t-pre-bottom {
+    padding: 2px 0;
+    width: 100%;
+    border-bottom: 1px solid #c9d7f1;
+    overflow: hidden
+    }
+
+    .mail-list .m-table tr:hover {
+    cursor: pointer
+    }
+
+    .t-btn .friend-select {
+    padding-top: 0;
+    padding-bottom: 0
+    }
+
+    #friend_add {
+    padding: 4px 12px;
+    border-bottom: 1px solid #c9d7f1
+    }
+
+    #friend_add input {
+    margin-left: 5px
+    }
+
+    .t-pre-online .t-btn {
+    margin-top: 2px;
+    *margin-top: 6px;
+    *padding-left: 0
+    }
+
+    .t-pre-online .page {
+    margin-top: 0
+    }
+</style>
+<div class="mbar">
+    <ul>
+        <li><a href="/nForum/user/info">基本资料修改</a></li>
+        <li><a href="/nForum/user/passwd">昵称密码修改</a></li>
+        <li><a href="/nForum/user/custom">用户自定义参数</a></li>
+        <li><a href="/nForum/msg">短消息</a></li>
+        <li><a href="/nForum/mail">用户信件</a></li>
+        <li class="selected"><a href="/nForum/refer">文章提醒</a></li>
+        <li><a href="/nForum/friend">好友列表</a></li>
+        <li><a href="/nForum/fav">收藏版面</a></li>
+    </ul>
+</div>
+<div class="c-mbar">
+    <ul>
+        <li>
+            <a href="/nForum/refer/at">
+                <samp class="ico-pos-dot"></samp>@我的文章</a>
+        </li>
+        <li>
+            <a href="/nForum/refer/reply" class="select">
+                <samp class="ico-pos-dot"></samp>回复我的文章</a>
+        </li>
+        <li>
+            <a href="/nForum/refer/like">
+                <samp class="ico-pos-dot"></samp>Like我的文章</a>
+        </li>
+    </ul>
+</div>
+<div class="b-content">
+    <form id="refer_read" action="/nForum/refer/reply/ajax_read.json" method='post'>
+        <input type="hidden" name="index" value="all" />
+    </form>
+    <form id="refer_clear" action="/nForum/refer/reply/ajax_delete.json" method="post">
+        <input type="hidden" name="all" value="all" />
+    </form>
+    <form id="refer_form" action="/nForum/refer/reply/ajax_delete.json" method="post">
+        <div class="mail-list">
+            <div class="t-pre">
+                <div class="t-btn">
+                    <input type="checkbox" class="mail-select" />
+                    <input type="button" class="button refer-del" value="删除" />
+                    <input type="button" class="button refer-clear" value="全部删除" />
+                    <input type="button" class="button refer-read" value="全部已读" />
+                </div>
+                <div class="page">
+                    <ul class="pagination">
+                        <li class="page-pre">文章总数:<i>17</i>&emsp;分页:</li>
+                        <li>
+                            <ol title="分页列表" class="page-main">
+                                <li class="page-select"><a title="当前页">1</a></li>
+                            </ol>
+                        </li>
+                        <li class="page-suf"></li>
+                    </ul>
+                </div>
+            </div>
+            <table class="m-table">
+                <thead>
+                <tr>
+                    <td class="title_1"></td>
+                    <td class="title_2">作者</td>
+                    <td class="title_2">版面</td>
+                    <td class="title_3">文章主题</td>
+                    <td class="title_4">发表时间</td>
+                </tR>
+                </thead>
+                <tbody>
+                <tr class="no-read">
+                    <td class="title_1">
+                        <input type="checkbox" name="m_16" class="mail-item" />
+                    </td>
+                    <td class="title_2"><a href="/nForum/user/query/Wunderman">Wunderman</a></td>
+                    <td class="title_2"><a href="/nForum/board/PocketLife">PocketLife</a></td>
+                    <td class="title_3"><a href="/nForum/article/PocketLife/ajax_single/2228708.json" class="m-single" _index="16">Re: zSMTH 1.0.0版发布</a></td>
+                    <td class="title_4">2016-05-06 04:13:55</td>
+                </tr>
+                <tr class="no-read">
+                    <td class="title_1">
+                        <input type="checkbox" name="m_15" class="mail-item" />
+                    </td>
+                    <td class="title_2"><a href="/nForum/user/query/zSMTHDev">zSMTHDev</a></td>
+                    <td class="title_2"><a href="/nForum/board/Test">Test</a></td>
+                    <td class="title_3"><a href="/nForum/article/Test/ajax_single/910967.json" class="m-single" _index="15">Re: 测试一下发文功能</a></td>
+                    <td class="title_4">2016-05-06 00:08:00</td>
+                </tr>
+                <tr>
+                    <td class="title_1">
+                        <input type="checkbox" name="m_14" class="mail-item" />
+                    </td>
+                    <td class="title_2"><a href="/nForum/user/query/dantifer">dantifer</a></td>
+                    <td class="title_2"><a href="/nForum/board/Test">Test</a></td>
+                    <td class="title_3"><a href="/nForum/article/Test/ajax_single/885603.json" class="m-single" _index="14">Re: 测试一下</a></td>
+                    <td class="title_4">2013-03-13 13:24:08</td>
+                </tr>
+                <tr>
+                    <td class="title_1">
+                        <input type="checkbox" name="m_13" class="mail-item" />
+                    </td>
+                    <td class="title_2"><a href="/nForum/user/query/dantifer">dantifer</a></td>
+                    <td class="title_2"><a href="/nForum/board/PocketLife">PocketLife</a></td>
+                    <td class="title_3"><a href="/nForum/article/PocketLife/ajax_single/1426292.json" class="m-single" _index="13">Re: Find 5 体验报告3 小白鼠结束。</a></td>
+                    <td class="title_4">2013-03-13 13:23:04</td>
+                </tr>
+                <tr>
+                    <td class="title_1">
+                        <input type="checkbox" name="m_12" class="mail-item" />
+                    </td>
+                    <td class="title_2"><a href="/nForum/user/query/dantifer">dantifer</a></td>
+                    <td class="title_2"><a href="/nForum/board/Test">Test</a></td>
+                    <td class="title_3"><a href="/nForum/article/Test/ajax_single/885602.json" class="m-single" _index="12">Re: 测试一下</a></td>
+                    <td class="title_4">2013-03-13 13:22:25</td>
+                </tr>
+                <tr>
+                    <td class="title_1">
+                        <input type="checkbox" name="m_11" class="mail-item" />
+                    </td>
+                    <td class="title_2"><a href="/nForum/user/query/hymr">hymr</a></td>
+                    <td class="title_2"><a href="/nForum/board/PocketLife">PocketLife</a></td>
+                    <td class="title_3"><a href="/nForum/article/PocketLife/ajax_single/1419343.json" class="m-single" _index="11">Re: aSM小更新</a></td>
+                    <td class="title_4">2013-03-04 23:14:28</td>
+                </tr>
+                <tr>
+                    <td class="title_1">
+                        <input type="checkbox" name="m_10" class="mail-item" />
+                    </td>
+                    <td class="title_2"><a href="/nForum/user/query/chwork">chwork</a></td>
+                    <td class="title_2"><a href="/nForum/board/PocketLife">PocketLife</a></td>
+                    <td class="title_3"><a href="/nForum/article/PocketLife/ajax_single/1419326.json" class="m-single" _index="10">Re: aSM小更新</a></td>
+                    <td class="title_4">2013-03-04 22:56:24</td>
+                </tr>
+                <tr>
+                    <td class="title_1">
+                        <input type="checkbox" name="m_9" class="mail-item" />
+                    </td>
+                    <td class="title_2"><a href="/nForum/user/query/dantifer">dantifer</a></td>
+                    <td class="title_2"><a href="/nForum/board/PocketLife">PocketLife</a></td>
+                    <td class="title_3"><a href="/nForum/article/PocketLife/ajax_single/1419320.json" class="m-single" _index="9">Re: asm是不是只能看帖和发帖？我怎么没找到回帖……</a></td>
+                    <td class="title_4">2013-03-04 22:52:14</td>
+                </tr>
+                <tr>
+                    <td class="title_1">
+                        <input type="checkbox" name="m_8" class="mail-item" />
+                    </td>
+                    <td class="title_2"><a href="/nForum/user/query/hymr">hymr</a></td>
+                    <td class="title_2"><a href="/nForum/board/PocketLife">PocketLife</a></td>
+                    <td class="title_3"><a href="/nForum/article/PocketLife/ajax_single/1419307.json" class="m-single" _index="8">Re: asm是不是只能看帖和发帖？我怎么没找到回帖……</a></td>
+                    <td class="title_4">2013-03-04 22:40:34</td>
+                </tr>
+                <tr>
+                    <td class="title_1">
+                        <input type="checkbox" name="m_7" class="mail-item" />
+                    </td>
+                    <td class="title_2"><a href="/nForum/user/query/dantifer">dantifer</a></td>
+                    <td class="title_2"><a href="/nForum/board/PocketLife">PocketLife</a></td>
+                    <td class="title_3"><a href="/nForum/article/PocketLife/ajax_single/1419302.json" class="m-single" _index="7">Re: asm是不是只能看帖和发帖？我怎么没找到回帖……</a></td>
+                    <td class="title_4">2013-03-04 22:37:50</td>
+                </tr>
+                <tr>
+                    <td class="title_1">
+                        <input type="checkbox" name="m_6" class="mail-item" />
+                    </td>
+                    <td class="title_2"><a href="/nForum/user/query/hymr">hymr</a></td>
+                    <td class="title_2"><a href="/nForum/board/PocketLife">PocketLife</a></td>
+                    <td class="title_3"><a href="/nForum/article/PocketLife/ajax_single/1419298.json" class="m-single" _index="6">Re: asm是不是只能看帖和发帖？我怎么没找到回帖……</a></td>
+                    <td class="title_4">2013-03-04 22:34:14</td>
+                </tr>
+                <tr>
+                    <td class="title_1">
+                        <input type="checkbox" name="m_5" class="mail-item" />
+                    </td>
+                    <td class="title_2"><a href="/nForum/user/query/dantifer">dantifer</a></td>
+                    <td class="title_2"><a href="/nForum/board/Test">Test</a></td>
+                    <td class="title_3"><a href="/nForum/article/Test/ajax_single/885359.json" class="m-single" _index="5">Re: 测试一下</a></td>
+                    <td class="title_4">2013-03-04 22:30:30</td>
+                </tr>
+                <tr>
+                    <td class="title_1">
+                        <input type="checkbox" name="m_4" class="mail-item" />
+                    </td>
+                    <td class="title_2"><a href="/nForum/user/query/inner1117">inner1117</a></td>
+                    <td class="title_2"><a href="/nForum/board/PocketLife">PocketLife</a></td>
+                    <td class="title_3"><a href="/nForum/article/PocketLife/ajax_single/1418846.json" class="m-single" _index="4">Re: asm是不是只能看帖和发帖？我怎么没找到回帖……</a></td>
+                    <td class="title_4">2013-03-04 14:03:14</td>
+                </tr>
+                <tr>
+                    <td class="title_1">
+                        <input type="checkbox" name="m_3" class="mail-item" />
+                    </td>
+                    <td class="title_2"><a href="/nForum/user/query/inner1117">inner1117</a></td>
+                    <td class="title_2"><a href="/nForum/board/PocketLife">PocketLife</a></td>
+                    <td class="title_3"><a href="/nForum/article/PocketLife/ajax_single/1418844.json" class="m-single" _index="3">Re: asm是不是只能看帖和发帖？我怎么没找到回帖……</a></td>
+                    <td class="title_4">2013-03-04 14:02:35</td>
+                </tr>
+                <tr>
+                    <td class="title_1">
+                        <input type="checkbox" name="m_2" class="mail-item" />
+                    </td>
+                    <td class="title_2"><a href="/nForum/user/query/dantifer">dantifer</a></td>
+                    <td class="title_2"><a href="/nForum/board/Test">Test</a></td>
+                    <td class="title_3"><a href="/nForum/article/Test/ajax_single/885341.json" class="m-single" _index="2">Re: 测试一下</a></td>
+                    <td class="title_4">2013-03-04 14:00:25</td>
+                </tr>
+                <tr>
+                    <td class="title_1">
+                        <input type="checkbox" name="m_1" class="mail-item" />
+                    </td>
+                    <td class="title_2"><a href="/nForum/user/query/moonwxy">moonwxy</a></td>
+                    <td class="title_2"><a href="/nForum/board/ADAgent_HGDG">ADAgent_HGDG</a></td>
+                    <td class="title_3"><a href="/nForum/article/ADAgent_HGDG/ajax_single/215286.json" class="m-single" _index="1">Re: [合购] DHA/gerber/aveeno等，恢复发货通知</a></td>
+                    <td class="title_4">2012-02-01 13:28:44</td>
+                </tr>
+                <tr>
+                    <td class="title_1">
+                        <input type="checkbox" name="m_0" class="mail-item" />
+                    </td>
+                    <td class="title_2"><a href="/nForum/user/query/vivianv">vivianv</a></td>
+                    <td class="title_2"><a href="/nForum/board/Pregnancy">Pregnancy</a></td>
+                    <td class="title_3"><a href="/nForum/article/Pregnancy/ajax_single/17152.json" class="m-single" _index="0">Re: 中日友好建档详细攻略</a></td>
+                    <td class="title_4">2012-01-29 13:09:51</td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="t-pre-bottom">
+                <div class="t-btn">
+                    <input type="checkbox" class="mail-select" />
+                    <input type="button" class="button refer-del" value="删除" />
+                    <input type="button" class="button refer-clear" value="全部删除" />
+                    <input type="button" class="button refer-read" value="全部已读" />
+                </div>
+                <div class="page">
+                    <ul class="pagination">
+                        <li class="page-pre">文章总数:<i>17</i>&emsp;分页:</li>
+                        <li>
+                            <ol title="分页列表" class="page-main">
+                                <li class="page-select"><a title="当前页">1</a></li>
+                            </ol>
+                        </li>
+                        <li class="page-suf"></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script id="tmpl_article_single" type="text/template">
+    <div class="m-op">
+        <ul class="m-func">
+            <li>
+                <samp class="ico-pos-reply"></samp><a href="article/<%=board_name%>/post/<%=id%>" class="a-post">回复</a></li>
+            <%if(id==group_id){%>
+            <li>
+                <samp class="ico-pos-template"></samp><a href="article/<%=board_name%>/tmpl?id=<%=id%>" class="a-post">模版回复</a></li>
+            <%}%>
+            <li>
+                <samp class="ico-pos-forward"></samp><a href="article/<%=board_name%>/ajax_forward/<%=id%>.json" class="a-func-forward">转寄</a></li>
+            <li>
+                <samp class="ico-pos-search"></samp><a href="s/article?b=<%=board_name%>&au=<%=user.id||user%>" class="a-close">搜索</a></li>
+            <%if(is_admin){%>
+            <li>
+                <samp class="ico-pos-edit"></samp><a href="article/<%=board_name%>/edit/<%=id%>" class="a-close">编辑</a></li>
+            <li>
+                <samp class="ico-pos-del"></samp><a href="article/<%=board_name%>/ajax_delete/<%=id%>.json" class="a-func-del">删除</a></li>
+            <%}%>
+            <li>
+                <samp class="ico-pos-edit"></samp><a href="article/<%=board_name%>/post" class="a-post">发文</a></li>
+            <li>
+                <samp class="ico-pos-query"></samp><a href="user/query/<%=user.id||user%>">作者信息</a></li>
+        </ul>
+    </div>
+    <div class="m-content">
+        <%=content%>
+    </div>
+    <div class="m-op">
+        <ul class="m-func">
+            <%if(previous_id){%>
+            <li><a href="article/<%=board_name%>/ajax_single/<%=previous_id%>.json" class="a-single">上一篇</a></li>
+            <%}%>
+            <%if(next_id){%>
+            <li><a href="article/<%=board_name%>/ajax_single/<%=next_id%>.json" class="a-single">下一篇</a></li>
+            <%}%>
+            <%if(threads_previous_id){%>
+            <li><a href="article/<%=board_name%>/ajax_single/<%=threads_previous_id%>.json" class="a-single">同主题上一篇</a></li>
+            <%}%>
+            <%if(threads_next_id){%>
+            <li><a href="article/<%=board_name%>/ajax_single/<%=threads_next_id%>.json" class="a-single">同主题下一篇</a></li>
+            <%}%>
+            <li><a href="article/<%=board_name%>/<%=group_id%>?s=<%=id%>" class="a-close">展开</a></li>
+            <li><a href="article/<%=board_name%>/ajax_single/<%=group_id%>.json" class="a-single">楼主</a></li>
+            <li><a href="article/<%=board_name%>/<%=group_id%>" class="a-close">同主题展开</a></li>
+            <li><a href="article/<%=board_name%>/ajax_single/<%=reply_id%>.json" class="a-single">溯源</a></li>
+        </ul>
+    </div>
+</script>
+<script id="tmpl_forward" type="text/template">
+    <form id="a_forward" action="<%=action%>" method="post">
+        <ul>
+            <li><span>收件人:</span>
+                <input type="text" class="input-text" name="target" />
+                <select id="a_forward_list">
+                    <option value="">选择好友</option>
+                    <%_.each(friends,function(f){%>
+                    <option value="<%=f%>">
+                        <%=f%>
+                    </option>
+                    <%});%>
+                </select>
+            </li>
+            <li><span>合集转寄:</span>
+                <input type="checkbox" name="threads" />&emsp;&emsp;<span class="noref" style="display:none">不带引文:</span>
+                <input class="noref" type="checkbox" name="noref" style="display:none" />
+            </li>
+            <li><span>不含附件:</span>
+                <input type="checkbox" name="noatt" />
+            </li>
+            <li class="internet" style="display:none"><span>转为BIG5:</span>
+                <input type="checkbox" name="big5" />&emsp;&emsp;<span>过滤ANSI:</span>
+                <input type="checkbox" name="noansi checked=" checked " /></li></form></script><link rel="stylesheet " type="text/css " href="http://images.newsmth.net/nForum/syntaxhighlighter/styles/shCore.css " /><link rel="stylesheet " type="text/css " href="http://images.newsmth.net/nForum/syntaxhighlighter/styles/shThemeDefault.css " /><style type="text/css ">.syntaxhighlighter table{table-layout:auto}</style><script type="text/javascript ">SyntaxHighlighter.defaults['gutter'] = true;SyntaxHighlighter.defaults['toolbar'] = false;SyntaxHighlighter.config.strings['alert'] = '语法高亮:\n';SyntaxHighlighter.config.strings['noBrush'] = '无法找到以下语言:';var sh_init = function(){function path(){var args = arguments, result = [];for(var i = 0; i < args.length; i++)result.push(args[i].replace('@', SYS.base + '/syntaxhighlighter/scripts/'));return result;};SyntaxHighlighter.vars.discoveredBrushes = null;SyntaxHighlighter.autoloader.apply(null, path('applescript            @shBrushAppleScript.js','actionscript3 as3      @shBrushAS3.js','bash shell             @shBrushBash.js','coldfusion cf          @shBrushColdFusion.js','cpp c                  @shBrushCpp.js','c# c-sharp csharp      @shBrushCSharp.js','css                    @shBrushCss.js','delphi pascal          @shBrushDelphi.js','diff patch pas         @shBrushDiff.js','erl erlang             @shBrushErlang.js','groovy                 @shBrushGroovy.js','java                   @shBrushJava.js','jfx javafx             @shBrushJavaFX.js','js jscript javascript  @shBrushJScript.js','perl pl                @shBrushPerl.js','php                    @shBrushPhp.js','text plain             @shBrushPlain.js','py python              @shBrushPython.js','ruby rails ror rb      @shBrushRuby.js','sass scss              @shBrushSass.js','scala                  @shBrushScala.js','sql                    @shBrushSql.js','vb vbnet               @shBrushVb.js','xml xhtml xslt html    @shBrushXml.js'));SyntaxHighlighter.all();}</script><script type="text/javascript ">$('#notice_nav').html('<a href="/nForum/mainpage ">水木社区</a>&ensp;>>&ensp;<a href="/nForum/mail ">文章提醒</a>');$.setTitle('水木社区-文章提醒');;</script><script type="text/javascript ">$(function(){var tmpl_article_single=_.template($('#tmpl_article_single').html()||''),friends=SYS.cache('friends');$('#body').on('click','.mail-select',function(){var val=($(this).attr("checked ")=='checked');$(".mail-select ").attr("checked ",val);$(".mail-item ").attr("checked ",val)}).on('click','.refer-del',function(){if($(".mail-item:checked ").length<=0){DIALOG.alertDialog("请先选择要删除的提醒! ");return false}DIALOG.confirmDialog("确认要删除这些提醒? ",function(){$('#refer_form').submit()})}).on('click','.refer-clear',function(){DIALOG.confirmDialog("确认要删除全部提醒? ",function(){$('#refer_clear').submit()})}).on('click','.refer-read',function(){DIALOG.confirmDialog("确认要已读全部提醒? ",function(){$('#refer_read').submit()})}).on('click','.title_3',function(){$(this).find('>.m-single').click();return false}).on('click','.m-single',function(){var tr=$(this).parent().parent();APP.tips(true);if(tr.hasClass('no-read'))$.post($('#refer_read').attr('action'),{'index':$(this).attr('_index')},function(){tr.removeClass('no-read');SESSION.update(true)});$.getJSON($(this).attr('href'),function(json){APP.tips(false);if(json.ajax_st==0)DIALOG.ajaxDialog(json);else{var d=DIALOG.formDialog(tmpl_article_single(json),{title:SYS.code.COM_DETAIL,width:600}),validPost=function(){if(!json.allow_post){DIALOG.alertDialog(SESSION.get('is_login')?SYS.code.MSG_NOPERM:SYS.code.MSG_LOGIN);return false}return true};d.on('click.nforum','.a-post',function(){if(!validPost())return false;d.dialog('close');BODY.open(this);return false}).on('click.nforum','.a-close',function(){d.dialog('close');BODY.open(this);return false}).on('click.nforum','.a-single',function(){APP.tips(true);$.getJSON($(this).attr('href'),function(json){APP.tips(false);if(json.ajax_st==0)DIALOG.ajaxDialog(json);else{DIALOG.updateTop(tmpl_article_single(json))}});return false}).on('click.nforum','.a-func-forward',function(){var d=DIALOG.formDialog(_.template($('#tmpl_forward').html())({action:$(this).attr('href'),friends:friends||[]}),{buttons:[{text:SYS.code.COM_SUBMIT,click:function(){var f=$(this).find('#a_forward');$.post(f.attr('action'),f.getPostData(),function(repo){DIALOG.ajaxDialog(repo)});$(this).dialog('close')}},{text:SYS.code.COM_CANCAL,click:function(){$(this).dialog('close')}}]}).on('change','select',function(){$(this).prev().val($(this).val())});if(friends)return false;$.getJSON(SYS.ajax.friend_list,function(json){if(!_.isArray(json))return;d.find('#a_forward_list').append(_.reduce(json,function(ret,item){ret+=('<option value=" '+item+' ">'+item+'</option>');return ret},''));SYS.cache('friends',json)});return false}).on('click.nforum','.a-func-del',function(){var url=$(this).attr('href');DIALOG.confirmDialog("确认要删除此文章? ",function(){$.post(url,function(json){d.dialog('close');DIALOG.ajaxDialog(json)},'json')});return false});if(typeof sh_init!=='undefined')sh_init()}});return false});$('#refer_form').submit(function(){var btn=$(this).find('input[type="submit "]').loading(true);$.post($(this).attr('action'),$(this).getPostData(),function(json){btn.loading(false);DIALOG.ajaxDialog(json);SESSION.update(true)},'json');return false});$('#refer_clear').submit(function(){$.post($(this).attr('action'),$(this).getPostData(),function(json){DIALOG.ajaxDialog(json);SESSION.update(true)},'json');return false});$('#refer_read').submit(function(){$.post($(this).attr('action'),$(this).getPostData(),function(json){if(json.ajax_st==1)BODY.refresh();SESSION.update(true)},'json');return false})});</script>

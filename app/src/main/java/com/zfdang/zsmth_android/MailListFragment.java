@@ -341,11 +341,41 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-    public void markMailAsReaded(int position) {
-        if(position < MailListContent.MAILS.size()) {
-            Mail mail = MailListContent.MAILS.get(position);
-            mail.isNew = false;
-            recyclerView.getAdapter().notifyItemChanged(position);
+    public void markMailAsReaded(final int position) {
+        if (position >= 0 && position < MailListContent.MAILS.size()) {
+            final Mail mail = MailListContent.MAILS.get(position);
+            if (!mail.isNew) return;
+
+            // this is a new mail, mark it as read in remote and local
+            SMTHHelper helper = SMTHHelper.getInstance();
+            helper.wService.readReferPosts(currentFolder, mail.referIndex)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<AjaxResponse>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.e(TAG, "onError: " + Log.getStackTraceString(e));
+                        }
+
+                        @Override
+                        public void onNext(AjaxResponse ajaxResponse) {
+//                            Log.d(TAG, "onNext: " + ajaxResponse.toString());
+                            if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
+                                // succeed to mark the post as read in remote
+                                mail.isNew = false;
+                                recyclerView.getAdapter().notifyItemChanged(position);
+                            } else {
+                                // mark remote failed, show the response message
+                                Toast.makeText(getActivity(), ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
         }
     }
 

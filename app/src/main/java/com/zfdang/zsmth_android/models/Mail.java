@@ -19,6 +19,10 @@ public class Mail implements Parcelable {
     public boolean isCategory;
     public String category;
 
+    // the following two fields are for refer posts
+    public String fromBoard;
+    public String referIndex;
+
     public Mail(String categoryName) {
         isCategory = true;
         category = categoryName;
@@ -26,6 +30,14 @@ public class Mail implements Parcelable {
 
     public Mail() {
         isCategory = false;
+    }
+
+    public String getFrom() {
+        String result = author;
+        if(fromBoard != null && fromBoard.length() > 0) {
+            result += String.format(" @ [%s]", fromBoard);
+        }
+        return result;
     }
 
     public String getMailIDFromURL(){
@@ -41,6 +53,7 @@ public class Mail implements Parcelable {
         return "";
     }
 
+
     @Override
     public String toString() {
         return "Mail{" +
@@ -51,6 +64,8 @@ public class Mail implements Parcelable {
                 ", isNew=" + isNew +
                 ", isCategory=" + isCategory +
                 ", category='" + category + '\'' +
+                ", fromBoard='" + fromBoard + '\'' +
+                ", referIndex=" + referIndex +
                 '}';
     }
 
@@ -68,6 +83,8 @@ public class Mail implements Parcelable {
         dest.writeByte(isNew ? (byte) 1 : (byte) 0);
         dest.writeByte(isCategory ? (byte) 1 : (byte) 0);
         dest.writeString(this.category);
+        dest.writeString(this.fromBoard);
+        dest.writeString(this.referIndex);
     }
 
     protected Mail(Parcel in) {
@@ -78,9 +95,11 @@ public class Mail implements Parcelable {
         this.isNew = in.readByte() != 0;
         this.isCategory = in.readByte() != 0;
         this.category = in.readString();
+        this.fromBoard = in.readString();
+        this.referIndex = in.readString();
     }
 
-    public static final Parcelable.Creator<Mail> CREATOR = new Parcelable.Creator<Mail>() {
+    public static final Creator<Mail> CREATOR = new Creator<Mail>() {
         @Override
         public Mail createFromParcel(Parcel source) {
             return new Mail(source);

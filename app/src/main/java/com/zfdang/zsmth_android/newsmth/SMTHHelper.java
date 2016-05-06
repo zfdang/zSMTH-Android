@@ -807,9 +807,9 @@ public class SMTHHelper {
         return boards;
     }
 
+    // sample input: mailbox_response.html, refer_at_posts.html
     public static List<Mail> ParseMailsFromWWW(String content) {
         List<Mail> mails = new ArrayList<>();
-        // Log.d(TAG, "ParseMailsFromWWW: " + content);
 
         Document doc = Jsoup.parse(content);
 
@@ -823,6 +823,7 @@ public class SMTHHelper {
         }
 
         // <li class="page-pre">邮件总数:<i>177</i>&emsp;分页:</li>
+        // <li class="page-pre">文章总数:<i>17</i>&emsp;分页:</li>
         Elements is = doc.select("div.page li.page-pre i");
         if(is.size() > 0) {
             Element i = is.first();
@@ -861,21 +862,32 @@ public class SMTHHelper {
             Elements tds = tr.getElementsByTag("td");
             for (Element td: tds) {
                 if (TextUtils.equals(td.attr("class"), "title_2")) {
-                    mail.author = td.text();
+                    // <td class="title_2"><a href="/nForum/user/query/Wunderman">Wunderman</a></td>
+                    // <td class="title_2"><a href="/nForum/board/PocketLife">PocketLife</a></td>
+                    if(mail.author == null || mail.author.length() == 0) {
+                        mail.author = td.text();
+                    } else {
+                        mail.fromBoard = td.text();
+                    }
                 } else if (TextUtils.equals(td.attr("class"), "title_3")) {
+                    // <td class="title_3"><a href="/nForum/article/PocketLife/ajax_single/2228708.json" class="m-single" _index="16">Re: zSMTH 1.0.0版发布</a></td>
                     mail.title = td.text();
                     Elements as = td.getElementsByTag("a");
                     if(as.size() > 0) {
                         Element a = as.first();
                         mail.url = a.attr("href");
+                        mail.referIndex = a.attr("_index");
                     }
                 } else if (TextUtils.equals(td.attr("class"), "title_4")) {
+                    // <td class="title_4">2016-05-06 04:13:55</td>
                     mail.date = td.text();
                 }
 
             }
 
-            if(mail.author != null && mail.author.length() > 0) {
+            if(mail.author != null && mail.author.length() > 0 && !TextUtils.equals(mail.author, "作者")) {
+                // only valid mail will be added
+                // referred post have table head, so we make sure author != "作者"
                 mails.add(mail);
             }
         }
