@@ -612,7 +612,7 @@ public class SMTHHelper {
         if(lis.size() > 0) {
             Element li = lis.first();
             currentPage = li.text();
-            Log.d(TAG, "ParseBoardTopicsFromWWW: " + currentPage);
+//            Log.d(TAG, "ParseBoardTopicsFromWWW: " + currentPage);
         }
 
 //        <tr class="top">
@@ -635,7 +635,7 @@ public class SMTHHelper {
         // get all trs
         Elements trs = doc.select("table.board-list tbody tr");
         for (Element tr: trs) {
-            Log.d(TAG, "ParseBoardTopicsFromWWW: " + tr.toString());
+//            Log.d(TAG, "ParseBoardTopicsFromWWW: " + tr.toString());
             Topic topic = new Topic();
 
             String trClass = tr.attr("class");
@@ -647,7 +647,7 @@ public class SMTHHelper {
             Elements tds = tr.getElementsByTag("td");
             for(Element td: tds) {
                 String tdClass = td.attr("class");
-                Log.d(TAG, "ParseBoardTopicsFromWWW: td.class = " + tdClass);
+//                Log.d(TAG, "ParseBoardTopicsFromWWW: td.class = " + tdClass);
 
                 if(TextUtils.equals(tdClass, "title_9")){
                     // <td class="title_9"><a href="/nForum/article/FamilyLife/1757972219">2岁女孩找妈妈 其父母终于被找到</a>
@@ -705,9 +705,10 @@ public class SMTHHelper {
             }
 
             // Log.d("ParseBoardTopics", topic.toString());
-            results.add(topic);
+            if(topic.getTitle() != null && topic.getTitle().length() > 0) {
+                results.add(topic);
+            }
         }
-
 
         return results;
     }

@@ -296,11 +296,10 @@ public class BoardTopicActivity extends AppCompatActivity
                     public Observable<Topic> call(ResponseBody responseBody) {
                         try {
                             String response = responseBody.string();
-                            System.out.print(response);
                             List<Topic> topics = SMTHHelper.ParseBoardTopicsFromWWW(response);
                             return Observable.from(topics);
                         } catch (Exception e) {
-                            Log.d(TAG, Log.getStackTraceString(e));
+                            Log.e(TAG, "call: " + Log.getStackTraceString(e));
                             return null;
                         }
                     }
