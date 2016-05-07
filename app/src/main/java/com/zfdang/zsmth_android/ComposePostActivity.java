@@ -327,6 +327,8 @@ public class ComposePostActivity extends AppCompatActivity {
                                 message = "发信成功";
                             }
                             Toast.makeText(SMTHApplication.getAppContext(), message, Toast.LENGTH_SHORT).show();
+
+                            KeyboardLess.$hide(ComposePostActivity.this, mContent);
                             ComposePostActivity.this.finish();
                         }
                     }
