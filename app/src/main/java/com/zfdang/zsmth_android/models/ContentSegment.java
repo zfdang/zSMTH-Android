@@ -38,7 +38,10 @@ public class ContentSegment {
 
 
     public void setText(String text) {
-        this.spanned = Html.fromHtml(text);
+        // http://stackoverflow.com/questions/4793347/jsoup-not-translating-ampersand-in-links-in-html
+        // Html.fromHtml has bugs to parse &mid: only &mid; should be converted, but it convert &mid wrongly
+        String tempText = text.replaceAll("&mid([^;])", "&amp;mid$1");
+        this.spanned = Html.fromHtml(tempText);
     }
 
     public Spanned getSpanned() {
