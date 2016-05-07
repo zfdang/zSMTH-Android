@@ -38,6 +38,18 @@ public class StringUtils {
         }
     }
 
+    // [团购]3.28-4.03 花的传说饰品团购(18) ==> 18
+    public static String getReplyCountInParentheses(String content) {
+        Pattern hp = Pattern.compile("\\((\\d+)\\)$", Pattern.DOTALL);
+        Matcher hm = hp.matcher(content);
+        if (hm.find()) {
+            String count = hm.group(1);
+            return count;
+        }
+
+        return "";
+    }
+
 
     // /nForum/board/ADAgent_TG ==> ADAgent_TG
     // /nForum/article/RealEstate/5017593 ==> 5017593

@@ -65,18 +65,19 @@ public class SMTHHelper {
     static final private String TAG = "SMTHHelper";
     public static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.143 Safari/537.36";
 
-    // WWW service of SMTH
-    private final String SMTH_WWW_URL = "http://www.newsmth.net";
-    static private final String SMTH_WWW_ENCODING = "GB2312";
     public OkHttpClient mHttpClient;
-    private Retrofit mRetrofit = null;
+
+    // WWW service of SMTH, but actually most of services are actually from nForum
+    private final String SMTH_WWW_URL = "http://www.newsmth.net";
+    private Retrofit wRetrofit = null;
     public SMTHWWWService wService = null;
+    static private final String SMTH_WWW_ENCODING = "GB2312";
 
     // Mobile service of SMTH
     // this interface is not used any longer
-    private final String SMTH_MOBILE_URL = "http://m.newsmth.net";
-    private Retrofit wRetrofit = null;
-    public SMTHMobileService mService = null;
+//    private final String SMTH_MOBILE_URL = "http://m.newsmth.net";
+//    private Retrofit mRetrofit = null;
+//    public SMTHMobileService mService = null;
 
     // All boards cache file
     public static int BOARD_TYPE_FAVORITE = 1;
@@ -95,6 +96,7 @@ public class SMTHHelper {
     }
 
     // response from WWW is GB2312, we need to conver it to UTF-8
+    // http://www.newsmth.net/mainpage.html
     public static String DecodeResponseFromWWW(byte[] bytes) {
         String result = null;
         try {
@@ -402,21 +404,6 @@ public class SMTHHelper {
         return likes;
     }
 
-
-
-    // [团购]3.28-4.03 花的传说饰品团购(18) ==> 18
-    public static String getReplyCountInParentheses(String content) {
-        Pattern hp = Pattern.compile("\\((\\d+)\\)$", Pattern.DOTALL);
-        Matcher hm = hp.matcher(content);
-        if (hm.find()) {
-            String count = hm.group(1);
-            return count;
-        }
-
-        return "";
-    }
-
-
     public static Topic ParseTopicFromElement(Element ele, String type) {
         if("top10".equals(type) ||  "sectionhot".equals(type)) {
             // two <A herf> nodes
@@ -441,7 +428,7 @@ public class SMTHHelper {
                 String topicID = StringUtils.getLastStringSegment(a2.attr("href"));
 
                 Topic topic = new Topic();
-                String reply_count = getReplyCountInParentheses(title);
+                String reply_count = StringUtils.getReplyCountInParentheses(title);
                 if(reply_count.length() > 0) {
                     title = title.substring(0, title.length() - reply_count.length() - 2);
                     topic.setTotalPostNoFromString(reply_count);
