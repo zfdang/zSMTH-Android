@@ -34,7 +34,8 @@ android {
     android.applicationVariants.all { variant ->
         variant.outputs.each { output ->
 //            output.outputFile = new File(output.outputFile.parent, "zSMTH" + "-" + buildType.name + "-v" + defaultConfig.versionName + "-" + defaultConfig.versionCode + ".apk" );
-            output.outputFile = new File(output.outputFile.parent, "zSMTH" + "-" + buildType.name + "-v" + defaultConfig.versionName + ".apk" );
+//            output.outputFile = new File(output.outputFile.parent, "zSMTH" + "-" + buildType.name + "-v" + defaultConfig.versionName + ".apk" );
+            output.outputFile = new File("/Users/zfdang/workspaces/gh-pages/zSMTH-Android/", "zSMTH" + "-" + buildType.name + "-v" + defaultConfig.versionName + ".apk" );
         }
     }
     // ...

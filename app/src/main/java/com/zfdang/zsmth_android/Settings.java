@@ -2,6 +2,7 @@ package com.zfdang.zsmth_android;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.os.Build;
 
 import com.zfdang.SMTHApplication;
 
@@ -193,7 +194,7 @@ public class Settings {
 
         bLastLoginSuccess = mPreference.getBoolean(LAST_LOGIN_SUCCESS, false);
 
-        mSignature = mPreference.getString(DEVICE_SIGNATURE, "Android");
+        mSignature = mPreference.getString(DEVICE_SIGNATURE, Build.MODEL);
         mTarget = mPreference.getString(FORWARD_TAEGET, "");
 
         bUserOnline = mPreference.getBoolean(USER_ONLINE, false);
