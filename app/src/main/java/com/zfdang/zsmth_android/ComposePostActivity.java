@@ -318,32 +318,17 @@ public class ComposePostActivity extends AppCompatActivity {
                     public void onCompleted() {
                         showProgress(null, false);
 
-                        String dialogTitle = "发表成功";
-                        if(mPostContext.isThroughMail()) {
-                            dialogTitle = "发信成功";
-                        }
-                        String dialogMessage = "结束编辑，或者停留在当前界面继续编辑？";
                         if(postPublishResult != AjaxResponse.AJAX_RESULT_OK) {
-                            dialogTitle = "发表失败";
-                            dialogMessage = "错误信息:\n" +postPUblishMessage + "\n" + dialogMessage;
+                            String message = "发表失败! \n错误信息:\n" + postPUblishMessage;
+                            Toast.makeText(ComposePostActivity.this, message, Toast.LENGTH_SHORT).show();
+                        } else {
+                            String message = "发表成功";
+                            if(mPostContext.isThroughMail()) {
+                                message = "发信成功";
+                            }
+                            Toast.makeText(SMTHApplication.getAppContext(), message, Toast.LENGTH_SHORT).show();
+                            ComposePostActivity.this.finish();
                         }
-
-                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ComposePostActivity.this);
-                        alertDialogBuilder.setTitle(dialogTitle)
-                                .setMessage(dialogMessage)
-                                .setCancelable(false)
-                                .setPositiveButton("结束编辑", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        // if this button is clicked, close current activity
-                                        ComposePostActivity.this.finish();
-                                    }
-                                })
-                                .setNegativeButton("继续编辑", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        // if this button is clicked, just close the dialog box and do nothing
-                                        dialog.cancel();
-                                    }
-                                }).create().show();
                     }
 
                     @Override
