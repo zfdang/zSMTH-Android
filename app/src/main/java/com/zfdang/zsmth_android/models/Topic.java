@@ -32,15 +32,40 @@ public class Topic implements Parcelable {
     // 是否是置顶的主题
     public boolean isSticky;
 
-    // Hot topics in Shida section has special settings
-    // <div><a href="/nForum/board/AutoWorld"><span class="board">[汽车世界]</span></a><a href="/nForum/article/ShiDa/59791" title=" 女子横穿西直门被三车碾轧 逃逸司机30小时全部落网">
-    private boolean isShida = false;
-    public void setIsShida(boolean isShida) {
-        this.isShida = isShida;
+    // status of topic
+    private String score = null;
+    private String likes = null;
+    private String replyCounts = null;
+    private boolean hasAttach;
+
+    private int totalPageNo = 0;
+    private int totalPostNo = 0;
+
+    // this is actually a category, used in guidance fragment to seperate hot topics
+    public Topic(String category) {
+        isCategory = true;
+        this.category = category;
     }
 
+    public Topic() {
+        isCategory = false;
+        this.boardChsName = "";
+        this.boardEngName = "";
+        this.author = "";
+    }
 
-    private String type;
+    public void setTotalPostNoFromString(String totalPostNoString) {
+        try {
+            this.totalPostNo = Integer.parseInt(totalPostNoString);
+            if(this.totalPostNo % Topic.POST_PER_PAGE == 0) {
+                this.totalPageNo = this.totalPostNo / Topic.POST_PER_PAGE;
+            } else {
+                this.totalPageNo = this.totalPostNo / Topic.POST_PER_PAGE + 1;
+            }
+        }catch (Exception e) {
+            Log.d("Topic", Log.getStackTraceString(e));
+        }
+    }
 
     public int getTotalPageNo() {
         return totalPageNo;
@@ -53,39 +78,6 @@ public class Topic implements Parcelable {
         String result = String.format("%d", this.totalPostNo);
         return result;
     }
-
-    private int totalPageNo = 0;
-    private int currentPageNo = 0;
-    private int totalPostNo = 0;
-
-    public void setTotalPostNoFromString(String totalPostNoString) {
-        try {
-            this.totalPostNo = Integer.parseInt(totalPostNoString);
-            if(this.totalPostNo % Topic.POST_PER_PAGE == 0) {
-                this.totalPageNo = this.totalPostNo / Topic.POST_PER_PAGE;
-            } else {
-                this.totalPageNo = this.totalPostNo / Topic.POST_PER_PAGE + 1;
-            }
-        }catch (Exception e) {
-            Log.d("", e.toString());
-        }
-    }
-
-
-    // this is actually a category, used in guidance fragment to seperate hot topics
-    public Topic(String category) {
-        isCategory = true;
-        this.category = category;
-    }
-
-
-    public Topic() {
-        isCategory = false;
-        this.boardChsName = "";
-        this.boardEngName = "";
-        this.author = "";
-    }
-
 
     public String getTitle() {
         return title;
@@ -108,9 +100,6 @@ public class Topic implements Parcelable {
     }
 
     public String getTopicURL() {
-        // "近期热帖"的topic, boardEngName和boardChsName显示的都是原来的版面，但是URL显示的
-        if(this.isShida)
-            return "ShiDa";
         return boardEngName;
     }
 
@@ -151,7 +140,6 @@ public class Topic implements Parcelable {
         this.category = category;
     }
 
-
     public String getPublishDate() {
         return publishDate;
     }
@@ -174,6 +162,42 @@ public class Topic implements Parcelable {
 
     public void setReplyDate(String replyDate) {
         this.replyDate = replyDate;
+    }
+
+    public boolean hasAttach() {
+        return hasAttach;
+    }
+
+    public void setHasAttach(boolean hasAttach) {
+        this.hasAttach = hasAttach;
+    }
+
+    public String getLikes() {
+        return likes;
+    }
+
+    public void setLikes(String likes) {
+        this.likes = likes;
+    }
+
+    public String getReplyCounts() {
+        return replyCounts;
+    }
+
+    public void setReplyCounts(String replyCounts) {
+        this.replyCounts = replyCounts;
+    }
+
+    public String getScore() {
+        return score;
+    }
+
+    public void setScore(String score) {
+        this.score = score;
+    }
+
+    public String getStatusSummary() {
+        return String.format("评分: %-3s  Likes: %-3s  回复: %-3s", score, likes, replyCounts);
     }
 
     @Override
@@ -208,10 +232,11 @@ public class Topic implements Parcelable {
         dest.writeString(this.replier);
         dest.writeString(this.replyDate);
         dest.writeByte(isSticky ? (byte) 1 : (byte) 0);
-        dest.writeByte(isShida ? (byte) 1 : (byte) 0);
-        dest.writeString(this.type);
+        dest.writeString(this.score);
+        dest.writeString(this.likes);
+        dest.writeString(this.replyCounts);
+        dest.writeByte(hasAttach ? (byte) 1 : (byte) 0);
         dest.writeInt(this.totalPageNo);
-        dest.writeInt(this.currentPageNo);
         dest.writeInt(this.totalPostNo);
     }
 
@@ -227,10 +252,11 @@ public class Topic implements Parcelable {
         this.replier = in.readString();
         this.replyDate = in.readString();
         this.isSticky = in.readByte() != 0;
-        this.isShida = in.readByte() != 0;
-        this.type = in.readString();
+        this.score = in.readString();
+        this.likes = in.readString();
+        this.replyCounts = in.readString();
+        this.hasAttach = in.readByte() != 0;
         this.totalPageNo = in.readInt();
-        this.currentPageNo = in.readInt();
         this.totalPostNo = in.readInt();
     }
 

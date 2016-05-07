@@ -1,0 +1,1106 @@
+<script type="text/javascript">
+if (!document.getElementById('body')) {
+    var redir = window.location.href.replace('/nForum/', '/nForum/#!');
+    window.location.href = redir;
+}
+</script>
+<style type="text/css">
+    .t-pre,
+    .t-pre-bottom {
+    margin-top: 3px;
+    width: 100%
+    }
+
+    .t-pre-bottom .t-btn {
+    margin-left: 5px
+    }
+
+    .t-btn a {
+    display: inline-block;
+    text-align: center;
+    font-size: 12px;
+    margin-left: 2px;
+    margin-right: 4px;
+    padding: 2px 6px;
+    padding: 3px 6px 1px\9;
+    height: 16px;
+    vertical-align: middle
+    }
+
+    .t-btn a:hover {
+    color: #FFF
+    }
+
+    .t-btn .input {
+    color: #999;
+    font-size: 12px;
+    margin-right: 5px
+    }
+
+    .t-btn .rss {
+    padding: 0;
+    vertical-align: middle
+    }
+
+    .t-btn .rss samp {
+    width: 27px;
+    height: 15px
+    }
+
+    .t-btn label {
+    margin-right: 5px;
+    margin-left: 2px;
+    vertical-align: middle
+    }
+
+    .page {
+    float: right;
+    padding-top: 2px;
+    *padding-top: 0
+    }
+
+    .b-head div a {
+    color: #f0d97f;
+    padding-right: 5px
+    }
+
+    .b-head div a:hover {
+    color: #efdb8d
+    }
+
+    .b-content .middle {
+    text-align: center
+    }
+
+    .t_fewuser {
+    color: #FF0
+    }
+
+    .title_1 {
+    width: 140px;
+    padding-left: 10px
+    }
+
+    .title_2 {
+    width: 100px
+    }
+
+    .title_3 {
+    width: auto
+    }
+
+    .title_4 {
+    width: 45px
+    }
+
+    .title_5 {
+    width: 45px
+    }
+
+    .title_6 {
+    width: 45px
+    }
+
+    .title_7 {
+    width: 45px
+    }
+
+    .board-list thead th.title_8 {
+    padding-left: 7px
+    }
+
+    .title_8 {
+    width: 37px;
+    padding-left: 10px
+    }
+
+    .title_9 {
+    width: auto
+    }
+
+    .title_10 {
+    width: 64px
+    }
+
+    .title_11 {
+    width: 35px
+    }
+
+    .title_12 {
+    width: 97px
+    }
+
+    .title_13 {
+    width: 35px;
+    padding-left: 5px
+    }
+
+    .title_14 {
+    width: 35px
+    }
+
+    .title_15 {
+    width: auto
+    }
+
+    .title_16 {
+    width: 125px
+    }
+
+    .title_17 {
+    width: 80px
+    }
+
+    .middle {
+    text-align: center
+    }
+
+    .board-list .top .title_9 a {
+    color: red
+    }
+
+    .board-list .tag {
+    width: 16px;
+    height: 17px
+    }
+
+    .board-list .tag-att {
+    width: 7px;
+    height: 16px;
+    margin-left: 4px
+    }
+
+    .board-list .threads-tab {
+    font-weight: bold;
+    padding-left: 4px
+    }
+
+    .board-list .threads-tab a {
+    margin: 0 3px
+    }
+
+    #deny_list th.c_op {
+    padding-left: 5px
+    }
+
+    #deny_list .c_num {
+    width: 37px;
+    padding-left: 7px
+    }
+
+    #deny_list .c_userid {
+    width: 120px
+    }
+
+    #deny_list .c_userid input {
+    width: 90px
+    }
+
+    #deny_list .c_reason input {
+    width: 150px;
+    margin-right: 10px
+    }
+
+    #deny_list select {
+    background-color: #ffffff
+    }
+
+    #deny_list .c_desc {
+    width: 160px
+    }
+
+    #deny_list .c_desc input {
+    width: 30px
+    }
+
+    #deny_list .c_op {
+    width: 85px
+    }
+
+    #deny_list .c_op input {
+    margin-left: 5px
+    }
+
+    #m_deny li span {
+    padding-right: 4px;
+    vertical-align: middle
+    }
+
+    #m_deny .input-text {
+    width: 150px;
+    margin-right: 4px
+    }
+
+    #board_banner {
+    margin-top: 12px;
+    text-align: center;
+    font-size: 0
+    }
+
+    #board_banner div.swf_wrapper {
+    z-index: -1;
+    display: inline-block
+    }
+
+    #board_banner div.swf_overlay {
+    z-index: 0;
+    cursor: pointer;
+    background-color: #ffffff;
+    opacity: 0;
+    filter: Alpha(opacity=0);
+    display: inline-block
+    }
+
+    .apptable {
+    width: 100%
+    }
+
+    .apptable td {
+    border-bottom: 1px solid #c9d7f1;
+    vertical-align: center;
+    height: 26px;
+    text-align: center
+    }
+
+    .apptable pre {
+    margin: 0 auto;
+    overflow: scroll;
+    height: 500px;
+    width: 550px;
+    text-align: left
+    }
+
+    .apptable td.sugg {
+    font-size: 14px;
+    font-weight: bold
+    }
+
+    #bm_apply td {
+    text-align: center
+    }
+</style>
+<div class="t-pre">
+    <div class="page">
+        <ul class="pagination">
+            <li class="page-pre">主题数:<i>36495</i>&emsp;分页:</li>
+            <li>
+                <ol title="分页列表" class="page-main">
+                    <li class="page-normal">
+                        <a href="/nForum/board/FamilyLife?p=1" title="上一页">
+                            <<</a>
+                    </li>
+                    <li class="page-normal"><a href="/nForum/board/FamilyLife?p=1" title="转到第1页">1</a></li>
+                    <li class="page-select"><a title="当前页">2</a></li>
+                    <li class="page-normal"><a href="/nForum/board/FamilyLife?p=3" title="转到第3页">3</a></li>
+                    <li class="page-normal"><a href="/nForum/board/FamilyLife?p=4" title="转到第4页">4</a></li>
+                    <li class="page-normal"><a href="/nForum/board/FamilyLife?p=5" title="转到第5页">5</a></li>
+                    <li class="page-normal"><a href="/nForum/board/FamilyLife?p=6" title="转到第6页">6</a></li>
+                    <li class="page-normal"><a href="/nForum/board/FamilyLife?p=7" title="转到第7页">7</a></li>
+                    <li class="page-normal"><a href="/nForum/board/FamilyLife?p=8" title="转到第8页">8</a></li>
+                    <li class="page-omit">...</li>
+                    <li class="page-normal"><a href="/nForum/board/FamilyLife?p=1217" title="转到第1217页">1217</a></li>
+                    <li class="page-normal"><a href="/nForum/board/FamilyLife?p=3" title="下一页">>></a></li>
+                </ol>
+            </li>
+            <li class="page-suf"></li>
+        </ul>
+    </div>
+    <div class="t-btn"><a href="/nForum/article/FamilyLife/post" class="b-post button">发表文章</a><a href="/nForum/article/FamilyLife/tmpl" class="b-post button">模版发文</a><a href="/nForum/board/FamilyLife/member" class="button">驻版用户</a><a href="/nForum/elite/path?v=%2Fgroups%2Ftalk.faq%2FFamilyLife" class="button">精华区</a><a href="/nForum/board/FamilyLife/notes" class="button">备忘录</a>
+        <a href="/nForum/rss/board-FamilyLife" class="rss" target="_blank">
+            <samp class="ico-pos-rss"></samp>
+        </a>
+    </div>
+</div>
+<div class="b-head corner"><span class="n-right">版主:&ensp;<a href="/nForum/user/query/XiaoNan">XiaoNan</a>&ensp;<a href="/nForum/user/query/milkcat">milkcat</a></span><span class="n-left">本版当前共有1317人在线<span title="发生于2015-10-02 19:48:06">[最高10300人]</span>&emsp;今日帖数4842&emsp;版面积分:103144</span>
+</div>
+<div class="b-content">
+    <div id="pp_board"></div>
+    <table class="board-list tiz" cellpadding="0" cellspacing="0">
+        <thead>
+        <tr>
+            <th class="title_8">状态</th>
+            <th class="title_9 middle">主题</th>
+            <th class="title_10">发帖时间</th>
+            <th class="title_12">|&ensp;作者</th>
+            <th class="title_11 middle">评分</th>
+            <th class="title_11 middle">Like</th>
+            <th class="title_11 middle">回复</th>
+            <th class="title_10">最新回复</th>
+            <th class="title_12">|&ensp;作者</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757972219" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-light"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757972219">2岁女孩找妈妈 其父母终于被找到</a>
+                <samp class="tag-att ico-pos-article-attach"></samp><span class="threads-tab">[<a href="/nForum/article/FamilyLife/1757972219?p=2">2</a>]</span></td>
+            <td class="title_10">2016-05-05</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/Muscle" class="c63f">Muscle</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">14</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757972219?p=2#a14" title="跳转至最后回复">21:38:58&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/kxxx" class="c09f">kxxx</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757978933" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-normal"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757978933">也谈让座，讲道德之前先学会遵守规矩吧</a></td>
+            <td class="title_10">19:48:00&emsp;</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/makebigmoney" class="c63f">makebigmoney</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">7</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757978933?p=1#a7" title="跳转至最后回复">21:32:19&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/jessicax1" class="c09f">jessicax1</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757979054" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-normal"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757979054">找对象长相真的重要吗？</a></td>
+            <td class="title_10">20:27:18&emsp;</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/IloveMeteora" class="c63f">IloveMeteora</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">7</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757979054?p=1#a7" title="跳转至最后回复">21:29:25&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/changestill" class="c09f">changestill</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757977750" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-fire"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757977750">高铁让座&amp;老人高峰期搭公交</a><span class="threads-tab">[<a href="/nForum/article/FamilyLife/1757977750?p=2">2</a><a href="/nForum/article/FamilyLife/1757977750?p=3">3</a><a href="/nForum/article/FamilyLife/1757977750?p=4">4</a><a href="/nForum/article/FamilyLife/1757977750?p=5">5</a><a href="/nForum/article/FamilyLife/1757977750?p=6">6</a>..<a href="/nForum/article/FamilyLife/1757977750?p=15">15</a>]</span></td>
+            <td class="title_10">15:59:22&emsp;</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/bjcanada" class="c63f">bjcanada</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">144</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757977750?p=15#a144" title="跳转至最后回复">21:26:43&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/jessicax1" class="c09f">jessicax1</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757977008" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-light"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757977008">这样对公公婆婆过分吗？</a><span class="threads-tab">[<a href="/nForum/article/FamilyLife/1757977008?p=2">2</a><a href="/nForum/article/FamilyLife/1757977008?p=3">3</a><a href="/nForum/article/FamilyLife/1757977008?p=4">4</a><a href="/nForum/article/FamilyLife/1757977008?p=5">5</a>]</span></td>
+            <td class="title_10">14:29:04&emsp;</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/fruitsomehow" class="c63f">fruitsomehow</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">47</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757977008?p=5#a47" title="跳转至最后回复">21:25:55&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/jessicax1" class="c09f">jessicax1</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757970593" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-fire"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757970593">吵架后和LG试图沟通失败，求分析和建议</a><span class="threads-tab">[<a href="/nForum/article/FamilyLife/1757970593?p=2">2</a><a href="/nForum/article/FamilyLife/1757970593?p=3">3</a><a href="/nForum/article/FamilyLife/1757970593?p=4">4</a><a href="/nForum/article/FamilyLife/1757970593?p=5">5</a><a href="/nForum/article/FamilyLife/1757970593?p=6">6</a>..<a href="/nForum/article/FamilyLife/1757970593?p=21">21</a>]</span></td>
+            <td class="title_10">2016-05-04</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/female1" class="c63f">female1</a></td>
+            <td class="title_11 middle"><span style="color:green;">-14</span></td>
+            <td class="title_11 middle">15</td>
+            <td class="title_11 middle">205</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757970593?p=21#a205" title="跳转至最后回复">21:22:02&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/Christiana" class="c09f">Christiana</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757978535" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-light"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757978535">我想去矫正牙齿，老婆不同意，觉得我浪费钱</a><span class="threads-tab">[<a href="/nForum/article/FamilyLife/1757978535?p=2">2</a><a href="/nForum/article/FamilyLife/1757978535?p=3">3</a>]</span></td>
+            <td class="title_10">18:06:06&emsp;</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/aimertele" class="c63f">aimertele</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">28</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757978535?p=3#a28" title="跳转至最后回复">21:14:08&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/manabc" class="c09f">manabc</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757979112" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-normal"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757979112">老人爱买山寨保健品怎么破？</a></td>
+            <td class="title_10">20:46:22&emsp;</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/dx567" class="c63f">dx567</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">2</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757979112?p=1#a2" title="跳转至最后回复">21:12:36&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/manabc" class="c09f">manabc</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757973338" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-light"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757973338">[讨论]发一系列夫妻之间别扭无比的对话，无语，无奈</a><span class="threads-tab">[<a href="/nForum/article/FamilyLife/1757973338?p=2">2</a><a href="/nForum/article/FamilyLife/1757973338?p=3">3</a><a href="/nForum/article/FamilyLife/1757973338?p=4">4</a><a href="/nForum/article/FamilyLife/1757973338?p=5">5</a>]</span></td>
+            <td class="title_10">2016-05-05</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/hill0106" class="c63f">hill0106</a></td>
+            <td class="title_11 middle"><span style="color:green;">-5</span></td>
+            <td class="title_11 middle">1</td>
+            <td class="title_11 middle">45</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757973338?p=5#a45" title="跳转至最后回复">21:02:38&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/baomaobaomao" class="c09f">baomaobaomao</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757979183" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-normal"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757979183">郁闷</a></td>
+            <td class="title_10">21:01:05&emsp;</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/majia01" class="c63f">majia01</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">0</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757979183?p=1#a0" title="跳转至最后回复">21:01:05&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/majia01" class="c09f">majia01</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757978624" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-light"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757978624">你见过的最能体现男女不平等的现象是什么？</a>
+                <samp class="tag-att ico-pos-article-attach"></samp><span class="threads-tab">[<a href="/nForum/article/FamilyLife/1757978624?p=2">2</a>]</span></td>
+            <td class="title_10">18:26:29&emsp;</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/Ginny17" class="c63f">Ginny17</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">11</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757978624?p=2#a11" title="跳转至最后回复">20:59:52&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/Muscle" class="c09f">Muscle</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757965556" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-light"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757965556">老年人腿痛的多吗？怎么办呀</a><span class="threads-tab">[<a href="/nForum/article/FamilyLife/1757965556?p=2">2</a>]</span></td>
+            <td class="title_10">2016-05-03</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/wangmazi2011" class="c63f">wangmazi2011</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">12</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757965556?p=2#a12" title="跳转至最后回复">20:53:06&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/wangmazi2011" class="c09f">wangmazi2011</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757976091" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-light"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757976091">看了贵版的帖子</a><span class="threads-tab">[<a href="/nForum/article/FamilyLife/1757976091?p=2">2</a><a href="/nForum/article/FamilyLife/1757976091?p=3">3</a><a href="/nForum/article/FamilyLife/1757976091?p=4">4</a><a href="/nForum/article/FamilyLife/1757976091?p=5">5</a><a href="/nForum/article/FamilyLife/1757976091?p=6">6</a>..<a href="/nForum/article/FamilyLife/1757976091?p=8">8</a>]</span></td>
+            <td class="title_10">11:58:45&emsp;</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/majia01" class="c63f">majia01</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">70</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757976091?p=8#a70" title="跳转至最后回复">20:44:44&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/darley" class="c09f">darley</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757979051" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-normal"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757979051">要活漂亮每一天</a></td>
+            <td class="title_10">20:26:29&emsp;</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/Fridayout" class="c63f">Fridayout</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">4</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757979051?p=1#a4" title="跳转至最后回复">20:38:12&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/Fridayout" class="c09f">Fridayout</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757978517" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-light"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757978517">每一个人面对死亡时都很恐惧</a><span class="threads-tab">[<a href="/nForum/article/FamilyLife/1757978517?p=2">2</a>]</span></td>
+            <td class="title_10">17:59:50&emsp;</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/zhangshuhan" class="c63f">zhangshuhan</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">17</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757978517?p=2#a17" title="跳转至最后回复">20:37:30&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/darley" class="c09f">darley</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757976933" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-light"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757976933">这样算不算作</a><span class="threads-tab">[<a href="/nForum/article/FamilyLife/1757976933?p=2">2</a><a href="/nForum/article/FamilyLife/1757976933?p=3">3</a><a href="/nForum/article/FamilyLife/1757976933?p=4">4</a><a href="/nForum/article/FamilyLife/1757976933?p=5">5</a><a href="/nForum/article/FamilyLife/1757976933?p=6">6</a>..<a href="/nForum/article/FamilyLife/1757976933?p=9">9</a>]</span></td>
+            <td class="title_10">14:20:20&emsp;</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/rainlove" class="c63f">rainlove</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">85</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757976933?p=9#a85" title="跳转至最后回复">20:34:07&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/tyut" class="c09f">tyut</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757979039" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-normal"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757979039">母亲节到了  想给妈妈买衣服  但是中老年的衣服怎么都那么难看</a></td>
+            <td class="title_10">20:23:11&emsp;</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/goldentomato" class="c63f">goldentomato</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">1</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757979039?p=1#a1" title="跳转至最后回复">20:31:21&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/milkcat" class="c09f">milkcat</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757977940" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-normal"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757977940">非京籍娃，幼升小问题</a></td>
+            <td class="title_10">16:19:01&emsp;</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/caiyimama" class="c63f">caiyimama</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">8</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757977940?p=1#a8" title="跳转至最后回复">20:30:12&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/appleling" class="c09f">appleling</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757979056" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-normal"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757979056">坐着，比站着，一定更好？未必！</a></td>
+            <td class="title_10">20:27:35&emsp;</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/shuangpo" class="c63f">shuangpo</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">0</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757979056?p=1#a0" title="跳转至最后回复">20:27:35&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/shuangpo" class="c09f">shuangpo</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757976761" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-light"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757976761">坐地铁遇到八十岁老人要座位，你们会让么？</a><span class="threads-tab">[<a href="/nForum/article/FamilyLife/1757976761?p=2">2</a><a href="/nForum/article/FamilyLife/1757976761?p=3">3</a><a href="/nForum/article/FamilyLife/1757976761?p=4">4</a><a href="/nForum/article/FamilyLife/1757976761?p=5">5</a><a href="/nForum/article/FamilyLife/1757976761?p=6">6</a>]</span></td>
+            <td class="title_10">14:03:18&emsp;</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/liuruofan" class="c63f">liuruofan</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">54</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757976761?p=6#a54" title="跳转至最后回复">20:24:10&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/mean2010" class="c09f">mean2010</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757973110" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-light"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757973110">有时候真的替很多男人不值</a><span class="threads-tab">[<a href="/nForum/article/FamilyLife/1757973110?p=2">2</a><a href="/nForum/article/FamilyLife/1757973110?p=3">3</a><a href="/nForum/article/FamilyLife/1757973110?p=4">4</a><a href="/nForum/article/FamilyLife/1757973110?p=5">5</a>]</span></td>
+            <td class="title_10">2016-05-05</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/IloveMeteora" class="c63f">IloveMeteora</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">40</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757973110?p=5#a40" title="跳转至最后回复">20:23:16&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/majia01" class="c09f">majia01</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757976077" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-light"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757976077">其实我觉得男的娇生惯养的比较多</a><span class="threads-tab">[<a href="/nForum/article/FamilyLife/1757976077?p=2">2</a><a href="/nForum/article/FamilyLife/1757976077?p=3">3</a><a href="/nForum/article/FamilyLife/1757976077?p=4">4</a><a href="/nForum/article/FamilyLife/1757976077?p=5">5</a><a href="/nForum/article/FamilyLife/1757976077?p=6">6</a>]</span></td>
+            <td class="title_10">11:54:25&emsp;</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/Vanessa001" class="c63f">Vanessa001</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">53</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757976077?p=6#a53" title="跳转至最后回复">20:15:00&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/Fairy01" class="c09f">Fairy01</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757978909" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-normal"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757978909">感冒不断怎么办？两个多月了。</a></td>
+            <td class="title_10">19:40:16&emsp;</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/ScottJu" class="c63f">ScottJu</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">8</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757978909?p=1#a8" title="跳转至最后回复">20:06:00&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/ScottJu" class="c09f">ScottJu</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757974365" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-light"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757974365">搬家怎么那么贵啊!</a><span class="threads-tab">[<a href="/nForum/article/FamilyLife/1757974365?p=2">2</a><a href="/nForum/article/FamilyLife/1757974365?p=3">3</a>]</span></td>
+            <td class="title_10">00:10:00&emsp;</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/shuixianzi" class="c63f">shuixianzi</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">25</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757974365?p=3#a25" title="跳转至最后回复">20:02:55&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/gospeler" class="c09f">gospeler</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757978837" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-light"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757978837">老公给我讲了一笑话</a><span class="threads-tab">[<a href="/nForum/article/FamilyLife/1757978837?p=2">2</a><a href="/nForum/article/FamilyLife/1757978837?p=3">3</a>]</span></td>
+            <td class="title_10">19:17:43&emsp;</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/Ruoying" class="c63f">Ruoying</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">21</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757978837?p=3#a21" title="跳转至最后回复">19:59:08&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/Ruoying" class="c09f">Ruoying</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757978559" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-light"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757978559">有人约我一起吃晚餐</a><span class="threads-tab">[<a href="/nForum/article/FamilyLife/1757978559?p=2">2</a><a href="/nForum/article/FamilyLife/1757978559?p=3">3</a><a href="/nForum/article/FamilyLife/1757978559?p=4">4</a><a href="/nForum/article/FamilyLife/1757978559?p=5">5</a><a href="/nForum/article/FamilyLife/1757978559?p=6">6</a>]</span></td>
+            <td class="title_10">18:11:20&emsp;</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/pinkmary" class="c63f">pinkmary</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">58</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757978559?p=6#a58" title="跳转至最后回复">19:57:27&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/Ruoying" class="c09f">Ruoying</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757972020" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-light"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757972020">大家最长能接受多少天不洗澡？</a><span class="threads-tab">[<a href="/nForum/article/FamilyLife/1757972020?p=2">2</a><a href="/nForum/article/FamilyLife/1757972020?p=3">3</a><a href="/nForum/article/FamilyLife/1757972020?p=4">4</a><a href="/nForum/article/FamilyLife/1757972020?p=5">5</a><a href="/nForum/article/FamilyLife/1757972020?p=6">6</a>..<a href="/nForum/article/FamilyLife/1757972020?p=8">8</a>]</span></td>
+            <td class="title_10">2016-05-05</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/ailis" class="c63f">ailis</a></td>
+            <td class="title_11 middle"><span style="color:black;">0</span></td>
+            <td class="title_11 middle">1</td>
+            <td class="title_11 middle">75</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757972020?p=8#a75" title="跳转至最后回复">19:55:52&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/flaybird" class="c09f">flaybird</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757977650" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-light"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757977650">我也想赚好多钱</a><span class="threads-tab">[<a href="/nForum/article/FamilyLife/1757977650?p=2">2</a>]</span></td>
+            <td class="title_10">15:51:31&emsp;</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/lluvia66" class="c63f">lluvia66</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">12</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757977650?p=2#a12" title="跳转至最后回复">19:52:59&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/lluvia66" class="c09f">lluvia66</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757971056" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-light"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757971056">《欢乐颂》中的五个女主：阶层差异下，有真正的友情吗？ &#40;转载&#41;</a><span class="threads-tab">[<a href="/nForum/article/FamilyLife/1757971056?p=2">2</a>]</span></td>
+            <td class="title_10">2016-05-05</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/BusyCoder" class="c63f">BusyCoder</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">14</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757971056?p=2#a14" title="跳转至最后回复">19:20:25&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/greenteacat" class="c09f">greenteacat</a></td>
+        </tr>
+        <tr>
+            <td class="title_8">
+                <a target="_blank" href="/nForum/article/FamilyLife/1757976541" title="在新窗口打开此主题">
+                    <samp class="tag ico-pos-article-normal"></samp>
+                </a>
+            </td>
+            <td class="title_9"><a href="/nForum/article/FamilyLife/1757976541">干了件傻事</a></td>
+            <td class="title_10">13:38:44&emsp;</td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/bbid" class="c63f">bbid</a></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle"></td>
+            <td class="title_11 middle">5</td>
+            <td class="title_10"><a href="/nForum/article/FamilyLife/1757976541?p=1#a5" title="跳转至最后回复">19:11:50&emsp;</a></td>
+            <td class="title_12">|&ensp;<a href="/nForum/user/query/greenwind213" class="c09f">greenwind213</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="t-pre-bottom">
+    <div class="page">
+        <ul class="pagination">
+            <li class="page-pre">主题数:<i>36495</i>&emsp;分页:</li>
+            <li>
+                <ol title="分页列表" class="page-main">
+                    <li class="page-normal">
+                        <a href="/nForum/board/FamilyLife?p=1" title="上一页">
+                            <<</a>
+                    </li>
+                    <li class="page-normal"><a href="/nForum/board/FamilyLife?p=1" title="转到第1页">1</a></li>
+                    <li class="page-select"><a title="当前页">2</a></li>
+                    <li class="page-normal"><a href="/nForum/board/FamilyLife?p=3" title="转到第3页">3</a></li>
+                    <li class="page-normal"><a href="/nForum/board/FamilyLife?p=4" title="转到第4页">4</a></li>
+                    <li class="page-normal"><a href="/nForum/board/FamilyLife?p=5" title="转到第5页">5</a></li>
+                    <li class="page-normal"><a href="/nForum/board/FamilyLife?p=6" title="转到第6页">6</a></li>
+                    <li class="page-normal"><a href="/nForum/board/FamilyLife?p=7" title="转到第7页">7</a></li>
+                    <li class="page-normal"><a href="/nForum/board/FamilyLife?p=8" title="转到第8页">8</a></li>
+                    <li class="page-omit">...</li>
+                    <li class="page-normal"><a href="/nForum/board/FamilyLife?p=1217" title="转到第1217页">1217</a></li>
+                    <li class="page-normal"><a href="/nForum/board/FamilyLife?p=3" title="下一页">>></a></li>
+                </ol>
+            </li>
+            <li class="page-suf"></li>
+        </ul>
+    </div>
+    <div class="t-btn">
+        <form method="get" action="/nForum/s/article" id="board_search">
+            <input type="text" class="input-text input" name="t1" placeholder="输入关键字" size="16" />
+            <input type="text" class="input-text input" name="au" placeholder="输入作者ID" size="12" />
+            <input type="checkbox" name="m" id="c_m" />
+            <label for="c_m">精华帖</label>
+            <input type="checkbox" name="a" id="c_a" />
+            <label for="c_a">带附件</label>
+            <input type="submit" class="button" value="搜索" />&emsp;&emsp;
+            <input type="button" class="button" value="超级搜索" onclick="window.open('http://ar.newsmth.net/search.jsp?boardname=FamilyLife')" />
+            <input type="hidden" name="b" value="FamilyLife" />
+        </form>
+    </div>
+</div>
+<div id="board_banner"></div>
+<script type="text/javascript">
+var bName = 'FamilyLife';;
+$('#notice_nav').html('<a href="/nForum/mainpage">水木社区</a>&ensp;>>&ensp;<a href="/nForum/section/6">知性感性</a>&ensp;>>&ensp;<a href="/nForum/board/FamilyLife">家庭生活</a>&ensp;>>&ensp;<a href="javascript:void(0)">文章列表</a>');
+$.setTitle('水木社区-家庭生活');;
+</script>
+<script type="text/javascript">
+$(function() {
+    if (typeof have_topads !== 'undefined' && typeof bName !== 'undefined') {
+        $.getJSON(SYS.base + '/board/' + bName + '/ajax_topads.json', function(data) {
+            var html = '';
+            for (k in data) {
+                var link;
+                if (data[k].url == "") link = 'javascript:void(0);';
+                else link = data[k].url + '" target="_blank';
+                var pos = 'top_' + bName + '_' + k;
+                html += '<tr class="top ad"><td class="title_8"><a _pos="' + pos + '" href="' + link + '"><samp class="tag ico-pos-article-top"></samp></a></td><td class="title_9"><a _pos="' + pos + '" href="' + link + '">' + data[k].title + '</a></td><td class="title_10">' + data[k].date + '</td><td class="title_12">|&ensp;系统广告</td><td class="title_11"></td><td class="title_11"></td><td class="title_11 middle">0</td><td class="title_12"><a _pos="' + pos + '" href="' + link + '">' + data[k].date + '</a></td><td class="title_12">|&ensp;系统广告</td></tr>'
+            }
+            $('.tiz').prepend(html);
+            $('.tiz tr.ad a').click(function() {
+                $(this).pingback()
+            });
+            $('.board-list tbody tr:odd td').addClass('bg-odd')
+        })
+    } else {
+        $('.board-list tbody tr:odd td').addClass('bg-odd')
+    }
+    $('#board_search').submit(function() {
+        BODY.open($(this).attr('action') + '?' + _.map($(this).getPostData(), function(v, k) {
+            v = encodeURIComponent(encodeURIComponent(v));
+            return k + '=' + v
+        }).join('&'));
+        return false
+    });
+    $('#board_search input[placeholder]').placeholder();
+    var validPost = function() {
+        if (!SESSION.get('is_login')) {
+            $('#u_login_id').alertDialog(SYS.code.MSG_LOGIN);
+            return false
+        }
+    };
+    $('#board_search input[placeholder]').placeholder();
+    $('#body').on('click', '.b-post', validPost).on('click', '#b_fav', function() {
+        var self = this;
+        DIALOG.confirmDialog('确认收藏此版面?', function() {
+            var url = SYS.base + "/fav/op/0.json",
+                data = {
+                    ac: 'ab',
+                    v: $(self).attr('_b')
+                };
+            $.post(url, data, function(json) {
+                if (json.ajax_st == 1) APP.renderTree();
+                DIALOG.ajaxDialog(json)
+            }, "json")
+        })
+    });
+    $('#body').on('click', '#apply_switch', function() {
+        $('.apptable').hide();
+        $('#bm_apply').show()
+    });
+    $('#body').on('submit', '#bm_apply', function() {
+        var empty = false;
+        $(this).find('textarea').each(function() {
+            if ($(this).val() == '') {
+                empty = true
+            }
+        });
+        if (empty) {
+            alert('必须回答所有问题!');
+            return false
+        }
+        var btn = $(this).find('input[type="submit"]').loading(true);
+        $.post($(this).attr('action'), $(this).getPostData(), function(json) {
+            btn.loading(false);
+            DIALOG.ajaxDialog(json)
+        }, 'json');
+        return false
+    });
+    if (typeof bName !== 'undefined') {
+        $.getJSON(SYS.base + '/board/' + bName + '/ajax_boardbanner.json', function(data) {
+            if (data) {
+                var pos = 'boardbanner_' + bName;
+                var html = '';
+                if (/\.swf/.test(data.file)) {
+                    html += '<div class="swf_wrapper" _pos="' + pos + '" _file="' + SYS.static + SYS.base + data.file + '" _width="' + data.width + '" _height="' + data.height + '"></div>';
+                    if (data.url.length > 0) {
+                        html += '<div class="swf_overlay" _url="' + data.url + '" style="width:' + data.width + 'px;height:' + data.height + 'px;margin-top:-' + data.height + 'px"></div>'
+                    }
+                } else {
+                    if (data.url == '') {
+                        html += '<a href="javascript:void(0);" _pos="' + pos + '"><img src="' + SYS.static + SYS.base + data.file + '" /></a>'
+                    } else {
+                        html += '<a href="' + data.url + '" target="_blank" _pos="' + pos + '"><img src="' + SYS.static + SYS.base + data.file + '" /></a>'
+                    }
+                }
+                $('#board_banner').html(html);
+                $('#board_banner a').click(function() {
+                    $(this).pingback()
+                });
+                $('#board_banner div.swf_wrapper').each(function() {
+                    var width = $(this).attr('_width');
+                    var height = $(this).attr('_height');
+                    var file = $(this).attr('_file');
+                    $(this).width(width).height(height);
+                    $(this).flash({
+                        swf: file,
+                        height: height,
+                        width: width,
+                        wmode: 'transparent'
+                    });
+                    $(this).mouseup(function() {
+                        $(this).pingback()
+                    })
+                });
+                $('#body').on('click', '#board_banner div.swf_overlay', function() {
+                    $(this).prev().mouseup();
+                    window.open($(this).attr('_url'))
+                })
+            }
+        })
+    }
+    if ($('#deny_list').length > 0) {
+        var b = $('#add_deny').attr('_b'),
+            reason = SYS.cache(b + '_denyreasons');
+        if (reason) {
+            $('#deny_list select').append(_.reduce(reason, function(ret, item) {
+                ret += ('<option value="' + item.desc + '">' + item.desc + '</option>');
+                return ret
+            }, ''))
+        } else {
+            $.get(SYS.base + '/board/' + b + '/ajax_denyreasons.json', function(res) {
+                $('#deny_list select').append(_.reduce(res, function(ret, item) {
+                    ret += ('<option value="' + item.desc + '">' + item.desc + '</option>');
+                    return ret
+                }, ''));
+                SYS.cache(b + '_denyreasons', res)
+            })
+        }
+        $('#deny_list select').on('change', function() {
+            $(this).prev().val($(this).val()).change()
+        });
+        $('#add_deny').click(function() {
+            var tr = $(this).parents('tr:first');
+            var data = {
+                id: tr.find('.c_userid input').val(),
+                reason: tr.find('.c_reason input').val(),
+                day: tr.find('.c_desc input').val()
+            };
+            if (data.id == '' || data.reason == '' || data.day == '') {
+                DIALOG.alertDialog('请输入封禁信息!');
+                return false
+            }
+            DIALOG.confirmDialog('确认封禁 ' + data.id + ' ' + data.day + ' 天?', function() {
+                $.post(SYS.base + '/board/' + b + '/ajax_adddeny.json', data, function(res) {
+                    DIALOG.ajaxDialog(res)
+                }, 'json')
+            });
+            return false
+        });
+        $('.mod_deny').click(function() {
+            var tr = $(this).parents('tr:first');
+            var t = new Date();
+            var now = parseInt(t.getTime() / 1000);
+            var offset = t.getTimezoneOffset() * 60;
+            var free = tr.find('.c_desc span').text();
+            t.setTime(free * 1000);
+            var data = {
+                action: SYS.base + '/board/' + b + '/ajax_moddeny.json',
+                id: tr.find('.c_userid').text(),
+                reason: $.trim(tr.find('.c_reason').text()),
+                freetime: t.getFullYear() + '年' + (t.getMonth() + 1) + '月' + t.getDate() + '日',
+                day: Math.floor((free - offset) / 86400) - Math.floor((now - offset) / 86400),
+                maxday: SESSION.get('is_admin') ? 70 : 14
+            };
+            var d = DIALOG.formDialog(_.template($('#tmpl_denymod').html())(data), {
+                width: 450,
+                buttons: [{
+                    text: SYS.code.COM_SUBMIT,
+                    click: function() {
+                        var f = $(this).find('#m_deny');
+                        $.post(f.attr('action'), f.getPostData(), function(repo) {
+                            DIALOG.ajaxDialog(repo)
+                        });
+                        $(this).dialog('close')
+                    }
+                }, {
+                    text: SYS.code.COM_CANCAL,
+                    click: function() {
+                        $(this).dialog('close')
+                    }
+                }]
+            }).on('change', 'select', function() {
+                $(this).prev().val($(this).val()).change()
+            });
+            d.find('select').html($('#deny_list select').html());
+            return false
+        });
+        $('.del_deny').click(function() {
+            var tr = $(this).parents('tr:first');
+            var id = tr.find('.c_userid').text();
+            DIALOG.confirmDialog('确认解封 ' + id + ' 吗?', function() {
+                $.post(SYS.base + '/board/' + b + '/ajax_deldeny.json', {
+                    id: id
+                }, function(res) {
+                    DIALOG.ajaxDialog(res)
+                }, 'json')
+            });
+            return false
+        });
+        $('#deny_list input[type="button"]').prop('disabled', false)
+    }
+    if ($('#member_list').attr('_b') != undefined) {
+        var b = $('#member_list').attr('_b');
+        $('.quit_member').click(function() {
+            DIALOG.confirmDialog('您确实要取消在【' + b + '】版的驻版吗?', function() {
+                $.post(SYS.base + '/board/' + b + '/ajax_quit_member.json', {}, function(res) {
+                    DIALOG.ajaxDialog(res)
+                })
+            })
+        });
+        $('.join_member').click(function() {
+            $.get(SYS.base + '/board/' + b + '/ajax_member_request.json', {}, function(res) {
+                var tablehtml = '<table class="board-list"><thead><tr><th>驻版要求</th><th>最低值</th><th>当前值</th><th>是否满足</th></tr></thead>';
+                var i = 0;
+                var ok = true;
+                for (i = 0; i < res.length; i++) {
+                    if (res[i].key == 'approve') tablehtml += '<tr><td>' + res[i].name + '</td><td colspan="3">' + (res[i].config ? '是' : '否') + '</td></tr>';
+                    else tablehtml += '<tr><td>' + res[i].name + '</td><td>' + res[i].config + '</td><td>' + res[i].mine + '</td><td>' + (res[i].ok ? 'OK' : '不满足') + '</td></tr>';
+                    if (!res[i].ok) ok = false
+                }
+                tablehtml += '</table>';
+                var data = {
+                    action: SYS.base + '/board/' + b + '/ajax_join_member.json',
+                    requesttable: tablehtml
+                };
+                var btns = [];
+                i = 0;
+                if (ok) btns[i++] = {
+                    text: '申请成为驻版用户',
+                    click: function() {
+                        $(this).dialog('close');
+                        DIALOG.confirmDialog('您确实要申请成为【' + b + '】的驻版用户吗?', function() {
+                            $.post(SYS.base + '/board/' + b + '/ajax_join_member.json', {}, function(res2) {
+                                DIALOG.ajaxDialog(res2)
+                            })
+                        })
+                    }
+                };
+                btns[i] = {
+                    text: SYS.code.COM_CANCAL,
+                    click: function() {
+                        $(this).dialog('close')
+                    }
+                };
+                var d = DIALOG.formDialog(_.template($('#tmpl_member').html())(data), {
+                    width: 600,
+                    buttons: btns
+                })
+            });
+            return false
+        });
+        $('.view_member_flag').click(function() {
+            $.get(SYS.base + '/board/' + b + '/ajax_view_member_flag.json', {}, function(res) {
+                var d = DIALOG.formDialog(_.template($('#tmpl_member_flag').html())({
+                    content: res
+                }), {
+                    width: 700,
+                    buttons: [{
+                        text: '关闭',
+                        click: function() {
+                            $(this).dialog('close')
+                        }
+                    }]
+                })
+            })
+        })
+    }
+});
+</script>

@@ -19,23 +19,31 @@
         android:textColor="@color/status_text_night"
         android:textSize="16dp"/>
 
-    <TextView
-        android:id="@+id/topic_title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:id="@+id/topic_title_row"
         android:layout_below="@+id/category_name"
-        android:paddingLeft="2dp"
-        android:paddingRight="8dp"
-        android:text="Topic"
-        android:textColor="@color/status_text_night"
-        android:textSize="19dp"/>
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/topic_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="2dp"
+            android:paddingRight="8dp"
+            android:text="Topic"
+            android:textColor="@color/status_text_night"
+            android:textSize="19dp"/>
+
+    </LinearLayout>
 
 
     <LinearLayout
-        android:id="@+id/author_row"
+        android:id="@+id/topic_author_row"
+        android:layout_below="@+id/topic_title_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/topic_title"
         android:layout_marginRight="10dp"
         android:orientation="horizontal">
 
@@ -43,7 +51,6 @@
             android:id="@+id/topic_publish_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/topic_title"
             android:layout_toLeftOf="@+id/topic_author"
             android:gravity="left"
             android:paddingLeft="2dp"
@@ -54,19 +61,16 @@
             android:id="@+id/topic_author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/topic_title"
             android:layout_toRightOf="@+id/topic_publish_label"
             android:gravity="left"
             android:paddingLeft="2dp"
             android:text="作者"
             android:textColor="@color/blue_text_night"/>
 
-
         <TextView
             android:id="@+id/topic_public_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/topic_title"
             android:layout_gravity="end"
             android:layout_weight="1"
             android:paddingRight="8dp"
@@ -77,12 +81,11 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/replier_row"
+        android:id="@+id/topic_replier_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/author_row"
+        android:layout_below="@+id/topic_author_row"
         android:layout_marginRight="10dp"
-
         android:orientation="horizontal"
         >
 
@@ -90,7 +93,6 @@
             android:id="@+id/topic_reply_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/topic_title"
             android:layout_toLeftOf="@+id/topic_replier"
             android:gravity="left"
             android:paddingLeft="2dp"
@@ -102,7 +104,6 @@
             android:id="@+id/topic_replier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/topic_author"
             android:layout_gravity="top|left"
             android:layout_toRightOf="@+id/topic_reply_label"
             android:gravity="left"
@@ -115,13 +116,36 @@
             android:id="@+id/topic_reply_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/topic_title"
             android:layout_weight="1"
             android:gravity="end"
             android:paddingRight="8dp"
             android:text="2016-03-24"
             android:textAlignment="textEnd"
             android:textColor="@color/colorSecondaryText"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/topic_status_row"
+        android:layout_below="@+id/topic_replier_row"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Like: +15, 分数： -15; 回帖数: 129"
+            android:textColor="@color/colorSecondaryText"
+            android:id="@+id/topic_status_summary"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/topic_status_attach"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_attach_file_white_18dp"/>
     </LinearLayout>
 
 

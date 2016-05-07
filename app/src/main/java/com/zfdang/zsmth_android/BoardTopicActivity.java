@@ -290,13 +290,14 @@ public class BoardTopicActivity extends AppCompatActivity
         isSearchMode = false;
         final SMTHHelper helper = SMTHHelper.getInstance();
 
-        helper.mService.getBoardTopicsByPage(mBoard.getBoardEngName(), Integer.toString(mCurrentPageNo))
+        helper.wService.getBoardTopicsByPage(mBoard.getBoardEngName(), Integer.toString(mCurrentPageNo))
                 .flatMap(new Func1<ResponseBody, Observable<Topic>>() {
                     @Override
                     public Observable<Topic> call(ResponseBody responseBody) {
                         try {
                             String response = responseBody.string();
-                            List<Topic> topics = SMTHHelper.ParseBoardTopicsFromMobile(response);
+                            System.out.print(response);
+                            List<Topic> topics = SMTHHelper.ParseBoardTopicsFromWWW(response);
                             return Observable.from(topics);
                         } catch (Exception e) {
                             Log.d(TAG, Log.getStackTraceString(e));

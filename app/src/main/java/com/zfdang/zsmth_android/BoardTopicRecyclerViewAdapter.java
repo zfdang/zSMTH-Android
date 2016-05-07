@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.zfdang.SMTHApplication;
@@ -41,30 +43,31 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
 
         if(topic.isCategory){
             holder.mSeperator.setVisibility(View.VISIBLE);
-            holder.mTitle.setVisibility(View.GONE);
-            holder.mAuthor.setVisibility(View.GONE);
-            holder.mReplier.setVisibility(View.GONE);
-            holder.mPublishDate.setVisibility(View.GONE);
-            holder.mReplyDate.setVisibility(View.GONE);
-            holder.mPublishLabel.setVisibility(View.GONE);
-            holder.mReplyLabel.setVisibility(View.GONE);
-
             holder.mSeperator.setText(topic.getCategory());
+
+            holder.mTitleRow.setVisibility(View.GONE);
+            holder.mAuthorRow.setVisibility(View.GONE);
+            holder.mReplierRow.setVisibility(View.GONE);
+            holder.mStatusRow.setVisibility(View.GONE);
         } else {
             holder.mSeperator.setVisibility(View.GONE);
-            holder.mTitle.setVisibility(View.VISIBLE);
-            holder.mAuthor.setVisibility(View.VISIBLE);
-            holder.mReplier.setVisibility(View.VISIBLE);
-            holder.mPublishDate.setVisibility(View.VISIBLE);
-            holder.mReplyDate.setVisibility(View.VISIBLE);
-            holder.mPublishLabel.setVisibility(View.VISIBLE);
-            holder.mReplyLabel.setVisibility(View.VISIBLE);
+            holder.mTitleRow.setVisibility(View.VISIBLE);
+            holder.mAuthorRow.setVisibility(View.VISIBLE);
+            holder.mReplierRow.setVisibility(View.VISIBLE);
+            holder.mStatusRow.setVisibility(View.VISIBLE);
 
             holder.mTitle.setText(topic.getTitle());
             holder.mAuthor.setText(topic.getAuthor());
             holder.mReplier.setText(topic.getReplier());
             holder.mPublishDate.setText(topic.getPublishDate());
             holder.mReplyDate.setText(topic.getReplyDate());
+            holder.mStatusSummary.setText(topic.getStatusSummary());
+
+            if(topic.hasAttach()) {
+                holder.mAttach.setVisibility(View.VISIBLE);
+            } else {
+                holder.mAttach.setVisibility(View.GONE);
+            }
 
             if(topic.isSticky) {
                 holder.mView.setBackgroundDrawable(ContextCompat.getDrawable(SMTHApplication.getAppContext(), R.drawable.recyclerview_sticky_item_bg));
@@ -98,8 +101,14 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
         public final TextView mReplier;
         public final TextView mPublishDate;
         public final TextView mReplyDate;
-        public final TextView mReplyLabel;
-        public final TextView mPublishLabel;
+        public final TextView mStatusSummary;
+        public final ImageView mAttach;
+
+        public final LinearLayout mTitleRow;
+        public final LinearLayout mAuthorRow;
+        public final LinearLayout mReplierRow;
+        public final LinearLayout mStatusRow;
+
         public Topic mTopic;
 
         public ViewHolder(View view) {
@@ -111,8 +120,13 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
             mReplier = (TextView) view.findViewById(R.id.topic_replier);
             mPublishDate = (TextView) view.findViewById(R.id.topic_public_date);
             mReplyDate = (TextView) view.findViewById(R.id.topic_reply_date);
-            mPublishLabel = (TextView) view.findViewById(R.id.topic_publish_label);
-            mReplyLabel = (TextView) view.findViewById(R.id.topic_reply_label);
+            mStatusSummary = (TextView) view.findViewById(R.id.topic_status_summary);
+            mAttach = (ImageView) view.findViewById(R.id.topic_status_attach);
+
+            mTitleRow = (LinearLayout) view.findViewById(R.id.topic_title_row);
+            mAuthorRow = (LinearLayout) view.findViewById(R.id.topic_author_row);
+            mReplierRow = (LinearLayout) view.findViewById(R.id.topic_replier_row);
+            mStatusRow = (LinearLayout) view.findViewById(R.id.topic_status_row);
         }
 
         @Override

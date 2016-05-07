@@ -417,7 +417,7 @@ public class SMTHHelper {
 
 
     public static Topic ParseTopicFromElement(Element ele, String type) {
-        if("top10".equals(type) || "hotspot".equals(type) || "sectionhot".equals(type)) {
+        if("top10".equals(type) ||  "sectionhot".equals(type)) {
             // two <A herf> nodes
 
             // normal hot topic
@@ -448,9 +448,6 @@ public class SMTHHelper {
 
                 topic.setBoardEngName(boardEngName);
                 topic.setBoardChsName(boardChsName);
-                if("hotspot".equals(type)) {
-                    topic.setIsShida(true);
-                }
                 topic.setTopicID(topicID);
                 topic.setTitle(title);
 
@@ -600,72 +597,110 @@ public class SMTHHelper {
     }
 
 
-    // parse board topics from mobile
-    public static List<Topic> ParseBoardTopicsFromMobile(String content) {
+    // parse board topics from WWW
+    public static List<Topic> ParseBoardTopicsFromWWW(String content) {
         List<Topic> results = new ArrayList<>();
         if (content == null) {
             return results;
         }
 
-//        Log.d("ParseBoardTopics", content);
-
-        // <a class="plant">1/1272</a> 当前页/总共页
-        Pattern pagePattern = Pattern.compile("<a class=\"plant\">(\\d+)/(\\d+)");
-        Matcher pageMatcher = pagePattern.matcher(content);
-        if (pageMatcher.find()) {
-            int currentPageNo = Integer.parseInt(pageMatcher.group(1));
-            int totalPageNo = Integer.parseInt(pageMatcher.group(2));
-//            Log.d("ParseBoardTopics", String.format(" %d of %d", currentPageNo, totalPageNo));
-        }
-
-//        <ul class="list sec">
-//        <li class="hla"><div><a href="/article/DSLR/1700440" class="top">[合集] 水木上的低价单反广告不可信</a>(0)</div><div>2012-10-16&nbsp;<a href="/user/query/yuningilike">yuningilike</a>|2012-10-16&nbsp;<a href="/user/query/yuningilike">yuningilike</a></div></li>
-//        <li><div><a href="/article/DSLR/808676907" class="m">谷歌完全免费化专业PS滤镜套装Nik Collection</a>(6)</div><div>09:52:33&nbsp;<a href="/user/query/BEO">BEO</a>|14:22:58&nbsp;<a href="/user/query/yuningilike">yuningilike</a></div></li>
-//        </ul>
-
-        // parse topics using Jsoup
         Document doc = Jsoup.parse(content);
 
-        // get all lis
-        Elements lis = doc.select("ul li");
-        for (Element li: lis) {
-//            Log.d("ParseBoardTopics", li.toString());
+        // <li class="page-select"><a title="当前页">2</a></li>
+        String currentPage = null;
+        Elements lis = doc.select("li.page-select");
+        if(lis.size() > 0) {
+            Element li = lis.first();
+            currentPage = li.text();
+            Log.d(TAG, "ParseBoardTopicsFromWWW: " + currentPage);
+        }
+
+//        <tr class="top">
+//        <td class="title_8">
+//        <a target="_blank" href="/nForum/article/FamilyLife/1757972219" title="在新窗口打开此主题">
+//        <samp class="tag ico-pos-article-light"></samp>
+//        </a>
+//        </td>
+//        <td class="title_9"><a href="/nForum/article/FamilyLife/1757972219">2岁女孩找妈妈 其父母终于被找到</a>
+//        <samp class="tag-att ico-pos-article-attach"></samp><span class="threads-tab">[<a href="/nForum/article/FamilyLife/1757972219?p=2">2</a>]</span></td>
+//        <td class="title_10">2016-05-05</td>
+//        <td class="title_12">|&ensp;<a href="/nForum/user/query/Muscle" class="c63f">Muscle</a></td>
+//        <td class="title_11 middle"></td>
+//        <td class="title_11 middle"></td>
+//        <td class="title_11 middle">14</td>
+//        <td class="title_10"><a href="/nForum/article/FamilyLife/1757972219?p=2#a14" title="跳转至最后回复">21:38:58&emsp;</a></td>
+//        <td class="title_12">|&ensp;<a href="/nForum/user/query/kxxx" class="c09f">kxxx</a></td>
+//        </tr>
+
+        // get all trs
+        Elements trs = doc.select("table.board-list tbody tr");
+        for (Element tr: trs) {
+            Log.d(TAG, "ParseBoardTopicsFromWWW: " + tr.toString());
             Topic topic = new Topic();
 
-            Elements links = li.select("a[href]");
-            if(links.size() == 3) {
-                Element link1 =  links.get(0);
-                Element link2 =  links.get(1);
-                Element link3 =  links.get(2);
-                String topicID = StringUtils.getLastStringSegment(link1.attr("href"));
-                String type = link1.attr("class");
-                if("top".equals(type)) {
-                    topic.isSticky = true;
-                }
-                String title = link1.text();
-                String author = link2.text();
-                String replier = link3.text();
-
-                topic.setAuthor(author);
-                topic.setTopicID(topicID);
-                topic.setTitle(title);
-                topic.setReplier(replier);
+            String trClass = tr.attr("class");
+            if(TextUtils.equals(trClass, "top")) {
+                // is sticky
+                topic.isSticky = true;
             }
 
-            // find dates
-            Elements divs = li.select("div");
-            if(divs.size() == 2) {
-                String temp = divs.get(1).text();
-                // temp的样本
-                // 2016-03-22 Dd1122Ee|2016-03-23 DRAGON94Dd1122Ee
-                // 09:51:35 Qid|11:37:42 Frankiewong4Qid
-                String[] tokens = temp.split("[\\|\\s]+");
-                if(tokens.length == 4) {
-                    String publishDate = tokens[0];
-                    String replyDate = tokens[2];
+            Elements tds = tr.getElementsByTag("td");
+            for(Element td: tds) {
+                String tdClass = td.attr("class");
+                Log.d(TAG, "ParseBoardTopicsFromWWW: td.class = " + tdClass);
 
-                    topic.setPublishDate(publishDate);
-                    topic.setReplyDate(replyDate);
+                if(TextUtils.equals(tdClass, "title_9")){
+                    // <td class="title_9"><a href="/nForum/article/FamilyLife/1757972219">2岁女孩找妈妈 其父母终于被找到</a>
+                    Elements as = td.getElementsByTag("a");
+                    if(as.size() > 0) {
+                        Element a = as.first();
+                        topic.setTitle(a.text());
+
+                        String topicURL = a.attr("href");
+                        topic.setTopicID(StringUtils.getLastStringSegment(topicURL));
+                    }
+                    // <samp class="tag-att ico-pos-article-attach"></samp>
+                    // find attachment flag
+                    Elements samps = td.getElementsByTag("samp");
+                    if(samps != null && samps.size() > 0) {
+                        topic.setHasAttach(true);
+                    }
+
+                } else if (TextUtils.equals(tdClass, "title_10")) {
+                    // <td class="title_10">2016-05-05</td>
+                    // <td class="title_10"><a href="/nForum/article/FamilyLife/1757972219?p=2#a14" title="跳转至最后回复">21:38:58&emsp;</a></td>
+                    String publishDate = topic.getPublishDate();
+                    if(publishDate == null || publishDate.length() == 0 ) {
+                        topic.setPublishDate(td.text());
+                    } else {
+                        topic.setReplyDate(td.text());
+                    }
+
+                } else if (TextUtils.equals(tdClass, "title_12")) {
+                    // <td class="title_12">|&ensp;<a href="/nForum/user/query/Muscle" class="c63f">Muscle</a></td>
+                    // <td class="title_12">|&ensp;<a href="/nForum/user/query/kxxx" class="c09f">kxxx</a></td>
+                    String author = topic.getAuthor();
+                    String value = td.text().replace("|", "").trim();
+                    if(author == null || author.length() == 0 ) {
+                        topic.setAuthor(value);
+                    } else {
+                        topic.setReplier(value);
+                    }
+
+                } else if (TextUtils.equals(tdClass, "title_11 middle")) {
+                    // <td class="title_11 middle">评分</td>
+                    // <td class="title_11 middle">like</td>
+                    // <td class="title_11 middle">回复: 14</td>
+                    String score = topic.getScore();
+                    String likes = topic.getLikes();
+                    String value = td.text();
+                    if(score == null) {
+                        topic.setScore(value);
+                    } else if (likes == null) {
+                        topic.setLikes(value);
+                    } else {
+                        topic.setReplyCounts(value);
+                    }
                 }
             }
 
