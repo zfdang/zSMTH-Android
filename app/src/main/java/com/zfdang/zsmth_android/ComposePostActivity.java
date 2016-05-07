@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.zfdang.SMTHApplication;
 import com.zfdang.multiple_images_selector.ImagesSelectorActivity;
 import com.zfdang.multiple_images_selector.SelectorSettings;
+import com.zfdang.zsmth_android.helpers.KeyboardLess;
 import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.models.ComposePostContext;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
@@ -143,6 +144,9 @@ public class ComposePostActivity extends AppCompatActivity {
 
         // init controls from Intent
         initFromIntent();
+
+        // open keypads
+        KeyboardLess.$show(this, mContent);
     }
 
     public void initFromIntent() {
