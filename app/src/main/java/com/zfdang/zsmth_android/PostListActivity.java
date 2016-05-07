@@ -415,15 +415,18 @@ public class PostListActivity extends AppCompatActivity
             }
         };
 
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.post_alert_title))
                 .setAdapter(adapter, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         onPostPopupMenuItem(position, which);
                     }
                 })
-                .show();
+                .create();
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(true);
 
+        dialog.show();
         return true;
     }
 
