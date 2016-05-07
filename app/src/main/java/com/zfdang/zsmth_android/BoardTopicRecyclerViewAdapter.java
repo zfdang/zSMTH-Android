@@ -46,14 +46,12 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
             holder.mSeperator.setText(topic.getCategory());
 
             holder.mTitleRow.setVisibility(View.GONE);
-            holder.mAuthorRow.setVisibility(View.GONE);
-            holder.mReplierRow.setVisibility(View.GONE);
+            holder.mAuthorReplierRow.setVisibility(View.GONE);
             holder.mStatusRow.setVisibility(View.GONE);
         } else {
             holder.mSeperator.setVisibility(View.GONE);
             holder.mTitleRow.setVisibility(View.VISIBLE);
-            holder.mAuthorRow.setVisibility(View.VISIBLE);
-            holder.mReplierRow.setVisibility(View.VISIBLE);
+            holder.mAuthorReplierRow.setVisibility(View.VISIBLE);
             holder.mStatusRow.setVisibility(View.VISIBLE);
 
             holder.mTitle.setText(topic.getTitle());
@@ -105,8 +103,7 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
         public final ImageView mAttach;
 
         public final LinearLayout mTitleRow;
-        public final LinearLayout mAuthorRow;
-        public final LinearLayout mReplierRow;
+        public final LinearLayout mAuthorReplierRow;
         public final LinearLayout mStatusRow;
 
         public Topic mTopic;
@@ -124,8 +121,7 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
             mAttach = (ImageView) view.findViewById(R.id.topic_status_attach);
 
             mTitleRow = (LinearLayout) view.findViewById(R.id.topic_title_row);
-            mAuthorRow = (LinearLayout) view.findViewById(R.id.topic_author_row);
-            mReplierRow = (LinearLayout) view.findViewById(R.id.topic_replier_row);
+            mAuthorReplierRow = (LinearLayout) view.findViewById(R.id.topic_author_replier_row);
             mStatusRow = (LinearLayout) view.findViewById(R.id.topic_status_row);
         }
 
