@@ -214,7 +214,13 @@ public class MailContentActivity extends AppCompatActivity {
             postContext.setPostTitle(mPost.getTitle());
             postContext.setPostAuthor(mPost.getRawAuthor());
             postContext.setPostContent(mPost.getRawContent());
-            postContext.setThroughMail(true);
+
+            if(mMail.fromBoard != null && mMail.fromBoard.length() > 0) {
+                postContext.setBoardEngName(mMail.fromBoard);
+                postContext.setThroughMail(false);
+            } else {
+                postContext.setThroughMail(true);
+            }
 
             Intent intent = new Intent(this, ComposePostActivity.class);
             intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
