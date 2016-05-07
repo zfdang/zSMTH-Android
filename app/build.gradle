@@ -75,7 +75,6 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.0.2'
     compile 'com.github.maksim88:PasswordEditText:v0.6'
     compile 'org.jsoup:jsoup:1.9.1'
-    compile 'com.thefinestartist:finestwebview:1.2.5'
     compile 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
     compile 'com.jude:swipebackhelper:2.1.5'
     compile 'me.relex:circleindicator:1.2.1@aar'

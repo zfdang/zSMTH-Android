@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -34,7 +35,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jude.swipbackhelper.SwipeBackHelper;
-import com.thefinestartist.finestwebview.FinestWebView;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
 import com.zfdang.zsmth_android.models.Attachment;
@@ -510,18 +510,7 @@ public class PostListActivity extends AppCompatActivity
         } else if (which == 7) {
             // open post in browser
             String url = String.format("http://m.newsmth.net/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
-            new FinestWebView.Builder(this)
-                    .statusBarColorRes(R.color.colorPrimaryDark)
-                    .toolbarColorRes(R.color.colorPrimary)
-                    .titleColorRes(R.color.finestWhite)
-                    .titleDefault(String.format("zSMTH - %s", mTopic.getBoardName()))
-                    .updateTitleFromHtml(false)
-                    .showUrl(false)
-                    .showSwipeRefreshLayout(false)
-                    .progressBarColorRes(R.color.finestWhite)
-                    .progressBarHeight(4)
-                    .webViewSupportZoom(true)
-                    .show(url);
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
         } else if (which == 8) {
             // post_share
             // Toast.makeText(PostListActivity.this, "分享:TBD", Toast.LENGTH_SHORT).show();
