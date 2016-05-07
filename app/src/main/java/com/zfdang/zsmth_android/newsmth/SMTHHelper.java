@@ -73,6 +73,7 @@ public class SMTHHelper {
     public SMTHWWWService wService = null;
 
     // Mobile service of SMTH
+    // this interface is not used any longer
     private final String SMTH_MOBILE_URL = "http://m.newsmth.net";
     private Retrofit wRetrofit = null;
     public SMTHMobileService mService = null;
@@ -139,13 +140,13 @@ public class SMTHHelper {
                 .connectTimeout(15, TimeUnit.SECONDS)
                 .build();
 
-        mRetrofit = new Retrofit.Builder()
-                .baseUrl(SMTH_MOBILE_URL)
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .client(mHttpClient)
-                .build();
-        mService = mRetrofit.create(SMTHMobileService.class);
+//        mRetrofit = new Retrofit.Builder()
+//                .baseUrl(SMTH_MOBILE_URL)
+//                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+//                .addConverterFactory(ScalarsConverterFactory.create())
+//                .client(mHttpClient)
+//                .build();
+//        mService = mRetrofit.create(SMTHMobileService.class);
 
         wRetrofit = new Retrofit.Builder()
                 .baseUrl(SMTH_WWW_URL)
