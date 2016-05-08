@@ -39,8 +39,8 @@
     <color name="mail_folder_button_background">#bcc3cc</color>
 
     <color name="progress_dialog_background">#FFFFFF</color>
-    <color name="progress_dialog_background_night">#000000</color>
     <color name="progress_dialog_text">#000000</color>
-    <color name="progress_dialog_text_night">#ABC2DA</color>
+
+    <color name="navigation_button_background">#BBBBBB</color>
 
 </resources>
