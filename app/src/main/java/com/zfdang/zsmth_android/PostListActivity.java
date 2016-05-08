@@ -148,7 +148,7 @@ public class PostListActivity extends AppCompatActivity
         mFrom = intent.getStringExtra(SMTHApplication.FROM_BOARD);
         // now onCreateOptionsMenu(...) is called again
 //        invalidateOptionsMenu();
-        Log.d(TAG, String.format("Load post list for topic = %s, source = %s", topic.toString(), mFrom));
+//        Log.d(TAG, String.format("Load post list for topic = %s, source = %s", topic.toString(), mFrom));
 
         // set onClick Lisetner for page navigator buttons
         findViewById(R.id.post_list_first_page).setOnClickListener(this);
@@ -215,7 +215,7 @@ public class PostListActivity extends AppCompatActivity
                             List<Post> posts = SMTHHelper.ParsePostListFromWWW(response, mTopic);
                             return Observable.from(posts);
                         } catch (Exception e) {
-                            Log.d(TAG, Log.getStackTraceString(e));
+                            Log.e(TAG, Log.getStackTraceString(e));
                         }
                         return null;
                     }
@@ -235,7 +235,7 @@ public class PostListActivity extends AppCompatActivity
                     @Override
                     public void onError(Throwable e) {
                         clearLoadingHints();
-                        Log.d(TAG, Log.getStackTraceString(e));
+                        Log.e(TAG, Log.getStackTraceString(e));
                         Toast.makeText(PostListActivity.this, "加载失败！", Toast.LENGTH_SHORT).show();
                     }
 
@@ -371,7 +371,7 @@ public class PostListActivity extends AppCompatActivity
         if(position == RecyclerView.NO_POSITION || position >= PostListContent.POSTS.size())
             return false;
 
-        Log.d(TAG, String.format("Post by %s is long clicked", PostListContent.POSTS.get(position).getAuthor()));
+//        Log.d(TAG, String.format("Post by %s is long clicked", PostListContent.POSTS.get(position).getAuthor()));
 
         final PostActionAlertDialogItem[] menuItems = {
                 new PostActionAlertDialogItem(getString(R.string.post_reply_post), R.drawable.ic_reply_black_48dp),       // 0
@@ -431,7 +431,7 @@ public class PostListActivity extends AppCompatActivity
     }
 
     private void onPostPopupMenuItem(int position, int which) {
-        Log.d(TAG, String.format("MenuItem %d was clicked", which));
+//        Log.d(TAG, String.format("MenuItem %d was clicked", which));
         Post post = PostListContent.POSTS.get(position);
         if(which == 0) {
             // post_reply_post
@@ -634,7 +634,7 @@ public class PostListActivity extends AppCompatActivity
 
     @Override
     public void OnLikeAction(String score, String msg) {
-        Log.d(TAG, "OnLikeAction: " + score + msg);
+//        Log.d(TAG, "OnLikeAction: " + score + msg);
 
         SMTHHelper helper = SMTHHelper.getInstance();
         helper.wService.addLike(mTopic.getBoardEngName(), mTopic.getTopicID(), score, msg, "")
@@ -652,7 +652,7 @@ public class PostListActivity extends AppCompatActivity
 
                     @Override
                     public void onNext(AjaxResponse ajaxResponse) {
-                        Log.d(TAG, "onNext: " + ajaxResponse.toString());
+//                        Log.d(TAG, "onNext: " + ajaxResponse.toString());
                         if(ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
                             Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg() + "\n请刷新查看结果！", Toast.LENGTH_SHORT).show();
                         } else {
@@ -665,7 +665,7 @@ public class PostListActivity extends AppCompatActivity
 
     @Override
     public void OnForwardAction(Post post, String target, boolean threads, boolean noref, boolean noatt) {
-        Log.d(TAG, "OnForwardAction: ");
+//        Log.d(TAG, "OnForwardAction: ");
 
         String strThreads = null;
         if(threads) strThreads = "on";
@@ -693,7 +693,7 @@ public class PostListActivity extends AppCompatActivity
 
                     @Override
                     public void onNext(AjaxResponse ajaxResponse) {
-                        Log.d(TAG, "onNext: " + ajaxResponse.toString());
+//                        Log.d(TAG, "onNext: " + ajaxResponse.toString());
                         if(ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
                             Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
                         } else {
