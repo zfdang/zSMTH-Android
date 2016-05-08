@@ -27,7 +27,7 @@
         android:paddingLeft="2dp"
         android:text="Topic"
         android:textColor="@color/status_text_night"
-        android:textSize="19dp"/>
+        android:textSize="18dp"/>
 
 
     <LinearLayout
