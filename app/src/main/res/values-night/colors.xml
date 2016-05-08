@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--http://sunjiajia.com/2015/06/19/android-material-theme-and-toolbar/-->
+<resources>
+
+    <color name="colorPrimary">#607D8B</color>
+    <color name="colorPrimaryDark">#455A64</color>
+    <color name="colorPrimaryLight">#CFD8DC</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimaryText">#212121</color>
+    <color name="colorSecondaryText">#727272</color>
+    <color name="colorIcons">#FFFFFF</color>
+    <color name="colorDivider">#B6B6B6</color>
+
+    <color name="link_color">#FF0066CC</color>
+
+    <color name="simple_text_color">#FF52991F</color>
+
+    <color name="nav_background">#232529</color>
+    <color name="nav.item.background">#232529</color>
+    <color name="nav.item.background.default">#232529</color>
+
+    <color name="body_background_night">#232529</color>
+    <color name="status_text_night">#ABC2DA</color>
+    <color name="blue_text_night">#FBA50E</color>
+
+    <color name="recycler_view_seperator">#666666</color>
+    <color name="recycler_view_item_normal">#000000</color>
+    <color name="recycler_view_item_pressed">#777777</color>
+    <color name="recycler_view_item_sticky">#330033</color>
+    <color name="recycler_view_item_new">#6600cc</color>
+
+    <!--used in FullscreenActionBarStyle-->
+    <color name="black_overlay">#66000000</color>
+
+    <color name="avatar_border_color">#FFFFFF</color>
+
+    <color name="post_title_background">#3a3b3e</color>
+
+    <color name="mail_folder_button_background">#333E4B</color>
+
+    <color name="progress_dialog_background">#FFFFFF</color>
+    <color name="progress_dialog_text">#000000</color>
+
+    <color name="navigation_button_background">#4F4F4F</color>
+</resources>

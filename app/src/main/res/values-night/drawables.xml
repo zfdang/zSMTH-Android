@@ -1,0 +1,15 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--https://design.google.com/icons/-->
+    <item name="ic_menu_camera" type="drawable">@android:drawable/ic_menu_camera</item>
+    <item name="ic_menu_gallery" type="drawable">@android:drawable/ic_menu_gallery</item>
+    <item name="ic_menu_slideshow" type="drawable">@android:drawable/ic_menu_slideshow</item>
+
+    <item name="ic_menu_guidance" type="drawable">@android:drawable/ic_menu_compass</item>
+    <item name="ic_menu_favorite" type="drawable">@android:drawable/star_big_on</item>
+    <item name="ic_menu_allboard" type="drawable">@android:drawable/ic_menu_sort_alphabetically</item>
+    <item name="ic_menu_mail" type="drawable">@android:drawable/ic_dialog_email</item>
+
+    <item name="ic_menu_manage" type="drawable">@android:drawable/ic_menu_manage</item>
+    <item name="ic_menu_about" type="drawable">@android:drawable/ic_menu_info_details</item>
+</resources>
+
