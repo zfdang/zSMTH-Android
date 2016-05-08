@@ -33,8 +33,13 @@ public interface SMTHWWWService {
     @GET("/nForum/user/ajax_logout.json")
     Observable<AjaxResponse> logout();
 
+    // http://www.newsmth.net/bbsfav.php?select=1
     @GET("/bbsfav.php")
     Observable<ResponseBody> getFavoriteByPath(@Query("select") String path);
+
+    // http://www.newsmth.net/bbsboa.php?group2=1368
+    @GET("/bbsboa.php")
+    Observable<ResponseBody> getBoardsInGroup(@Query("group2") String group2);
 
     @GET("/nForum/section/{section}?ajax")
     Observable<ResponseBody> getBoardsBySection(@Path("section") String section);

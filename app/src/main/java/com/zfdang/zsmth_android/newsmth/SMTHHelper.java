@@ -798,6 +798,7 @@ public class SMTHHelper {
 //        o.o(false,1,896,22556,'[站务]','Advice','水木发展','SYSOP',7026,895,4);
 //        o.o(false,1,619,2332235,'[生活]','CouponsLife','辣妈羊毛党','hmilytt XZCL',897207,618,1601);
 //        o.o(false,1,179,808676665,'[数码]','DSLR','数码单反','jerryxiao',153110,178,57);
+//        o.o(true,1,1368,0,'[数码]','SmartLife','智能生活','[目录]',0,1367,0);
 
         // 先提取目录
         Pattern pattern = Pattern.compile("o\\.f\\((\\d+),'([^']+)',\\d+,''\\);");
@@ -819,12 +820,19 @@ public class SMTHHelper {
             String engName = matcher.group(3);
             String chsName = matcher.group(4);
             String moderator = matcher.group(5);
-            if (moderator.length() > 25) {
-                moderator = moderator.substring(0, 21) + "...";
+
+            Board board = null;
+            if(TextUtils.equals(moderator, "[目录]")) {
+//              o.o(true,1,1368,0,'[数码]','SmartLife','智能生活','[目录]',0,1367,0);
+                board = new Board(boardID, chsName + "[二级目录]");
+            } else {
+                if (moderator.length() > 25) {
+                    moderator = moderator.substring(0, 21) + "...";
+                }
+                board = new Board(boardID, chsName, engName);
+                board.setModerator(moderator);
+                board.setCategoryName(category);
             }
-            Board board = new Board(boardID, chsName, engName);
-            board.setModerator(moderator);
-            board.setCategoryName(category);
             boards.add(board);
         }
 
@@ -1036,6 +1044,30 @@ public class SMTHHelper {
         return results;
     }
 
+
+    public static List<Board> LoadFavoriteBoardsInGroupFromWWW(final String path) {
+        List<Board> results = SMTHHelper.getInstance().wService.getBoardsInGroup(path)
+                .flatMap(new Func1<ResponseBody, Observable<Board>>() {
+                    @Override
+                    public Observable<Board> call(ResponseBody resp) {
+                        try {
+                            String response = SMTHHelper.DecodeResponseFromWWW(resp.bytes());
+//                            Log.d(TAG, response);
+                            List<Board> boards = SMTHHelper.ParseFavoriteBoardsFromWWW(response);
+                            return Observable.from(boards);
+                        } catch (Exception e) {
+                            Log.e(TAG, "Failed to load favorite {" + path + "}");
+                            Log.e(TAG, Log.getStackTraceString(e));
+                            return null;
+                        }
+                    }
+                })
+                .toList().toBlocking().single();
+
+        SaveBoardListToCache(results, BOARD_TYPE_FAVORITE, path);
+
+        return results;
+    }
 
     // load all boards from WWW, recursively
     // http://stackoverflow.com/questions/31246088/how-to-do-recursive-observable-call-in-rxjava

@@ -69,6 +69,14 @@ public class FavoriteBoardFragment extends Fragment {
         }
     }
 
+    public String getCurrentFavoritePathName(){
+        if(mFavoritePathNames != null & mFavoritePathNames.size() > 0){
+            return this.mFavoritePathNames.get(this.mFavoritePathNames.size() - 1);
+        } else {
+            return "";
+        }
+    }
+
     public boolean atFavoriteRoot() {
         return !(mFavoritePaths != null && mFavoritePaths.size() > 1);
     }
@@ -155,17 +163,35 @@ public class FavoriteBoardFragment extends Fragment {
         });
 
         // all boards loaded from network
-        final Observable<List<Board>> network = Observable.create(new Observable.OnSubscribe<List<Board>>() {
-            @Override
-            public void call(Subscriber<? super List<Board>> subscriber) {
-                List<Board> boards = SMTHHelper.LoadFavoriteBoardsByFolderFromWWW(path);
-                if (boards != null && boards.size() > 0) {
-                    subscriber.onNext(boards);
-                } else {
-                    subscriber.onCompleted();
+        Observable<List<Board>> network = null;
+        String pathName = getCurrentFavoritePathName();
+        if(pathName.endsWith("[二级目录]")) {
+            // if user create cusomized folder like xxxx.[二级目录], this implementation will fail
+            // but let's assume that noboday will do this
+            network = Observable.create(new Observable.OnSubscribe<List<Board>>() {
+                @Override
+                public void call(Subscriber<? super List<Board>> subscriber) {
+                    List<Board> boards = SMTHHelper.LoadFavoriteBoardsInGroupFromWWW(path);
+                    if (boards != null && boards.size() > 0) {
+                        subscriber.onNext(boards);
+                    } else {
+                        subscriber.onCompleted();
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            network = Observable.create(new Observable.OnSubscribe<List<Board>>() {
+                @Override
+                public void call(Subscriber<? super List<Board>> subscriber) {
+                    List<Board> boards = SMTHHelper.LoadFavoriteBoardsByFolderFromWWW(path);
+                    if (boards != null && boards.size() > 0) {
+                        subscriber.onNext(boards);
+                    } else {
+                        subscriber.onCompleted();
+                    }
+                }
+            });
+        }
 
         Observable.concat(cache, network)
                 .first()
