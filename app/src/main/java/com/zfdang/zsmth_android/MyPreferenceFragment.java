@@ -1,5 +1,6 @@
 package com.zfdang.zsmth_android;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -9,6 +10,7 @@ import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
+import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +41,7 @@ public class MyPreferenceFragment extends PreferenceFragment {
     CheckBoxPreference signature_control;
     Preference signature_content;
     private CheckBoxPreference image_quality_control;
+    private CheckBoxPreference daynight_control;
     Preference app_version;
 
 
@@ -114,6 +117,24 @@ public class MyPreferenceFragment extends PreferenceFragment {
         });
 
 
+        daynight_control = (CheckBoxPreference) findPreference("setting_daynight_control");
+        daynight_control.setChecked(Settings.getInstance().isNightMode());
+        daynight_control.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                boolean bNightMode = Settings.getInstance().isNightMode();
+                if(newValue instanceof Boolean){
+                    Boolean boolVal = (Boolean) newValue;
+                    bNightMode = boolVal;
+                }
+                Settings.getInstance().setNightMode(bNightMode);
+
+                setApplicationNightMode();
+                return true;
+            }
+        });
+
+
         app_version = findPreference("setting_app_version");
         app_version.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -126,6 +147,20 @@ public class MyPreferenceFragment extends PreferenceFragment {
         updateOkHttp3Cache();
         updateFrescoCache();
         updateVersionInfo();
+    }
+
+    public void setApplicationNightMode() {
+        boolean bNightMode = Settings.getInstance().isNightMode();
+        if(bNightMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
+        Activity activity = getActivity();
+        if(activity != null) {
+            activity.recreate();
+        }
     }
 
     public void updateVersionInfo() {

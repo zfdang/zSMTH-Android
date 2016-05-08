@@ -11,57 +11,36 @@
     <color name="colorIcons">#FFFFFF</color>
     <color name="colorDivider">#B6B6B6</color>
 
-    <!--copy from aSM resource -->
-    <drawable name="label_color">#FF6BB324</drawable>
-    <drawable name="status_color">#FFFF0000</drawable>
-    <drawable name="tweet_user_color">#FF52991F</drawable>
-    <drawable name="tweet_color">#FF000000</drawable>
-    <drawable name="tweet_meta_color">#FF999999</drawable>
-
-    <color name="opaque_red">#f00</color>
-    <color name="translucent_red">#80ff0000</color>
     <color name="link_color">#FF0066CC</color>
 
-    <color name="status_background">#FFA</color>
-    <color name="colorMainText">#000</color>
-
-    <color name="simiple_button_color">#FFF</color>
     <color name="simple_text_color">#FF52991F</color>
-    <color name="body_background">#FFF</color>
 
-    <color name="clear">#00000000</color>
-    <color name="button_text">#444</color>
-    <color name="action_bar">#fff</color>
-    <color name="action_bar_pressed">#ffd0d0d0</color>
-
-    <color name="blue_text">#0099FF</color>
-    <color name="grey_text">#C0C0C0</color>
-
-    <color name="self_background">#FFFAF4BE</color>
-    <color name="mention_background">#FFC9E6F8</color>
-
+    <color name="nav_background">#232529</color>
     <color name="nav.item.background">#232529</color>
     <color name="nav.item.background.default">#232529</color>
 
-    <color name="body_background_night">#232529</color>
-    <color name="status_text_night">#ABC2DA</color>
-    <color name="blue_text_night">#FBA50E</color>
+    <color name="body_background_night">#FFFFFF</color>
+    <color name="status_text_night">#000000</color>
+    <color name="blue_text_night">#0099FF</color>
 
-    <color name="recycler_view_seperator">#666666</color>
-    <color name="recycler_view_item_normal">#000000</color>
+    <color name="recycler_view_seperator">#BBBBBB</color>
+    <color name="recycler_view_item_normal">#FFFFFF</color>
     <color name="recycler_view_item_pressed">#777777</color>
     <color name="recycler_view_item_sticky">#330033</color>
     <color name="recycler_view_item_new">#6600cc</color>
 
-    <!--for FinestWebView-->
-    <color name="blackPrimaryDark">#282828</color>
-    <color name="blackPrimary">#2E2E2E</color>
-    <color name="blackPrimaryLight">#8F8F8F</color>
-
+    <!--used in FullscreenActionBarStyle-->
     <color name="black_overlay">#66000000</color>
 
     <color name="avatar_border_color">#FFFFFF</color>
 
-    <color name="post_title_background">#3a3b3e</color>
+    <color name="post_title_background">#BBBBBB</color>
+
+    <color name="mail_folder_button_background">#bcc3cc</color>
+
+    <color name="progress_dialog_background">#FFFFFF</color>
+    <color name="progress_dialog_background_night">#000000</color>
+    <color name="progress_dialog_text">#000000</color>
+    <color name="progress_dialog_text_night">#ABC2DA</color>
 
 </resources>

@@ -162,6 +162,19 @@ public class Settings {
         }
     }
 
+    private static final String NIGHT_MODE = "NIGHT_MODE";
+    private boolean bNightMode;
+    public boolean isNightMode() {
+        return bNightMode;
+    }
+    public void setNightMode(boolean bNightMode) {
+        if(this.bNightMode != bNightMode) {
+            this.bNightMode = bNightMode;
+            mEditor.putBoolean(NIGHT_MODE, this.bNightMode);
+            mEditor.commit();
+        }
+    }
+
 
     private static final String LAST_LAUNCH_VERSION = "last_launch_version";
 
@@ -200,5 +213,7 @@ public class Settings {
         bUserOnline = mPreference.getBoolean(USER_ONLINE, false);
 
         bLoadOriginalImage = mPreference.getBoolean(LOAD_ORIGINAL_IMAGE, true);
+
+        bNightMode = mPreference.getBoolean(NIGHT_MODE, true);
     }
 }

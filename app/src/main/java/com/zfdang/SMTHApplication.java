@@ -2,10 +2,12 @@ package com.zfdang;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.v7.app.AppCompatDelegate;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.zfdang.zsmth_android.Settings;
 import com.zfdang.zsmth_android.helpers.GEODatabase;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.newsmth.UserStatus;
@@ -74,6 +76,13 @@ public class SMTHApplication extends Application {
                 .build();
         Fresco.initialize(context, config);
 //        FLog.setMinimumLoggingLevel(FLog.VERBOSE);
+
+        boolean bNightMode = Settings.getInstance().isNightMode();
+        if(bNightMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
     }
 
     public static Context getAppContext() {

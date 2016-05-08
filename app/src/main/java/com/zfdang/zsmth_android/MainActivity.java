@@ -167,6 +167,7 @@ public class MainActivity extends AppCompatActivity
         // start service to maintain user status
         setupUserStatusReceiver();
         updateUserStatusNow();
+        UpdateNavigationViewHeader();
 
         // schedule the periodical run
         MaintainUserStatusService.schedule(MainActivity.this, mReceiver);
