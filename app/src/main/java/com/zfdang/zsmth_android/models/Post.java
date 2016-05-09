@@ -148,11 +148,11 @@ public class Post {
 
         if (likes != null && likes.size() > 0) {
             StringBuilder wordList = new StringBuilder();
-            wordList.append("<br/><cite>");
+            wordList.append("<br/><small><cite>");
             for (String word : likes) {
                 wordList.append(word).append("<br/>");
             }
-            wordList.append("</cite>");
+            wordList.append("</cite></small>");
             htmlCompleteContent += new String(wordList);
         }
         // now htmlCompleteContent has both post content and likes content
