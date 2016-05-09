@@ -23,11 +23,11 @@
     <color name="status_text_night">#000000</color>
     <color name="blue_text_night">#0099FF</color>
 
-    <color name="recycler_view_seperator">#cee4d3</color>
+    <color name="recycler_view_seperator">#BBBBBB</color>
     <color name="recycler_view_item_normal">#ebebeb</color>
     <color name="recycler_view_item_pressed">#777777</color>
-    <color name="recycler_view_item_sticky">#330033</color>
-    <color name="recycler_view_item_new">#6600cc</color>
+    <color name="recycler_view_item_sticky">#f1cdf1</color>
+    <color name="recycler_view_item_new">#bbadca</color>
 
     <!--used in FullscreenActionBarStyle-->
     <color name="black_overlay">#66000000</color>
