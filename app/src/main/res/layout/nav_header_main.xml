@@ -40,7 +40,7 @@
             android:paddingBottom="@dimen/nav_header_username_padding_bottom"
             android:paddingTop="@dimen/nav_header_vertical_spacing"
             android:text="@string/nav_header_click_to_login"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+            android:textColor="@color/status_text_night"/>
     </LinearLayout>
 
 </LinearLayout>

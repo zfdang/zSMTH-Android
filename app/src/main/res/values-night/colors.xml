@@ -16,7 +16,7 @@
     <color name="simple_text_color">#FF52991F</color>
 
     <color name="nav_background">#232529</color>
-    <color name="nav.item.background">#232529</color>
+    <color name="nav.item.background.active">#3e6342</color>
     <color name="nav.item.background.default">#232529</color>
 
     <color name="body_background_night">#232529</color>
