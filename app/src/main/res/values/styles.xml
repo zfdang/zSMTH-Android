@@ -87,21 +87,6 @@
 
 
     <!--http://stackoverflow.com/questions/13347539/change-background-of-progressdialog-->
-    <style name="PDialog.MyTheme" parent="@android:style/Theme.Dialog">
-        <item name="android:alertDialogStyle">@style/CustomAlertDialogStyle</item>
-        <item name="android:textColorPrimary">@color/progress_dialog_text</item>
-    </style>
-
-    <style name="CustomAlertDialogStyle">
-        <item name="android:bottomBright">@color/progress_dialog_background</item>
-        <item name="android:bottomDark">@color/progress_dialog_background</item>
-        <item name="android:bottomMedium">@color/progress_dialog_background</item>
-        <item name="android:centerBright">@color/progress_dialog_background</item>
-        <item name="android:centerDark">@color/progress_dialog_background</item>
-        <item name="android:centerMedium">@color/progress_dialog_background</item>
-        <item name="android:fullBright">@color/progress_dialog_background</item>
-        <item name="android:fullDark">@color/progress_dialog_background</item>
-        <item name="android:topBright">@color/progress_dialog_background</item>
-        <item name="android:topDark">@color/progress_dialog_background</item>
+    <style name="PDialog.MyTheme" parent="Theme.AppCompat.DayNight.Dialog">
     </style>
 </resources>
