@@ -19,12 +19,12 @@
     <color name="nav.item.background">#232529</color>
     <color name="nav.item.background.default">#232529</color>
 
-    <color name="body_background_night">#FFFFFF</color>
+    <color name="body_background_night">#ebebeb</color>
     <color name="status_text_night">#000000</color>
     <color name="blue_text_night">#0099FF</color>
 
-    <color name="recycler_view_seperator">#BBBBBB</color>
-    <color name="recycler_view_item_normal">#FFFFFF</color>
+    <color name="recycler_view_seperator">#cee4d3</color>
+    <color name="recycler_view_item_normal">#ebebeb</color>
     <color name="recycler_view_item_pressed">#777777</color>
     <color name="recycler_view_item_sticky">#330033</color>
     <color name="recycler_view_item_new">#6600cc</color>
@@ -34,13 +34,16 @@
 
     <color name="avatar_border_color">#FFFFFF</color>
 
-    <color name="post_title_background">#BBBBBB</color>
+    <color name="post_title_background">#cee4d3</color>
 
     <color name="mail_folder_button_background">#bcc3cc</color>
 
     <color name="progress_dialog_background">#FFFFFF</color>
     <color name="progress_dialog_text">#000000</color>
 
-    <color name="navigation_button_background">#BBBBBB</color>
+    <color name="navigation_button_background">#cee4d3</color>
+    <color name="navigation_button_background_pressed">#bebbbb</color>
+
+    <color name="preference_background">#ebebeb</color>
 
 </resources>

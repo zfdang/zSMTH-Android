@@ -34,7 +34,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        android:background="@color/white"
+        android:background="@color/body_background_night"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="com.zfdang.zsmth_android.ComposePostActivity"
         tools:showIn="@layout/activity_compose_post">
@@ -55,12 +55,16 @@
                     android:id="@+id/compose_post_userid_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/status_text_night"
+                    android:textColorHint="@color/status_text_night"
                     android:text="收信人:"/>
 
                 <EditText
                     android:id="@+id/compose_post_userid"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/status_text_night"
+                    android:textColorHint="@color/status_text_night"
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="8dp"/>
             </LinearLayout>
@@ -75,6 +79,8 @@
                     android:id="@+id/compose_post_title_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/status_text_night"
+                    android:textColorHint="@color/status_text_night"
                     android:text="标题:"/>
 
                 <EditText
@@ -82,6 +88,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
+                    android:textColor="@color/status_text_night"
+                    android:textColorHint="@color/status_text_night"
                     android:layout_marginRight="8dp"/>
             </LinearLayout>
 
@@ -90,12 +98,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:id="@+id/compose_post_attach_row">
+                android:id="@+id/compose_post_attach_row"
+                android:gravity="center_vertical">
 
                 <TextView
                     android:id="@+id/compose_post_attach_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/status_text_night"
+                    android:textColorHint="@color/status_text_night"
                     android:text="附件:"/>
 
                 <EditText
@@ -108,15 +119,21 @@
                     android:editable="false"
                     android:focusable="false"
                     android:gravity="left"
+                    android:textColor="@color/status_text_night"
+                    android:textColorHint="@color/status_text_night"
                     android:inputType="none"
                     android:text="无图片附件"/>
 
                 <Button
                     android:id="@+id/compose_post_attach_button"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="8dp"
+                    android:layout_height="30dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/navigation_button_background"
+                    android:textColor="@color/status_text_night"
                     android:text="选择附件"/>
             </LinearLayout>
 
@@ -131,8 +148,9 @@
                     android:id="@+id/compose_post_content"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/colorPrimaryLight"
                     android:gravity="top"
+                    android:textColor="@color/status_text_night"
+                    android:textColorHint="@color/status_text_night"
                     android:hint="请输入内容"
                     android:imeOptions="actionSend|flagNoEnterAction"/>
             </LinearLayout>
@@ -148,7 +166,8 @@
                     android:id="@+id/compose_post_content_label"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
+                    android:textColor="@color/status_text_night"
+                    android:textColorHint="@color/status_text_night"
                     android:gravity="center"
                     android:text="文章字数:0"/>
 

@@ -42,4 +42,8 @@
     <color name="progress_dialog_text">#000000</color>
 
     <color name="navigation_button_background">#4F4F4F</color>
+    <color name="navigation_button_background_pressed">#878686</color>
+
+    <color name="preference_background">#cee4d3</color>
+
 </resources>

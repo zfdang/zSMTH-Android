@@ -221,7 +221,7 @@ public class MyPreferenceFragment extends PreferenceFragment {
     public View onCreateView(LayoutInflater paramLayoutInflater, ViewGroup paramViewGroup, Bundle paramBundle) {
         // http://stackoverflow.com/questions/16970209/preferencefragment-background-color
         View view = super.onCreateView(paramLayoutInflater, paramViewGroup, paramBundle);
-        view.setBackgroundColor(getResources().getColor(R.color.white));
+        view.setBackgroundColor(getResources().getColor(R.color.preference_background));
 
         return view;
     }

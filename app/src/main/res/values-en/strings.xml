@@ -18,7 +18,7 @@
     <string name="action_refresh">刷新</string>
     <string name="action_switch_theme">切换主题</string>
     <string name="action_login">登录</string>
-    <string name="action_logout">退出</string>
+    <string name="action_logout">退出登录</string>
 
 
     <!-- 登录页 -->
