@@ -138,8 +138,8 @@ public class PostListActivity extends AppCompatActivity
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(new PostRecyclerViewAdapter(PostListContent.POSTS, this));
 
-        //  holder.mView.setOnTouchListener(this)
-        mGestureDetector = new GestureDetector(mRecyclerView.getContext(), new RecyclerViewGestureListener(this, mRecyclerView));
+        //  holder.mView.setOnTouchListener(this); so the event will be sent from holder.mView
+        mGestureDetector = new GestureDetector(SMTHApplication.getAppContext(), new RecyclerViewGestureListener(this, mRecyclerView));
 
         // get Board information from launcher
         Intent intent = getIntent();
@@ -371,7 +371,7 @@ public class PostListActivity extends AppCompatActivity
         if(position == RecyclerView.NO_POSITION || position >= PostListContent.POSTS.size())
             return false;
 
-//        Log.d(TAG, String.format("Post by %s is long clicked", PostListContent.POSTS.get(position).getAuthor()));
+        Log.d(TAG, String.format("Post by %s is long clicked", PostListContent.POSTS.get(position).getAuthor()));
 
         final PostActionAlertDialogItem[] menuItems = {
                 new PostActionAlertDialogItem(getString(R.string.post_reply_post), R.drawable.ic_reply_black_48dp),       // 0
