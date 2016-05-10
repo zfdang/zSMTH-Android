@@ -264,6 +264,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
 
                     @Override
                     public void onError(Throwable e) {
+                        clearLoadingHints();
                         Toast.makeText(getActivity(), "加载相关文章失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
                     }
 
