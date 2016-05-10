@@ -115,7 +115,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingRight="20dp"
-            android:src="@drawable/ic_attachment_white_18dp"
+            android:src="@drawable/ic_attach_file_white_18dp"
             />
     </LinearLayout>
 
