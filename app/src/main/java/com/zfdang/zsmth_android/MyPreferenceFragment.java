@@ -6,11 +6,11 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.EditTextPreference;
-import android.preference.Preference;
-import android.preference.PreferenceScreen;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.preference.CheckBoxPreference;
+import android.support.v7.preference.EditTextPreference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipeline;
-import com.github.machinarius.preferencefragment.PreferenceFragment;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.helpers.FileLess;
 import com.zfdang.zsmth_android.helpers.FileSizeUtil;
@@ -34,7 +33,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by zfdang on 2016-5-2.
  */
-public class MyPreferenceFragment extends PreferenceFragment {
+public class MyPreferenceFragment extends PreferenceFragmentCompat {
     private static final String TAG = "PreferenceFragment";
     Preference fresco_cache;
     Preference okhttp3_cache;
@@ -149,6 +148,10 @@ public class MyPreferenceFragment extends PreferenceFragment {
         updateVersionInfo();
     }
 
+    @Override
+    public void onCreatePreferences(Bundle bundle, String s) {
+    }
+
     public void setApplicationNightMode() {
         boolean bNightMode = Settings.getInstance().isNightMode();
         if(bNightMode) {
@@ -225,10 +228,4 @@ public class MyPreferenceFragment extends PreferenceFragment {
 
         return view;
     }
-
-    @Override
-    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
-        return super.onPreferenceTreeClick(preferenceScreen, preference);
-    }
-
 }

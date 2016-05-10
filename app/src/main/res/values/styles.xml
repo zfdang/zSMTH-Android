@@ -12,6 +12,8 @@
         <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
         <!--http://stackoverflow.com/questions/14462226/white-background-during-app-launch-->
         <item name="android:windowBackground">@color/body_background_night</item>
+
+        <item name="preferenceTheme">@style/MyPreferenceThemeOverlay</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -89,4 +91,11 @@
     <!--http://stackoverflow.com/questions/13347539/change-background-of-progressdialog-->
     <style name="PDialog.MyTheme" parent="Theme.AppCompat.DayNight.Dialog">
     </style>
+
+    <style name="MyPreferenceThemeOverlay" parent="PreferenceThemeOverlay.v14.Material">
+        <item name="android:background">@color/body_background_night</item>
+        <item name="android:textColor">@color/status_text_night</item>
+        <item name="android:textColorSecondary">@color/blue_text_night</item>
+    </style>
+
 </resources>
