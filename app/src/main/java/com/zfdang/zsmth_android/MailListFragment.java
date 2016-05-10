@@ -94,7 +94,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_mail_contents);
         Context context = view.getContext();
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        LinearLayoutManager linearLayoutManager = new WrapContentLinearLayoutManager(context);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, 0));
