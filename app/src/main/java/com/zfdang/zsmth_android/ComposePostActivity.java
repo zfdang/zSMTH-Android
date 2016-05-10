@@ -1,11 +1,9 @@
 package com.zfdang.zsmth_android;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -39,13 +37,11 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class ComposePostActivity extends AppCompatActivity {
+public class ComposePostActivity extends SMTHBaseActivity {
 
     private static final int REQUEST_CODE = 653;
     private static final String TAG = "ComposePostActivity";
     private final String UPLOAD_TEMPLATE = "  [upload=%d][/upload]  ";
-
-    private ProgressDialog pdialog = null;
 
     private Button mButton;
     private LinearLayout mUserRow;
@@ -235,19 +231,6 @@ public class ComposePostActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-    public void showProgress(String message, final boolean show) {
-        if(pdialog == null) {
-            pdialog = new ProgressDialog(this, R.style.PDialog_MyTheme);
-        }
-        if (show) {
-            pdialog.setMessage(message);
-            pdialog.show();
-        } else {
-            pdialog.cancel();
-        }
-    }
-
     public class BytesContainer {
         public String filename;
         public byte[] bytes;
@@ -270,7 +253,7 @@ public class ComposePostActivity extends AppCompatActivity {
             ComposePostActivity.totalSteps += mPhotos.size();
         }
 
-        showProgress(String.format(progressHint, ComposePostActivity.currentStep, ComposePostActivity.totalSteps), true);
+        showProgress(String.format(progressHint, ComposePostActivity.currentStep, ComposePostActivity.totalSteps));
 
         final SMTHHelper helper = SMTHHelper.getInstance();
 
@@ -316,7 +299,7 @@ public class ComposePostActivity extends AppCompatActivity {
                 .subscribe(new Subscriber<AjaxResponse>() {
                     @Override
                     public void onCompleted() {
-                        showProgress(null, false);
+                        dismissProgress();
 
                         if(postPublishResult != AjaxResponse.AJAX_RESULT_OK) {
                             String message = "发表失败! \n错误信息:\n" + postPUblishMessage;
@@ -335,9 +318,8 @@ public class ComposePostActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        showProgress(null, false);
-                        Log.d(TAG, "onError: " + Log.getStackTraceString(e));
-                        Toast.makeText(ComposePostActivity.this, "发布失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                        dismissProgress();
+                        Toast.makeText(SMTHApplication.getAppContext(), "发布失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -348,7 +330,7 @@ public class ComposePostActivity extends AppCompatActivity {
                             postPUblishMessage += ajaxResponse.getAjax_msg() + "\n";
                         }
                         ComposePostActivity.currentStep ++;
-                        showProgress(String.format(progressHint, ComposePostActivity.currentStep, ComposePostActivity.totalSteps), true);
+                        showProgress(String.format(progressHint, ComposePostActivity.currentStep, ComposePostActivity.totalSteps));
                     }
                 });
 

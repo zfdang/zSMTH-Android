@@ -1,11 +1,9 @@
 package com.zfdang.zsmth_android;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -46,7 +44,7 @@ import rx.schedulers.Schedulers;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class BoardTopicActivity extends AppCompatActivity
+public class BoardTopicActivity extends SMTHBaseActivity
         implements OnTopicFragmentInteractionListener,
         SwipeRefreshLayout.OnRefreshListener,
         PopupSearchWindow.SearchInterface
@@ -61,7 +59,6 @@ public class BoardTopicActivity extends AppCompatActivity
 
     private Board mBoard = null;
 
-    private ProgressDialog pdialog = null;
     private int mCurrentPageNo = 1;
     private int LOAD_MORE_THRESHOLD = 1;
 
@@ -215,27 +212,9 @@ public class BoardTopicActivity extends AppCompatActivity
         return true;
     }
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    public void showProgress(String message, final boolean show) {
-        if(pdialog == null) {
-            pdialog = new ProgressDialog(this, R.style.PDialog_MyTheme);
-        }
-        if (show) {
-            pdialog.setMessage(message);
-            pdialog.show();
-        } else {
-            pdialog.cancel();
-        }
-    }
-
 
     public void clearLoadingHints() {
-        // disable progress bar
-        if(pdialog != null && pdialog.isShowing()){
-            showProgress("", false);
-        }
+        dismissProgress();
 
         if (mSwipeRefreshLayout != null && mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);  // This hides the spinner
@@ -249,7 +228,7 @@ public class BoardTopicActivity extends AppCompatActivity
 
     // load topics from next page, without alert
     public void loadMoreItems() {
-        if(isSearchMode || mSwipeRefreshLayout.isRefreshing() || pdialog.isShowing()) {
+        if(isSearchMode || mSwipeRefreshLayout.isRefreshing() || pDialog.isShowing()) {
             return;
         }
 
@@ -270,7 +249,7 @@ public class BoardTopicActivity extends AppCompatActivity
 
 
     public void RefreshBoardTopoFromPageOne() {
-        showProgress("刷新版面文章...", true);
+        showProgress("刷新版面文章...");
 
         TopicListContent.clearBoardTopics();
         mRecyclerView.getAdapter().notifyDataSetChanged();
@@ -280,7 +259,7 @@ public class BoardTopicActivity extends AppCompatActivity
     }
 
     public void RefreshBoardTopicsWithoutClear() {
-        showProgress("加载版面文章...", true);
+        showProgress("加载版面文章...");
 
         LoadBoardTopicsFromMobile();
     }
@@ -324,11 +303,9 @@ public class BoardTopicActivity extends AppCompatActivity
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(TAG, Log.getStackTraceString(e));
-
                         clearLoadingHints();
 
-                        Toast.makeText(getApplicationContext(), String.format("获取第%d页的帖子失败", mCurrentPageNo), Toast.LENGTH_LONG).show();
+                        Toast.makeText(SMTHApplication.getAppContext(), String.format("获取第%d页的帖子失败!\n", mCurrentPageNo) + e.toString(), Toast.LENGTH_LONG).show();
                         mCurrentPageNo -= 1;
                     }
 
@@ -380,7 +357,7 @@ public class BoardTopicActivity extends AppCompatActivity
         Log.d(TAG, "OnSearchAction: " + keyword + author + elite + attachment);
 
         isSearchMode = true;
-        showProgress("加载搜索结果...", true);
+        showProgress("加载搜索结果...");
 
         TopicListContent.BOARD_TOPICS.clear();
         mRecyclerView.getAdapter().notifyDataSetChanged();
@@ -413,12 +390,12 @@ public class BoardTopicActivity extends AppCompatActivity
                 .subscribe(new Subscriber<Topic>() {
                     @Override
                     public void onCompleted() {
-                        showProgress("", false);
+                        dismissProgress();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(TAG, "onError: " + Log.getStackTraceString(e) );
+                        Toast.makeText(SMTHApplication.getAppContext(), "加载搜索结果失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

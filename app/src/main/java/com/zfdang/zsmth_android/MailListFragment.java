@@ -1,7 +1,5 @@
 package com.zfdang.zsmth_android;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -172,11 +170,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
 
                                 @Override
                                 public void onError(Throwable e) {
-                                    Log.e(TAG, "onError: " + Log.getStackTraceString(e) );
-                                    Activity activity = getActivity();
-                                    if(activity != null) {
-                                        Toast.makeText(activity, e.toString(), Toast.LENGTH_SHORT).show();
-                                    }
+                                    Toast.makeText(SMTHApplication.getAppContext(), "加载邮件列表失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
                                 }
 
                                 @Override
@@ -201,8 +195,8 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
         // LoadMore will be re-enabled in clearLoadingHints.
         // if we return here, loadMore will not be triggered again
 
-        ProgressDialog pdialog = ((MainActivity)getActivity()).pdialog;
-        if(pdialog != null && pdialog.isShowing())
+        MainActivity activity = (MainActivity)getActivity();
+        if(activity != null && activity.pDialog != null && activity.pDialog.isShowing())
         {
             // loading in progress, do nothing
             return;
@@ -270,8 +264,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(TAG, "onError: " + Log.getStackTraceString(e) );
-                        Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "加载相关文章失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -314,8 +307,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(TAG, "onError: " + Log.getStackTraceString(e) );
-                        Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SMTHApplication.getAppContext(), "加载邮件列表失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -331,14 +323,15 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
 
     public void showLoadingHints() {
         MainActivity activity = (MainActivity)getActivity();
-        activity.showProgress("加载信件中...", true);
+        if(activity != null)
+            activity.showProgress("加载信件中...");
     }
 
     public void clearLoadingHints () {
         // disable progress bar
         MainActivity activity = (MainActivity) getActivity();
         if(activity != null) {
-            activity.showProgress("", false);
+            activity.dismissProgress();
         }
 
         // re-enable endless load
@@ -365,7 +358,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
 
                         @Override
                         public void onError(Throwable e) {
-                            Log.e(TAG, "onError: " + Log.getStackTraceString(e));
+                            Toast.makeText(SMTHApplication.getAppContext(), "设置已读标记失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
                         }
 
                         @Override

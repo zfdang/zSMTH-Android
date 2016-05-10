@@ -1,11 +1,9 @@
 package com.zfdang.zsmth_android;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -18,6 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
@@ -29,13 +28,12 @@ import rx.schedulers.Schedulers;
 /**
  * A login screen that offers login to newsmth forum
  */
-public class LoginActivity extends AppCompatActivity implements OnClickListener {
+public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
 
     private EditText m_userNameEditText;
     private EditText m_passwordEditText;
     private CheckBox mAutoLogin;
 
-    private ProgressDialog pdialog = null;
     private final String TAG = "LoginActivity";
 
     @Override
@@ -114,7 +112,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     // login from WWW, then nforum / www / m are all logined
     private void attemptLoginFromWWW(final String username, final String password) {
         // perform the user login attempt.
-        showProgress(true);
+        showProgress("登录中...");
 
 
         Log.d(TAG, "start login now...");
@@ -135,15 +133,13 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
                     @Override
                     public void onError(Throwable e) {
-                        showProgress(false);
-
-                        Log.d(TAG, "onError: " + Log.getStackTraceString(e));
-                        Toast.makeText(LoginActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+                        dismissProgress();
+                        Toast.makeText(SMTHApplication.getAppContext(), "登录失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onNext(AjaxResponse ajaxResponse) {
-                        showProgress(false);
+                        dismissProgress();
 
 //                        {"ajax_st":0,"ajax_code":"0101","ajax_msg":"您的用户名并不存在，或者您的密码错误"}
 //                        {"ajax_st":0,"ajax_code":"0105","ajax_msg":"请勿频繁登录"}
@@ -162,7 +158,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                                 finish();
                                 break;
                             default:
-                                Toast.makeText(getApplicationContext(), ajaxResponse.toString(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(SMTHApplication.getAppContext(), ajaxResponse.toString(), Toast.LENGTH_LONG).show();
                                 break;
                         }
                     }
@@ -175,21 +171,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
     private boolean isPasswordValid(String password) {
         return password.length() > 0;
-    }
-
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    private void showProgress(final boolean show) {
-        if (pdialog == null) {
-            pdialog = new ProgressDialog(this, R.style.PDialog_MyTheme);
-        }
-        if (show) {
-            pdialog.setMessage("登录中...");
-            pdialog.show();
-        } else {
-            pdialog.cancel();
-        }
     }
 
     @Override

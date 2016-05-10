@@ -103,14 +103,15 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
 
     public void showLoadingHints() {
         MainActivity activity = (MainActivity)getActivity();
-        activity.showProgress("从缓存或网络加载所有版面，请耐心等待...", true);
+        if(activity != null)
+            activity.showProgress("从缓存或网络加载所有版面，请耐心等待...");
     }
 
     public void clearLoadingHints () {
         // disable progress bar
         MainActivity activity = (MainActivity) getActivity();
         if(activity != null)
-            activity.showProgress("", false);
+            activity.dismissProgress();
     }
 
     public void LoadAllBoardsWithoutCache() {
@@ -174,7 +175,7 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(TAG, Log.getStackTraceString(e));
+                        Toast.makeText(SMTHApplication.getAppContext(), "加载所有版面失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

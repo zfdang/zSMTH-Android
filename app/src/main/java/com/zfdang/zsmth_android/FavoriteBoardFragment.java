@@ -1,16 +1,18 @@
 package com.zfdang.zsmth_android;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.listeners.OnBoardFragmentInteractionListener;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.BoardListContent;
@@ -124,14 +126,15 @@ public class FavoriteBoardFragment extends Fragment {
 
     public void showLoadingHints() {
         MainActivity activity = (MainActivity)getActivity();
-        activity.showProgress("加载收藏版面，请稍候...", true);
+        if(activity != null)
+            activity.showProgress("加载收藏版面，请稍候...");
     }
 
     public void clearLoadingHints () {
         // disable progress bar
         MainActivity activity = (MainActivity) getActivity();
         if (activity != null){
-            activity.showProgress("", false);
+            activity.dismissProgress();
         }
     }
 
@@ -220,8 +223,8 @@ public class FavoriteBoardFragment extends Fragment {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(TAG, e.toString());
                         clearLoadingHints();
+                        Toast.makeText(SMTHApplication.getAppContext(), "加载收藏夹失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -234,18 +237,22 @@ public class FavoriteBoardFragment extends Fragment {
     }
 
     private void updateFavoriteTitle(){
+        Activity activity = getActivity();
+        if(activity == null){
+            return;
+        }
+
         if(mOriginalTitle == null) {
-            mOriginalTitle = getActivity().getTitle().toString();
+            mOriginalTitle = activity.getTitle().toString();
         }
         if( mFavoritePathNames != null && mFavoritePathNames.size() > 1) {
             String path = "";
             for(int i = 1; i < mFavoritePathNames.size(); i ++) {
                 path += ">" + mFavoritePathNames.get(i);
             }
-            getActivity().setTitle(mOriginalTitle + path);
-
+            activity.setTitle(mOriginalTitle + path);
         } else {
-            getActivity().setTitle(mOriginalTitle);
+            activity.setTitle(mOriginalTitle);
         }
     }
 

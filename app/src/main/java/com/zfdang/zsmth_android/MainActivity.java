@@ -3,7 +3,6 @@ package com.zfdang.zsmth_android;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -20,7 +19,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -60,7 +58,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends SMTHBaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         View.OnClickListener,
         OnTopicFragmentInteractionListener,
@@ -78,7 +76,6 @@ public class MainActivity extends AppCompatActivity
     MailListFragment mailListFragment = null;
     MyPreferenceFragment preferenceFragment = null;
     Fragment aboutFragment = null;
-    public ProgressDialog pdialog = null;
     private WrapContentDraweeView mAvatar = null;
     private TextView mUsername = null;
 
@@ -500,23 +497,6 @@ public class MainActivity extends AppCompatActivity
 
         // Make the textview clickable. Must be called after show()
         ((TextView) dlg.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
-    }
-
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    public void showProgress(String message, final boolean show) {
-        if (pdialog == null) {
-            pdialog = new ProgressDialog(this, R.style.PDialog_MyTheme);
-        }
-        if(pdialog != null) {
-            if (show) {
-                pdialog.setMessage(message);
-                pdialog.show();
-            } else {
-                pdialog.cancel();
-            }
-        }
     }
 
     @Override

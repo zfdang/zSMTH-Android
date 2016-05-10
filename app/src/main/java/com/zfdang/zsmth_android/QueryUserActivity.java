@@ -1,9 +1,7 @@
 package com.zfdang.zsmth_android;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -26,10 +24,9 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class QueryUserActivity extends AppCompatActivity {
+public class QueryUserActivity extends SMTHBaseActivity {
     private static final String TAG = "QueryUserActivity";
     private String mUsername;
-    private ProgressDialog pdialog = null;
 
     private WrapContentDraweeView mImageView;
 
@@ -108,19 +105,6 @@ public class QueryUserActivity extends AppCompatActivity {
 
     }
 
-    public void showProgress(String message, final boolean show) {
-        if(pdialog == null) {
-            pdialog = new ProgressDialog(this, R.style.PDialog_MyTheme);
-        }
-        if (show) {
-            pdialog.setMessage(message);
-            pdialog.show();
-        } else {
-            pdialog.cancel();
-        }
-    }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.query_user_menu, menu);
@@ -162,8 +146,7 @@ public class QueryUserActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(TAG, "onError: " + Log.getStackTraceString(e) );
-                        Toast.makeText(QueryUserActivity.this, "发生错误:" + e.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(QueryUserActivity.this, "发生错误!\n" + e.toString(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -175,7 +158,7 @@ public class QueryUserActivity extends AppCompatActivity {
 
     public void LoadUserInfo() {
 
-        showProgress("加载用户信息中...", true);
+        showProgress("加载用户信息中...");
         SMTHHelper helper = SMTHHelper.getInstance();
         helper.wService.queryUserInformation(mUsername)
                 .subscribeOn(Schedulers.io())
@@ -188,7 +171,7 @@ public class QueryUserActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        showProgress("", false);
+                        dismissProgress();
                         Toast.makeText(QueryUserActivity.this, "加载失败！", Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "onError: " + Log.getStackTraceString(e));
                     }
@@ -217,7 +200,7 @@ public class QueryUserActivity extends AppCompatActivity {
                         if(user.getFace_url() != null && user.getFace_url().length() > 10) {
                             mImageView.setImageFromStringURL(user.getFace_url());
                         }
-                        showProgress("", false);
+                        dismissProgress();
 
                     }
 

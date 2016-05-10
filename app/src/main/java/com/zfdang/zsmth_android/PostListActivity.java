@@ -1,6 +1,5 @@
 package com.zfdang.zsmth_android;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,7 +10,6 @@ import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -67,7 +65,7 @@ import rx.schedulers.Schedulers;
  * item details are presented side-by-side with a list of items
  * in a {@link BoardTopicActivity}.
  */
-public class PostListActivity extends AppCompatActivity
+public class PostListActivity extends SMTHBaseActivity
         implements View.OnClickListener,
         OnTouchListener,
         RecyclerViewGestureListener.OnItemLongClickListener,
@@ -84,7 +82,6 @@ public class PostListActivity extends AppCompatActivity
 
     private Topic mTopic = null;
 
-    private ProgressDialog pdialog = null;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private String mFrom;
 
@@ -94,7 +91,6 @@ public class PostListActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         SwipeBackHelper.onDestroy(this);
-        dismissProgress();
     }
 
     @Override
@@ -168,23 +164,7 @@ public class PostListActivity extends AppCompatActivity
         }
     }
 
-    // http://stackoverflow.com/questions/22924825/view-not-attached-to-window-manager-crash
-    public void showProgress(String message) {
-        if(pdialog == null) {
-            pdialog = new ProgressDialog(this, R.style.PDialog_MyTheme);
-        }
-        pdialog.setMessage(message);
-        pdialog.show();
-    }
-
-    public void dismissProgress() {
-        if(pdialog != null && pdialog.isShowing()) {
-            pdialog.dismiss();
-        }
-    }
-
     public void clearLoadingHints() {
-        // disable progress bar
         dismissProgress();
 
         if(mSwipeRefreshLayout.isRefreshing()) {
@@ -238,8 +218,7 @@ public class PostListActivity extends AppCompatActivity
                     @Override
                     public void onError(Throwable e) {
                         clearLoadingHints();
-                        Log.e(TAG, Log.getStackTraceString(e));
-                        Toast.makeText(SMTHApplication.getAppContext(), "加载失败！", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SMTHApplication.getAppContext(), "加载失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

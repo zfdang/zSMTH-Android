@@ -106,14 +106,15 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
 
     public void showLoadingHints() {
         MainActivity activity = (MainActivity)getActivity();
-        activity.showProgress("获取导读信息...", true);
+        if(activity != null)
+            activity.showProgress("获取导读信息...");
     }
 
     public void clearLoadingHints () {
         // disable progress bar
         MainActivity activity = (MainActivity) getActivity();
         if(activity != null) {
-            activity.showProgress("", false);
+            activity.dismissProgress();
         }
 
         // disable SwipeFreshLayout
@@ -164,10 +165,8 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(TAG, Log.getStackTraceString(e));
                         clearLoadingHints();
-
-                        Toast.makeText(getActivity(), "获取热帖失败!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SMTHApplication.getAppContext(), "获取热帖失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
