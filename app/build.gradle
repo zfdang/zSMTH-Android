@@ -14,7 +14,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 22
         versionCode gitVersion
-        versionName "1.2.3"
+        versionName "1.2.5"
     }
     signingConfigs {
         release {

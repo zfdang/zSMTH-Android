@@ -175,7 +175,8 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
 
                     @Override
                     public void onError(Throwable e) {
-                        Toast.makeText(SMTHApplication.getAppContext(), "加载所有版面失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                        clearLoadingHints();
+                        Toast.makeText(SMTHApplication.getAppContext(), "加载所有版面失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
                     }
 
                     @Override

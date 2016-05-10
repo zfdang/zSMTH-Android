@@ -134,7 +134,7 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
                     @Override
                     public void onError(Throwable e) {
                         dismissProgress();
-                        Toast.makeText(SMTHApplication.getAppContext(), "登录失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SMTHApplication.getAppContext(), "登录失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
                     }
 
                     @Override

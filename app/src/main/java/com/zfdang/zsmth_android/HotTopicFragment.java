@@ -166,7 +166,7 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
                     @Override
                     public void onError(Throwable e) {
                         clearLoadingHints();
-                        Toast.makeText(SMTHApplication.getAppContext(), "获取热帖失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SMTHApplication.getAppContext(), "获取热帖失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
                     }
 
                     @Override

@@ -319,7 +319,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
                     @Override
                     public void onError(Throwable e) {
                         dismissProgress();
-                        Toast.makeText(SMTHApplication.getAppContext(), "发布失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SMTHApplication.getAppContext(), "发布失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
                     }
 
                     @Override

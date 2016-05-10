@@ -7,7 +7,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.util.Linkify;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -109,8 +108,7 @@ public class MailContentActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(TAG, "onError: " + Log.getStackTraceString(e) );
-                        mPostContent.setText("读取内容失败: \n" + Log.getStackTraceString(e));
+                        mPostContent.setText("读取内容失败: \n" + e.toString());
                     }
 
                     @Override

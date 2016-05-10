@@ -556,13 +556,12 @@ public class MainActivity extends SMTHBaseActivity
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(TAG, "onError: " + Log.getStackTraceString(e));
+                        Toast.makeText(MainActivity.this, "退出登录失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onNext(AjaxResponse ajaxResponse) {
-                        Log.d(TAG, "onNext: " + ajaxResponse.toString());
-                        Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -706,7 +705,7 @@ public class MainActivity extends SMTHBaseActivity
 
                                     @Override
                                     public void onError(Throwable e) {
-                                        Log.e(TAG, "onError: " + Log.getStackTraceString(e));
+                                        Toast.makeText(MainActivity.this, "删除收藏版面失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
                                     }
 
                                     @Override

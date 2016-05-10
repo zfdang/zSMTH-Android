@@ -186,7 +186,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
                         @Override
                         public void onError(Throwable e) {
-                            Log.e(TAG, "onError: " + Log.getStackTraceString(e));
+                            Toast.makeText(BoardTopicActivity.this, "收藏版面失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
                         }
 
                         @Override
@@ -395,7 +395,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
                     @Override
                     public void onError(Throwable e) {
-                        Toast.makeText(SMTHApplication.getAppContext(), "加载搜索结果失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SMTHApplication.getAppContext(), "加载搜索结果失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
                     }
 
                     @Override

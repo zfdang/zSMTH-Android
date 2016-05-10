@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipeline;
@@ -278,7 +279,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(TAG, "onError: " + Log.getStackTraceString(e));
+                        Toast.makeText(SMTHApplication.getAppContext(), "获取缓存大小失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
                     }
 
                     @Override

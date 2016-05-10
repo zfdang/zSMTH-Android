@@ -170,7 +170,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
 
                                 @Override
                                 public void onError(Throwable e) {
-                                    Toast.makeText(SMTHApplication.getAppContext(), "删除邮件失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SMTHApplication.getAppContext(), "删除邮件失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
                                 }
 
                                 @Override
@@ -265,7 +265,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
                     @Override
                     public void onError(Throwable e) {
                         clearLoadingHints();
-                        Toast.makeText(getActivity(), "加载相关文章失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "加载相关文章失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
                     }
 
                     @Override
@@ -309,7 +309,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
                     @Override
                     public void onError(Throwable e) {
                         clearLoadingHints();
-                        Toast.makeText(SMTHApplication.getAppContext(), "加载邮件列表失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SMTHApplication.getAppContext(), "加载邮件列表失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
                     }
 
                     @Override
@@ -360,7 +360,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
 
                         @Override
                         public void onError(Throwable e) {
-                            Toast.makeText(SMTHApplication.getAppContext(), "设置已读标记失败!\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SMTHApplication.getAppContext(), "设置已读标记失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
                         }
 
                         @Override

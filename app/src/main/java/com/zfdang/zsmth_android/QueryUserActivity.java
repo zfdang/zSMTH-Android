@@ -146,12 +146,12 @@ public class QueryUserActivity extends SMTHBaseActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        Toast.makeText(QueryUserActivity.this, "发生错误!\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(QueryUserActivity.this, "增加好友失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onNext(AjaxResponse ajaxResponse) {
-                        Toast.makeText(QueryUserActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(QueryUserActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_LONG).show();
                     }
                 });
     }
@@ -172,8 +172,7 @@ public class QueryUserActivity extends SMTHBaseActivity {
                     @Override
                     public void onError(Throwable e) {
                         dismissProgress();
-                        Toast.makeText(QueryUserActivity.this, "加载失败！", Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, "onError: " + Log.getStackTraceString(e));
+                        Toast.makeText(QueryUserActivity.this, "加载用户信息失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
                     }
 
                     @Override

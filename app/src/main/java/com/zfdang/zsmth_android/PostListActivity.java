@@ -218,7 +218,7 @@ public class PostListActivity extends SMTHBaseActivity
                     @Override
                     public void onError(Throwable e) {
                         clearLoadingHints();
-                        Toast.makeText(SMTHApplication.getAppContext(), "加载失败！\n" + e.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SMTHApplication.getAppContext(), "加载失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
                     }
 
                     @Override
@@ -532,13 +532,12 @@ public class PostListActivity extends SMTHBaseActivity
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(TAG, "onError: " + Log.getStackTraceString(e) );
-                        Toast.makeText(PostListActivity.this, "发生错误:" + e.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostListActivity.this, "删除帖子失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onNext(String result) {
-                        Toast.makeText(PostListActivity.this, result, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostListActivity.this, result, Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -596,7 +595,7 @@ public class PostListActivity extends SMTHBaseActivity
 
             @Override
             public void onError(Platform platform, int i, Throwable throwable) {
-                Toast.makeText(PostListActivity.this, "分享失败:" + throwable.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(PostListActivity.this, "分享失败:\n" + throwable.toString(), Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -629,7 +628,7 @@ public class PostListActivity extends SMTHBaseActivity
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(TAG, "onError: " + Log.getStackTraceString(e));
+                        Toast.makeText(PostListActivity.this, "增加Like失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
                     }
 
                     @Override
@@ -669,8 +668,7 @@ public class PostListActivity extends SMTHBaseActivity
 
                     @Override
                     public void onError(Throwable e) {
-                        // Log.e(TAG, "onError: " + Log.getStackTraceString(e));
-                        Toast.makeText(PostListActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostListActivity.this, "转寄失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
                     }
 
                     @Override
