@@ -34,26 +34,26 @@
         <CheckBoxPreference
             android:defaultValue="on"
             android:key="setting_notification_control_mail"
-            android:summaryOff="关闭邮件提醒"
-            android:summaryOn="打开邮件提醒"
+            android:summaryOff="邮件提醒已关闭"
+            android:summaryOn="邮件提醒已打开"
             android:title="邮件提醒"/>
         <CheckBoxPreference
             android:defaultValue="on"
             android:key="setting_notification_control_at"
-            android:summaryOff="关闭\@提醒"
-            android:summaryOn="打开\@提醒"
+            android:summaryOff="\@提醒已关闭"
+            android:summaryOn="\@提醒已打开"
             android:title="\@我提醒"/>
         <CheckBoxPreference
             android:defaultValue="on"
             android:key="setting_notification_control_reply"
-            android:summaryOff="关闭回复提醒"
-            android:summaryOn="打开回复提醒"
+            android:summaryOff="回复提醒已关闭"
+            android:summaryOn="回复提醒已打开"
             android:title="回复提醒"/>
         <CheckBoxPreference
             android:defaultValue="on"
             android:key="setting_notification_control_like"
-            android:summaryOff="关闭Like提醒"
-            android:summaryOn="打开Like提醒"
+            android:summaryOff="Like提醒已关闭"
+            android:summaryOn="Like提醒已打开"
             android:title="Like提醒"/>
     </PreferenceCategory>
 
