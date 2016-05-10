@@ -175,7 +175,14 @@ public class MainActivity extends SMTHBaseActivity
         MaintainUserStatusService.schedule(MainActivity.this, mReceiver);
 
         if(Settings.getInstance().isFirstRun()) {
-            showInfoDialog();
+            // show info dialog after 5 seconds for the first run
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showInfoDialog();
+                }
+            }, 5000);
         }
     }
 
