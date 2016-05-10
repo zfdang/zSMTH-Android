@@ -76,16 +76,17 @@ public class MaintainUserStatusService extends IntentService {
 
     public String getNotificationMessage(UserStatus userStatus) {
         String message = "";
-        if(userStatus.isNew_mail()) {
+        Settings settings = Settings.getInstance();
+        if(userStatus.isNew_mail() && settings.isNotificationMail()) {
             message = "你有新邮件!  ";
         }
-        if(userStatus.getNew_like() > 0) {
+        if(userStatus.getNew_like() > 0  && settings.isNotificationLike()) {
             message += "你有新Like!  ";
         }
-        if(userStatus.getNew_at() > 0) {
+        if(userStatus.getNew_at() > 0  && settings.isNotificationAt()) {
             message += "你有新@!  ";
         }
-        if(userStatus.getNew_reply() > 0) {
+        if(userStatus.getNew_reply() > 0  && settings.isNotificationReply()) {
             message += "你有新Reply!  ";
         }
         return message;
@@ -106,7 +107,7 @@ public class MaintainUserStatusService extends IntentService {
         // 4. if user status is a different user, send notification to receiver to update navigationView
 
         final SMTHHelper helper = SMTHHelper.getInstance();
-        Log.d(TAG, "1.0 get current UserStatus from remote");
+//        Log.d(TAG, "1.0 get current UserStatus from remote");
         helper.wService.queryActiveUserStatus()
                 .map(new Func1<UserStatus, UserStatus>() {
                     @Override
@@ -116,7 +117,7 @@ public class MaintainUserStatusService extends IntentService {
                         // check it's logined user, or guest
                         if (userStatus != null && userStatus.getId() != null && !userStatus.getId().equals("guest")) {
                             // logined user, just return the status for next step
-                            Log.d(TAG, "call: 2.1 valid logined user: " + userStatus.getId());
+//                            Log.d(TAG, "call: 2.1 valid logined user: " + userStatus.getId());
                             return userStatus;
                         }
 

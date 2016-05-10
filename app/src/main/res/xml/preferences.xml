@@ -12,6 +12,51 @@
             android:title="清除帖子缓存"/>
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="图片控制">
+        <CheckBoxPreference
+            android:defaultValue="on"
+            android:key="setting_image_quality_control"
+            android:summaryOff="仅在全屏看图时加载原图(GIF点击后播放)"
+            android:summaryOn="总是加载原图(加载失败的可能性较大)"
+            android:title="图片质量"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="显示模式">
+        <CheckBoxPreference
+            android:defaultValue="on"
+            android:key="setting_daynight_control"
+            android:summaryOff="使用白色背景"
+            android:summaryOn="使用黑色背景"
+            android:title="夜间模式"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="提醒">
+        <CheckBoxPreference
+            android:defaultValue="on"
+            android:key="setting_notification_control_mail"
+            android:summaryOff="关闭邮件提醒"
+            android:summaryOn="打开邮件提醒"
+            android:title="邮件提醒"/>
+        <CheckBoxPreference
+            android:defaultValue="on"
+            android:key="setting_notification_control_at"
+            android:summaryOff="关闭\@提醒"
+            android:summaryOn="打开\@提醒"
+            android:title="\@我提醒"/>
+        <CheckBoxPreference
+            android:defaultValue="on"
+            android:key="setting_notification_control_reply"
+            android:summaryOff="关闭回复提醒"
+            android:summaryOn="打开回复提醒"
+            android:title="回复提醒"/>
+        <CheckBoxPreference
+            android:defaultValue="on"
+            android:key="setting_notification_control_like"
+            android:summaryOff="关闭Like提醒"
+            android:summaryOn="打开Like提醒"
+            android:title="Like提醒"/>
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="设备签名">
         <CheckBoxPreference
             android:defaultValue="on"
@@ -25,24 +70,6 @@
             android:summary=""
             android:title="设备型号"
             />
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="图片控制">
-        <CheckBoxPreference
-            android:defaultValue="on"
-            android:key="setting_image_quality_control"
-            android:summaryOff="仅在全屏看图时加载原图(GIF不会直接播放)"
-            android:summaryOn="总是加载原图(原图容易加载失败)"
-            android:title="图片质量"/>
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="显示模式">
-        <CheckBoxPreference
-            android:defaultValue="on"
-            android:key="setting_daynight_control"
-            android:summaryOff="使用白色背景"
-            android:summaryOn="使用黑色背景"
-            android:title="夜间模式"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="更多">

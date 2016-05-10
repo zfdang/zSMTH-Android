@@ -9,8 +9,6 @@ import android.util.Log;
 
 import com.zfdang.SMTHApplication;
 
-
-
 /**
  * Usage:
  *   String username = Settings.getInstance().getUsername();
@@ -201,6 +199,57 @@ public class Settings {
         }
     }
 
+    private static final String NOTIFICATION_MAIL = "NOTIFICATION_MAIL";
+    private boolean bNotificationMail;
+    public boolean isNotificationMail() {
+        return bNotificationMail;
+    }
+    public void setNotificationMail(boolean bNotificationMail) {
+        if(this.bNotificationMail != bNotificationMail) {
+            this.bNotificationMail = bNotificationMail;
+            mEditor.putBoolean(NOTIFICATION_MAIL, this.bNotificationMail);
+            mEditor.commit();
+        }
+    }
+
+    private static final String NOTIFICATION_AT = "NOTIFICATION_AT";
+    private boolean bNotificationAt;
+    public boolean isNotificationAt() {
+        return bNotificationAt;
+    }
+    public void setNotificationAt(boolean bNotificationAt) {
+        if(this.bNotificationAt != bNotificationAt) {
+            this.bNotificationAt = bNotificationAt;
+            mEditor.putBoolean(NOTIFICATION_AT, this.bNotificationAt);
+            mEditor.commit();
+        }
+    }
+
+    private static final String NOTIFICATION_LIKE = "NOTIFICATION_LIKE";
+    private boolean bNotificationLike;
+    public boolean isNotificationLike() {
+        return bNotificationLike;
+    }
+    public void setNotificationLike(boolean bNotificationLike) {
+        if(this.bNotificationLike != bNotificationLike) {
+            this.bNotificationLike = bNotificationLike;
+            mEditor.putBoolean(NOTIFICATION_LIKE, this.bNotificationLike);
+            mEditor.commit();
+        }
+    }
+
+    private static final String NOTIFICATION_REPLY = "NOTIFICATION_REPLY";
+    private boolean bNotificationReply;
+    public boolean isNotificationReply() {
+        return bNotificationReply;
+    }
+    public void setNotificationReply(boolean bNotificationReply) {
+        if(this.bNotificationReply != bNotificationReply) {
+            this.bNotificationReply = bNotificationReply;
+            mEditor.putBoolean(NOTIFICATION_REPLY, this.bNotificationReply);
+            mEditor.commit();
+        }
+    }
 
     private final String Preference_Name = "ZSMTH_Config";
 
@@ -241,5 +290,10 @@ public class Settings {
         bNightMode = mPreference.getBoolean(NIGHT_MODE, true);
 
         iLastVersion = mPreference.getInt(LAST_LAUNCH_VERSION, 0);
+
+        bNotificationMail = mPreference.getBoolean(NOTIFICATION_MAIL, true);
+        bNotificationAt = mPreference.getBoolean(NOTIFICATION_AT, true);
+        bNotificationLike = mPreference.getBoolean(NOTIFICATION_LIKE, true);
+        bNotificationReply = mPreference.getBoolean(NOTIFICATION_REPLY, true);
     }
 }

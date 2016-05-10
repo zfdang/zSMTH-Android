@@ -39,8 +39,15 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     Preference okhttp3_cache;
     CheckBoxPreference signature_control;
     Preference signature_content;
-    private CheckBoxPreference image_quality_control;
-    private CheckBoxPreference daynight_control;
+    CheckBoxPreference image_quality_control;
+    CheckBoxPreference daynight_control;
+
+    CheckBoxPreference notification_control_mail;
+    CheckBoxPreference notification_control_like;
+    CheckBoxPreference notification_control_reply;
+    CheckBoxPreference notification_control_at;
+
+
     Preference app_version;
 
 
@@ -129,6 +136,69 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
                 Settings.getInstance().setNightMode(bNightMode);
 
                 setApplicationNightMode();
+                return true;
+            }
+        });
+
+
+        notification_control_mail = (CheckBoxPreference) findPreference("setting_notification_control_mail");
+        notification_control_mail.setChecked(Settings.getInstance().isNotificationMail());
+        notification_control_mail.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                boolean bValue = Settings.getInstance().isNotificationMail();
+                if(newValue instanceof Boolean){
+                    Boolean boolVal = (Boolean) newValue;
+                    bValue = boolVal;
+                }
+                Settings.getInstance().setNotificationMail(bValue);
+                return true;
+            }
+        });
+
+
+        notification_control_at = (CheckBoxPreference) findPreference("setting_notification_control_at");
+        notification_control_at.setChecked(Settings.getInstance().isNotificationAt());
+        notification_control_at.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                boolean bValue = Settings.getInstance().isNotificationAt();
+                if(newValue instanceof Boolean){
+                    Boolean boolVal = (Boolean) newValue;
+                    bValue = boolVal;
+                }
+                Settings.getInstance().setNotificationAt(bValue);
+                return true;
+            }
+        });
+
+        notification_control_like = (CheckBoxPreference) findPreference("setting_notification_control_like");
+        notification_control_like.setChecked(Settings.getInstance().isNotificationLike());
+        notification_control_like.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                boolean bValue = Settings.getInstance().isNotificationLike();
+                if(newValue instanceof Boolean){
+                    Boolean boolVal = (Boolean) newValue;
+                    bValue = boolVal;
+                }
+                Settings.getInstance().setNotificationLike(bValue);
+                return true;
+            }
+        });
+
+
+        notification_control_reply = (CheckBoxPreference) findPreference("setting_notification_control_reply");
+        notification_control_reply.setChecked(Settings.getInstance().isNotificationReply());
+        notification_control_reply.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                boolean bValue = Settings.getInstance().isNotificationReply();
+                if(newValue instanceof Boolean){
+                    Boolean boolVal = (Boolean) newValue;
+                    bValue = boolVal;
+                }
+                Settings.getInstance().setNotificationReply(bValue);
                 return true;
             }
         });
