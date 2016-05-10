@@ -94,6 +94,7 @@ public class PostListActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         SwipeBackHelper.onDestroy(this);
+        dismissProgress();
     }
 
     @Override
@@ -167,23 +168,25 @@ public class PostListActivity extends AppCompatActivity
         }
     }
 
-    public void showProgress(String message, final boolean show) {
+    // http://stackoverflow.com/questions/22924825/view-not-attached-to-window-manager-crash
+    public void showProgress(String message) {
         if(pdialog == null) {
             pdialog = new ProgressDialog(this, R.style.PDialog_MyTheme);
         }
-        if (show) {
-            pdialog.setMessage(message);
-            pdialog.show();
-        } else {
-            pdialog.cancel();
+        pdialog.setMessage(message);
+        pdialog.show();
+    }
+
+    public void dismissProgress() {
+        if(pdialog != null && pdialog.isShowing()) {
+            pdialog.dismiss();
         }
     }
 
     public void clearLoadingHints() {
         // disable progress bar
-        if(pdialog != null && pdialog.isShowing()){
-            showProgress("", false);
-        }
+        dismissProgress();
+
         if(mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
@@ -198,7 +201,7 @@ public class PostListActivity extends AppCompatActivity
 
 
     public void reloadPostList() {
-        showProgress("加载文章中, 请稍候...", true);
+        showProgress("加载文章中, 请稍候...");
 
         reloadPostListWithoutAlert();
     }
@@ -236,7 +239,7 @@ public class PostListActivity extends AppCompatActivity
                     public void onError(Throwable e) {
                         clearLoadingHints();
                         Log.e(TAG, Log.getStackTraceString(e));
-                        Toast.makeText(PostListActivity.this, "加载失败！", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SMTHApplication.getAppContext(), "加载失败！", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
