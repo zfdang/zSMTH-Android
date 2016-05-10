@@ -13,6 +13,8 @@ public class SMTHBaseActivity extends AppCompatActivity {
     public void showProgress(String message) {
         if(pDialog == null) {
             pDialog = new ProgressDialog(this, R.style.PDialog_MyTheme);
+            pDialog.setCancelable(false);
+            pDialog.setCanceledOnTouchOutside(false);
         }
         pDialog.setMessage(message);
         pDialog.show();
