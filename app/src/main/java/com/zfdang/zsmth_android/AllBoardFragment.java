@@ -68,7 +68,7 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
         // Set the adapter
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, 0));
         Context context = view.getContext();
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        mRecyclerView.setLayoutManager(new WrapContentLinearLayoutManager(context));
         if(mAdapter == null) {
             // this is very important, we only create adapter on the first time.
             // otherwise, BoardListContent.ALL_BOARDS might be filtered result already
