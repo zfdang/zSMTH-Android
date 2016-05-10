@@ -2,7 +2,10 @@ package com.zfdang.zsmth_android;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
+import android.util.Log;
 
 import com.zfdang.SMTHApplication;
 
@@ -176,7 +179,28 @@ public class Settings {
     }
 
 
-    private static final String LAST_LAUNCH_VERSION = "last_launch_version";
+    private static final String LAST_LAUNCH_VERSION = "LAST_LAUNCH_VERSION";
+    private int iLastVersion;
+    public boolean isFirstRun() {
+        PackageManager pm = SMTHApplication.getAppContext().getPackageManager();
+        int currentVersion = 0;
+        try {
+            PackageInfo pi = pm.getPackageInfo(SMTHApplication.getAppContext().getPackageName(), 0);
+            currentVersion = pi.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e("Setting", "isFirstRun: " + Log.getStackTraceString(e));
+        }
+
+        if(currentVersion == iLastVersion) {
+            return false;
+        } else {
+            this.iLastVersion = currentVersion;
+            mEditor.putInt(LAST_LAUNCH_VERSION, this.iLastVersion);
+            mEditor.commit();
+            return true;
+        }
+    }
+
 
     private final String Preference_Name = "ZSMTH_Config";
 
@@ -215,5 +239,7 @@ public class Settings {
         bLoadOriginalImage = mPreference.getBoolean(LOAD_ORIGINAL_IMAGE, true);
 
         bNightMode = mPreference.getBoolean(NIGHT_MODE, true);
+
+        iLastVersion = mPreference.getInt(LAST_LAUNCH_VERSION, 0);
     }
 }

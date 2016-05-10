@@ -131,4 +131,9 @@
     <string name="mail_button_at_label">\@我</string>
     <string name="mail_button_reply_label">回复我</string>
     <string name="mail_button_like_label">Like我</string>
+
+    <!-- 关于 -->
+    <string name="about_title">关于zSMTH</string>
+    <string name="about_content" formatted="false">版本: %s(%d).\nzSMTH-Android是水木社区BBS的开源Android客户端。\n\n在帖子内容处，长按将弹出‘回复’等操作菜单！\n\n获取更新和使用说明:\nhttp://zsmth-android.zfdang.com/\n\nby zfdang.</string>
+    <string name="about_close">关闭</string>
 </resources>

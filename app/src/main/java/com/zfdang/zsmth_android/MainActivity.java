@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -20,7 +22,10 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -171,6 +176,10 @@ public class MainActivity extends AppCompatActivity
 
         // schedule the periodical run
         MaintainUserStatusService.schedule(MainActivity.this, mReceiver);
+
+        if(Settings.getInstance().isFirstRun()) {
+            showInfoDialog();
+        }
     }
 
     private void initCircularActionMenu(FloatingActionButton fab) {
@@ -451,6 +460,46 @@ public class MainActivity extends AppCompatActivity
         finish();
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(0);
+    }
+
+
+    // show information dialog, called by first run
+    private void showInfoDialog() {
+        // read version info from androidmanifest.xml
+        String versionName = "unknown";
+        int versionCode = 0;
+        PackageManager pm = getPackageManager();
+        try {
+            PackageInfo pi = pm.getPackageInfo(getPackageName(), 0);
+            versionName = pi.versionName;
+            versionCode = pi.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(TAG, "showInfoDialog: " + Log.getStackTraceString(e) );
+        }
+
+        // generate about_content with version from manifest
+        String content_with_version = getString(R.string.about_content, versionName, versionCode);
+
+        // linkify
+        final SpannableString msg = new SpannableString(content_with_version);
+        Linkify.addLinks(msg, Linkify.WEB_URLS);
+
+        final AlertDialog dlg = new AlertDialog.Builder(this).setIcon(R.drawable.ic_launcher).setTitle(R.string.about_title)
+                .setMessage(msg).create();
+
+        dlg.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.about_close),
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing here
+                    }
+                });
+
+        dlg.show();
+
+        // Make the textview clickable. Must be called after show()
+        ((TextView) dlg.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     /**
