@@ -131,7 +131,7 @@ public class PostListActivity extends SMTHBaseActivity
         mRecyclerView = (RecyclerView) findViewById(R.id.post_list);
         assert mRecyclerView != null;
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL, R.drawable.recyclerview_divider_gradient));
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager linearLayoutManager = new WrapContentLinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(new PostRecyclerViewAdapter(PostListContent.POSTS, this));
 
