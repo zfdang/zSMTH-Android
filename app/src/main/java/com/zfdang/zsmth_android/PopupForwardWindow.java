@@ -129,7 +129,7 @@ public class PopupForwardWindow extends PopupWindow {
 
         this.setContentView(contentView);
         this.setWidth((int)(size.x * 0.95));
-        this.setHeight((int)(size.y * 0.55));
+        this.setHeight((int)(size.y * 0.50));
         // http://stackoverflow.com/questions/12232724/popupwindow-dismiss-when-clicked-outside
         // this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.setFocusable(true);

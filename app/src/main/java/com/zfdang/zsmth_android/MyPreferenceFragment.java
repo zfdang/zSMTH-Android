@@ -12,9 +12,6 @@ import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -289,14 +286,5 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
                     }
                 });
 
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater paramLayoutInflater, ViewGroup paramViewGroup, Bundle paramBundle) {
-        // http://stackoverflow.com/questions/16970209/preferencefragment-background-color
-        View view = super.onCreateView(paramLayoutInflater, paramViewGroup, paramBundle);
-        view.setBackgroundColor(getResources().getColor(R.color.preference_background));
-
-        return view;
     }
 }

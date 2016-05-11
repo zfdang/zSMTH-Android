@@ -44,6 +44,6 @@
     <color name="navigation_button_background">#cee4d3</color>
     <color name="navigation_button_background_pressed">#bebbbb</color>
 
-    <color name="preference_background">#ebebeb</color>
+    <color name="popupwindow_background">#b3dcbc</color>
 
 </resources>
