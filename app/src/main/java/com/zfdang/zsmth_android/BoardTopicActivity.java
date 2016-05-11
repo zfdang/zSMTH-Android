@@ -172,7 +172,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
         } else if(id == R.id.board_topic_action_search) {
             PopupSearchWindow popup = new PopupSearchWindow();
             popup.initPopupWindow(this);
-            popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, -80);
+            popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
 
         } else if(id == R.id.board_topic_action_favorite) {
             SMTHHelper helper = SMTHHelper.getInstance();

@@ -784,7 +784,9 @@ public class SMTHHelper {
             topic.setReplyDate(replyDate);
 
             // Log.d(TAG, "ParseSearchResultFromWWW: " + topic.toString());
-            results.add(topic);
+            if(topic.getTitle() != null && topic.getTitle().length() > 0) {
+                results.add(topic);
+            }
         }
 
         return results;
