@@ -83,6 +83,15 @@ public class BoardTopicActivity extends SMTHBaseActivity
     }
 
     @Override
+    public void onBackPressed() {
+        if(isSearchMode) {
+            onRefresh();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SwipeBackHelper.onCreate(this);
@@ -378,7 +387,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
                         try {
                             String response = responseBody.string();
                             List<Topic> topics = SMTHHelper.ParseSearchResultFromWWW(response);
-                            Topic topic = new Topic("搜索模式 - 下拉刷新返回版面列表");
+                            Topic topic = new Topic("搜索模式 - 下拉或按返回键退出搜索模式");
                             topics.add(0, topic);
                             return Observable.from(topics);
                         } catch (Exception e) {
