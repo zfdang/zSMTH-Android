@@ -60,7 +60,8 @@ public class ComposePostActivity extends SMTHBaseActivity {
     private static int currentStep = 1;
 
     private int postPublishResult = 0;
-    private String postPUblishMessage = null;
+    private String postPublishMessage = null;
+    private AjaxResponse lastResponse = null;
 
 
     public void startImageSelector() {
@@ -244,7 +245,8 @@ public class ComposePostActivity extends SMTHBaseActivity {
     public void publishPost() {
 
         postPublishResult = AjaxResponse.AJAX_RESULT_OK;
-        postPUblishMessage = "";
+        postPublishMessage = "";
+        lastResponse = null;
 
         final String progressHint = "发表文章中(%d/%d)...";
         ComposePostActivity.totalSteps = 1;
@@ -301,18 +303,25 @@ public class ComposePostActivity extends SMTHBaseActivity {
                     public void onCompleted() {
                         dismissProgress();
 
+                        String message = null;
                         if(postPublishResult != AjaxResponse.AJAX_RESULT_OK) {
-                            String message = "发表失败! \n错误信息:\n" + postPUblishMessage;
-                            Toast.makeText(ComposePostActivity.this, message, Toast.LENGTH_SHORT).show();
+                            message = "发表失败! \n错误信息:\n" + postPublishMessage;
+                            Toast.makeText(ComposePostActivity.this, message, Toast.LENGTH_LONG).show();
                         } else {
-                            String message = "发表成功";
-                            if(mPostContext.isThroughMail()) {
-                                message = "发信成功";
+                            if(lastResponse != null) {
+                                // if we have valid last response, use the message.
+                                message = lastResponse.getAjax_msg();
+                            } else {
+                                // otherwise, compose the message by ourself
+                                message = "成功!";
                             }
-                            Toast.makeText(SMTHApplication.getAppContext(), message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SMTHApplication.getAppContext(), message, Toast.LENGTH_LONG).show();
 
                             KeyboardLess.$hide(ComposePostActivity.this, mContent);
-                            ComposePostActivity.this.finish();
+
+                            if(message != null && !message.contains("本文可能含有不当内容")) {
+                                ComposePostActivity.this.finish();
+                            }
                         }
                     }
 
@@ -327,8 +336,9 @@ public class ComposePostActivity extends SMTHBaseActivity {
                         Log.d(TAG, "onNext: " + ajaxResponse.toString());
                         if(ajaxResponse.getAjax_st() != AjaxResponse.AJAX_RESULT_OK) {
                             postPublishResult = AjaxResponse.AJAX_RESULT_FAILED;
-                            postPUblishMessage += ajaxResponse.getAjax_msg() + "\n";
+                            postPublishMessage += ajaxResponse.getAjax_msg() + "\n";
                         }
+                        lastResponse = ajaxResponse;
                         ComposePostActivity.currentStep ++;
                         showProgress(String.format(progressHint, ComposePostActivity.currentStep, ComposePostActivity.totalSteps));
                     }
