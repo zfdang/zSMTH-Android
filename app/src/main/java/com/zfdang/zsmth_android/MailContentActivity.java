@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.zfdang.SMTHApplication;
@@ -207,22 +208,27 @@ public class MailContentActivity extends AppCompatActivity {
             onBackPressed();
             return true;
         } else if (id == R.id.mail_content_reply) {
-            ComposePostContext postContext = new ComposePostContext();
-            postContext.setPostid(mPost.getPostID());
-            postContext.setPostTitle(mPost.getTitle());
-            postContext.setPostAuthor(mPost.getRawAuthor());
-            postContext.setPostContent(mPost.getRawContent());
-
-            if(mMail.fromBoard != null && mMail.fromBoard.length() > 0) {
-                postContext.setBoardEngName(mMail.fromBoard);
-                postContext.setThroughMail(false);
+            if(mPost == null) {
+                Toast.makeText(MailContentActivity.this, "帖子内容错误，无法回复！", Toast.LENGTH_LONG).show();
+                return true;
             } else {
-                postContext.setThroughMail(true);
-            }
+                ComposePostContext postContext = new ComposePostContext();
+                postContext.setPostid(mPost.getPostID());
+                postContext.setPostTitle(mPost.getTitle());
+                postContext.setPostAuthor(mPost.getRawAuthor());
+                postContext.setPostContent(mPost.getRawContent());
 
-            Intent intent = new Intent(this, ComposePostActivity.class);
-            intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
-            startActivity(intent);
+                if(mMail.fromBoard != null && mMail.fromBoard.length() > 0) {
+                    postContext.setBoardEngName(mMail.fromBoard);
+                    postContext.setThroughMail(false);
+                } else {
+                    postContext.setThroughMail(true);
+                }
+
+                Intent intent = new Intent(this, ComposePostActivity.class);
+                intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
+                startActivity(intent);
+            }
         }
         return super.onOptionsItemSelected(item);
     }
