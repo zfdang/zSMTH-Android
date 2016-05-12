@@ -182,7 +182,7 @@ public class MainActivity extends SMTHBaseActivity
                 public void run() {
                     showInfoDialog();
                 }
-            }, 5000);
+            }, 2000);
         }
     }
 
