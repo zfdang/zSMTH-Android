@@ -280,9 +280,13 @@ public class Settings {
 
         bLastLoginSuccess = mPreference.getBoolean(LAST_LOGIN_SUCCESS, false);
 
-        String marketingName = DeviceMarketingName.getInstance(SMTHApplication.getAppContext())
-                .getDeviceMarketingName(false);
-        mSignature = mPreference.getString(DEVICE_SIGNATURE, marketingName);
+        mSignature = mPreference.getString(DEVICE_SIGNATURE, "");
+        if(mSignature.length() == 0) {
+            String marketingName = DeviceMarketingName.getInstance(SMTHApplication.getAppContext())
+                    .getDeviceMarketingName(false);
+            setSignature(marketingName);
+        }
+
         mTarget = mPreference.getString(FORWARD_TAEGET, "");
 
         bUserOnline = mPreference.getBoolean(USER_ONLINE, false);
