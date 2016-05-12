@@ -122,16 +122,19 @@
 
         <Button
             android:id="@+id/popup_forward_cancel"
-            style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/navigation_button_background"
+            android:textColor="@color/status_text_night"
             android:text="取消"/>
 
         <Button
             android:id="@+id/popup_forward_confirm"
-            style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
+            android:background="@drawable/navigation_button_background"
+            android:textColor="@color/status_text_night"
             android:text="转寄"/>
     </LinearLayout>
 
