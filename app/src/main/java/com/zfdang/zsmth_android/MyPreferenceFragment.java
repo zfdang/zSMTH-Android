@@ -206,7 +206,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         app_version.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://zsmth-android.zfdang.com/release.html")));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/zfdang/zSMTH-Android/releases")));
                 return true;
             }
         });
