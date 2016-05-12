@@ -4,10 +4,10 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.util.Log;
 
 import com.zfdang.SMTHApplication;
+import com.zfdang.devicemodeltomarketingname.DeviceMarketingName;
 
 /**
  * Usage:
@@ -280,7 +280,9 @@ public class Settings {
 
         bLastLoginSuccess = mPreference.getBoolean(LAST_LOGIN_SUCCESS, false);
 
-        mSignature = mPreference.getString(DEVICE_SIGNATURE, Build.MODEL);
+        String marketingName = DeviceMarketingName.getInstance(SMTHApplication.getAppContext())
+                .getDeviceMarketingName(false);
+        mSignature = mPreference.getString(DEVICE_SIGNATURE, marketingName);
         mTarget = mPreference.getString(FORWARD_TAEGET, "");
 
         bUserOnline = mPreference.getBoolean(USER_ONLINE, false);
