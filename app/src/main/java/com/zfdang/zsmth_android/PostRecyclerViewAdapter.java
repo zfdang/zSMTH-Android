@@ -1,7 +1,6 @@
 package com.zfdang.zsmth_android;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.util.Linkify;
@@ -64,7 +63,8 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         viewGroup.addView(contentView);
         contentView.setText(contents.get(0).getSpanned());
 
-        final LayoutInflater inflater = (LayoutInflater) SMTHApplication.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        // http://stackoverflow.com/questions/13438473/clicking-html-link-in-textview-fires-weird-androidruntimeexception
+        final LayoutInflater inflater = mListener.getLayoutInflater();
         for(int i = 1; i < contents.size(); i++) {
             ContentSegment content = contents.get(i);
 
