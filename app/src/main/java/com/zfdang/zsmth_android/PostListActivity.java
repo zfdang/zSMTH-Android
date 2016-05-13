@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,6 +32,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jude.swipbackhelper.SwipeBackHelper;
+import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
+import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
 import com.zfdang.zsmth_android.models.Attachment;
@@ -82,7 +83,7 @@ public class PostListActivity extends SMTHBaseActivity
 
     private Topic mTopic = null;
 
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private SwipyRefreshLayout mSwipeRefreshLayout;
     private String mFrom;
 
     private GestureDetector mGestureDetector;
@@ -120,11 +121,17 @@ public class PostListActivity extends SMTHBaseActivity
         assert mPageNo != null;
 
         // define swipe refresh function
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.post_list_swipe_refresh_layout);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        mSwipeRefreshLayout = (SwipyRefreshLayout) findViewById(R.id.post_list_swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipyRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefresh() {
-                reloadPostListWithoutAlert();
+            public void onRefresh(SwipyRefreshLayoutDirection direction) {
+                if(direction == SwipyRefreshLayoutDirection.TOP) {
+                    // reload current page
+                    reloadPostListWithoutAlert();
+                } else {
+                    // load next page if available
+                    goToNextPage();
+                }
             }
         });
 
@@ -291,12 +298,7 @@ public class PostListActivity extends SMTHBaseActivity
                 }
                 break;
             case R.id.post_list_next_page:
-                if(mCurrentPageNo == mTopic.getTotalPageNo()) {
-                    Toast.makeText(PostListActivity.this, "已在末页！", Toast.LENGTH_SHORT).show();
-                } else {
-                    mCurrentPageNo += 1;
-                    reloadPostList();
-                }
+                goToNextPage();
                 break;
             case R.id.post_list_last_page:
                 if(mCurrentPageNo == mTopic.getTotalPageNo()) {
@@ -329,6 +331,19 @@ public class PostListActivity extends SMTHBaseActivity
                 break;
         }
     }
+
+
+    public void goToNextPage() {
+        if(mCurrentPageNo == mTopic.getTotalPageNo()) {
+            Toast.makeText(PostListActivity.this, "已在末页！", Toast.LENGTH_SHORT).show();
+            clearLoadingHints();
+        } else {
+            mCurrentPageNo += 1;
+            reloadPostList();
+        }
+    }
+
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {

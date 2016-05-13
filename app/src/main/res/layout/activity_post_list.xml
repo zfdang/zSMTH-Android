@@ -45,9 +45,10 @@
             android:textSize="18sp"/>
 
         <!-- Body -->
-        <android.support.v4.widget.SwipeRefreshLayout
+        <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
             android:id="@+id/post_list_swipe_refresh_layout"
             android:layout_width="match_parent"
+            app:srl_direction="both"
             android:layout_height="0dp"
             android:layout_weight="1">
 
@@ -65,7 +66,7 @@
                 app:layoutManager="LinearLayoutManager"
                 tools:context=".BoardTopicActivity"
                 tools:listitem="@layout/post_item"/>
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
 
         <!-- footer -->
         <include layout="@layout/post_list_page_navigator"/>

@@ -92,4 +92,5 @@ dependencies {
     compile files('libs/ShareSDK-Core-2.7.1.jar')
     compile 'com.wx.wheelview:wheelview:1.3.4'
     compile 'com.zfdang.devicemodeltomarketingname:device-model-to-marketing-name:1.0.0'
+    compile 'com.github.orangegangsters:swipy:1.2.3@aar'
 }
