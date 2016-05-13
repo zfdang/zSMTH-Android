@@ -46,4 +46,6 @@
 
     <color name="popupwindow_background">#b3dcbc</color>
 
+    <color name="black_background">#000000</color>
+
 </resources>

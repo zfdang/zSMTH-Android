@@ -11,7 +11,7 @@
         <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
         <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
         <!--http://stackoverflow.com/questions/14462226/white-background-during-app-launch-->
-        <item name="android:windowBackground">@color/body_background_night</item>
+        <item name="android:windowBackground">@color/black_background</item>
 
         <item name="preferenceTheme">@style/MyPreferenceThemeOverlay</item>
     </style>
