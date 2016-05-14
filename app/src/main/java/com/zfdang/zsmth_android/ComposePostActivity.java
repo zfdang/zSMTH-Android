@@ -354,6 +354,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
                 .setPositiveButton("结束编辑", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // if this button is clicked, close current activity
+                        KeyboardLess.$hide(ComposePostActivity.this, mContent);
                         ComposePostActivity.this.finish();
                     }
                 })
