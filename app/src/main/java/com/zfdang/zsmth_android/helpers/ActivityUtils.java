@@ -1,8 +1,18 @@
 package com.zfdang.zsmth_android.helpers;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
+import android.widget.Toast;
+
+import com.klinker.android.link_builder.Link;
+import com.zfdang.SMTHApplication;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by zfdang on 2016-5-14.
@@ -26,6 +36,54 @@ public class ActivityUtils {
 
         /* Send it off to the Activity-Chooser */
         activity.startActivity(Intent.createChooser(emailIntent, "发邮件..."));
+    }
+
+
+    // this will be called in PostRecyclerViewAdapter & MailContentActivity
+    public static List<Link> getPostSupportedLinks(final Activity activity) {
+        List<Link> links = new ArrayList<>();
+
+        // web URL link
+        Link weburl = new Link(Regex.WEB_URL_PATTERN);
+        weburl.setTextColor(Color.parseColor("#00BCD4"));
+        weburl.setHighlightAlpha(.4f);
+        weburl.setOnClickListener(new Link.OnClickListener() {
+            @Override
+            public void onClick(String clickedText) {
+                ActivityUtils.openLink(clickedText, activity);
+            }
+        });
+        weburl.setOnLongClickListener(new Link.OnLongClickListener() {
+            @Override
+            public void onLongClick(String clickedText) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    final android.content.ClipboardManager clipboardManager = (android.content.ClipboardManager)
+                            activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                    final android.content.ClipData clipData = android.content.ClipData.newPlainText("PostContent", clickedText);
+                    clipboardManager.setPrimaryClip(clipData);
+                } else {
+                    final android.text.ClipboardManager clipboardManager = (android.text.ClipboardManager)activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                    clipboardManager.setText(clickedText);
+                }
+                Toast.makeText(SMTHApplication.getAppContext(), "链接已复制到剪贴板", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // email link
+        Link emaillink = new Link(Regex.EMAIL_ADDRESS_PATTERN);
+        emaillink.setTextColor(Color.parseColor("#00BCD4"));
+        emaillink.setHighlightAlpha(.4f);
+        emaillink.setOnClickListener(new Link.OnClickListener() {
+            @Override
+            public void onClick(String clickedText) {
+                ActivityUtils.sendEmail(clickedText, activity);
+            }
+        });
+
+        links.add(weburl);
+        links.add(emaillink);
+
+        return links;
     }
 
 }
