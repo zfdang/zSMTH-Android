@@ -1,11 +1,13 @@
 package com.zfdang.zsmth_android.helpers;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.klinker.android.link_builder.Link;
@@ -18,11 +20,16 @@ import java.util.List;
  * Created by zfdang on 2016-5-14.
  */
 public class ActivityUtils {
+    private static final String TAG = "ActivityUtils";
+
     public static void openLink(String link, Activity activity) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
-        activity.startActivity(browserIntent);
+        try {
+            activity.startActivity(browserIntent);
+        } catch(ActivityNotFoundException e) {
+            Toast.makeText(activity, "链接打开错误:" + e.toString(), Toast.LENGTH_LONG).show();
+        }
     }
-
 
     public static void sendEmail(String link, Activity activity) {
         /* Create the Intent */
@@ -31,13 +38,15 @@ public class ActivityUtils {
         /* Fill it with Data */
         emailIntent.setType("plain/text");
         emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{link});
-        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "来自zSMTH的邮件");
-        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "");
+        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
+        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, " \n \n \n \n--\n来自zSMTH的邮件\n");
 
-        /* Send it off to the Activity-Chooser */
-        activity.startActivity(Intent.createChooser(emailIntent, "发邮件..."));
+        try {
+            activity.startActivity(Intent.createChooser(emailIntent, "发邮件..."));
+        } catch(ActivityNotFoundException e) {
+            Toast.makeText(activity, "链接打开错误:" + e.toString(), Toast.LENGTH_LONG).show();
+        }
     }
-
 
     // this will be called in PostRecyclerViewAdapter & MailContentActivity
     public static List<Link> getPostSupportedLinks(final Activity activity) {
