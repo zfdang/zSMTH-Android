@@ -1,22 +1,29 @@
 package com.zfdang.zsmth_android;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
-import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.klinker.android.link_builder.Link;
+import com.klinker.android.link_builder.LinkBuilder;
+import com.klinker.android.link_builder.LinkConsumableTextView;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
+import com.zfdang.zsmth_android.helpers.Regex;
 import com.zfdang.zsmth_android.models.Attachment;
 import com.zfdang.zsmth_android.models.ContentSegment;
 import com.zfdang.zsmth_android.models.Post;
-import com.zfdang.zsmth_android.view.LinkTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,19 +56,16 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         List<ContentSegment> contents = post.getContentSegments();
         if(contents == null) return;
 
-        // the simple case, without any attachment
-        if(contents.size() == 1) {
-            viewGroup.addView(contentView);
-            contentView.setText(contents.get(0).getSpanned());
-            Linkify.addLinks(contentView, Linkify.WEB_URLS);
+        if(contents.size() > 0) {
+            // there are multiple segments, add the first contentView first
+            // contentView is always available, we don't have to inflate it again
+            ContentSegment content = contents.get(0);
+            contentView.setText(content.getSpanned());
+            LinkBuilder.on(contentView).addLinks(getPostSupportedLinks()).build();
 
-            return;
+            viewGroup.addView(contentView);
         }
 
-        // there are multiple segments, add the first contentView first
-        // contentView is always available, we don't have to inflate it again
-        viewGroup.addView(contentView);
-        contentView.setText(contents.get(0).getSpanned());
 
         // http://stackoverflow.com/questions/13438473/clicking-html-link-in-textview-fires-weird-androidruntimeexception
         final LayoutInflater inflater = mListener.getLayoutInflater();
@@ -74,7 +78,6 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                 // Add the text layout to the parent layout
                 WrapContentDraweeView image = (WrapContentDraweeView) inflater.inflate(R.layout.post_item_imageview, viewGroup, false);
                 image.setImageFromStringURL(content.getUrl());
-
 
                 // set onclicklistener
                 image.setTag(R.id.image_tag, content.getImgIndex());
@@ -103,16 +106,56 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             } else if (content.getType() == ContentSegment.SEGMENT_TEXT) {
                 // Log.d("CreateView", "Text: " + content.getSpanned().toString());
 
-                // Add the text layout to the parent layout
-                LinkTextView tv = (LinkTextView) inflater.inflate(R.layout.post_item_content, viewGroup, false);
+                // Add the links and make the links clickable
+                LinkConsumableTextView tv = (LinkConsumableTextView) inflater.inflate(R.layout.post_item_content, viewGroup, false);
                 tv.setText(content.getSpanned());
-                Linkify.addLinks(tv, Linkify.WEB_URLS);
+                LinkBuilder.on(tv).addLinks(getPostSupportedLinks()).build();
 
                 // Add the text view to the parent layout
                 viewGroup.addView(tv);
             }
         }
 
+    }
+
+
+    private List<Link> getPostSupportedLinks() {
+        List<Link> links = new ArrayList<>();
+
+        // create a single click link to the matched twitter profiles
+        Link weburl = new Link(Regex.WEB_URL_PATTERN);
+        weburl.setTextColor(Color.parseColor("#00BCD4"));
+        weburl.setHighlightAlpha(.4f);
+        weburl.setOnClickListener(new Link.OnClickListener() {
+            @Override
+            public void onClick(String clickedText) {
+                openLink(clickedText);
+            }
+        });
+        weburl.setOnLongClickListener(new Link.OnLongClickListener() {
+            @Override
+            public void onLongClick(String clickedText) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    final android.content.ClipboardManager clipboardManager = (android.content.ClipboardManager)
+                            mListener.getSystemService(Context.CLIPBOARD_SERVICE);
+                    final android.content.ClipData clipData = android.content.ClipData.newPlainText("PostContent", clickedText);
+                    clipboardManager.setPrimaryClip(clipData);
+                } else {
+                    final android.text.ClipboardManager clipboardManager = (android.text.ClipboardManager)mListener.getSystemService(Context.CLIPBOARD_SERVICE);
+                    clipboardManager.setText(clickedText);
+                }
+                Toast.makeText(SMTHApplication.getAppContext(), "链接已复制到剪贴板", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        links.add(weburl);
+
+        return links;
+    }
+
+    private void openLink(String link) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+        mListener.startActivity(browserIntent);
     }
 
     @Override
@@ -156,7 +199,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         public final TextView mPostIndex;
         public final TextView mPostPublishDate;
         private final LinearLayout mViewGroup;
-        public final LinkTextView mPostContent;
+        public final LinkConsumableTextView mPostContent;
         public Post mPost;
 
         public ViewHolder(View view) {
@@ -166,7 +209,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             mPostIndex = (TextView) view.findViewById(R.id.post_index);
             mPostPublishDate = (TextView) view.findViewById(R.id.post_publish_date);
             mViewGroup = (LinearLayout) view.findViewById(R.id.post_content_holder);
-            mPostContent = (LinkTextView) view.findViewById(R.id.post_content);
+            mPostContent = (LinkConsumableTextView) view.findViewById(R.id.post_content);
         }
 
         @Override
