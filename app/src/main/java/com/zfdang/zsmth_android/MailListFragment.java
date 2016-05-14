@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -182,7 +181,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
 
                                 @Override
                                 public void onNext(AjaxResponse ajaxResponse) {
-                                    Log.d(TAG, "onNext: " + ajaxResponse.toString());
+//                                    Log.d(TAG, "onNext: " + ajaxResponse.toString());
 
                                     if(ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
                                         MailListContent.MAILS.remove(viewHolder.getAdapterPosition());
@@ -208,7 +207,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
         } else if(TextUtils.equals(folder, LIKE_LABEL)) {
             currentFolder = LIKE_LABEL;
         }
-        Log.d(TAG, "setCurrentFolder: " + folder);
+//        Log.d(TAG, "setCurrentFolder: " + folder);
     }
 
     public void highlightCurrentFolder() {
@@ -314,7 +313,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
                             List<Mail> results = SMTHHelper.ParseMailsFromWWW(response);
                             return Observable.from(results);
                         } catch (Exception e) {
-                            Log.d(TAG, Log.getStackTraceString(e));
+                            Toast.makeText(SMTHApplication.getAppContext(), "加载文章提醒失败\n" + e.toString(), Toast.LENGTH_LONG).show();
                         }
                         return null;
                     }
@@ -358,7 +357,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
                             List<Mail> results = SMTHHelper.ParseMailsFromWWW(response);
                             return Observable.from(results);
                         } catch (Exception e) {
-                            Log.d(TAG, Log.getStackTraceString(e));
+                            Toast.makeText(SMTHApplication.getAppContext(), "加载邮件错误\n" + e.toString(), Toast.LENGTH_SHORT).show();
                         }
                         return null;
                     }
