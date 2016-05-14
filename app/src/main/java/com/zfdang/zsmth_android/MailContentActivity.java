@@ -3,7 +3,6 @@ package com.zfdang.zsmth_android;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -24,6 +23,7 @@ import com.klinker.android.link_builder.LinkBuilder;
 import com.klinker.android.link_builder.LinkConsumableTextView;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
+import com.zfdang.zsmth_android.helpers.ActivityUtils;
 import com.zfdang.zsmth_android.helpers.Regex;
 import com.zfdang.zsmth_android.models.ComposePostContext;
 import com.zfdang.zsmth_android.models.ContentSegment;
@@ -194,7 +194,7 @@ public class MailContentActivity extends AppCompatActivity {
         weburl.setOnClickListener(new Link.OnClickListener() {
             @Override
             public void onClick(String clickedText) {
-                openLink(clickedText);
+                ActivityUtils.openLink(clickedText, MailContentActivity.this);
             }
         });
         weburl.setOnLongClickListener(new Link.OnLongClickListener() {
@@ -220,7 +220,7 @@ public class MailContentActivity extends AppCompatActivity {
         emaillink.setOnClickListener(new Link.OnClickListener() {
             @Override
             public void onClick(String clickedText) {
-                sendEmail(clickedText);
+                ActivityUtils.sendEmail(clickedText, MailContentActivity.this);
             }
         });
 
@@ -228,26 +228,6 @@ public class MailContentActivity extends AppCompatActivity {
         links.add(emaillink);
 
         return links;
-    }
-
-    private void openLink(String link) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
-        startActivity(browserIntent);
-    }
-
-
-    private void sendEmail(String link) {
-        /* Create the Intent */
-        final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-
-        /* Fill it with Data */
-        emailIntent.setType("plain/text");
-        emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{link});
-        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "来自zSMTH的邮件");
-        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "");
-
-        /* Send it off to the Activity-Chooser */
-        startActivity(Intent.createChooser(emailIntent, "发邮件..."));
     }
 
     @Override

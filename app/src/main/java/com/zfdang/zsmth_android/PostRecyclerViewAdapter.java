@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,6 +19,7 @@ import com.klinker.android.link_builder.LinkBuilder;
 import com.klinker.android.link_builder.LinkConsumableTextView;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
+import com.zfdang.zsmth_android.helpers.ActivityUtils;
 import com.zfdang.zsmth_android.helpers.Regex;
 import com.zfdang.zsmth_android.models.Attachment;
 import com.zfdang.zsmth_android.models.ContentSegment;
@@ -129,7 +129,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         weburl.setOnClickListener(new Link.OnClickListener() {
             @Override
             public void onClick(String clickedText) {
-                openLink(clickedText);
+                ActivityUtils.openLink(clickedText, mListener);
             }
         });
         weburl.setOnLongClickListener(new Link.OnLongClickListener() {
@@ -155,7 +155,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         emaillink.setOnClickListener(new Link.OnClickListener() {
             @Override
             public void onClick(String clickedText) {
-                sendEmail(clickedText);
+                ActivityUtils.sendEmail(clickedText, mListener);
             }
         });
 
@@ -163,26 +163,6 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         links.add(emaillink);
 
         return links;
-    }
-
-    private void openLink(String link) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
-        mListener.startActivity(browserIntent);
-    }
-
-
-    private void sendEmail(String link) {
-        /* Create the Intent */
-        final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-
-        /* Fill it with Data */
-        emailIntent.setType("plain/text");
-        emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{link});
-        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "来自zSMTH的邮件");
-        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "");
-
-        /* Send it off to the Activity-Chooser */
-        mListener.startActivity(Intent.createChooser(emailIntent, "发邮件..."));
     }
 
     @Override
