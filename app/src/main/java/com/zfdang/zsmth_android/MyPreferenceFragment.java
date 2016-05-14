@@ -2,9 +2,7 @@ package com.zfdang.zsmth_android;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.CheckBoxPreference;
@@ -17,6 +15,7 @@ import android.widget.Toast;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.helpers.ActivityUtils;
 import com.zfdang.zsmth_android.helpers.FileLess;
 import com.zfdang.zsmth_android.helpers.FileSizeUtil;
 
@@ -206,7 +205,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         app_version.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://zsmth-android.zfdang.com/release.html")));
+                ActivityUtils.openLink("http://zsmth-android.zfdang.com/release.html", getActivity());
                 return true;
             }
         });
