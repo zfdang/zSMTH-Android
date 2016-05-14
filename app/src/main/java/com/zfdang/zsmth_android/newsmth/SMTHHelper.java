@@ -802,6 +802,12 @@ public class SMTHHelper {
 //        o.o(false,1,179,808676665,'[数码]','DSLR','数码单反','jerryxiao',153110,178,57);
 //        o.o(true,1,1368,0,'[数码]','SmartLife','智能生活','[目录]',0,1367,0);
 
+        if(content.contains("您还没有登录，或者长时间没有动作，请您重新登录")){
+            Board board = new Board("发生错误", "您还没有登录，或者长时间没有动作，请您重新登录");
+            boards.add(board);
+            return boards;
+        }
+
         // 先提取目录
         Pattern pattern = Pattern.compile("o\\.f\\((\\d+),'([^']+)',\\d+,''\\);");
         Matcher matcher = pattern.matcher(content);
