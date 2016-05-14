@@ -34,15 +34,17 @@ public class SMTHApplication extends Application {
 
     public static final String MAIL_OBJECT = "MAIL_OBJECT";
 
-    public static final String MAIN_TARGET_FRAGMENT = "MAIN_TARGET_FRAGMENT";
+    // MaintainUserStatusService to UserStatusReceiver, to onNewIntent
     public static final String SERVICE_NOTIFICATION_MESSAGE = "SERVICE_NOTIFICATION_MESSAGE";
-
 
     public static final String USER_SERVICE_RECEIVER = "USER_SERVICE_RECEIVER";
 
     public static final String COMPOSE_POST_CONTEXT = "Compose_Post_Context";
 
-
+    public static final String NOTIFICATION_NEW_MAIL = "你有新邮件!";
+    public static final String NOTIFICATION_NEW_AT = "你有新@!";
+    public static final String NOTIFICATION_NEW_REPLY = "你有新回复!";
+    public static final String NOTIFICATION_NEW_LIKE = "你有新Like!";
 
     // IP database
     public static GEODatabase geoDB;

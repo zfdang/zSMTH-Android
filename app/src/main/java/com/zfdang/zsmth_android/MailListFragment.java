@@ -48,12 +48,12 @@ import rx.schedulers.Schedulers;
 public class MailListFragment extends Fragment implements View.OnClickListener{
 
     private static final String TAG = "MailListFragment";
-    private static final String INBOX_LABEL = "inbox";
+    public static final String INBOX_LABEL = "inbox";
     private static final String OUTBOX_LABEL = "outbox";
     private static final String DELETED_LABEL = "deleted";
-    private static final String AT_LABEL = "at";
-    private static final String REPLY_LABEL = "reply";
-    private static final String LIKE_LABEL = "like";
+    public static final String AT_LABEL = "at";
+    public static final String REPLY_LABEL = "reply";
+    public static final String LIKE_LABEL = "like";
 
     private OnMailInteractionListener mListener;
     private RecyclerView recyclerView;
@@ -66,10 +66,11 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
     private Button btReply;
     private Button btLike;
 
+    private int colorNormal;
+    private int colorBlue;
 
-    private String currentFolder;
+    private String currentFolder = INBOX_LABEL;
     private int currentPage;
-
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -126,9 +127,15 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
         btLike = (Button) view.findViewById(R.id.mail_button_like);
         btLike.setOnClickListener(this);
 
+        colorNormal = getResources().getColor(R.color.status_text_night);
+        colorBlue = getResources().getColor(R.color.blue_text_night);
 
-        currentFolder = INBOX_LABEL;
-        LoadMailsFromBeginning();
+        if(MailListContent.MAILS.size() == 0) {
+            LoadMailsFromBeginning();
+        }
+
+        // highlight the current folder
+        highlightCurrentFolder();
 
         return view;
     }
@@ -189,6 +196,65 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(mCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
+    }
+
+    public void setCurrentFolder(String folder) {
+        if(TextUtils.equals(folder, INBOX_LABEL)) {
+            currentFolder = INBOX_LABEL;
+        } else if(TextUtils.equals(folder, AT_LABEL)) {
+            currentFolder = AT_LABEL;
+        } else if(TextUtils.equals(folder, REPLY_LABEL)) {
+            currentFolder = REPLY_LABEL;
+        } else if(TextUtils.equals(folder, LIKE_LABEL)) {
+            currentFolder = LIKE_LABEL;
+        }
+        Log.d(TAG, "setCurrentFolder: " + folder);
+    }
+
+    public void highlightCurrentFolder() {
+        if(TextUtils.equals(currentFolder, INBOX_LABEL)) {
+            btInbox.setTextColor(colorBlue);
+            btOutbox.setTextColor(colorNormal);
+            btTrashbox.setTextColor(colorNormal);
+            btAt.setTextColor(colorNormal);
+            btReply.setTextColor(colorNormal);
+            btLike.setTextColor(colorNormal);
+        } else if(TextUtils.equals(currentFolder, OUTBOX_LABEL)) {
+            btInbox.setTextColor(colorNormal);
+            btOutbox.setTextColor(colorBlue);
+            btTrashbox.setTextColor(colorNormal);
+            btAt.setTextColor(colorNormal);
+            btReply.setTextColor(colorNormal);
+            btLike.setTextColor(colorNormal);
+        } else if(TextUtils.equals(currentFolder, DELETED_LABEL)) {
+            btInbox.setTextColor(colorNormal);
+            btOutbox.setTextColor(colorNormal);
+            btTrashbox.setTextColor(colorBlue);
+            btAt.setTextColor(colorNormal);
+            btReply.setTextColor(colorNormal);
+            btLike.setTextColor(colorNormal);
+        } else if(TextUtils.equals(currentFolder, AT_LABEL)) {
+            btInbox.setTextColor(colorNormal);
+            btOutbox.setTextColor(colorNormal);
+            btTrashbox.setTextColor(colorNormal);
+            btAt.setTextColor(colorBlue);
+            btReply.setTextColor(colorNormal);
+            btLike.setTextColor(colorNormal);
+        } else if(TextUtils.equals(currentFolder, REPLY_LABEL)) {
+            btInbox.setTextColor(colorNormal);
+            btOutbox.setTextColor(colorNormal);
+            btTrashbox.setTextColor(colorNormal);
+            btAt.setTextColor(colorNormal);
+            btReply.setTextColor(colorBlue);
+            btLike.setTextColor(colorNormal);
+        } else if(TextUtils.equals(currentFolder, LIKE_LABEL)) {
+            btInbox.setTextColor(colorNormal);
+            btOutbox.setTextColor(colorNormal);
+            btTrashbox.setTextColor(colorNormal);
+            btAt.setTextColor(colorNormal);
+            btReply.setTextColor(colorNormal);
+            btLike.setTextColor(colorBlue);
+        }
     }
 
     public void LoadMoreMails() {
@@ -411,7 +477,6 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
             // write new mail
             ComposePostContext postContext = new ComposePostContext();
             postContext.setThroughMail(true);
-
             Intent intent = new Intent(getActivity(), ComposePostActivity.class);
             intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
             startActivity(intent);
@@ -423,51 +488,29 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
         return super.onOptionsItemSelected(item);
     }
 
-
-    public void resetAllButtons() {
-        btInbox.setTextColor(getResources().getColor(R.color.status_text_night));
-        btOutbox.setTextColor(getResources().getColor(R.color.status_text_night));
-        btTrashbox.setTextColor(getResources().getColor(R.color.status_text_night));
-        btAt.setTextColor(getResources().getColor(R.color.status_text_night));
-        btReply.setTextColor(getResources().getColor(R.color.status_text_night));
-        btLike.setTextColor(getResources().getColor(R.color.status_text_night));
-    }
-
-
     @Override
     public void onClick(View v) {
         if(v == btInbox) {
             if(TextUtils.equals(currentFolder, INBOX_LABEL)) return;
-            resetAllButtons();
-            btInbox.setTextColor(getResources().getColor(R.color.blue_text_night));
             currentFolder = INBOX_LABEL;
         } else if(v == btOutbox) {
             if(TextUtils.equals(currentFolder, OUTBOX_LABEL)) return;
-            resetAllButtons();
-            btOutbox.setTextColor(getResources().getColor(R.color.blue_text_night));
             currentFolder = OUTBOX_LABEL;
         } else if (v == btTrashbox) {
             if(TextUtils.equals(currentFolder, DELETED_LABEL)) return;
-            resetAllButtons();
-            btTrashbox.setTextColor(getResources().getColor(R.color.blue_text_night));
             currentFolder = DELETED_LABEL;
         } else if (v == btAt) {
             if(TextUtils.equals(currentFolder, AT_LABEL)) return;
-            resetAllButtons();
-            btAt.setTextColor(getResources().getColor(R.color.blue_text_night));
             currentFolder = AT_LABEL;
         } else if (v == btReply) {
             if(TextUtils.equals(currentFolder, REPLY_LABEL)) return;
-            resetAllButtons();
-            btReply.setTextColor(getResources().getColor(R.color.blue_text_night));
             currentFolder = REPLY_LABEL;
         } else if (v == btLike) {
             if(TextUtils.equals(currentFolder, LIKE_LABEL)) return;
-            resetAllButtons();
-            btLike.setTextColor(getResources().getColor(R.color.blue_text_night));
             currentFolder = LIKE_LABEL;
         }
 
+        highlightCurrentFolder();
         LoadMailsFromBeginning();
     }
 }

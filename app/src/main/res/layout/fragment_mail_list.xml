@@ -34,7 +34,7 @@
             android:background="@color/mail_folder_button_background"
             android:gravity="center"
             android:text="@string/mail_button_inbox_label"
-            android:textColor="@color/blue_text_night"
+            android:textColor="@color/status_text_night"
             android:textSize="12sp"
             />
 

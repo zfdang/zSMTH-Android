@@ -78,16 +78,16 @@ public class MaintainUserStatusService extends IntentService {
         String message = "";
         Settings settings = Settings.getInstance();
         if(userStatus.isNew_mail() && settings.isNotificationMail()) {
-            message = "你有新邮件!  ";
+            message = SMTHApplication.NOTIFICATION_NEW_MAIL + "  ";
         }
         if(userStatus.getNew_like() > 0  && settings.isNotificationLike()) {
-            message += "你有新Like!  ";
+            message += SMTHApplication.NOTIFICATION_NEW_LIKE + "  ";
         }
         if(userStatus.getNew_at() > 0  && settings.isNotificationAt()) {
-            message += "你有新@!  ";
+            message += SMTHApplication.NOTIFICATION_NEW_AT + "  ";
         }
         if(userStatus.getNew_reply() > 0  && settings.isNotificationReply()) {
-            message += "你有新Reply!  ";
+            message += SMTHApplication.NOTIFICATION_NEW_REPLY + "  ";
         }
         return message;
     }

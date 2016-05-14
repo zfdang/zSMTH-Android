@@ -140,13 +140,7 @@ public class MainActivity extends SMTHBaseActivity
         initFragments();
 
         FragmentManager fm = getSupportFragmentManager();
-        Bundle bundle = getIntent().getExtras();
-        if(bundle != null && bundle.getString(SMTHApplication.MAIN_TARGET_FRAGMENT) != null) {
-            // this activity is launched by notification, show mail fragment
-            fm.beginTransaction().replace(R.id.content_frame, mailListFragment).commit();
-        } else {
-            fm.beginTransaction().replace(R.id.content_frame, hotTopicFragment).commit();
-        }
+        fm.beginTransaction().replace(R.id.content_frame, hotTopicFragment).commit();
 
         getSupportFragmentManager().addOnBackStackChangedListener(
                 new FragmentManager.OnBackStackChangedListener() {
@@ -284,7 +278,7 @@ public class MainActivity extends SMTHBaseActivity
     private void showNotification(String text) {
 
         Intent notificationIntent = new Intent(MainActivity.this, MainActivity.class);
-        notificationIntent.putExtra(SMTHApplication.MAIN_TARGET_FRAGMENT, "MAIL");
+        notificationIntent.putExtra(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE, text);
         // http://stackoverflow.com/questions/26608627/how-to-open-fragment-page-when-pressed-a-notification-in-android
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(MainActivity.this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -336,14 +330,29 @@ public class MainActivity extends SMTHBaseActivity
 
     @Override
     protected void onNewIntent(Intent intent) {
+        // this method will be triggered by showNotification(message);
         FragmentManager fm = getSupportFragmentManager();
         Bundle bundle = intent.getExtras();
-        if(bundle != null && bundle.getString(SMTHApplication.MAIN_TARGET_FRAGMENT) != null) {
+        if(bundle != null) {
             // this activity is launched by notification, show mail fragment now
             // http://www.androiddesignpatterns.com/2013/08/fragment-transaction-commit-state-loss.html
             // http://stackoverflow.com/questions/7575921/illegalstateexception-can-not-perform-this-action-after-onsaveinstancestate-wit
             // java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
-            fm.beginTransaction().replace(R.id.content_frame, mailListFragment).commitAllowingStateLoss();
+            String message = bundle.getString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE);
+            if(message != null) {
+                // find the actual folder for the new message
+                if(message.contains(SMTHApplication.NOTIFICATION_NEW_MAIL)) {
+                    mailListFragment.setCurrentFolder(MailListFragment.INBOX_LABEL);
+                } else if(message.contains(SMTHApplication.NOTIFICATION_NEW_LIKE)) {
+                    mailListFragment.setCurrentFolder(MailListFragment.LIKE_LABEL);
+                } else if(message.contains(SMTHApplication.NOTIFICATION_NEW_AT)) {
+                    mailListFragment.setCurrentFolder(MailListFragment.AT_LABEL);
+                } else if(message.contains(SMTHApplication.NOTIFICATION_NEW_REPLY)) {
+                    mailListFragment.setCurrentFolder(MailListFragment.REPLY_LABEL);
+                }
+
+                fm.beginTransaction().replace(R.id.content_frame, mailListFragment).commitAllowingStateLoss();
+            }
         }
     }
 
