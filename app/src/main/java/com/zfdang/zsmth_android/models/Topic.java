@@ -197,7 +197,11 @@ public class Topic implements Parcelable {
     }
 
     public String getStatusSummary() {
-        return String.format("评分: %-3s  Likes: %-3s  回复: %-3s", score, likes, replyCounts);
+        String result = String.format("回复: %-4s", replyCounts);
+        if(likes!= null && likes.length() > 0) {
+            result += String.format("    Likes: %-4s    评分: %-4s", likes, score);
+        }
+        return result;
     }
 
     @Override
