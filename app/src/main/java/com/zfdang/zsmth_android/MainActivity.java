@@ -46,6 +46,7 @@ import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
 import com.zfdang.zsmth_android.listeners.OnVolumeUpDownListener;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.Mail;
+import com.zfdang.zsmth_android.models.MailListContent;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
@@ -350,6 +351,8 @@ public class MainActivity extends SMTHBaseActivity
                 } else if(message.contains(SMTHApplication.NOTIFICATION_NEW_REPLY)) {
                     mailListFragment.setCurrentFolder(MailListFragment.REPLY_LABEL);
                 }
+                // force mail fragment to reload
+                MailListContent.clear();
 
                 fm.beginTransaction().replace(R.id.content_frame, mailListFragment).commitAllowingStateLoss();
             }

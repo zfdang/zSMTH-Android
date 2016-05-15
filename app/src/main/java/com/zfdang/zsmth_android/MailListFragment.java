@@ -412,7 +412,15 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
             final Mail mail = MailListContent.MAILS.get(position);
             if (!mail.isNew) return;
 
-            // this is a new mail, mark it as read in remote and local
+            // only referred post need explicit marking. for mails, there is no need to mark
+            if(TextUtils.equals(currentFolder, INBOX_LABEL) || TextUtils.equals(currentFolder, OUTBOX_LABEL)
+                    || TextUtils.equals(currentFolder, DELETED_LABEL)) {
+                mail.isNew = false;
+                recyclerView.getAdapter().notifyItemChanged(position);
+                return;
+            }
+
+            // mark it as read in remote and local
             SMTHHelper helper = SMTHHelper.getInstance();
             helper.wService.readReferPosts(currentFolder, mail.referIndex)
                     .subscribeOn(Schedulers.io())
