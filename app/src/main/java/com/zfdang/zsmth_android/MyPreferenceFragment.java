@@ -44,6 +44,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     CheckBoxPreference notification_control_reply;
     CheckBoxPreference notification_control_at;
 
+    CheckBoxPreference launch_hottopic_as_entry;
 
     Preference app_version;
 
@@ -200,6 +201,20 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
             }
         });
 
+        launch_hottopic_as_entry = (CheckBoxPreference) findPreference("launch_hottopic_as_entry");
+        launch_hottopic_as_entry.setChecked(Settings.getInstance().isLaunchHotTopic());
+        launch_hottopic_as_entry.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                boolean bValue = Settings.getInstance().isLaunchHotTopic();
+                if(newValue instanceof Boolean){
+                    Boolean boolVal = (Boolean) newValue;
+                    bValue = boolVal;
+                }
+                Settings.getInstance().setLaunchHotTopic(bValue);
+                return true;
+            }
+        });
 
         app_version = findPreference("setting_app_version");
         app_version.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

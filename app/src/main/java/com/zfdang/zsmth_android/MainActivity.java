@@ -141,7 +141,11 @@ public class MainActivity extends SMTHBaseActivity
         initFragments();
 
         FragmentManager fm = getSupportFragmentManager();
-        fm.beginTransaction().replace(R.id.content_frame, hotTopicFragment).commit();
+        if(Settings.getInstance().isLaunchHotTopic()) {
+            fm.beginTransaction().replace(R.id.content_frame, hotTopicFragment).commit();
+        } else {
+            fm.beginTransaction().replace(R.id.content_frame, favoriteBoardFragment).commit();
+        }
 
         getSupportFragmentManager().addOnBackStackChangedListener(
                 new FragmentManager.OnBackStackChangedListener() {

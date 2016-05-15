@@ -57,6 +57,16 @@
             android:title="Like提醒"/>
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="启动模式">
+        <CheckBoxPreference
+            android:defaultValue="on"
+            android:key="launch_hottopic_as_entry"
+            android:summaryOff="打开收藏页面"
+            android:summaryOn="打开导读页面"
+            android:title="初始页面"/>
+    </PreferenceCategory>
+
+
     <PreferenceCategory android:title="设备签名">
         <CheckBoxPreference
             android:defaultValue="on"

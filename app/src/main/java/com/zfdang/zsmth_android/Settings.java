@@ -251,6 +251,19 @@ public class Settings {
         }
     }
 
+    private static final String LAUNCH_HOTTOPIC_AS_ENTRY = "LAUNCH_HOTTOPIC_AS_ENTRY";
+    private boolean bLaunchHotTopic;
+    public boolean isLaunchHotTopic() {
+        return bLaunchHotTopic;
+    }
+    public void setLaunchHotTopic(boolean bLaunchHotTopic) {
+        if(this.bLaunchHotTopic != bLaunchHotTopic) {
+            this.bLaunchHotTopic = bLaunchHotTopic;
+            mEditor.putBoolean(LAUNCH_HOTTOPIC_AS_ENTRY, this.bLaunchHotTopic);
+            mEditor.commit();
+        }
+    }
+
     private final String Preference_Name = "ZSMTH_Config";
 
     private SharedPreferences mPreference;
@@ -301,5 +314,7 @@ public class Settings {
         bNotificationAt = mPreference.getBoolean(NOTIFICATION_AT, true);
         bNotificationLike = mPreference.getBoolean(NOTIFICATION_LIKE, true);
         bNotificationReply = mPreference.getBoolean(NOTIFICATION_REPLY, true);
+
+        bLaunchHotTopic = mPreference.getBoolean(LAUNCH_HOTTOPIC_AS_ENTRY, true);
     }
 }
