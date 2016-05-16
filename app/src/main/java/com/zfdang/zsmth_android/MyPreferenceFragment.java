@@ -34,20 +34,21 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     private static final String TAG = "PreferenceFragment";
     Preference fresco_cache;
     Preference okhttp3_cache;
+
     CheckBoxPreference signature_control;
     Preference signature_content;
-    CheckBoxPreference image_quality_control;
+
+    CheckBoxPreference launch_hottopic_as_entry;
     CheckBoxPreference daynight_control;
+    CheckBoxPreference setting_post_navigation_control;
+    CheckBoxPreference image_quality_control;
 
     CheckBoxPreference notification_control_mail;
     CheckBoxPreference notification_control_like;
     CheckBoxPreference notification_control_reply;
     CheckBoxPreference notification_control_at;
 
-    CheckBoxPreference launch_hottopic_as_entry;
-
     Preference app_version;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,26 +85,38 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
             }
         });
 
-        signature_control = (CheckBoxPreference) findPreference("setting_signature_control");
-        // ignore signature_control at the moment
 
-        signature_content = findPreference("setting_signature_content");
-        signature_content.setSummary(Settings.getInstance().getSignature());
-        if(signature_content instanceof EditTextPreference) {
-            // set default value in editing dialog
-            EditTextPreference et = (EditTextPreference) signature_content;
-            et.setText(Settings.getInstance().getSignature());
-        }
-        signature_content.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+
+
+        launch_hottopic_as_entry = (CheckBoxPreference) findPreference("launch_hottopic_as_entry");
+        launch_hottopic_as_entry.setChecked(Settings.getInstance().isLaunchHotTopic());
+        launch_hottopic_as_entry.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                String signature = newValue.toString();
-                Settings.getInstance().setSignature(signature);
-                signature_content.setSummary(signature);
+                boolean bValue = Settings.getInstance().isLaunchHotTopic();
+                if(newValue instanceof Boolean){
+                    Boolean boolVal = (Boolean) newValue;
+                    bValue = boolVal;
+                }
+                Settings.getInstance().setLaunchHotTopic(bValue);
                 return true;
             }
         });
 
+        setting_post_navigation_control = (CheckBoxPreference) findPreference("setting_post_navigation_control");
+        setting_post_navigation_control.setChecked(Settings.getInstance().hasPostNavBar());
+        setting_post_navigation_control.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                boolean bValue = Settings.getInstance().hasPostNavBar();
+                if(newValue instanceof Boolean){
+                    Boolean boolVal = (Boolean) newValue;
+                    bValue = boolVal;
+                }
+                Settings.getInstance().setPostNavBar(bValue);
+                return true;
+            }
+        });
 
         image_quality_control = (CheckBoxPreference) findPreference("setting_image_quality_control");
         image_quality_control.setChecked(Settings.getInstance().isLoadOriginalImage());
@@ -137,6 +150,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
                 return true;
             }
         });
+
 
 
         notification_control_mail = (CheckBoxPreference) findPreference("setting_notification_control_mail");
@@ -201,20 +215,28 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
             }
         });
 
-        launch_hottopic_as_entry = (CheckBoxPreference) findPreference("launch_hottopic_as_entry");
-        launch_hottopic_as_entry.setChecked(Settings.getInstance().isLaunchHotTopic());
-        launch_hottopic_as_entry.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+
+
+        signature_control = (CheckBoxPreference) findPreference("setting_signature_control");
+        // ignore signature_control at the moment
+
+        signature_content = findPreference("setting_signature_content");
+        signature_content.setSummary(Settings.getInstance().getSignature());
+        if(signature_content instanceof EditTextPreference) {
+            // set default value in editing dialog
+            EditTextPreference et = (EditTextPreference) signature_content;
+            et.setText(Settings.getInstance().getSignature());
+        }
+        signature_content.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                boolean bValue = Settings.getInstance().isLaunchHotTopic();
-                if(newValue instanceof Boolean){
-                    Boolean boolVal = (Boolean) newValue;
-                    bValue = boolVal;
-                }
-                Settings.getInstance().setLaunchHotTopic(bValue);
+                String signature = newValue.toString();
+                Settings.getInstance().setSignature(signature);
+                signature_content.setSummary(signature);
                 return true;
             }
         });
+
 
         app_version = findPreference("setting_app_version");
         app_version.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -224,6 +246,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
                 return true;
             }
         });
+
 
         updateOkHttp3Cache();
         updateFrescoCache();

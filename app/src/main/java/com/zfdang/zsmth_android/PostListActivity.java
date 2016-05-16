@@ -26,7 +26,9 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -87,6 +89,7 @@ public class PostListActivity extends SMTHBaseActivity
     private String mFrom;
 
     private GestureDetector mGestureDetector;
+    private LinearLayoutManager linearLayoutManager;
 
     @Override
     protected void onDestroy() {
@@ -138,7 +141,7 @@ public class PostListActivity extends SMTHBaseActivity
         mRecyclerView = (RecyclerView) findViewById(R.id.post_list);
         assert mRecyclerView != null;
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL, R.drawable.recyclerview_divider_gradient));
-        LinearLayoutManager linearLayoutManager = new WrapContentLinearLayoutManager(this);
+        linearLayoutManager = new WrapContentLinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(new PostRecyclerViewAdapter(PostListContent.POSTS, this));
 
@@ -161,6 +164,14 @@ public class PostListActivity extends SMTHBaseActivity
         findViewById(R.id.post_list_last_page).setOnClickListener(this);
         findViewById(R.id.post_list_go_page).setOnClickListener(this);
 
+        LinearLayout navLayout = (LinearLayout) findViewById(R.id.post_list_action_layout);
+        if(Settings.getInstance().hasPostNavBar()) {
+            navLayout.setVisibility(View.VISIBLE);
+        } else {
+            navLayout.setVisibility(View.GONE);
+        }
+        initPostNavigationButtons();
+
         if(mTopic == null || !mTopic.getTopicID().equals(topic.getTopicID()) || PostListContent.POSTS.size() == 0) {
             // new topic, different topic, or no post loaded
             mTopic = topic;
@@ -169,6 +180,27 @@ public class PostListActivity extends SMTHBaseActivity
 
             setTitle(mTopic.getBoardChsName() + " - 阅读文章");
         }
+    }
+
+    public void initPostNavigationButtons() {
+        int alphaValue = 50;
+
+        ImageButton imageButton;
+        imageButton = (ImageButton) findViewById(R.id.post_list_action_top);
+        imageButton.setAlpha(alphaValue);
+        imageButton.setOnClickListener(this);
+
+        imageButton = (ImageButton) findViewById(R.id.post_list_action_up);
+        imageButton.setAlpha(alphaValue);
+        imageButton.setOnClickListener(this);
+
+        imageButton = (ImageButton) findViewById(R.id.post_list_action_down);
+        imageButton.setAlpha(alphaValue);
+        imageButton.setOnClickListener(this);
+
+        imageButton = (ImageButton) findViewById(R.id.post_list_action_bottom);
+        imageButton.setAlpha(alphaValue);
+        imageButton.setOnClickListener(this);
     }
 
     public void clearLoadingHints() {
@@ -328,6 +360,24 @@ public class PostListActivity extends SMTHBaseActivity
                 } catch(Exception e) {
                     Toast.makeText(PostListActivity.this, "非法输入！", Toast.LENGTH_SHORT).show();
                 }
+                break;
+            case R.id.post_list_action_top:
+                mRecyclerView.scrollToPosition(0);
+                break;
+            case R.id.post_list_action_up:
+                int prevPos = linearLayoutManager.findFirstVisibleItemPosition() - 1;
+                if(prevPos >= 0) {
+                    mRecyclerView.smoothScrollToPosition(prevPos);
+                }
+                break;
+            case R.id.post_list_action_down:
+                int nextPos = linearLayoutManager.findLastVisibleItemPosition() + 1;
+                if(nextPos < mRecyclerView.getAdapter().getItemCount()) {
+                    mRecyclerView.smoothScrollToPosition(nextPos);
+                }
+                break;
+            case R.id.post_list_action_bottom:
+                mRecyclerView.scrollToPosition(mRecyclerView.getAdapter().getItemCount() - 1);
                 break;
         }
     }

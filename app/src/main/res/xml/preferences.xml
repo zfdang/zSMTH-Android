@@ -12,23 +12,37 @@
             android:title="清除帖子缓存"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="图片控制">
+    <PreferenceCategory android:title="程序设置">
+        <CheckBoxPreference
+            android:defaultValue="on"
+            android:key="launch_hottopic_as_entry"
+            android:summaryOff="打开收藏页面"
+            android:summaryOn="打开导读页面"
+            android:title="初始页面"/>
+
+        <CheckBoxPreference
+            android:defaultValue="on"
+            android:key="setting_daynight_control"
+            android:summaryOff="使用白色背景"
+            android:summaryOn="使用黑色背景"
+            android:title="配色模式"/>
+
+        <CheckBoxPreference
+            android:defaultValue="on"
+            android:key="setting_post_navigation_control"
+            android:summaryOff="快速导航栏已关闭"
+            android:summaryOn="快速导航栏已打开"
+            android:title="帖子快速导航栏"/>
+
         <CheckBoxPreference
             android:defaultValue="on"
             android:key="setting_image_quality_control"
             android:summaryOff="仅在全屏看图时加载原图(GIF点击后播放)"
             android:summaryOn="总是加载原图(加载失败的可能性较大)"
             android:title="图片质量"/>
+
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="显示模式">
-        <CheckBoxPreference
-            android:defaultValue="on"
-            android:key="setting_daynight_control"
-            android:summaryOff="使用白色背景"
-            android:summaryOn="使用黑色背景"
-            android:title="夜间模式"/>
-    </PreferenceCategory>
 
     <PreferenceCategory android:title="提醒">
         <CheckBoxPreference
@@ -57,21 +71,11 @@
             android:title="Like提醒"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="启动模式">
-        <CheckBoxPreference
-            android:defaultValue="on"
-            android:key="launch_hottopic_as_entry"
-            android:summaryOff="打开收藏页面"
-            android:summaryOn="打开导读页面"
-            android:title="初始页面"/>
-    </PreferenceCategory>
-
-
     <PreferenceCategory android:title="设备签名">
         <CheckBoxPreference
             android:defaultValue="on"
             android:key="setting_signature_control"
-            android:summaryOff="使用签名(^-^)"
+            android:summaryOff="还要使用签名"
             android:summaryOn="使用签名"
             android:title="发帖时添加设备签名"/>
         <EditTextPreference

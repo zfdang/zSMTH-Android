@@ -264,6 +264,20 @@ public class Settings {
         }
     }
 
+    private static final String SHOW_POST_NAVITATION_BAR = "SHOW_POST_NAVITATION_BAR";
+    private boolean bPostNavBar;
+    public boolean hasPostNavBar() {
+        return bPostNavBar;
+    }
+    public void setPostNavBar(boolean bPostNavBar) {
+        if(this.bPostNavBar != bPostNavBar) {
+            this.bPostNavBar = bPostNavBar;
+            mEditor.putBoolean(SHOW_POST_NAVITATION_BAR, this.bPostNavBar);
+            mEditor.commit();
+        }
+    }
+
+
     private final String Preference_Name = "ZSMTH_Config";
 
     private SharedPreferences mPreference;
@@ -316,5 +330,7 @@ public class Settings {
         bNotificationReply = mPreference.getBoolean(NOTIFICATION_REPLY, true);
 
         bLaunchHotTopic = mPreference.getBoolean(LAUNCH_HOTTOPIC_AS_ENTRY, true);
+
+        bPostNavBar = mPreference.getBoolean(SHOW_POST_NAVITATION_BAR, true);
     }
 }
