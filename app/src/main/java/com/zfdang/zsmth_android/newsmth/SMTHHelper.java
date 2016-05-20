@@ -27,6 +27,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -989,7 +990,8 @@ public class SMTHHelper {
         List<Board> boards = new ArrayList<>();
         try {
             FileInputStream is = SMTHApplication.getAppContext().openFileInput(filename);
-            ObjectInputStream ois = new ObjectInputStream(is);
+            BufferedInputStream bis = new BufferedInputStream(is, 64000);
+            ObjectInputStream ois = new ObjectInputStream(bis);
             boards = (ArrayList<Board>) ois.readObject();
             is.close();
             Log.d("LoadBoardListFromCache", String.format("%d boards loaded from cache file %s", boards.size(), filename));
