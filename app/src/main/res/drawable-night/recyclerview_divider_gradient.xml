@@ -4,5 +4,6 @@
         android:startColor="@color/colorDivider"
         android:centerColor="@color/simple_text_color"
         android:endColor="@color/colorDivider"
+        android:gradientRadius="150dp"
         android:type="linear"/>
 </shape>
