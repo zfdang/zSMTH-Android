@@ -183,7 +183,12 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
                     public void onNext(Board board) {
 //                        Log.d(TAG, board.toString());
                         BoardListContent.addAllBoardItem(board);
-                        mRecyclerView.getAdapter().notifyItemInserted(BoardListContent.ALL_BOARDS.size() - 1);
+                        int size = BoardListContent.ALL_BOARDS.size();
+                        mRecyclerView.getAdapter().notifyItemInserted(size - 1);
+                        if(size == 50) {
+                            // if 50 items have been shown already, stop the loading hints
+                            clearLoadingHints();
+                        }
                     }
                 });
 

@@ -8,6 +8,9 @@ import android.graphics.RectF;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
@@ -27,14 +30,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -83,8 +81,8 @@ public class SMTHHelper {
     // All boards cache file
     public static int BOARD_TYPE_FAVORITE = 1;
     public static int BOARD_TYPE_ALL = 2;
-    static private final String ALL_BOARD_CACHE_FILE = "SMTH_ALL_BOARDS_CACHE";
-    static private final String FAVORITE_BOARD_CACHE_PREFIX = "SMTH_FAVORITE_CACHE";
+    static private final String ALL_BOARD_CACHE_FILE = "SMTH_ALLBD_CACHE_KRYO";
+    static private final String FAVORITE_BOARD_CACHE_PREFIX = "SMTH_FAVBD_CACHE_KYRO";
 
     // singleton
     private static SMTHHelper instance = null;
@@ -989,11 +987,10 @@ public class SMTHHelper {
         String filename = getCacheFile(type, folder);
         List<Board> boards = new ArrayList<>();
         try {
-            FileInputStream is = SMTHApplication.getAppContext().openFileInput(filename);
-            BufferedInputStream bis = new BufferedInputStream(is, 64000);
-            ObjectInputStream ois = new ObjectInputStream(bis);
-            boards = (ArrayList<Board>) ois.readObject();
-            is.close();
+            Kryo kryo = new Kryo();
+            Input input = new Input(SMTHApplication.getAppContext().openFileInput(filename));
+            boards = kryo.readObject(input, ArrayList.class);
+            input.close();
             Log.d("LoadBoardListFromCache", String.format("%d boards loaded from cache file %s", boards.size(), filename));
         } catch (Exception e) {
             Log.d("LoadBoardListFromCache", e.toString());
@@ -1005,10 +1002,10 @@ public class SMTHHelper {
     public static void SaveBoardListToCache(List<Board> boards, int type, String folder){
         String filename = getCacheFile(type, folder);
         try {
-            FileOutputStream fos = SMTHApplication.getAppContext().openFileOutput(filename, Context.MODE_PRIVATE);
-            ObjectOutputStream os = new ObjectOutputStream(fos);
-            os.writeObject(boards);
-            fos.close();
+            Kryo kryo = new Kryo();
+            Output output = new Output(SMTHApplication.getAppContext().openFileOutput(filename, Context.MODE_PRIVATE));
+            kryo.writeObject(output, boards);
+            output.close();
             Log.d("SaveBoardListToCache", String.format("%d boards saved to cache file %s", boards.size(), filename));
         } catch (Exception e) {
             Log.d("SaveBoardListToCache", e.toString());
