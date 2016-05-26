@@ -479,6 +479,11 @@ public class PostListActivity extends SMTHBaseActivity
 
     private void onPostPopupMenuItem(int position, int which) {
 //        Log.d(TAG, String.format("MenuItem %d was clicked", which));
+        if(position >= PostListContent.POSTS.size()) {
+            Log.e(TAG, "onPostPopupMenuItem: " + "Invalid Post index" + position );
+            return;
+        }
+
         Post post = PostListContent.POSTS.get(position);
         if(which == 0) {
             // post_reply_post
