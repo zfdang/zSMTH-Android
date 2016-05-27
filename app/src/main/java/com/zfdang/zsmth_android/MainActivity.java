@@ -281,26 +281,30 @@ public class MainActivity extends SMTHBaseActivity
 
 
     private void showNotification(String text) {
+        // http://stackoverflow.com/questions/13602190/java-lang-securityexception-requires-vibrate-permission-on-jelly-bean-4-2
+        try{
+            Intent notificationIntent = new Intent(MainActivity.this, MainActivity.class);
+            notificationIntent.putExtra(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE, text);
+            // http://stackoverflow.com/questions/26608627/how-to-open-fragment-page-when-pressed-a-notification-in-android
+            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            PendingIntent resultPendingIntent = PendingIntent.getActivity(MainActivity.this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Intent notificationIntent = new Intent(MainActivity.this, MainActivity.class);
-        notificationIntent.putExtra(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE, text);
-        // http://stackoverflow.com/questions/26608627/how-to-open-fragment-page-when-pressed-a-notification-in-android
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(MainActivity.this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.ic_launcher)
+                    .setContentTitle("zSMTH提醒")
+                    .setWhen(System.currentTimeMillis())
+                    .setAutoCancel(true)
+                    .setOnlyAlertOnce(true)
+                    .setDefaults(Notification.DEFAULT_VIBRATE)
+                    .setContentText(text)
+                    .setContentIntent(resultPendingIntent);
+            Notification notification = mBuilder.build();
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_launcher)
-                .setContentTitle("zSMTH提醒")
-                .setWhen(System.currentTimeMillis())
-                .setAutoCancel(true)
-                .setOnlyAlertOnce(true)
-                .setDefaults(Notification.DEFAULT_VIBRATE)
-                .setContentText(text)
-                .setContentIntent(resultPendingIntent);
-        Notification notification = mBuilder.build();
-
-        NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        mNotifyMgr.notify(notificationID, notification);
+            NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            mNotifyMgr.notify(notificationID, notification);
+        } catch (Exception se) {
+            Log.e(TAG, "showNotification: " + se.toString());
+        }
     }
 
     @Override
