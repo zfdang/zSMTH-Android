@@ -966,6 +966,26 @@ public class SMTHHelper {
         return result;
     }
 
+    // sample response: assets/deletion_response.html
+    public static String parseRepostResponse(String response) {
+        if(response == null) {
+            return "错误的返回结果";
+        }
+
+        if(response.contains("操作成功: 转贴成功！")){
+            return "操作成功: 转贴成功！";
+        }
+
+        Document doc = Jsoup.parse(response);
+        Elements errors = doc.select("table.error");
+        if(errors != null && errors.size() > 0) {
+            Element error = errors.first();
+            return error.text();
+        }
+
+        return "未识别的返回";
+    }
+
 
     /*
     * All Boards related methods

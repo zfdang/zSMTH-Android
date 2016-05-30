@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -35,6 +36,10 @@ public class PopupForwardWindow extends PopupWindow {
     private CheckBox mThread;
     private CheckBox mNoRef;
     private CheckBox mNoAtt;
+
+    private AutoCompleteTextView mTargetBoard;
+//    private ArrayAdapter<String> mBoarddapter;
+
 
 
     // http://stackoverflow.com/questions/23464232/how-would-you-create-a-popover-view-in-android-like-facebook-comments
@@ -122,6 +127,33 @@ public class PopupForwardWindow extends PopupWindow {
             }
         });
 
+
+        // implement post repost part
+        mTargetBoard = (AutoCompleteTextView) contentView.findViewById(R.id.popup_post_target);
+        // AutoCompleteTextView can't be used in PopupWindow
+//        loadBoardsForAutoCompletion();
+
+        Button cancel2 = (Button) contentView.findViewById(R.id.popup_post_cancel);
+        cancel2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+
+        Button confirm2 = (Button) contentView.findViewById(R.id.popup_post_confirm);
+        confirm2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mListener != null) {
+                    String target = mTargetBoard.getText().toString().trim();
+                    mListener.OnRePostAction(PopupForwardWindow.post, target, "on");
+                }
+                dismiss();
+            }
+        });
+
+
         // get device size
         Display display = context.getWindowManager().getDefaultDisplay();
         final Point size = new Point();
@@ -129,14 +161,43 @@ public class PopupForwardWindow extends PopupWindow {
 
         this.setContentView(contentView);
         this.setWidth((int)(size.x * 0.95));
-        this.setHeight((int)(size.y * 0.50));
+        this.setHeight((int)(size.y * 0.65));
         // http://stackoverflow.com/questions/12232724/popupwindow-dismiss-when-clicked-outside
         // this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.setFocusable(true);
     }
 
+//    public void loadBoardsForAutoCompletion() {
+//        final List<String> allboards = new ArrayList<>();
+//        if(mTargetBoard != null) {
+//            // all boards loaded in cached file
+//            Observable.from(SMTHHelper.LoadBoardListFromCache(SMTHHelper.BOARD_TYPE_ALL, null))
+//                    .subscribeOn(Schedulers.io())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe(new Subscriber<Board>() {
+//                        @Override
+//                        public void onCompleted() {
+//                            mBoarddapter = new ArrayAdapter<String>(mTargetBoard.getContext(), android.R.layout.simple_dropdown_item_1line, allboards);
+//                            mTargetBoard.setAdapter(mBoarddapter);
+//                            Log.d(TAG, "onCompleted: " + allboards.size());
+//                        }
+//
+//                        @Override
+//                        public void onError(Throwable e) {
+//                            Toast.makeText(SMTHApplication.getAppContext(), e.toString(), Toast.LENGTH_LONG).show();
+//                        }
+//
+//                        @Override
+//                        public void onNext(Board board) {
+//                            allboards.add(board.getBoardEngName());
+//                        }
+//                    });
+//        }
+//    }
+
     static public interface OnForwardInterface {
         public void OnForwardAction(Post post, String target, boolean threads, boolean noref, boolean noatt);
+        public void OnRePostAction(Post post, String target, String outgo);
     }
 
 }

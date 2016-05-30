@@ -184,4 +184,12 @@ public interface SMTHWWWService {
                                         @Path("folder") String folder,
                                         @FieldMap Map<String, String> mail);
 
+    // http://www.newsmth.net/bbsccc.php?do&board=DigiHome&id=575648
+    // target=test&outgo=on
+    @FormUrlEncoded
+    @POST("/bbsccc.php?do")
+    Observable<ResponseBody> repostPost(@Query("board") String boardEngName,
+                                        @Query("id") String postID,
+                                        @Field("target") String target,
+                                        @Field("outgo") String outgo);
 }

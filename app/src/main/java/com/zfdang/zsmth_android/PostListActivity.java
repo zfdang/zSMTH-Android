@@ -754,4 +754,42 @@ public class PostListActivity extends SMTHBaseActivity
 
 
     }
+
+    @Override
+    public void OnRePostAction(Post post, String target, String outgo) {
+        SMTHHelper helper = SMTHHelper.getInstance();
+        helper.wService.repostPost(mTopic.getBoardEngName(), post.getPostID(), target, outgo)
+                .map(new Func1<ResponseBody, String>() {
+                    @Override
+                    public String call(ResponseBody responseBody) {
+                        try {
+                            String response = SMTHHelper.DecodeResponseFromWWW(responseBody.bytes());
+                            return SMTHHelper.parseRepostResponse(response);
+                        } catch (Exception e) {
+                            Log.e(TAG, "call: " + Log.getStackTraceString(e) );
+                        }
+                        return null;
+
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Toast.makeText(SMTHApplication.getAppContext(), e.toString(), Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        Toast.makeText(SMTHApplication.getAppContext(), s, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+    }
 }
