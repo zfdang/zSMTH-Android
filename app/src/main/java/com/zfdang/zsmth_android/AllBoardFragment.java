@@ -41,7 +41,7 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
     final private String TAG = "AllBoardFragment";
     private RecyclerView mRecyclerView = null;
     private SearchView mSearchView = null;
-    private QueryTextListner mQueryListner = null;
+    private QueryTextListener mQueryListener = null;
 
     private OnBoardFragmentInteractionListener mListener = null;
     private BoardRecyclerViewAdapter mAdapter = null;
@@ -85,10 +85,10 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
         textView.setTextColor(getResources().getColor(R.color.status_text_night));
         textView.setHintTextColor(getResources().getColor(R.color.status_text_night));
 
-        if(mQueryListner == null) {
-            mQueryListner = new QueryTextListner((BoardRecyclerViewAdapter) mRecyclerView.getAdapter());
+        if(mQueryListener == null) {
+            mQueryListener = new QueryTextListener((BoardRecyclerViewAdapter) mRecyclerView.getAdapter());
         }
-        mSearchView.setOnQueryTextListener(mQueryListner);
+        mSearchView.setOnQueryTextListener(mQueryListener);
 
         // set focus to recyclerview
         mRecyclerView.requestFocus();
@@ -222,10 +222,10 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
         return super.onOptionsItemSelected(item);
     }
 
-    public class QueryTextListner implements  SearchView.OnQueryTextListener {
+    public class QueryTextListener implements  SearchView.OnQueryTextListener {
         private BoardRecyclerViewAdapter mAdapter = null;
 
-        public QueryTextListner(BoardRecyclerViewAdapter mAdapter) {
+        public QueryTextListener(BoardRecyclerViewAdapter mAdapter) {
             this.mAdapter = mAdapter;
         }
 
