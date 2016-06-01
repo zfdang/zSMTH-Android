@@ -725,13 +725,13 @@ public class PostListActivity extends SMTHBaseActivity
         String strNoatt = null;
         if(noatt) strNoatt = "on";
         String strNoansi = null;
-        if(target.contains("@")) strNoansi = "on";
+        if(target != null && target.contains("@")) strNoansi = "on";
 
         SMTHHelper helper = SMTHHelper.getInstance();
         helper.wService.forwardPost(mTopic.getBoardEngName(), post.getPostID(), target, strThreads, strNoref, strNoatt, strNoansi)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<AjaxResponse>() {
+                .subscribe(new Subscriber<AjaxResponse>() {java.lang.NullPointerException
                     @Override
                     public void onCompleted() {
                     }
