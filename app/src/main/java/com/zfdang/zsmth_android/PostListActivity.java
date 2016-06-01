@@ -731,7 +731,7 @@ public class PostListActivity extends SMTHBaseActivity
         helper.wService.forwardPost(mTopic.getBoardEngName(), post.getPostID(), target, strThreads, strNoref, strNoatt, strNoansi)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<AjaxResponse>() {java.lang.NullPointerException
+                .subscribe(new Subscriber<AjaxResponse>() {
                     @Override
                     public void onCompleted() {
                     }
