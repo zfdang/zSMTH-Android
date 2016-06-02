@@ -17,7 +17,6 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.DraweeHolder;
-import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
@@ -92,10 +91,10 @@ public class MyPhotoView extends PhotoView {
         return mDraweeHolder.onTouchEvent(event) || super.onTouchEvent(event);
     }
 
-    public void setImageUri(String uri, ResizeOptions options) {
+    public void setImageUri(String uri) {
 
         final ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(Uri.parse(uri))
-                .setResizeOptions(options)
+                .setResizeOptions(null)
                 .setAutoRotateEnabled(true)
                 .build();
         final ImagePipeline imagePipeline = Fresco.getImagePipeline();

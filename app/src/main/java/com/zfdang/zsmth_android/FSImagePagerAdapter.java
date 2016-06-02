@@ -45,7 +45,7 @@ public class FSImagePagerAdapter extends PagerAdapter {
         image.setTag(R.id.fsview_image_index, position);
         image.setMaximumScale(12.0f);
         // use only this method to set image
-        image.setImageUri(mURLs.get(position), null);
+        image.setImageUri(mURLs.get(position));
 
         image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
