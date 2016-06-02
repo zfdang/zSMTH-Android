@@ -48,9 +48,13 @@
             android:label="@string/title_topic_list"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+
+        <!--// OpenGLRenderer: Shape too large to be rendered into a texture (1428x42739, max=8192x8192)-->
+        <!--so we disable hardwareAccelerated for postListActivity & FSImageViewer-->
         <activity
             android:name=".PostListActivity"
             android:label="@string/title_topic_detail"
+            android:hardwareAccelerated="false"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity

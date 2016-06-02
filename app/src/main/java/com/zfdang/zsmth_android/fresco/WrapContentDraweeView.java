@@ -13,7 +13,6 @@ import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
@@ -86,7 +85,7 @@ public class WrapContentDraweeView extends SimpleDraweeView {
         // larger images are resized to 2048*2048
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
                 .setAutoRotateEnabled(true)
-                .setResizeOptions(new ResizeOptions(2048, 2048))
+//                .setResizeOptions(new ResizeOptions(2048, 2048))
                 .build();
 
         DraweeController controller = ((PipelineDraweeControllerBuilder) getControllerBuilder())
