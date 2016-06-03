@@ -172,7 +172,13 @@ public class WrapContentDraweeView extends SimpleDraweeView {
                     // split images if its height is too large: > OpenGL max Height
                     try {
                         int imageTotalHeight = destBitmap.getHeight();
-                        int imageMaxAllowedHeight = ImageUtils.getMaxHeight();
+                        double imageAspectRatio = destBitmap.getWidth() / (double)WindowWidth;
+                        int imageMaxAllowedHeight;
+                        if(imageAspectRatio < 1) {
+                            imageMaxAllowedHeight = (int) (ImageUtils.getMaxHeight() * imageAspectRatio) - 5;
+                        } else {
+                            imageMaxAllowedHeight = ImageUtils.getMaxHeight() - 5;
+                        }
                         int imageCount = getTimes(imageTotalHeight, imageMaxAllowedHeight);
 //                        Log.d(TAG, "process: h = " + imageTotalHeight + " w = " + destBitmap.getWidth() + " allowed: " + imageMaxAllowedHeight + " count: " + imageCount);
                         if (imageCount > 1) {

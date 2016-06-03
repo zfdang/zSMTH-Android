@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.klinker.android.link_builder.Link;
