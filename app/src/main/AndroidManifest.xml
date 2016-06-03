@@ -54,7 +54,6 @@
         <activity
             android:name=".PostListActivity"
             android:label="@string/title_topic_detail"
-            android:hardwareAccelerated="false"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity

@@ -1,10 +1,16 @@
 package com.zfdang.zsmth_android.fresco;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapRegionDecoder;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
@@ -13,26 +19,46 @@ import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.imagepipeline.request.BasePostprocessor;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.facebook.imagepipeline.request.Postprocessor;
 import com.zfdang.SMTHApplication;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStream;
+import java.util.ArrayList;
 
 
 /**
  * Created by zfdang on 2016-4-8.
  */
+
 // http://stackoverflow.com/questions/33955510/facebook-fresco-using-wrap-conent/34075281#34075281
+// http://blog.csdn.net/yuanhejie/article/details/49868131
 
 /**
  * Works when either height or width is set to wrap_content
- * The view is resized based on the image fetched
+ * The imageview will be resized after image was fetched;
+ *
+ * this view is also capable of handling very long image:
+ * it will split the long images into multiple bitmaps, and draw them one by one in OnDraw
  */
 
 public class WrapContentDraweeView extends SimpleDraweeView {
     private static final String TAG = "DraweeView";
+
+    private int windowWidth;
+    private BitmapRegionDecoder mDecoder;
+    private Rect bsrc;
+    private Rect src;
+    private Rect dst;
+    private Paint paint;
+    private ArrayList<Bitmap> bmps;
 
     // we set a listener and update the view's aspect ratio depending on the loaded image
     private final ControllerListener listener = new BaseControllerListener<ImageInfo>() {
@@ -50,42 +76,104 @@ public class WrapContentDraweeView extends SimpleDraweeView {
         }
     };
 
+    // update view's width & height after loading is done
+    void updateViewSize(@Nullable ImageInfo imageInfo) {
+        // since we have placeholder to show loading status, the height is 68dp, we need to reset height to WRAP_CONTENT
+        getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+
+        // set ratio, so that image view's width & height will be updated by Fresco
+        setAspectRatio((float) imageInfo.getWidth() / imageInfo.getHeight());
+    }
+
     public WrapContentDraweeView(Context context, GenericDraweeHierarchy hierarchy) {
         super(context, hierarchy);
-        InitProgressBar();
+        initDraweeView();
     }
 
     public WrapContentDraweeView(Context context) {
         super(context);
-        InitProgressBar();
+        initDraweeView();
     }
 
     public WrapContentDraweeView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        InitProgressBar();
+        initDraweeView();
     }
 
     public WrapContentDraweeView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        InitProgressBar();
+        initDraweeView();
     }
 
     public WrapContentDraweeView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        InitProgressBar();
+        initDraweeView();
     }
 
-    public void InitProgressBar() {
+    public void initDraweeView() {
         getHierarchy().setProgressBarImage(new LoadingProgressDrawable(SMTHApplication.getAppContext()));
+
+        windowWidth = getResources().getDisplayMetrics().widthPixels;
     }
+
+
+    // getTimes(3, 4) == 0
+    // getTimes(4, 4) == 1
+    // getTimes(8, 4) == 2
+    // getTimes(9, 4) == 3
+    int getTimes(int actualNumber, int allowedMaxNumber){
+        if(actualNumber < allowedMaxNumber)
+            return 0;
+        int result = actualNumber / allowedMaxNumber;
+        if(result * allowedMaxNumber < actualNumber) {
+            result += 1;
+        }
+        return result;
+    }
+
 
     @Override
     public void setImageURI(Uri uri, Object callerContext) {
-        // http://stackoverflow.com/questions/7428996/hw-accelerated-activity-how-to-get-opengl-texture-size-limit
-        // larger images are resized to 2048*2048
+        Postprocessor postProcessor = new BasePostprocessor() {
+            @Override
+            public String getName() {
+                return "SplitLongImagePostProcessor";
+            }
+
+            @Override
+            public void process(Bitmap bitmap) {
+                try {
+                    int imageTotalHeight = bitmap.getHeight();
+                    int imageMaxAllowedHeight = ImageUtils.getMaxHeight();
+                    int imageCount = getTimes(imageTotalHeight, imageMaxAllowedHeight);
+                    if (imageCount > 1) {
+                        bmps = new ArrayList<Bitmap>();
+                        bsrc = new Rect();
+
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                        InputStream isBm = new ByteArrayInputStream(baos.toByteArray());
+                        mDecoder = BitmapRegionDecoder.newInstance(isBm, true);
+                        for (int i = 0; i < imageCount; i++) {
+                            bsrc.left = 0;
+                            bsrc.top = i * imageMaxAllowedHeight;
+                            bsrc.right = bitmap.getWidth();
+                            bsrc.bottom = Math.min(bsrc.top + imageMaxAllowedHeight, imageTotalHeight);
+                            Bitmap bmp = mDecoder.decodeRegion(bsrc, null);
+                            bmps.add(bmp);
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, Log.getStackTraceString(e));
+                }
+            }
+        };
+
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
                 .setAutoRotateEnabled(true)
-//                .setResizeOptions(new ResizeOptions(2048, 2048))
+                // this will reduce image's size if it's wider than screen width
+                .setResizeOptions(new ResizeOptions(windowWidth, Integer.MAX_VALUE))
+                .setPostprocessor(postProcessor)
                 .build();
 
         DraweeController controller = ((PipelineDraweeControllerBuilder) getControllerBuilder())
@@ -96,16 +184,41 @@ public class WrapContentDraweeView extends SimpleDraweeView {
                 .setOldController(getController())
                 .build();
         setController(controller);
-
-//        Log.d(TAG, "setImageURI: " + "With Context");
     }
 
-    void updateViewSize(@Nullable ImageInfo imageInfo) {
-        // since we have placeholder to show loading status, the height is 68dp, we need to reset height to WRAP_CONTENT
-        getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+    @Override
+    protected void onDraw(Canvas canvas) {
+        if(bmps == null || bmps.size() <= 1) {
+            // use super.onDraw
+            super.onDraw(canvas);
+        } else {
+            if(paint == null) {
+                paint = new Paint();
+                paint.setAntiAlias(true);
+                paint.setFilterBitmap(true);
 
-        // set ratio
-        setAspectRatio((float) imageInfo.getWidth() / imageInfo.getHeight());
+                src = new Rect();
+                dst = new Rect();
+            }
+
+            // this is a very large image, and it has been splitted into several small bitmaps
+            int accumulatedHeight = 0;
+            for (int i = 0; i < bmps.size(); i++) {
+                Bitmap bmp = bmps.get(i);
+                src.left = 0;
+                src.top = 0;
+                src.right = bmp.getWidth();
+                src.bottom = bmp.getHeight();
+
+                dst.left = 0;
+                dst.top = accumulatedHeight;
+                dst.right = getWidth();
+                dst.bottom = accumulatedHeight + (int)((float)src.bottom / (float)src.right * getWidth());
+                canvas.drawBitmap(bmp, src, dst, paint);
+
+                accumulatedHeight = dst.bottom + 1;
+            }
+        }
     }
 
     // load image from string URL
