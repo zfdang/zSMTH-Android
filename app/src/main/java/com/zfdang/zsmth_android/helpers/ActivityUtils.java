@@ -22,7 +22,11 @@ public class ActivityUtils {
     private static final String TAG = "ActivityUtils";
 
     public static void openLink(String link, Activity activity) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+        Uri uri = Uri.parse(link);
+        if(uri.getScheme() == null) {
+            uri = Uri.parse("http://" + link);
+        }
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
         try {
             activity.startActivity(browserIntent);
         } catch(ActivityNotFoundException e) {
