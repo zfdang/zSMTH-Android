@@ -13,13 +13,14 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup;
 
+import com.facebook.common.references.CloseableReference;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.BasePostprocessor;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -52,9 +53,7 @@ import java.util.ArrayList;
 public class WrapContentDraweeView extends SimpleDraweeView {
     private static final String TAG = "DraweeView";
 
-    private int windowWidth;
-    private BitmapRegionDecoder mDecoder;
-    private Rect bsrc;
+    private int WindowWidth;
     private Rect src;
     private Rect dst;
     private Paint paint;
@@ -81,7 +80,7 @@ public class WrapContentDraweeView extends SimpleDraweeView {
         // since we have placeholder to show loading status, the height is 68dp, we need to reset height to WRAP_CONTENT
         getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
 
-        // set ratio, so that image view's width & height will be updated by Fresco
+        // set ratio, so that image view's height will be updated by Fresco (width = match_parent)
         setAspectRatio((float) imageInfo.getWidth() / imageInfo.getHeight());
     }
 
@@ -113,7 +112,14 @@ public class WrapContentDraweeView extends SimpleDraweeView {
     public void initDraweeView() {
         getHierarchy().setProgressBarImage(new LoadingProgressDrawable(SMTHApplication.getAppContext()));
 
-        windowWidth = getResources().getDisplayMetrics().widthPixels;
+        WindowWidth = getResources().getDisplayMetrics().widthPixels;
+
+        paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setFilterBitmap(true);
+
+        src = new Rect();
+        dst = new Rect();
     }
 
 
@@ -134,6 +140,8 @@ public class WrapContentDraweeView extends SimpleDraweeView {
 
     @Override
     public void setImageURI(Uri uri, Object callerContext) {
+        // http://frescolib.org/docs/modifying-image.html
+        // this post process will do two things: 1. resize if image width is too large; 2. split if image height is too large
         Postprocessor postProcessor = new BasePostprocessor() {
             @Override
             public String getName() {
@@ -141,30 +149,55 @@ public class WrapContentDraweeView extends SimpleDraweeView {
             }
 
             @Override
-            public void process(Bitmap bitmap) {
-                try {
-                    int imageTotalHeight = bitmap.getHeight();
-                    int imageMaxAllowedHeight = ImageUtils.getMaxHeight();
-                    int imageCount = getTimes(imageTotalHeight, imageMaxAllowedHeight);
-                    if (imageCount > 1) {
-                        bmps = new ArrayList<Bitmap>();
-                        bsrc = new Rect();
+            public CloseableReference<Bitmap> process(
+                    Bitmap sourceBitmap,
+                    PlatformBitmapFactory bitmapFactory) {
+                CloseableReference<Bitmap>  bitmapRef = null;
 
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                        InputStream isBm = new ByteArrayInputStream(baos.toByteArray());
-                        mDecoder = BitmapRegionDecoder.newInstance(isBm, true);
-                        for (int i = 0; i < imageCount; i++) {
-                            bsrc.left = 0;
-                            bsrc.top = i * imageMaxAllowedHeight;
-                            bsrc.right = bitmap.getWidth();
-                            bsrc.bottom = Math.min(bsrc.top + imageMaxAllowedHeight, imageTotalHeight);
-                            Bitmap bmp = mDecoder.decodeRegion(bsrc, null);
-                            bmps.add(bmp);
-                        }
+                try {
+                    // resize image if its width is too large: > windowWidth * 1.5
+                    double ratio = 1.0;
+                    if (sourceBitmap.getWidth() >= WindowWidth * 1.5) {
+                        ratio = (double)WindowWidth / sourceBitmap.getWidth();
                     }
-                } catch (Exception e) {
-                    Log.e(TAG, Log.getStackTraceString(e));
+                    bitmapRef = bitmapFactory.createBitmap(
+                            (int) (sourceBitmap.getWidth() * ratio),
+                            (int) (sourceBitmap.getHeight() * ratio));
+
+                    Bitmap destBitmap = bitmapRef.get();
+                    Canvas canvas = new Canvas(destBitmap);
+                    Rect destRect = new Rect(0, 0, destBitmap.getWidth(), destBitmap.getHeight());
+                    canvas.drawBitmap(sourceBitmap, null, destRect, paint);
+
+                    // split images if its height is too large: > OpenGL max Height
+                    try {
+                        int imageTotalHeight = destBitmap.getHeight();
+                        int imageMaxAllowedHeight = ImageUtils.getMaxHeight();
+                        int imageCount = getTimes(imageTotalHeight, imageMaxAllowedHeight);
+//                        Log.d(TAG, "process: h = " + imageTotalHeight + " w = " + destBitmap.getWidth() + " allowed: " + imageMaxAllowedHeight + " count: " + imageCount);
+                        if (imageCount > 1) {
+                            bmps = new ArrayList<Bitmap>();
+                            Rect bsrc = new Rect();
+
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            destBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                            InputStream isBm = new ByteArrayInputStream(baos.toByteArray());
+                            BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(isBm, true);
+                            for (int i = 0; i < imageCount; i++) {
+                                bsrc.left = 0;
+                                bsrc.top = i * imageMaxAllowedHeight;
+                                bsrc.right = destBitmap.getWidth();
+                                bsrc.bottom = Math.min(bsrc.top + imageMaxAllowedHeight, imageTotalHeight);
+                                Bitmap bmp = decoder.decodeRegion(bsrc, null);
+                                bmps.add(bmp);
+                            }
+                        }
+                    } catch (Exception e) {
+                        Log.e(TAG, Log.getStackTraceString(e));
+                    }
+                    return CloseableReference.cloneOrNull(bitmapRef);
+                } finally {
+                    CloseableReference.closeSafely(bitmapRef);
                 }
             }
         };
@@ -172,7 +205,7 @@ public class WrapContentDraweeView extends SimpleDraweeView {
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
                 .setAutoRotateEnabled(true)
                 // this will reduce image's size if it's wider than screen width
-                .setResizeOptions(new ResizeOptions(windowWidth, Integer.MAX_VALUE))
+//                .setResizeOptions(new ResizeOptions(WindowWidth, Integer.MAX_VALUE))
                 .setPostprocessor(postProcessor)
                 .build();
 
@@ -192,15 +225,6 @@ public class WrapContentDraweeView extends SimpleDraweeView {
             // use super.onDraw
             super.onDraw(canvas);
         } else {
-            if(paint == null) {
-                paint = new Paint();
-                paint.setAntiAlias(true);
-                paint.setFilterBitmap(true);
-
-                src = new Rect();
-                dst = new Rect();
-            }
-
             // this is a very large image, and it has been splitted into several small bitmaps
             int accumulatedHeight = 0;
             for (int i = 0; i < bmps.size(); i++) {
