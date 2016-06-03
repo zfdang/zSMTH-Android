@@ -11,7 +11,8 @@ public class Regex {
 
     // https://mathiasbynens.be/demo/url-regex
     public static final Pattern Emosol_WEB_URL_PATTERN
-            = Pattern.compile("(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/[^\\s]*)?");
+            = Pattern.compile("((?:https?:\\/\\/|www\\d{0,3}[.]|[a-z0-9.\\-]+[.][a-z]{2,4}\\/)(?:[^\\s()<>]+|\\((?:[^\\s()<>]+|(?:\\([^\\s()<>]+\\)))*\\))+(?:\\((?:[^\\s()<>]+|(?:\\([^\\s()<>]+\\)))*\\)|[^\\s`!()\\[\\]{};:\\'\".,<>?\\xab\\xbb\\u201c\\u201d\\u2018\\u2019]))",
+            Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
 
 
     public static final Pattern Diegoperini_WEB_URL_PATTERN
