@@ -7,7 +7,6 @@ package com.zfdang.zsmth_android.helpers;
 import java.util.regex.Pattern;
 
 // https://github.com/klinker24/Talon-for-Twitter/blob/master/src/main/java/com/klinker/android/twitter/utils/text/Regex.java
-
 public class Regex {
 
     // https://mathiasbynens.be/demo/url-regex
