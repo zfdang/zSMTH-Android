@@ -24,6 +24,7 @@ import com.zfdang.zsmth_android.models.ComposePostContext;
 import com.zfdang.zsmth_android.models.ContentSegment;
 import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.Post;
+import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 
@@ -38,6 +39,7 @@ public class MailContentActivity extends AppCompatActivity {
 
     private static final String TAG = "MailContent";
     private Mail mMail;
+    private int mPostGroupId;
     private Post mPost;
 
     public TextView mPostAuthor;
@@ -94,6 +96,7 @@ public class MailContentActivity extends AppCompatActivity {
                 .map(new Func1<AjaxResponse, Post>() {
                     @Override
                     public Post call(AjaxResponse ajaxResponse) {
+                        mPostGroupId = ajaxResponse.getGroup_id();
                         return SMTHHelper.ParseMailContentFromWWW(ajaxResponse.getContent());
                     }
                 })
@@ -205,6 +208,22 @@ public class MailContentActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, ComposePostActivity.class);
                 intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
                 startActivity(intent);
+            }
+        } else if(id == R.id.mail_content_open_post) {
+            if(mMail.fromBoard != null && mMail.fromBoard.length() > 0) {
+//                Log.d(TAG, "onOptionsItemSelected: " + mMail.fromBoard + mPostGroupId);
+                Topic topic = new Topic();
+                topic.setTopicID(Integer.toString(mPostGroupId));
+                topic.setAuthor(mPost.getRawAuthor());
+                topic.setTitle(mPost.getTitle());
+
+                Intent intent = new Intent(this, PostListActivity.class);
+                topic.setBoardEngName(mMail.fromBoard);
+                intent.putExtra(SMTHApplication.TOPIC_OBJECT, topic);
+                intent.putExtra(SMTHApplication.FROM_BOARD, SMTHApplication.FROM_BOARD_BOARD);
+                startActivity(intent);
+            } else {
+                Toast.makeText(MailContentActivity.this, "普通邮件，无法打开原贴!", Toast.LENGTH_LONG).show();
             }
         }
         return super.onOptionsItemSelected(item);

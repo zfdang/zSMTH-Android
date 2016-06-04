@@ -8,4 +8,10 @@
         android:icon="@drawable/ic_reply_white_36dp"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/mail_content_open_post"
+        android:orderInCategory="1"
+        android:title="@string/mail_content_menu_open_post"
+        android:icon="@drawable/ic_launch_white_24dp"
+        app:showAsAction="always" />
 </menu>

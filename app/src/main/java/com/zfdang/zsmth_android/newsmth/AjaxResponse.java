@@ -32,6 +32,7 @@ public class AjaxResponse implements Parcelable {
     private String ajax_code;
     private String ajax_msg;
     private String content;
+    private int group_id;
 
     public AjaxResponse() {
     }
@@ -68,6 +69,14 @@ public class AjaxResponse implements Parcelable {
         this.content = content;
     }
 
+    public int getGroup_id() {
+        return group_id;
+    }
+
+    public void setGroup_id(int group_id) {
+        this.group_id = group_id;
+    }
+
     @Override
     public String toString() {
         return "AjaxResponse{" +
@@ -75,8 +84,10 @@ public class AjaxResponse implements Parcelable {
                 ", ajax_st=" + ajax_st +
                 ", ajax_msg='" + ajax_msg + '\'' +
                 ", content='" + content + '\'' +
+                ", group_id=" + group_id +
                 '}';
     }
+
 
     @Override
     public int describeContents() {
@@ -89,6 +100,7 @@ public class AjaxResponse implements Parcelable {
         dest.writeString(this.ajax_code);
         dest.writeString(this.ajax_msg);
         dest.writeString(this.content);
+        dest.writeInt(this.group_id);
     }
 
     protected AjaxResponse(Parcel in) {
@@ -96,6 +108,7 @@ public class AjaxResponse implements Parcelable {
         this.ajax_code = in.readString();
         this.ajax_msg = in.readString();
         this.content = in.readString();
+        this.group_id = in.readInt();
     }
 
     public static final Creator<AjaxResponse> CREATOR = new Creator<AjaxResponse>() {
