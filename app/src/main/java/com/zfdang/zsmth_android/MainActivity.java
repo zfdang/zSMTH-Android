@@ -669,9 +669,10 @@ public class MainActivity extends SMTHBaseActivity
 
     @Override
     public void onMailInteraction(Mail item, int position) {
+        if (item.isCategory) return;
+
         // mark item as readed
         mailListFragment.markMailAsReaded(position);
-
         // MailListFragment
         Intent intent = new Intent(this, MailContentActivity.class);
         intent.putExtra(SMTHApplication.MAIL_OBJECT, (Parcelable) item);
