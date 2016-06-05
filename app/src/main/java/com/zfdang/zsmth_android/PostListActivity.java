@@ -431,6 +431,7 @@ public class PostListActivity extends SMTHBaseActivity
                 new PostActionAlertDialogItem(getString(R.string.post_view_in_browser), R.drawable.ic_open_in_browser_black_48dp), // 7
                 new PostActionAlertDialogItem(getString(R.string.post_share), R.drawable.ic_share_black_48dp), // 8
                 new PostActionAlertDialogItem(getString(R.string.post_delete_post), R.drawable.ic_delete_black_48dp), // 9
+                new PostActionAlertDialogItem(getString(R.string.post_edit_post), R.drawable.ic_edit_black_48dp), // 10
         };
 
 
@@ -573,6 +574,19 @@ public class PostListActivity extends SMTHBaseActivity
         } else if (which == 9) {
             // delete post
             deletePost(post);
+        } else if (which == 10) {
+            // edit post
+            ComposePostContext postContext = new ComposePostContext();
+            postContext.setBoardEngName(mTopic.getBoardEngName());
+            postContext.setPostId(post.getPostID());
+            postContext.setPostTitle(mTopic.getTitle());
+            postContext.setPostAuthor(post.getRawAuthor());
+            postContext.setPostContent(post.getRawContent());
+            postContext.setComposingMode(ComposePostContext.MODE_EDIT_POST);
+
+            Intent intent = new Intent(this, ComposePostActivity.class);
+            intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
+            startActivity(intent);
         }
     }
 

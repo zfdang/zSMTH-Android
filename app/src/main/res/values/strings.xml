@@ -138,4 +138,5 @@
     <string name="about_close">关闭</string>
     <string name="mail_content_menu_open_post">打开原贴</string>
     <string name="mail_content_title">加载中...</string>
+    <string name="post_edit_post">修改文章</string>
 </resources>
