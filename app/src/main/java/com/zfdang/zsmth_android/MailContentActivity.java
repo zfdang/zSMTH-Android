@@ -42,6 +42,7 @@ public class MailContentActivity extends AppCompatActivity {
     private int mPostGroupId;
     private Post mPost;
 
+    public TextView mMailTitle;
     public TextView mPostAuthor;
     public TextView mPostIndex;
     public TextView mPostPublishDate;
@@ -67,6 +68,7 @@ public class MailContentActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_mail_content);
 
+        mMailTitle =  (TextView) findViewById(R.id.mail_content_title);
         // init post widget
         mPostAuthor = (TextView) findViewById(R.id.post_author);
         mPostIndex = (TextView) findViewById(R.id.post_index);
@@ -124,6 +126,7 @@ public class MailContentActivity extends AppCompatActivity {
 
                         mPostAuthor.setText(mPost.getRawAuthor());
                         mPostPublishDate.setText(mPost.getFormatedDate());
+                        mMailTitle.setText(mPost.getTitle());
                         inflateContentViewGroup(mViewGroup, mPostContent, mPost);
                     }
                 });
