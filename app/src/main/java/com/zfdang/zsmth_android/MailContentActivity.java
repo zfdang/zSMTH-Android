@@ -219,6 +219,7 @@ public class MailContentActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(this, PostListActivity.class);
                 topic.setBoardEngName(mMail.fromBoard);
+                topic.setBoardChsName(mMail.fromBoard);
                 intent.putExtra(SMTHApplication.TOPIC_OBJECT, topic);
                 intent.putExtra(SMTHApplication.FROM_BOARD, SMTHApplication.FROM_BOARD_BOARD);
                 startActivity(intent);
