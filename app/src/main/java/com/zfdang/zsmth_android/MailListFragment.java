@@ -483,7 +483,7 @@ public class MailListFragment extends Fragment implements View.OnClickListener{
         if (id == R.id.mail_list_fragment_newmail) {
             // write new mail
             ComposePostContext postContext = new ComposePostContext();
-            postContext.setThroughMail(true);
+            postContext.setComposingMode(ComposePostContext.MODE_NEW_MAIL);
             Intent intent = new Intent(getActivity(), ComposePostActivity.class);
             intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
             startActivity(intent);

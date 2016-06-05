@@ -161,47 +161,53 @@ public class ComposePostActivity extends SMTHBaseActivity {
         // 5. write new mail: invalid post && isThroughMail
 
         // set title, hide userRow / attachRow if necessary
-        if(! mPostContext.isThroughMail()) {
-            // hide user row, and enable attachment button
+        if(mPostContext.getComposingMode() == ComposePostContext.MODE_NEW_POST) {
             mUserRow.setVisibility(View.GONE);
-            if(mPostContext.isValidPost()) {
-                // reply post
-                setTitle(String.format("回复文章@%s", mPostContext.getBoardEngName()));
-            } else {
-                // write new post
-                setTitle(String.format("发表文章@%s", mPostContext.getBoardEngName()));
-            }
-        } else {
+            setTitle(String.format("发表文章@%s", mPostContext.getBoardEngName()));
+        } else if(mPostContext.getComposingMode() == ComposePostContext.MODE_REPLY_POST) {
+            mUserRow.setVisibility(View.GONE);
+            setTitle(String.format("回复文章@%s", mPostContext.getBoardEngName()));
+        } else if(mPostContext.getComposingMode() == ComposePostContext.MODE_EDIT_POST) {
+            mUserRow.setVisibility(View.GONE);
             mAttachRow.setVisibility(View.GONE);
-
-            if(mPostContext.isValidPost()) {
-                // reply post
-                setTitle("回复信件");
-                mUserID.setEnabled(false);
-            } else {
-                // write new post
-                setTitle("写新信件");
-            }
+            setTitle(String.format("修改文章@%s", mPostContext.getBoardEngName()));
+        } else if(mPostContext.getComposingMode() == ComposePostContext.MODE_NEW_MAIL ){
+            mAttachRow.setVisibility(View.GONE);
+            setTitle("写新信件");
+        } else if(mPostContext.getComposingMode() == ComposePostContext.MODE_NEW_MAIL_TO_USER ){
+            mAttachRow.setVisibility(View.GONE);
+            setTitle("写新信件");
             mUserID.setText(mPostContext.getPostAuthor());
+            mUserID.setEnabled(false);
+        } else if(mPostContext.getComposingMode() == ComposePostContext.MODE_REPLY_MAIL){
+            mAttachRow.setVisibility(View.GONE);
+            setTitle("回复信件");
+            mUserID.setText(mPostContext.getPostAuthor());
+            mUserID.setEnabled(false);
         }
 
         // set post title & content
         if(mPostContext.isValidPost()) {
             // have valid post information
-            mTitle.setText(String.format("Re: %s", mPostContext.getPostTitle()));
+            if(mPostContext.getComposingMode() == ComposePostContext.MODE_EDIT_POST) {
+                mTitle.setText(mPostContext.getPostTitle());
+                mContent.setText(mPostContext.getPostContent());
+            } else {
+                mTitle.setText(String.format("Re: %s", mPostContext.getPostTitle()));
 
-            String[] lines = mPostContext.getPostContent().split("\n");
-            StringBuilder wordList = new StringBuilder();
-            wordList.append("\n\n");
-            wordList.append(String.format("【 在 %s 的大作中提到: 】", mPostContext.getPostAuthor())).append("\n");
-            for(int i = 0; i < lines.length && i < 5; i++) {
-                if(lines[i].startsWith("--")){
-                    // this might be the start of signature, ignore following lines in quote
-                    break;
+                String[] lines = mPostContext.getPostContent().split("\n");
+                StringBuilder wordList = new StringBuilder();
+                wordList.append("\n\n");
+                wordList.append(String.format("【 在 %s 的大作中提到: 】", mPostContext.getPostAuthor())).append("\n");
+                for(int i = 0; i < lines.length && i < 5; i++) {
+                    if(lines[i].startsWith("--")){
+                        // this might be the start of signature, ignore following lines in quote
+                        break;
+                    }
+                    wordList.append(String.format(": %s", lines[i])).append("\n");
                 }
-                wordList.append(String.format(": %s", lines[i])).append("\n");
+                mContent.setText(new String(wordList));
             }
-            mContent.setText(new String(wordList));
 
             // focus content, and move cursor to the beginning
             mContent.requestFocus();
@@ -286,12 +292,16 @@ public class ComposePostActivity extends SMTHBaseActivity {
 
         // publish post
         String postContent = mContent.getText().toString() + "\n" + String.format("#发自zSMTH@%s", Settings.getInstance().getSignature());
-        Observable<AjaxResponse> resp2;
-        if(mPostContext.isThroughMail()){
+        Observable<AjaxResponse> resp2 = null;
+        if (mPostContext.getComposingMode() == ComposePostContext.MODE_NEW_MAIL
+                || mPostContext.getComposingMode() == ComposePostContext.MODE_NEW_MAIL_TO_USER
+                || mPostContext.getComposingMode() == ComposePostContext.MODE_REPLY_MAIL) {
             String userid = mUserID.getText().toString().trim();
             resp2 = SMTHHelper.sendMail(userid, mTitle.getText().toString(), postContent);
-        } else {
-            resp2 = SMTHHelper.publishPost(mPostContext.getBoardEngName(), mTitle.getText().toString(), postContent, "0", mPostContext.getPostid());
+        } else if (mPostContext.getComposingMode() == ComposePostContext.MODE_NEW_POST
+                || mPostContext.getComposingMode() == ComposePostContext.MODE_REPLY_POST) {
+            resp2 = SMTHHelper.publishPost(mPostContext.getBoardEngName(), mTitle.getText().toString(), postContent, "0", mPostContext.getPostId());
+        } else if (mPostContext.getComposingMode() == ComposePostContext.MODE_EDIT_POST) {
         }
 
         // process all these tasks one by one
@@ -305,7 +315,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
 
                         String message = null;
                         if(postPublishResult != AjaxResponse.AJAX_RESULT_OK) {
-                            message = "发表失败! \n错误信息:\n" + postPublishMessage;
+                            message = "操作失败! \n错误信息:\n" + postPublishMessage;
                             Toast.makeText(ComposePostActivity.this, message, Toast.LENGTH_LONG).show();
                         } else {
                             if(lastResponse != null) {
@@ -328,7 +338,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
                     @Override
                     public void onError(Throwable e) {
                         dismissProgress();
-                        Toast.makeText(SMTHApplication.getAppContext(), "发布失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(SMTHApplication.getAppContext(), "发生错误:\n" + e.toString(), Toast.LENGTH_LONG).show();
                     }
 
                     @Override

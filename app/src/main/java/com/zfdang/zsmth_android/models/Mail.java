@@ -53,6 +53,10 @@ public class Mail implements Parcelable {
         return "";
     }
 
+    public boolean isRefferedPost() {
+        return this.fromBoard != null && this.fromBoard.length() > 0;
+    }
+
 
     @Override
     public String toString() {

@@ -7,26 +7,34 @@ import android.os.Parcelable;
  * Created by zfdang on 2016-4-4.
  */
 public class ComposePostContext implements Parcelable {
+    public static int MODE_NEW_POST = 1;
+    public static int MODE_REPLY_POST = 2;  // two entries: 1. reply post in post list; 2. reply reffered post in mailbox
+    public static int MODE_EDIT_POST = 3;
+    public static int MODE_NEW_MAIL = 4;
+    public static int MODE_NEW_MAIL_TO_USER = 5;  // new mail in user query interface
+    public static int MODE_REPLY_MAIL = 6;  // two entries: 1. reply mail in mail box 2. reply post via mail in post list
+
     private String boardEngName;
     private String postTitle;
-    private String postid;
+    private String postId;
     private String postContent;
     private String postAuthor;
-    private boolean throughMail;
+
+    public int getComposingMode() {
+        return composingMode;
+    }
+
+    public void setComposingMode(int composingMode) {
+        this.composingMode = composingMode;
+    }
+
+    private int composingMode;
 
     public ComposePostContext() {
     }
 
-    public boolean isThroughMail() {
-        return throughMail;
-    }
-
     public boolean isValidPost() {
         return postTitle != null && postTitle.length() > 0;
-    }
-
-    public void setThroughMail(boolean throughMail) {
-        this.throughMail = throughMail;
     }
 
     public String getBoardEngName() {
@@ -45,12 +53,12 @@ public class ComposePostContext implements Parcelable {
         this.postContent = postContent;
     }
 
-    public String getPostid() {
-        return postid;
+    public String getPostId() {
+        return postId;
     }
 
-    public void setPostid(String postid) {
-        this.postid = postid;
+    public void setPostId(String postId) {
+        this.postId = postId;
     }
 
     public String getPostTitle() {
@@ -70,6 +78,18 @@ public class ComposePostContext implements Parcelable {
     }
 
     @Override
+    public String toString() {
+        return "ComposePostContext{" +
+                "boardEngName='" + boardEngName + '\'' +
+                ", postTitle='" + postTitle + '\'' +
+                ", postId='" + postId + '\'' +
+                ", postContent='" + postContent + '\'' +
+                ", postAuthor='" + postAuthor + '\'' +
+                ", composingMode=" + composingMode +
+                '}';
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }
@@ -78,19 +98,19 @@ public class ComposePostContext implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.boardEngName);
         dest.writeString(this.postTitle);
-        dest.writeString(this.postid);
+        dest.writeString(this.postId);
         dest.writeString(this.postContent);
         dest.writeString(this.postAuthor);
-        dest.writeByte(throughMail ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.composingMode);
     }
 
     protected ComposePostContext(Parcel in) {
         this.boardEngName = in.readString();
         this.postTitle = in.readString();
-        this.postid = in.readString();
+        this.postId = in.readString();
         this.postContent = in.readString();
         this.postAuthor = in.readString();
-        this.throughMail = in.readByte() != 0;
+        this.composingMode = in.readInt();
     }
 
     public static final Creator<ComposePostContext> CREATOR = new Creator<ComposePostContext>() {
@@ -104,16 +124,4 @@ public class ComposePostContext implements Parcelable {
             return new ComposePostContext[size];
         }
     };
-
-    @Override
-    public String toString() {
-        return "ComposePostContext{" +
-                "boardEngName='" + boardEngName + '\'' +
-                ", postTitle='" + postTitle + '\'' +
-                ", postid='" + postid + '\'' +
-                ", postContent='" + postContent + '\'' +
-                ", postAuthor='" + postAuthor + '\'' +
-                ", throughMail=" + throughMail +
-                '}';
-    }
 }

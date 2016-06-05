@@ -489,11 +489,11 @@ public class PostListActivity extends SMTHBaseActivity
             // post_reply_post
             ComposePostContext postContext = new ComposePostContext();
             postContext.setBoardEngName(mTopic.getBoardEngName());
-            postContext.setPostid(post.getPostID());
+            postContext.setPostId(post.getPostID());
             postContext.setPostTitle(mTopic.getTitle());
             postContext.setPostAuthor(post.getRawAuthor());
             postContext.setPostContent(post.getRawContent());
-            postContext.setThroughMail(false);
+            postContext.setComposingMode(ComposePostContext.MODE_REPLY_POST);
 
             Intent intent = new Intent(this, ComposePostActivity.class);
             intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
@@ -509,11 +509,11 @@ public class PostListActivity extends SMTHBaseActivity
             // Toast.makeText(PostListActivity.this, "回复到作者信箱:TBD", Toast.LENGTH_SHORT).show();
             ComposePostContext postContext = new ComposePostContext();
             postContext.setBoardEngName(mTopic.getBoardEngName());
-            postContext.setPostid(post.getPostID());
+            postContext.setPostId(post.getPostID());
             postContext.setPostTitle(mTopic.getTitle());
             postContext.setPostAuthor(post.getRawAuthor());
             postContext.setPostContent(post.getRawContent());
-            postContext.setThroughMail(true);
+            postContext.setComposingMode(ComposePostContext.MODE_REPLY_MAIL);
 
             Intent intent = new Intent(this, ComposePostActivity.class);
             intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);

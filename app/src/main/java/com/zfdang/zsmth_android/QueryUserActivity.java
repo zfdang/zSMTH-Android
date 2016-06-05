@@ -119,7 +119,7 @@ public class QueryUserActivity extends SMTHBaseActivity {
         } else if (code == R.id.query_user_action_message) {
             // write mail to current user
             ComposePostContext postContext = new ComposePostContext();
-            postContext.setThroughMail(true);
+            postContext.setComposingMode(ComposePostContext.MODE_NEW_MAIL_TO_USER);
             postContext.setPostAuthor(mUserId.getText().toString());
 
             Intent intent = new Intent(this, ComposePostActivity.class);

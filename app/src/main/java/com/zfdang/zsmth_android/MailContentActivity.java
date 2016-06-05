@@ -193,16 +193,16 @@ public class MailContentActivity extends AppCompatActivity {
                 return true;
             } else {
                 ComposePostContext postContext = new ComposePostContext();
-                postContext.setPostid(mPost.getPostID());
+                postContext.setPostId(mPost.getPostID());
                 postContext.setPostTitle(mPost.getTitle());
                 postContext.setPostAuthor(mPost.getRawAuthor());
                 postContext.setPostContent(mPost.getRawContent());
 
-                if(mMail.fromBoard != null && mMail.fromBoard.length() > 0) {
+                if(mMail.isRefferedPost()) {
                     postContext.setBoardEngName(mMail.fromBoard);
-                    postContext.setThroughMail(false);
+                    postContext.setComposingMode(ComposePostContext.MODE_REPLY_POST);
                 } else {
-                    postContext.setThroughMail(true);
+                    postContext.setComposingMode(ComposePostContext.MODE_REPLY_MAIL);
                 }
 
                 Intent intent = new Intent(this, ComposePostActivity.class);
@@ -210,8 +210,7 @@ public class MailContentActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         } else if(id == R.id.mail_content_open_post) {
-            if(mMail.fromBoard != null && mMail.fromBoard.length() > 0) {
-//                Log.d(TAG, "onOptionsItemSelected: " + mMail.fromBoard + mPostGroupId);
+            if(mMail.isRefferedPost()) {
                 Topic topic = new Topic();
                 topic.setTopicID(Integer.toString(mPostGroupId));
                 topic.setAuthor(mPost.getRawAuthor());
