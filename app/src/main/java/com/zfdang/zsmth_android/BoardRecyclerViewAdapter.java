@@ -19,7 +19,6 @@ import java.util.regex.Pattern;
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Board} and makes a call to the
  * specified {@link OnBoardFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
  */
 public class BoardRecyclerViewAdapter extends RecyclerView.Adapter<BoardRecyclerViewAdapter.ViewHolder>  implements Filterable {
 

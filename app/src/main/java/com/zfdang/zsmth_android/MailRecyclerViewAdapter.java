@@ -14,7 +14,6 @@ import java.util.List;
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Mail} and makes a call to the
  * specified {@link OnMailInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
  */
 public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerViewAdapter.ViewHolder> {
 
