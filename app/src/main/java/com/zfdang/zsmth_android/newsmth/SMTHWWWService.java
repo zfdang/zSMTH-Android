@@ -91,6 +91,15 @@ public interface SMTHWWWService {
                                          @Field("signature") String signature,
                                          @Field("id") String id);
 
+    // http://www.newsmth.net/nForum/article/PocketLife/ajax_edit/2244172.json
+    @FormUrlEncoded
+    @Headers("X-Requested-With:XMLHttpRequest")
+    @POST("/nForum/article/{boardEngName}/ajax_edit/{postID}.json")
+    Observable<AjaxResponse> editPost(@Path("boardEngName") String boardEngName,
+                                      @Path("postID") String postID,
+                                      @Field("subject") String subject,
+                                      @Field("content") String content);
+
     @FormUrlEncoded
     @Headers("X-Requested-With:XMLHttpRequest")
     @POST("/nForum/mail/{mailid}/ajax_send.json")

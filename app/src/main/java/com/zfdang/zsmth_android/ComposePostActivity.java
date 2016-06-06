@@ -302,6 +302,8 @@ public class ComposePostActivity extends SMTHBaseActivity {
                 || mPostContext.getComposingMode() == ComposePostContext.MODE_REPLY_POST) {
             resp2 = SMTHHelper.publishPost(mPostContext.getBoardEngName(), mTitle.getText().toString(), postContent, "0", mPostContext.getPostId());
         } else if (mPostContext.getComposingMode() == ComposePostContext.MODE_EDIT_POST) {
+            postContent = mContent.getText().toString() + "\n" + String.format("#修改自zSMTH@%s", Settings.getInstance().getSignature());
+            resp2 = SMTHHelper.editPost(mPostContext.getBoardEngName(), mPostContext.getPostId(), mTitle.getText().toString(), postContent);
         }
 
         // process all these tasks one by one

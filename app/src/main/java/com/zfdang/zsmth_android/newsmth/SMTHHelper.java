@@ -244,6 +244,16 @@ public class SMTHHelper {
                 .observeOn(Schedulers.io());
     }
 
+    public static Observable<AjaxResponse> editPost(String boardEngName,
+                                                    String postID,
+                                                    String subject,
+                                                    String content) {
+        SMTHHelper helper = SMTHHelper.getInstance();
+        return helper.wService.editPost(boardEngName, postID, subject, content)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io());
+    }
+
 
     public static Observable<AjaxResponse> sendMail(String userid,
                                                        String title,
