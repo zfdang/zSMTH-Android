@@ -18,7 +18,7 @@
             android:paddingLeft="2dp"
             android:text="mozilla"
             android:textColor="@color/blue_text_night"
-            android:textSize="18sp"/>
+            android:textSize="@dimen/zsmth_font_size_medium"/>
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -33,7 +33,7 @@
                 android:layout_marginRight="4dp"
                 android:text="楼主"
                 android:textColor="@color/colorPrimary"
-                android:textSize="16sp"
+                android:textSize="@dimen/zsmth_font_size_small"
                 />
         </LinearLayout>
 
@@ -51,7 +51,7 @@
             android:paddingLeft="2dp"
             android:text=""
             android:textColor="@color/colorPrimary"
-            android:textSize="16sp"/>
+            android:textSize="@dimen/zsmth_font_size_small"/>
     </LinearLayout>
 
     <LinearLayout

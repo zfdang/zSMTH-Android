@@ -17,7 +17,7 @@
             android:gravity="center_horizontal"
             android:text="@string/image_info_basic"
             android:textColor="@color/blue_text_night"
-            android:textSize="20sp"/>
+            android:textSize="@dimen/zsmth_font_size_large"/>
 
         <TableLayout
             android:layout_width="match_parent"
@@ -129,7 +129,7 @@
             android:gravity="center_horizontal"
             android:text="@string/image_info_capture"
             android:textColor="@color/blue_text_night"
-            android:textSize="20sp"/>
+            android:textSize="@dimen/zsmth_font_size_large"/>
 
         <TableLayout
             android:layout_width="match_parent"
@@ -300,7 +300,7 @@
             android:gravity="center_horizontal"
             android:text="@string/image_info_end"
             android:textColor="@color/colorPrimary"
-            android:textSize="18sp"/>
+            android:textSize="@dimen/zsmth_font_size_medium"/>
 
     </LinearLayout>
 

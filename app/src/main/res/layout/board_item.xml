@@ -33,5 +33,5 @@
         android:layout_below="@+id/CategoryName"
         android:text="[engBoard]chsBoard"
         android:textColor="@color/status_text_night"
-        android:textSize="18sp"/>
+        android:textSize="@dimen/zsmth_font_size_medium"/>
 </RelativeLayout>

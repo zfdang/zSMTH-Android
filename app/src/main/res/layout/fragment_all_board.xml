@@ -14,7 +14,7 @@
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
         android:queryHint="搜索版面中/英文名称..."
-        android:textSize="16sp"/>
+        android:textSize="@dimen/zsmth_font_size_small"/>
 
 
     <android.support.v7.widget.RecyclerView

@@ -194,7 +194,7 @@
                 android:gravity="center_horizontal"
                 android:text="论坛属性"
                 android:textColor="@color/status_text_night"
-                android:textSize="20sp"/>
+                android:textSize="@dimen/zsmth_font_size_large"/>
         </LinearLayout>
 
         <LinearLayout

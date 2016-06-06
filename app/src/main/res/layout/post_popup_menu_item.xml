@@ -21,6 +21,6 @@
         android:paddingLeft="16dp"
         android:text="Menu Item"
         android:textColor="@color/colorPrimary"
-        android:textSize="18sp"/>
+        android:textSize="@dimen/zsmth_font_size_medium"/>
 
 </LinearLayout>

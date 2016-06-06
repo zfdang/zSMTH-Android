@@ -35,7 +35,7 @@
             android:gravity="center"
             android:text="@string/mail_button_inbox_label"
             android:textColor="@color/status_text_night"
-            android:textSize="12sp"
+            android:textSize="@dimen/zsmth_font_size_extra_extra_small"
             />
 
         <Button
@@ -47,7 +47,7 @@
             android:gravity="center"
             android:text="@string/mail_button_outbox_label"
             android:textColor="@color/status_text_night"
-            android:textSize="12sp"
+            android:textSize="@dimen/zsmth_font_size_extra_extra_small"
             />
 
         <Button
@@ -59,7 +59,7 @@
             android:gravity="center"
             android:text="@string/mail_button_trashbox_label"
             android:textColor="@color/status_text_night"
-            android:textSize="12sp"
+            android:textSize="@dimen/zsmth_font_size_extra_extra_small"
             />
 
         <Button
@@ -71,7 +71,7 @@
             android:gravity="center"
             android:text="@string/mail_button_at_label"
             android:textColor="@color/status_text_night"
-            android:textSize="12sp"
+            android:textSize="@dimen/zsmth_font_size_extra_extra_small"
             />
 
         <Button
@@ -83,7 +83,7 @@
             android:gravity="center"
             android:text="@string/mail_button_reply_label"
             android:textColor="@color/status_text_night"
-            android:textSize="12sp"
+            android:textSize="@dimen/zsmth_font_size_extra_extra_small"
             />
 
         <Button
@@ -95,7 +95,7 @@
             android:gravity="center"
             android:text="@string/mail_button_like_label"
             android:textColor="@color/status_text_night"
-            android:textSize="12sp"
+            android:textSize="@dimen/zsmth_font_size_extra_extra_small"
             />
 
         <Button
@@ -106,7 +106,7 @@
             android:background="@color/mail_folder_button_background"
             android:gravity="center"
             android:textColor="@color/status_text_night"
-            android:textSize="12sp"
+            android:textSize="@dimen/zsmth_font_size_extra_extra_small"
             />
 
     </LinearLayout>

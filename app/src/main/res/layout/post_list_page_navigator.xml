@@ -20,7 +20,7 @@
         android:background="@drawable/navigation_button_background"
         android:text="@string/first_page"
         android:textColor="@color/status_text_night"
-        android:textSize="14sp"/>
+        android:textSize="@dimen/zsmth_font_size_extra_small"/>
 
     <Button
         android:id="@+id/post_list_pre_page"
@@ -35,7 +35,7 @@
         android:background="@drawable/navigation_button_background"
         android:text="@string/pre_page"
         android:textColor="@color/status_text_night"
-        android:textSize="14sp"/>
+        android:textSize="@dimen/zsmth_font_size_extra_small"/>
 
     <Button
         android:id="@+id/post_list_next_page"
@@ -50,7 +50,7 @@
         android:background="@drawable/navigation_button_background"
         android:text="@string/next_page"
         android:textColor="@color/status_text_night"
-        android:textSize="14sp"/>
+        android:textSize="@dimen/zsmth_font_size_extra_small"/>
 
     <Button
         android:id="@+id/post_list_last_page"
@@ -66,7 +66,7 @@
         android:padding="5dp"
         android:text="@string/last_page"
         android:textColor="@color/status_text_night"
-        android:textSize="14sp"/>
+        android:textSize="@dimen/zsmth_font_size_extra_small"/>
 
     <EditText
         android:id="@+id/post_list_page_no"
@@ -94,5 +94,5 @@
         android:background="@drawable/navigation_button_background"
         android:text="@string/go_page"
         android:textColor="@color/status_text_night"
-        android:textSize="14sp"/>
+        android:textSize="@dimen/zsmth_font_size_extra_small"/>
 </LinearLayout>

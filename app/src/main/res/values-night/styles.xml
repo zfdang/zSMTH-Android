@@ -47,7 +47,7 @@
 
     <!--title text style in toolbar-->
     <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">@dimen/zsmth_font_size_app_title</item>
     </style>
 
     <!--popup menu style in toolbar-->
@@ -55,7 +55,7 @@
 
 
     <style name="RecyclerViewSeperatorStyle" parent="@android:style/Theme">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">@dimen/zsmth_font_size_app_title</item>
         <item name="android:textColor">#CFD8DC</item>
         <item name="android:hint">"load from style 3"</item>
         <item name="android:textStyle">bold|italic</item>
