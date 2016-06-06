@@ -277,6 +277,29 @@ public class Settings {
         }
     }
 
+    private static final String ZSMTH_FONT_INDEX = "ZSMTH_FONT_INDEX";
+    private int iFontIndex;  // 0: large font; 1: normal font; 2: small
+    public int getFontIndex() {
+        return iFontIndex;
+    }
+    public float getFontSizeFloatValue() {
+        if(iFontIndex == 0) {
+            return 1.15f;
+        } else if(iFontIndex == 2) {
+            return 0.85f;
+        } else {
+            return 1.0f;
+        }
+    }
+    public void setFontIndex(int iFontIndex) {
+        System.out.println(iFontIndex);
+        if(this.iFontIndex != iFontIndex) {
+            this.iFontIndex = iFontIndex;
+            mEditor.putInt(ZSMTH_FONT_INDEX, this.iFontIndex);
+            mEditor.commit();
+        }
+    }
+
 
     private final String Preference_Name = "ZSMTH_Config";
 
@@ -332,5 +355,6 @@ public class Settings {
         bLaunchHotTopic = mPreference.getBoolean(LAUNCH_HOTTOPIC_AS_ENTRY, true);
 
         bPostNavBar = mPreference.getBoolean(SHOW_POST_NAVITATION_BAR, true);
+        iFontIndex = mPreference.getInt(ZSMTH_FONT_INDEX, 1);
     }
 }

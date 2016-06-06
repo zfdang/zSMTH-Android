@@ -1,7 +1,10 @@
 package com.zfdang.zsmth_android;
 
 import android.app.ProgressDialog;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 /**
  * Created by zfdang on 2016-5-10.
@@ -33,5 +36,16 @@ public class SMTHBaseActivity extends AppCompatActivity {
         super.onDestroy();
 
         dismissProgress();
+    }
+
+    @Override
+    public Resources getResources() {
+        Resources res = super.getResources();
+        Configuration config = res.getConfiguration();
+        config.fontScale = Settings.getInstance().getFontSizeFloatValue();
+        res.updateConfiguration(config, res.getDisplayMetrics());
+
+        Log.d("SMTHBaseActivity", "getResources: " + config.fontScale);
+        return res;
     }
 }

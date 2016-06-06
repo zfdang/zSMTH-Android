@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.EditTextPreference;
+import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.Log;
@@ -41,6 +42,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     CheckBoxPreference launch_hottopic_as_entry;
     CheckBoxPreference daynight_control;
     CheckBoxPreference setting_post_navigation_control;
+    ListPreference setting_fontsize_control;
     CheckBoxPreference image_quality_control;
 
     CheckBoxPreference notification_control_mail;
@@ -117,6 +119,28 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
                 return true;
             }
         });
+
+
+        setting_fontsize_control = (ListPreference) findPreference("setting_fontsize_control");
+        setting_fontsize_control.setValueIndex(Settings.getInstance().getFontIndex());
+        setting_fontsize_control.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener(){
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                int fontIndex = Settings.getInstance().getFontIndex();
+                if(newValue instanceof String){
+                    fontIndex = Integer.parseInt((String)newValue);
+                }
+                Settings.getInstance().setFontIndex(fontIndex);
+
+                // recreate activity for font size to take effect
+                Activity activity = getActivity();
+                if(activity != null) {
+                    activity.recreate();
+                }
+                return true;
+            }
+        });
+
 
         image_quality_control = (CheckBoxPreference) findPreference("setting_image_quality_control");
         image_quality_control.setChecked(Settings.getInstance().isLoadOriginalImage());

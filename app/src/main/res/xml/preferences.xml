@@ -34,6 +34,13 @@
             android:summaryOn="快速导航栏已打开"
             android:title="帖子快速导航栏"/>
 
+        <ListPreference android:title="字体设置"
+                        android:key="setting_fontsize_control"
+                        android:summary="%s"
+                        android:entries="@array/font_size_names"
+                        android:entryValues="@array/font_size_values">
+        </ListPreference>
+
         <CheckBoxPreference
             android:defaultValue="on"
             android:key="setting_image_quality_control"
