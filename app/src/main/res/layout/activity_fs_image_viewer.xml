@@ -19,7 +19,6 @@
         android:id="@+id/fullscreen_image_indicator"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_above="@+id/fullscreen_image_switch"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="30dp"
         app:ci_animator="@animator/indicator_animator"

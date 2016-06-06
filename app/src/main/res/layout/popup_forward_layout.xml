@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:text="转寄帖子"
             android:textColor="@color/blue_text_night"
-            android:textSize="20dp"/>
+            android:textSize="20sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -156,7 +156,7 @@
             android:layout_height="wrap_content"
             android:text="转贴至版面"
             android:textColor="@color/blue_text_night"
-            android:textSize="20dp"/>
+            android:textSize="20sp"/>
     </LinearLayout>
 
     <LinearLayout
