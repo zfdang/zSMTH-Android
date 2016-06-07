@@ -193,7 +193,11 @@ public class ComposePostActivity extends SMTHBaseActivity {
                 mTitle.setText(mPostContext.getPostTitle());
                 mContent.setText(mPostContext.getPostContent());
             } else {
-                mTitle.setText(String.format("Re: %s", mPostContext.getPostTitle()));
+                String title = mPostContext.getPostTitle();
+                if(title != null && !title.startsWith("Re:")) {
+                    title = String.format("Re: %s", title);
+                }
+                mTitle.setText(title);
 
                 String[] lines = mPostContext.getPostContent().split("\n");
                 StringBuilder wordList = new StringBuilder();
