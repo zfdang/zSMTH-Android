@@ -70,7 +70,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
         // max number of images to be selected
         intent.putExtra(SelectorSettings.SELECTOR_MAX_IMAGE_NUMBER, 5);
         // min size of image which will be shown; to filter tiny images (mainly icons)
-        intent.putExtra(SelectorSettings.SELECTOR_MIN_IMAGE_SIZE, 100000);
+        intent.putExtra(SelectorSettings.SELECTOR_MIN_IMAGE_SIZE, 10000); // file size > 10k
         // show camera or not
         intent.putExtra(SelectorSettings.SELECTOR_SHOW_CAMERA, false);
         // pass current selected images as the initial value
