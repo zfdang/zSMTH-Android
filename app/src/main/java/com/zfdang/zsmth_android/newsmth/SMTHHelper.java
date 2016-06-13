@@ -32,7 +32,9 @@ import org.jsoup.select.Elements;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -216,20 +218,69 @@ public class SMTHHelper {
         }
     }
 
+    /**
+     * Returns the contents of the file in a byte array
+     * @param file File this method should read
+     * @return byte[] Returns a byte[] array of the contents of the file
+     */
+    private static byte[] getBytesFromFile(File file){
+        byte[] bytes = null;
+        try{
+            InputStream is = new FileInputStream(file);
+
+            // Get the size of the file
+            long length = file.length();
+            if (length > Integer.MAX_VALUE) {
+                Log.e(TAG, "getBytesFromFile: " + "File is too large to process");
+                return bytes;
+            }
+
+            // Create the byte array to hold the data
+            bytes = new byte[(int)length];
+
+            // Read in the bytes
+            int offset = 0;
+            int numRead = 0;
+            while ( (offset < bytes.length)
+                    &&
+                    ( (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) ) {
+                offset += numRead;
+            }
+
+            // Ensure all the bytes have been read in
+            if (offset < bytes.length) {
+                throw new IOException("Could not completely read file " + file.getName());
+            }
+            is.close();
+        } catch (IOException e) {
+            Log.e(TAG, "getBytesFromFile: " + Log.getStackTraceString(e) );
+        }
+
+        return bytes;
+    }
+
 
     public static byte[] getBitmapBytesWithResize(final String filename){
         final SMTHHelper helper = SMTHHelper.getInstance();
         Log.d(TAG, "getBitmapBytesWithResize: " + filename);
 
-        Bitmap theBitmap = loadResizedBitmapFromFile(filename, 1200, 1200);
+        if(filename.toLowerCase().endsWith(".gif")) {
+            // gif, don't resize
+            File infile = new File(filename);
+            byte[] byteArray = getBytesFromFile(infile);
+            return byteArray;
+        } else {
+            // static image, resize it if necessary
+            Bitmap theBitmap = loadResizedBitmapFromFile(filename, 1200, 1200);
 
-        // convert bitmap to byte array
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        theBitmap.compress(Bitmap.CompressFormat.JPEG, 85, stream);
-        byte[] byteArray = stream.toByteArray();
-        Log.d(TAG, "getBitmapBytesWithResize: " + byteArray.length);
+            // convert bitmap to byte array
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            theBitmap.compress(Bitmap.CompressFormat.JPEG, 85, stream);
+            byte[] byteArray = stream.toByteArray();
+            Log.d(TAG, "getBitmapBytesWithResize: " + byteArray.length);
 
-        return byteArray;
+            return byteArray;
+        }
     }
 
 

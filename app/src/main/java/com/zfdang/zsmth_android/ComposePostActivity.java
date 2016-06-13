@@ -274,7 +274,6 @@ public class ComposePostActivity extends SMTHBaseActivity {
                 .map(new Func1<String, BytesContainer>() {
                     @Override
                     public BytesContainer call(String filename) {
-                        // TODO: to support uploading GIF file
                         byte[] bytes = SMTHHelper.getBitmapBytesWithResize(filename);
                         return new BytesContainer(filename, bytes);
                     }
