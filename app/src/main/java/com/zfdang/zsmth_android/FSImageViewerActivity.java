@@ -104,7 +104,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
                 int position = mViewPager.getCurrentItem();
                 final String imagePath = mURLs.get(position);
 
-                View currentView = mViewPager.findViewWithTag(position);
+                View currentView = mPagerAdapter.mCurrentView;
                 boolean isAnimation = false;
                 if(currentView instanceof MyPhotoView) {
                     MyPhotoView photoView = (MyPhotoView) currentView;
@@ -178,7 +178,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
         isFullscreen = false;
     }
 
-    private String getStoredFilenameFromURL(String imagePath) {
+    private String getURLHashCode(String imagePath) {
         return Integer.toHexString(imagePath.hashCode());
     }
 
@@ -204,7 +204,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
                 if(isAnimation) {
                     IMAGE_FILE_SUFFIX = ".gif";
                 }
-                File outFile = new File(dir, IMAGE_FILE_PREFIX + getStoredFilenameFromURL(imagePath) + IMAGE_FILE_SUFFIX);
+                File outFile = new File(dir, IMAGE_FILE_PREFIX + getURLHashCode(imagePath) + IMAGE_FILE_SUFFIX);
 
                 BufferedInputStream bufr = new BufferedInputStream(new FileInputStream(imageFile));
                 BufferedOutputStream bufw = new BufferedOutputStream(new FileOutputStream(outFile));

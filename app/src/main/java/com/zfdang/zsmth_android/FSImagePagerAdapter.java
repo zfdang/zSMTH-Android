@@ -25,6 +25,9 @@ public class FSImagePagerAdapter extends PagerAdapter {
     private Activity mListener;
     private Map<Integer, PhotoViewAttacher> mAttachers;
 
+    // http://stackoverflow.com/questions/6807262/get-focused-view-from-viewpager
+    public View mCurrentView;
+
     public FSImagePagerAdapter(List<String> URLs, Activity listener) {
         mURLs = URLs;
         mListener = listener;
@@ -83,6 +86,12 @@ public class FSImagePagerAdapter extends PagerAdapter {
         ImageView iv = (ImageView) object;
         container.removeView(iv);
         object = null;
+    }
+
+    @Override
+    public void setPrimaryItem(ViewGroup container, int position, Object object) {
+        mCurrentView = (View) object;
+        super.setPrimaryItem(container, position, object);
     }
 
     @Override
