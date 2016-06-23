@@ -213,7 +213,7 @@ public class MailContentActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         } else if(id == R.id.mail_content_open_post) {
-            if(mMail.isRefferedPost()) {
+            if(mPost != null && mMail.isRefferedPost()) {
                 Topic topic = new Topic();
                 topic.setTopicID(Integer.toString(mPostGroupId));
                 topic.setAuthor(mPost.getRawAuthor());
