@@ -2,7 +2,6 @@ package com.zfdang.zsmth_android;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -14,6 +13,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,12 +31,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.List;
 
 import me.relex.circleindicator.CircleIndicator;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-public class FSImageViewerActivity extends AppCompatActivity implements PhotoViewAttacher.OnPhotoTapListener, View.OnLongClickListener{
+public class FSImageViewerActivity extends AppCompatActivity implements PhotoViewAttacher.OnPhotoTapListener{
 
     private static final String TAG = "FullViewer";
 
@@ -46,6 +45,10 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
     private FSImagePagerAdapter mPagerAdapter;
     private CircleIndicator mIndicator;
     private ArrayList<String> mURLs;
+
+    private ImageView btBack;
+    private ImageView btInfo;
+    private ImageView btSave;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +75,44 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
 
         mIndicator = (CircleIndicator) findViewById(R.id.fullscreen_image_indicator);
         mIndicator.setViewPager(mViewPager);
+
+
+        btBack = (ImageView) findViewById(R.id.fullscreen_button_back);
+        btBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+
+        btInfo = (ImageView) findViewById(R.id.fullscreen_button_info);
+        btInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = mViewPager.getCurrentItem();
+                final String imagePath = mURLs.get(position);
+
+                showExifDialog(imagePath);
+            }
+        });
+
+        btSave = (ImageView) findViewById(R.id.fullscreen_button_save);
+        btSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = mViewPager.getCurrentItem();
+                final String imagePath = mURLs.get(position);
+
+                View currentView = mViewPager.findViewWithTag(position);
+                boolean isAnimation = false;
+                if(currentView instanceof MyPhotoView) {
+                    MyPhotoView photoView = (MyPhotoView) currentView;
+                    isAnimation = photoView.isAnimation();
+                }
+                saveImageToFile(imagePath, isAnimation);
+            }
+        });
 
         hide();
 
@@ -137,49 +178,8 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
         isFullscreen = false;
     }
 
-
-    @Override
-    public boolean onLongClick(final View v) {
-        int position = (int) v.getTag(R.id.fsview_image_index);
-        final String imagePath = mURLs.get(position);
-        Log.d(TAG, "onLongClick: " + position + imagePath);
-
-        // build menu for long click
-        List<String> itemList = new ArrayList<String>();
-        itemList.add(getString(R.string.full_image_information));
-        itemList.add(getString(R.string.full_image_save));
-        itemList.add(getString(R.string.full_image_back));
-        final String[] items = new String[itemList.size()];
-        itemList.toArray(items);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle(String.format("图片: %s", StringUtils.getEllipsizedMidString(imagePath, 16)));
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                switch (item) {
-                    case 0:
-                        showExifDialog(imagePath);
-                        break;
-                    case 1:
-                        boolean isAnimation = false;
-                        if(v instanceof MyPhotoView) {
-                            MyPhotoView photoView = (MyPhotoView) v;
-                            isAnimation = photoView.isAnimation();
-                        }
-                        saveImageToFile(imagePath, isAnimation);
-                        break;
-                    case 2:
-                        break;
-                    default:
-                        break;
-                }
-                dialog.dismiss();
-            }
-        });
-
-        builder.create().show();
-
-        return true;
+    private String getStoredFilenameFromURL(String imagePath) {
+        return Integer.toHexString(imagePath.hashCode());
     }
 
     public void saveImageToFile(String imagePath, boolean isAnimation) {
@@ -204,7 +204,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
                 if(isAnimation) {
                     IMAGE_FILE_SUFFIX = ".gif";
                 }
-                File outFile = File.createTempFile(IMAGE_FILE_PREFIX, IMAGE_FILE_SUFFIX, dir);
+                File outFile = new File(dir, IMAGE_FILE_PREFIX + getStoredFilenameFromURL(imagePath) + IMAGE_FILE_SUFFIX);
 
                 BufferedInputStream bufr = new BufferedInputStream(new FileInputStream(imageFile));
                 BufferedOutputStream bufw = new BufferedOutputStream(new FileOutputStream(outFile));
