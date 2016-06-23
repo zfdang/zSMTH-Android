@@ -1,7 +1,7 @@
 package com.zfdang.zsmth_android;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -33,13 +33,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import me.relex.circleindicator.CircleIndicator;
-import uk.co.senab.photoview.PhotoViewAttacher;
 
-public class FSImageViewerActivity extends AppCompatActivity implements PhotoViewAttacher.OnPhotoTapListener{
+public class FSImageViewerActivity extends AppCompatActivity{
 
     private static final String TAG = "FullViewer";
 
-    private boolean isFullscreen;
     private HackyViewPager mViewPager;
 
     private FSImagePagerAdapter mPagerAdapter;
@@ -57,9 +55,7 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
         setContentView(R.layout.activity_fs_image_viewer);
         getSupportActionBar().hide();
 
-        isFullscreen = false;
         mViewPager = (HackyViewPager) findViewById(R.id.fullscreen_image_pager);
-
 
         // find paramenters from parent
         mURLs = getIntent().getStringArrayListExtra(SMTHApplication.ATTACHMENT_URLS);
@@ -120,6 +116,17 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
         SwipeBackHelper.getCurrentPage(this).setSwipeEdgePercent(0.2f);
     }
 
+    private void hide() {
+        // Hide status bar and navigation bar
+        mViewPager.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+    }
+
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -154,29 +161,6 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
         return super.onKeyUp(keyCode, event);
     }
 
-
-    // the following 3 methods are used to control status bar
-    private void toggle() {
-        if (isFullscreen) {
-            show();
-        } else {
-            hide();
-        }
-    }
-
-    private void hide() {
-        // Hide status bar and navigation bar
-        mViewPager.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-        isFullscreen = true;
-    }
-
-
-    @SuppressLint("InlinedApi")
-    private void show() {
-        // Show the status bar
-        mViewPager.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-        isFullscreen = false;
-    }
 
     private String getURLHashCode(String imagePath) {
         return Integer.toHexString(imagePath.hashCode());
@@ -412,15 +396,14 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
             Log.d("read ExifInfo", "can't read Exif information");
         }
 
-        new AlertDialog.Builder(FSImageViewerActivity.this).setView(layout)
-//                .setPositiveButton("确定", null)
+        new AlertDialog.Builder(FSImageViewerActivity.this)
+                .setView(layout)
+                .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        hide();
+                    }
+                })
                 .show();
     }
-
-    // the following two methods will never be called, since we disable onTap events in adapter
-    @Override
-    public void onPhotoTap(View view, float x, float y) {    }
-
-    @Override
-    public void onOutsidePhotoTap() {   }
 }
