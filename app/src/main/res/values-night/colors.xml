@@ -19,7 +19,7 @@
     <color name="nav.item.background.active">#3e6342</color>
     <color name="nav.item.background.default">#232529</color>
 
-    <color name="body_background_night">#232529</color>
+    <color name="body_background_night">#000000</color>
     <color name="status_text_night">#ABC2DA</color>
     <color name="blue_text_night">#FBA50E</color>
 
