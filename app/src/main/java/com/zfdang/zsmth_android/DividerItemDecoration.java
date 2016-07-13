@@ -1,7 +1,6 @@
 package com.zfdang.zsmth_android;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -29,17 +28,13 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     private int mWidth;
 
     public DividerItemDecoration(Context context, int orientation, int dividerDrawableRes) {
-        if(dividerDrawableRes == 0){
-            final TypedArray a = context.obtainStyledAttributes(ATTRS);
-            mDivider = a.getDrawable(0);
-            a.recycle();
-            mHeight = mDivider.getIntrinsicHeight();
-            mWidth = mDivider.getIntrinsicWidth();
-        } else {
-            mDivider = context.getResources().getDrawable(dividerDrawableRes);
-            mHeight = DIVIDER_HEIGHT;
-            mWidth = DIVIDER_WIDTH;
+        if(dividerDrawableRes == 0) {
+            dividerDrawableRes = R.drawable.recyclerview_divider;
         }
+
+        mDivider = context.getResources().getDrawable(dividerDrawableRes);
+        mHeight = DIVIDER_HEIGHT;
+        mWidth = DIVIDER_WIDTH;
         setOrientation(orientation);
     }
 

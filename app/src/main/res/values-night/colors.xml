@@ -28,6 +28,7 @@
     <color name="recycler_view_item_pressed">#777777</color>
     <color name="recycler_view_item_sticky">#273864</color>
     <color name="recycler_view_item_new">#6600cc</color>
+    <color name="recycler_view_divider">#232529</color>
 
     <!--used in FullscreenActionBarStyle-->
     <color name="black_overlay">#66000000</color>
