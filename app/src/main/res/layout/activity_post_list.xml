@@ -69,6 +69,7 @@
                     android:scrollbars="vertical"
                     app:layoutManager="LinearLayoutManager"
                     tools:context=".BoardTopicActivity"
+                    android:background="@color/recycler_view_item_normal"
                     tools:listitem="@layout/post_item"/>
             </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
 
