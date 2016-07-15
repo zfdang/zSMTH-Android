@@ -33,6 +33,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/AppTheme.NoActionBar.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -40,12 +41,23 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
         <activity
             android:name=".LoginActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_login"/>
+
         <activity
             android:name=".BoardTopicActivity"
             android:label="@string/title_topic_list"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
+            android:name=".MailContentActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_mail_content"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
@@ -53,16 +65,19 @@
         <!--so we disable hardwareAccelerated for postListActivity & FSImageViewer-->
         <activity
             android:name=".PostListActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_topic_detail"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
             android:name=".ComposePostActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_compose_post"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
             android:name=".QueryUserActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_query_user"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
@@ -125,11 +140,6 @@
             android:name="UMENG_CHANNEL"
             android:value="ZFDANG"/>
 
-        <activity
-            android:name=".MailContentActivity"
-            android:label="@string/title_activity_mail_content"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
     </application>
 
 </manifest>
