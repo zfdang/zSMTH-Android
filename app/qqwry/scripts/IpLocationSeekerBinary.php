@@ -78,12 +78,54 @@ class IpLocationSeekerBinary {
 			$country = str_replace("县", "", $country);
 			$country = str_replace("区", "", $country);
 			$country = str_replace("清华大学", "清华", $country);
+			$country = str_replace("CZ88.NET", "", $country);
 			// if($use_china_province_name) $country = self::real_province_name($country);
 			$area = str_replace("\t", "", $area);
 			$area = str_replace("\n", "", $area);
-			
-			echo long2ip($ip_int), "\t", $country, "\t", $area, "\n";
+			$area = str_replace("CZ88.NET", "", $area);
 			$area = str_replace("'", "", $area);
+			$area = str_replace("(", "-", $area);
+			$area = str_replace(")", "-", $area);
+			$area = str_replace("/", "", $area);
+
+			// echo long2ip($ip_int), "\t{", $country, "}\t{", $area, "}\n";
+
+			$detail = "";
+			if(strpos($area, '大学') !== false && strlen($detail) == 0) {
+				$detail = substr($area, 0, strpos($area, '大学') + strlen('大学'));
+				// echo $detail, "\n";
+				$country = $country."-".$detail;
+				echo $country, "\n";
+			}
+
+			if(strpos($area, '学院') !== false && strlen($detail) == 0) {
+				$detail = substr($area, 0, strpos($area, '学院') + strlen('学院'));
+				// echo $detail, "\n";
+				$country = $country."-".$detail;
+				echo $country, "\n";
+			}
+
+			if(strpos($area, '公司') !== false && strlen($detail) == 0) {
+				$detail = substr($area, 0, strpos($area, '公司') + strlen('公司'));
+				// echo $detail, "\n";
+				$country = $country."-".$detail;
+				echo $country, "\n";
+			}
+
+			// if(strpos($area, '中心') !== false && strlen($detail) == 0) {
+			// 	$detail = substr($area, 0, strpos($area, '中心') + strlen('中心'));
+			// 	// echo $detail, "\n";
+			// 	$country = $country."-".$detail;
+			// 	echo $country, "\n";
+			// }
+
+			if(strpos($area, '州') !== false && strlen($detail) == 0) {
+				$detail = substr($area, 0, strpos($area, '州') + strlen('州'));
+				// echo $detail, "\n";
+				$country = $country."-".$detail;
+				echo $country, "\n";
+			}
+
 			$sql = "insert into qqwry (ip, country) values ({$ip_int}, '{$country}')";
 			$sqlite_seeker->execute($sql);
 		}
