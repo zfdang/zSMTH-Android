@@ -20,6 +20,7 @@
             android:layout_height="@dimen/zsmth_actionbar_size"
             android:theme="@style/ThemeOverlay.ToolBar"
             app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:layout_scrollFlags="scroll|enterAlways"
             app:titleTextAppearance="@style/Toolbar.TitleText"/>
 
     </android.support.design.widget.AppBarLayout>
@@ -71,6 +72,7 @@
                     android:scrollbars="vertical"
                     app:layoutManager="LinearLayoutManager"
                     tools:context=".BoardTopicActivity"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
                     tools:listitem="@layout/post_item"/>
             </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
 

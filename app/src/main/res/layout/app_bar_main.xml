@@ -22,6 +22,7 @@
             android:padding="0dp"
             android:theme="@style/ThemeOverlay.ToolBar"
             app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:layout_scrollFlags="scroll|enterAlways"
             app:titleTextAppearance="@style/Toolbar.TitleText"/>
 
     </android.support.design.widget.AppBarLayout>
