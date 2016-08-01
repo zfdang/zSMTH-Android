@@ -112,12 +112,12 @@ class IpLocationSeekerBinary {
 				echo $country, "\n";
 			}
 
-			// if(strpos($area, '中心') !== false && strlen($detail) == 0) {
-			// 	$detail = substr($area, 0, strpos($area, '中心') + strlen('中心'));
-			// 	// echo $detail, "\n";
-			// 	$country = $country."-".$detail;
-			// 	echo $country, "\n";
-			// }
+			if(strpos($area, '中心') !== false && strlen($detail) == 0) {
+				$detail = substr($area, 0, strpos($area, '中心') + strlen('中心'));
+				// echo $detail, "\n";
+				$country = $country."-".$detail;
+				echo $country, "\n";
+			}
 
 			if(strpos($area, '州') !== false && strlen($detail) == 0) {
 				$detail = substr($area, 0, strpos($area, '州') + strlen('州'));
