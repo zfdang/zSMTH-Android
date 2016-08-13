@@ -14,7 +14,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 22
         versionCode gitVersion
-        versionName "1.5.0"
+        versionName "1.5.1"
     }
     signingConfigs {
         release {
@@ -96,7 +96,7 @@ dependencies {
     compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
     compile files('libs/ShareSDK-Core-2.7.1.jar')
     compile 'com.wx.wheelview:wheelview:1.3.4'
-    compile 'com.zfdang.devicemodeltomarketingname:device-model-to-marketing-name:1.0.1'
+    compile 'com.zfdang.devicemodeltomarketingname:device-model-to-marketing-name:1.0.2'
     compile 'com.github.orangegangsters:swipy:1.2.3@aar'
     compile 'com.klinkerapps:link_builder:1.3.2'
     compile 'com.esotericsoftware:kryo:4.0.0'

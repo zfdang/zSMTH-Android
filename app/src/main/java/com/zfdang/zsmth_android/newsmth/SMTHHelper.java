@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.RectF;
+import android.media.ExifInterface;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -30,9 +32,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -259,6 +261,76 @@ public class SMTHHelper {
         return bytes;
     }
 
+    public static String saveBitmapToFile(final Bitmap bitmap, final String filename) {
+        try {
+            if (TextUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED)) {
+                String path = Environment.getExternalStorageDirectory().getPath() + "/zSMTH/uploaded";
+                File dir = new File(path);
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+
+                File outFile = new File(dir, new File(filename).getName());
+
+                FileOutputStream fstream = new FileOutputStream(outFile);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 85, fstream);
+                fstream.flush();
+                fstream.close();
+
+                Log.d(TAG, "saveBitmapToFile: " + outFile.getAbsolutePath());
+                return outFile.getAbsolutePath();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "saveBitmapToFile: ", e);
+        }
+        return null;
+    }
+
+    public static void copyExif(String oldPath, String newPath)
+    {
+        try {
+            ExifInterface oldExif = new ExifInterface(oldPath);
+            String[] attributes = new String[]
+                    {
+                            ExifInterface.TAG_APERTURE,
+                            ExifInterface.TAG_DATETIME,
+                            ExifInterface.TAG_DATETIME_DIGITIZED,
+                            ExifInterface.TAG_EXPOSURE_TIME,
+                            ExifInterface.TAG_FLASH,
+                            ExifInterface.TAG_FOCAL_LENGTH,
+                            ExifInterface.TAG_GPS_ALTITUDE,
+                            ExifInterface.TAG_GPS_ALTITUDE_REF,
+                            ExifInterface.TAG_GPS_DATESTAMP,
+                            ExifInterface.TAG_GPS_LATITUDE,
+                            ExifInterface.TAG_GPS_LATITUDE_REF,
+                            ExifInterface.TAG_GPS_LONGITUDE,
+                            ExifInterface.TAG_GPS_LONGITUDE_REF,
+                            ExifInterface.TAG_GPS_PROCESSING_METHOD,
+                            ExifInterface.TAG_GPS_TIMESTAMP,
+                            ExifInterface.TAG_IMAGE_LENGTH,
+                            ExifInterface.TAG_IMAGE_WIDTH,
+                            ExifInterface.TAG_ISO,
+                            ExifInterface.TAG_MAKE,
+                            ExifInterface.TAG_MODEL,
+                            ExifInterface.TAG_ORIENTATION,
+                            ExifInterface.TAG_SUBSEC_TIME,
+                            ExifInterface.TAG_SUBSEC_TIME_DIG,
+                            ExifInterface.TAG_SUBSEC_TIME_ORIG,
+                            ExifInterface.TAG_WHITE_BALANCE
+                    };
+
+            ExifInterface newExif = new ExifInterface(newPath);
+            for (int i = 0; i < attributes.length; i++)
+            {
+                String value = oldExif.getAttribute(attributes[i]);
+                if (value != null)
+                    newExif.setAttribute(attributes[i], value);
+            }
+            newExif.saveAttributes();
+        } catch (IOException e) {
+            Log.e(TAG, "copyExif: ", e);
+        }
+    }
 
     public static byte[] getBitmapBytesWithResize(final String filename){
         final SMTHHelper helper = SMTHHelper.getInstance();
@@ -270,15 +342,18 @@ public class SMTHHelper {
             byte[] byteArray = getBytesFromFile(infile);
             return byteArray;
         } else {
-            // static image, resize it if necessary
+            // static image, resize it
             Bitmap theBitmap = loadResizedBitmapFromFile(filename, 1200, 1200);
 
-            // convert bitmap to byte array
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            theBitmap.compress(Bitmap.CompressFormat.JPEG, 85, stream);
-            byte[] byteArray = stream.toByteArray();
-            Log.d(TAG, "getBitmapBytesWithResize: " + byteArray.length);
+            // save bitmap to temp file
+            String newfilename = saveBitmapToFile(theBitmap, filename);
 
+            // copy exif information from old file to new file
+            copyExif(filename, newfilename);
+
+            // read data
+            File infile = new File(newfilename);
+            byte[] byteArray = getBytesFromFile(infile);
             return byteArray;
         }
     }
