@@ -82,7 +82,7 @@
         <CheckBoxPreference
             android:defaultValue="on"
             android:key="setting_signature_control"
-            android:summaryOff="还要使用签名"
+            android:summaryOff="依然使用签名^o^"
             android:summaryOn="使用签名"
             android:title="发帖时添加设备签名"/>
         <EditTextPreference
