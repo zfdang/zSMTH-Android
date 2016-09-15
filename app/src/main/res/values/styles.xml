@@ -113,4 +113,9 @@
         <item name="android:textColor">@color/status_text_night</item>
         <item name="android:textColorSecondary">@color/blue_text_night</item>
     </style>
+
+    <style name="WindowAnimationFadeInOut">
+        <item name="@android:windowEnterAnimation">@animator/fade_in</item>
+        <item name="@android:windowExitAnimation">@animator/fade_out</item>
+    </style>
 </resources>

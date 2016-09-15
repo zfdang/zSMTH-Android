@@ -290,6 +290,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         }
 
         Activity activity = getActivity();
+        activity.getWindow().setWindowAnimations(R.style.WindowAnimationFadeInOut);
         if(activity != null) {
             activity.recreate();
         }
