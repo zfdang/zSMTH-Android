@@ -134,7 +134,20 @@
                     android:layout_marginTop="5dp"
                     android:background="@drawable/navigation_button_background"
                     android:textColor="@color/status_text_night"
-                    android:text="选择附件"/>
+                    android:text="选择图片"/>
+
+                <Switch
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginTop="5dp"
+                    android:text="压缩"
+                    android:background="@drawable/navigation_button_background"
+                    android:textColor="@color/status_text_night"
+                    android:id="@+id/compose_post_attach_switch"
+                    android:checked="true"/>
             </LinearLayout>
 
 

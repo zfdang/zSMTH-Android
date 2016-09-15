@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +50,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
     private EditText mTitle;
     private LinearLayout mAttachRow;
     private EditText mAttachments;
+    private Switch mCompress;
     private EditText mContent;
     private ArrayList<String> mPhotos;
     private TextView mContentCount;
@@ -115,6 +117,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
         mTitle = (EditText) findViewById(R.id.compose_post_title);
         mAttachRow = (LinearLayout) findViewById(R.id.compose_post_attach_row);
         mAttachments = (EditText) findViewById(R.id.compose_post_attach);
+        mCompress = (Switch) findViewById(R.id.compose_post_attach_switch);
         mContent = (EditText) findViewById(R.id.compose_post_content);
         mContentCount = (TextView) findViewById(R.id.compose_post_content_label);
 
@@ -270,11 +273,12 @@ public class ComposePostActivity extends SMTHBaseActivity {
         final SMTHHelper helper = SMTHHelper.getInstance();
 
         // update attachments
+        final boolean bCompress = this.mCompress.isChecked();
         Observable<AjaxResponse> resp1 = Observable.from(mPhotos)
                 .map(new Func1<String, BytesContainer>() {
                     @Override
                     public BytesContainer call(String filename) {
-                        byte[] bytes = SMTHHelper.getBitmapBytesWithResize(filename);
+                        byte[] bytes = SMTHHelper.getBitmapBytesWithResize(filename, bCompress);
                         return new BytesContainer(filename, bytes);
                     }
                 })

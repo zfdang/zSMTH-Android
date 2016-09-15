@@ -187,7 +187,7 @@ public class SMTHHelper {
                 });
     }
 
-    private static Bitmap loadResizedBitmapFromFile(final String filename, final int targetWidth, final int targetHeight) {
+    private static Bitmap loadResizedBitmapFromFile(final String filename, final int targetWidth, final int targetHeight, boolean bCompress) {
         try {
             BitmapFactory.Options option = null;
             Bitmap bitmap = null;
@@ -196,21 +196,23 @@ public class SMTHHelper {
             bitmap = BitmapFactory.decodeFile(filename, option);
             Log.d(TAG, "loadResizedBitmapFromFile: " + String.format("Pre-sized bitmap size: (%dx%d).", bitmap.getWidth(), bitmap.getHeight()));
 
-            // create bitmap which matches exactly within the target size
-            // calc exact destination size
-            // http://developer.android.com/reference/android/graphics/Matrix.ScaleToFit.html
-            Matrix m = new Matrix();
-            RectF inRect = new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight());
-            RectF outRect = new RectF(0, 0, targetWidth, targetHeight);
-            m.setRectToRect(inRect, outRect, Matrix.ScaleToFit.CENTER);
-            float[] values = new float[9];
-            m.getValues(values);
+            if(bCompress) {
+                // create bitmap which matches exactly within the target size
+                // calc exact destination size
+                // http://developer.android.com/reference/android/graphics/Matrix.ScaleToFit.html
+                Matrix m = new Matrix();
+                RectF inRect = new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight());
+                RectF outRect = new RectF(0, 0, targetWidth, targetHeight);
+                m.setRectToRect(inRect, outRect, Matrix.ScaleToFit.CENTER);
+                float[] values = new float[9];
+                m.getValues(values);
 
-            Log.d(TAG, "loadResizedBitmapFromFile: " + String.format("Zoom: (%fx%f).", values[0], values[4]));
-            if (values[0] < 1.0 || values[4] < 1.0) {
-                bitmap = Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * values[0]),
-                        (int) (bitmap.getHeight() * values[4]), true);
-                Log.d(TAG, "loadResizedBitmapFromFile: " + "reduce size");
+                Log.d(TAG, "loadResizedBitmapFromFile: " + String.format("Zoom: (%fx%f).", values[0], values[4]));
+                if (values[0] < 1.0 || values[4] < 1.0) {
+                    bitmap = Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * values[0]),
+                            (int) (bitmap.getHeight() * values[4]), true);
+                    Log.d(TAG, "loadResizedBitmapFromFile: " + "reduce size");
+                }
             }
 
             Log.d(TAG, "loadResizedBitmapFromFile: " + String.format("Final bitmap size: (%dx%d).", bitmap.getWidth(), bitmap.getHeight()));
@@ -332,7 +334,7 @@ public class SMTHHelper {
         }
     }
 
-    public static byte[] getBitmapBytesWithResize(final String filename){
+    public static byte[] getBitmapBytesWithResize(final String filename, boolean bCompress){
         final SMTHHelper helper = SMTHHelper.getInstance();
         Log.d(TAG, "getBitmapBytesWithResize: " + filename);
 
@@ -343,7 +345,7 @@ public class SMTHHelper {
             return byteArray;
         } else {
             // static image, resize it
-            Bitmap theBitmap = loadResizedBitmapFromFile(filename, 1200, 1200);
+            Bitmap theBitmap = loadResizedBitmapFromFile(filename, 1200, 1200, bCompress);
 
             // save bitmap to temp file
             String newfilename = saveBitmapToFile(theBitmap, filename);
