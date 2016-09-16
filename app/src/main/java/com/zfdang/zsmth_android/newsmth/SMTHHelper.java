@@ -66,8 +66,9 @@ import rx.schedulers.Schedulers;
 public class SMTHHelper {
 
     static final private String TAG = "SMTHHelper";
-    public static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.143 Safari/537.36";
+    public static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.101 Safari/537.36";
 
+    public ClearableCookieJar mCookieJar;
     public OkHttpClient mHttpClient;
 
     // WWW service of SMTH, but actually most of services are actually from nForum
@@ -115,12 +116,11 @@ public class SMTHHelper {
 
         // set your desired log level
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.NONE);
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         // https://github.com/franmontiel/PersistentCookieJar
         // A persistent CookieJar implementation for OkHttp 3 based on SharedPreferences.
-        ClearableCookieJar cookieJar =
-                new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
+        mCookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
 
         //设置缓存路径
         File httpCacheDirectory = new File(SMTHApplication.getAppContext().getCacheDir(), "Responses");
@@ -139,7 +139,7 @@ public class SMTHHelper {
                         return chain.proceed(request);
                     }
                 })
-                .cookieJar(cookieJar)
+                .cookieJar(mCookieJar)
                 .cache(cache)
                 .readTimeout(15, TimeUnit.SECONDS)
                 .connectTimeout(10, TimeUnit.SECONDS)

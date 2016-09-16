@@ -122,6 +122,8 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
         // RxJava & Retrofit: VERY VERY good article
         // http://gank.io/post/560e15be2dca930e00da1083
         SMTHHelper helper = SMTHHelper.getInstance();
+        // clear cookies upon login
+        helper.mCookieJar.clear();
         final String cookieDays = "2";
         helper.wService.login(username, password, cookieDays)
                 .subscribeOn(Schedulers.io())
