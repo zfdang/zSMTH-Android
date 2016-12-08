@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 // http://www.race604.com/android-auto-version/
 def cmd = 'git rev-list HEAD --count'
 def gitVersion = cmd.execute().text.trim().toInteger()
-def appVersion = '1.5.2'
+def appVersion = '1.5.3'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -99,7 +99,7 @@ dependencies {
     compile 'com.github.maksim88:PasswordEditText:v0.9'
     compile 'org.jsoup:jsoup:1.9.1'
     compile 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
-    compile 'com.jude:swipebackhelper:2.1.5'
+    compile 'com.jude:swipebackhelper:3.1.2'
     compile 'me.relex:circleindicator:1.2.2@aar'
     compile 'com.commit451:PhotoView:1.2.5'
     compile('com.mikepenz:aboutlibraries:5.8.1@aar') {
