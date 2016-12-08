@@ -3,18 +3,18 @@ apply plugin: 'com.android.application'
 // http://www.race604.com/android-auto-version/
 def cmd = 'git rev-list HEAD --count'
 def gitVersion = cmd.execute().text.trim().toInteger()
-
+def appVersion = '1.5.2'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
 
     defaultConfig {
         applicationId "com.zfdang.zsmth_android"
-        minSdkVersion 15
-        targetSdkVersion 22
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
         versionCode gitVersion
-        versionName "1.5.2"
+        versionName appVersion
     }
     signingConfigs {
         release {
