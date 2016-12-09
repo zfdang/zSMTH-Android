@@ -78,7 +78,8 @@ public class CustomScrollingViewBehavior extends AppBarLayout.ScrollingViewBehav
     // Calculate the padding needed to keep the bottom of the view pager's content at the same location on the screen.
     private int calculateBottomPadding(AppBarLayout dependency) {
         final int totalScrollRange = dependency.getTotalScrollRange();
-        return totalScrollRange + dependency.getTop();
+        // 96 is the original offset of AppBarLayout to the screen, so we need to adjust the child bottom padding
+        return totalScrollRange + dependency.getTop() - 96;
     }
 
     private void startAnimationRunnable(final View child, final View dependency) {

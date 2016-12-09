@@ -33,7 +33,7 @@
         android:paddingRight="@dimen/activity_horizontal_margin_right"
         android:background="@color/body_background_night"
         android:orientation="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="com.zfdang.zsmth_android.helpers.CustomScrollingViewBehavior">
 
         <!--Header-->
         <TextView
@@ -72,7 +72,6 @@
                     android:scrollbars="vertical"
                     app:layoutManager="LinearLayoutManager"
                     tools:context=".BoardTopicActivity"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
                     tools:listitem="@layout/post_item"/>
             </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
 
