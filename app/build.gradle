@@ -109,7 +109,7 @@ dependencies {
     compile files('libs/ShareSDK-Core-2.7.1.jar')
     compile 'com.wx.wheelview:wheelview:1.3.4'
     compile 'com.github.orangegangsters:swipy:1.2.3@aar'
-    compile 'com.klinkerapps:link_builder:1.5.0'
+    compile 'com.klinkerapps:link_builder:1.5.2'
     compile 'com.esotericsoftware:kryo:4.0.0'
 
     // my gradles

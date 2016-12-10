@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 // Workaround for https://code.google.com/p/android/issues/detail?id=177195
@@ -12,6 +13,7 @@ import android.view.View;
 public class CustomScrollingViewBehavior extends AppBarLayout.ScrollingViewBehavior {
     private AppBarLayout appBarLayout;
     private boolean onAnimationRunnablePosted = false;
+    private int appBarTop = Integer.MAX_VALUE;
 
     @SuppressWarnings("unused")
     public CustomScrollingViewBehavior() {
@@ -78,8 +80,10 @@ public class CustomScrollingViewBehavior extends AppBarLayout.ScrollingViewBehav
     // Calculate the padding needed to keep the bottom of the view pager's content at the same location on the screen.
     private int calculateBottomPadding(AppBarLayout dependency) {
         final int totalScrollRange = dependency.getTotalScrollRange();
-        // 96 is the original offset of AppBarLayout to the screen, so we need to adjust the child bottom padding
-        return totalScrollRange + dependency.getTop() - 96;
+        if(appBarTop == Integer.MAX_VALUE) {
+            appBarTop = dependency.getTop();
+        }
+        return totalScrollRange + dependency.getTop() - appBarTop;
     }
 
     private void startAnimationRunnable(final View child, final View dependency) {
