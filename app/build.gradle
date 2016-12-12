@@ -51,37 +51,34 @@ android {
 }
 
 dependencies {
-    final FRESCO_VERSION = '0.14.1'
-    final SUPPORT_LIBRARY_VERSION = '25.0.1'
     final OKHTTP_VERSION = '3.5.0'
     final RETROFIT_VERSION = '2.1.0'
-    final ICEPICK_VERSION = '3.1.0'
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
 
     // Fresco
-    compile "com.facebook.fresco:fresco:$FRESCO_VERSION"
+    compile "com.facebook.fresco:fresco:$rootProject.FRESCO_VERSION"
     // For animated GIF support
-    compile "com.facebook.fresco:animated-gif:$FRESCO_VERSION"
+    compile "com.facebook.fresco:animated-gif:$rootProject.FRESCO_VERSION"
     // For WebP support, including animated WebP
-    compile "com.facebook.fresco:webpsupport:$FRESCO_VERSION"
-    compile "com.facebook.fresco:animated-webp:$FRESCO_VERSION"
-    compile "com.facebook.fresco:imagepipeline-okhttp3:$FRESCO_VERSION"
+    compile "com.facebook.fresco:webpsupport:$rootProject.FRESCO_VERSION"
+    compile "com.facebook.fresco:animated-webp:$rootProject.FRESCO_VERSION"
+    compile "com.facebook.fresco:imagepipeline-okhttp3:$rootProject.FRESCO_VERSION"
 
     // Support library
-    compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:support-v4:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:recyclerview-v7:$SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:appcompat-v7:$rootProject.SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:design:$rootProject.SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:support-v4:$rootProject.SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:recyclerview-v7:$rootProject.SUPPORT_LIBRARY_VERSION"
     // http://stackoverflow.com/questions/9783368/alternatives-to-preferencefragment-with-android-support-v4
     // https://github.com/Gericop/Android-Support-Preference-V7-Fix
-    compile "com.android.support:preference-v7:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:preference-v14:$SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:preference-v7:$rootProject.SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:preference-v14:$rootProject.SUPPORT_LIBRARY_VERSION"
 
     // RX
-    compile 'io.reactivex:rxjava:1.2.3'
-    compile 'io.reactivex:rxandroid:1.2.1'
+    compile "io.reactivex:rxjava:$rootProject.RXJAVA_VERSION"
+    compile "io.reactivex:rxandroid:$rootProject.RXANDROID_VERSION"
 
     // OkHttp
     compile "com.squareup.okhttp3:okhttp:$OKHTTP_VERSION"
@@ -113,6 +110,6 @@ dependencies {
     compile 'com.esotericsoftware:kryo:4.0.0'
 
     // my gradles
-    compile 'com.zfdang.multiple-images-selector:multiple-images-selector:1.1.3'
-    compile 'com.zfdang.devicemodeltomarketingname:device-model-to-marketing-name:1.0.3'
+    compile project(':multiple-images-selector')
+    compile project(':device_model_to_marketing_name')
 }

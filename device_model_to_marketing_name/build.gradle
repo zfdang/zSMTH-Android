@@ -1,0 +1,37 @@
+apply plugin: 'com.android.library'
+
+ext {
+    PUBLISH_GROUP_ID = 'com.zfdang.devicemodeltomarketingname'
+    PUBLISH_ARTIFACT_ID = 'device-model-to-marketing-name'
+    PUBLISH_VERSION = '1.0.3'
+}
+
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile "com.android.support:appcompat-v7:$rootProject.SUPPORT_LIBRARY_VERSION"
+}
+
+// https://github.com/blundell/release-android-library
+// or use the remote copy to keep update with latest changes
+// ./gradlew clean build generateRelease
+apply from: 'https://raw.githubusercontent.com/blundell/release-android-library/master/android-release-aar.gradle'
