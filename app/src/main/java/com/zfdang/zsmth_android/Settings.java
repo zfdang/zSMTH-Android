@@ -300,6 +300,20 @@ public class Settings {
         }
     }
 
+    // we will cache contents in compose post activity, so that user can restore contents
+    private static final String COMPOSE_POST_CACHE = "COMPOSE_POST_CACHE";
+    private String mPostCache;
+    public String getPostCache() {
+        return mPostCache;
+    }
+    public void setPostCache(String mPostCache) {
+        if(this.mPostCache == null || !this.mPostCache.equals(mPostCache)){
+            this.mPostCache = mPostCache;
+            mEditor.putString(COMPOSE_POST_CACHE, this.mPostCache);
+            mEditor.commit();
+        }
+    }
+
 
     private final String Preference_Name = "ZSMTH_Config";
 
@@ -356,5 +370,7 @@ public class Settings {
 
         bPostNavBar = mPreference.getBoolean(SHOW_POST_NAVITATION_BAR, true);
         iFontIndex = mPreference.getInt(ZSMTH_FONT_INDEX, 1);
+
+        mPostCache = mPreference.getString(COMPOSE_POST_CACHE, "");
     }
 }

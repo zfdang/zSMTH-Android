@@ -65,7 +65,6 @@ public class ComposePostActivity extends SMTHBaseActivity {
     private String postPublishMessage = null;
     private AjaxResponse lastResponse = null;
 
-
     public void startImageSelector() {
         // start multiple photos selector
         Intent intent = new Intent(ComposePostActivity.this, ImagesSelectorActivity.class);
@@ -145,8 +144,49 @@ public class ComposePostActivity extends SMTHBaseActivity {
         // init controls from Intent
         initFromIntent();
 
+        restorePostContentFromCache();
+
         // open keypads
         KeyboardLess.$show(this, mContent);
+    }
+
+    // three methods to manage content cache
+    private void restorePostContentFromCache() {
+        final String content = Settings.getInstance().getPostCache();
+        if(content != null && content.length() > 0 && content.length() != mContent.getText().toString().length()) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ComposePostActivity.this);
+            alertDialogBuilder.setTitle("恢复缓存的内容?")
+                    .setMessage(StringUtils.getEllipsizedMidString(content, 240))
+                    .setCancelable(false)
+                    .setPositiveButton("恢复内容", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // if this button is clicked, close current activity
+                            mContent.setText(content);
+                        }
+                    })
+                    .setNegativeButton("放弃内容", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // if this button is clicked, just close the dialog box and do nothing
+                            dialog.cancel();
+                        }
+                    }).create().show();
+        }
+    }
+
+    private void savePostContentToCache() {
+        String content = mContent.getText().toString();
+        Settings.getInstance().setPostCache(content);
+    }
+
+    private void clearPostContentCache() {
+        Settings.getInstance().setPostCache("");
+    }
+
+    @Override
+    protected void onPause() {
+        // this method will also be called after activity.finish(), so we will have to set mContent.SetText("") before .finish()
+        super.onPause();
+        savePostContentToCache();
     }
 
     public void initFromIntent() {
@@ -339,6 +379,8 @@ public class ComposePostActivity extends SMTHBaseActivity {
                             KeyboardLess.$hide(ComposePostActivity.this, mContent);
 
                             if(message != null && !message.contains("本文可能含有不当内容")) {
+                                mContent.setText("");
+                                clearPostContentCache();
                                 ComposePostActivity.this.finish();
                             }
                         }
@@ -374,6 +416,8 @@ public class ComposePostActivity extends SMTHBaseActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         // if this button is clicked, close current activity
                         KeyboardLess.$hide(ComposePostActivity.this, mContent);
+                        mContent.setText("");
+                        clearPostContentCache();
                         ComposePostActivity.this.finish();
                     }
                 })
@@ -384,5 +428,4 @@ public class ComposePostActivity extends SMTHBaseActivity {
                     }
                 }).create().show();
     }
-
 }
