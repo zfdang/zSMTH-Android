@@ -97,6 +97,20 @@ public class Settings {
     }
 
 
+    private static final String USE_DEVICE_SIGNATURE = "use_device_signature";
+    private boolean bUseSignature;
+    public boolean bUseSignature() {
+        return bUseSignature;
+    }
+    public void setUseSignature(boolean bUseSignature) {
+        if(this.bUseSignature != bUseSignature) {
+            this.bUseSignature = bUseSignature;
+            mEditor.putBoolean(USE_DEVICE_SIGNATURE, this.bUseSignature);
+            mEditor.commit();
+        }
+    }
+
+
     private static final String DEVICE_SIGNATURE = "device_signature";
     private String mSignature;
     public String getSignature() {
@@ -344,6 +358,7 @@ public class Settings {
 
         bLastLoginSuccess = mPreference.getBoolean(LAST_LOGIN_SUCCESS, false);
 
+        bUseSignature = mPreference.getBoolean(USE_DEVICE_SIGNATURE, true);
         mSignature = mPreference.getString(DEVICE_SIGNATURE, "");
         if(mSignature.length() == 0) {
             String marketingName = DeviceMarketingName.getInstance(SMTHApplication.getAppContext())

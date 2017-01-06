@@ -338,7 +338,10 @@ public class ComposePostActivity extends SMTHBaseActivity {
                 });
 
         // publish post
-        String postContent = mContent.getText().toString() + "\n" + String.format("#发自zSMTH@%s", Settings.getInstance().getSignature());
+        String postContent = mContent.getText().toString();
+        if(Settings.getInstance().bUseSignature()) {
+            postContent += "\n" + String.format("#发自zSMTH@%s", Settings.getInstance().getSignature());
+        }
         Observable<AjaxResponse> resp2 = null;
         if (mPostContext.getComposingMode() == ComposePostContext.MODE_NEW_MAIL
                 || mPostContext.getComposingMode() == ComposePostContext.MODE_NEW_MAIL_TO_USER

@@ -3,6 +3,7 @@ package com.zfdang.zsmth_android;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.CheckBoxPreference;
@@ -242,7 +243,32 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
 
 
         signature_control = (CheckBoxPreference) findPreference("setting_signature_control");
-        // ignore signature_control at the moment
+        signature_control.setChecked(Settings.getInstance().bUseSignature());
+        signature_control.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                boolean bValue = Settings.getInstance().bUseSignature();
+                if(newValue instanceof Boolean){
+                    Boolean boolVal = (Boolean) newValue;
+                    bValue = boolVal;
+                }
+                Settings.getInstance().setUseSignature(bValue);
+                if(bValue == false) {
+                    String alipay = "dantifer@gmail.com";
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                        final android.content.ClipboardManager clipboardManager = (android.content.ClipboardManager)
+                                getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                        final android.content.ClipData clipData = android.content.ClipData.newPlainText("ID", alipay);
+                        clipboardManager.setPrimaryClip(clipData);
+                    } else {
+                        final android.text.ClipboardManager clipboardManager = (android.text.ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                        clipboardManager.setText(alipay);
+                    }
+                    Toast.makeText(getActivity(), "作者支付宝ID已复制到剪贴板...", Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            }
+        });
 
         signature_content = findPreference("setting_signature_content");
         signature_content.setSummary(Settings.getInstance().getSignature());
