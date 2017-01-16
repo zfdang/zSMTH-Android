@@ -124,7 +124,7 @@ public class SMTHHelper {
 
         //设置缓存路径
         File httpCacheDirectory = new File(SMTHApplication.getAppContext().getCacheDir(), "Responses");
-        int cacheSize = 250 * 1024 * 1024; // 100 MiB
+        int cacheSize = 250 * 1024 * 1024; // 250 MiB
         Cache cache = new Cache(httpCacheDirectory, cacheSize);
 
         mHttpClient = new OkHttpClient().newBuilder()

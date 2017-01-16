@@ -81,6 +81,7 @@ dependencies {
     compile "io.reactivex:rxandroid:$rootProject.RXANDROID_VERSION"
 
     // OkHttp
+    compile 'com.github.franmontiel:PersistentCookieJar:v1.0.0'
     compile "com.squareup.okhttp3:okhttp:$OKHTTP_VERSION"
     compile "com.squareup.okhttp3:logging-interceptor:$OKHTTP_VERSION"
 
