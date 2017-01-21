@@ -939,9 +939,11 @@ public class SMTHHelper {
 //        o.o(false,1,179,808676665,'[数码]','DSLR','数码单反','jerryxiao',153110,178,57);
 //        o.o(true,1,1368,0,'[数码]','SmartLife','智能生活','[目录]',0,1367,0);
 
-        if(content.contains("您还没有登录，或者长时间没有动作，请您重新登录")){
-            Board board = new Board("发生错误", "您还没有登录，或者长时间没有动作，请您重新登录");
+        final String error_msg = "您还没有登录，或者长时间没有动作，请您重新登录";
+        if(content.contains(error_msg)){
+            Board board = new Board(Board.Invalid_Folder_ID, error_msg + "\n" + "登录后，请在右上角菜单里'刷新'收藏夹");
             boards.add(board);
+
             return boards;
         }
 

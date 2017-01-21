@@ -15,6 +15,7 @@ public class Board implements Externalizable, Parcelable{
 
     // for Externalizable
     static final long serialVersionUID = 20160322L;
+    static public final String Invalid_Folder_ID = "_0_";
 
     // 具体的版面
     // http://www.newsmth.net/nForum/#!board/DrivingStudy
@@ -89,6 +90,10 @@ public class Board implements Externalizable, Parcelable{
 
     public String getFolderID() {
         return folderID;
+    }
+
+    public boolean isValidFolder() {
+        return !folderID.equals(Invalid_Folder_ID);
     }
 
     public void setCategoryName(String categoryName) {

@@ -686,8 +686,10 @@ public class MainActivity extends SMTHBaseActivity
         if (fragment == favoriteBoardFragment) {
             // favorite fragment, we might enter a folder
             if (item.isFolder()) {
-                favoriteBoardFragment.pushFavoritePath(item.getFolderID(), item.getFolderName());
-                favoriteBoardFragment.RefreshFavoriteBoards();
+                if(item.isValidFolder()) {
+                    favoriteBoardFragment.pushFavoritePath(item.getFolderID(), item.getFolderName());
+                    favoriteBoardFragment.RefreshFavoriteBoards();
+                }
             } else {
                 startBoardTopicActivity(item);
             }
