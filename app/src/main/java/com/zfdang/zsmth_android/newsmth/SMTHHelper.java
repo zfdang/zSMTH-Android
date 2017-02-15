@@ -112,7 +112,7 @@ public class SMTHHelper {
     }
 
     // protected constructor, can only be called by getInstance
-    protected SMTHHelper(Context context) {
+    protected SMTHHelper(final Context context) {
 
         // set your desired log level
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -137,6 +137,20 @@ public class SMTHHelper {
                                 .header("User-Agent", USER_AGENT)
                                 .build();
                         return chain.proceed(request);
+                    }
+                })
+                .addNetworkInterceptor(new Interceptor() {
+                    // for error response, do not cache its content
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        Response originalResponse = chain.proceed(chain.request());
+                        if( originalResponse.isSuccessful() ) {
+                            return originalResponse;
+                        } else {
+                            return originalResponse.newBuilder()
+                                    .header("Cache-Control", "no-cache")
+                                    .build();
+                        }
                     }
                 })
                 .cookieJar(mCookieJar)
