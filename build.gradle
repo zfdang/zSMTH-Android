@@ -33,6 +33,6 @@ ext {
     buildToolsVersion = '25.0.1'
     FRESCO_VERSION = '1.1.0'
     SUPPORT_LIBRARY_VERSION = '25.1.0'
-    RXJAVA_VERSION = '1.2.6'
+    RXJAVA_VERSION = '1.2.7'
     RXANDROID_VERSION = '1.2.1'
 }

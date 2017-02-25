@@ -52,7 +52,7 @@ android {
 
 dependencies {
     final OKHTTP_VERSION = '3.6.0'
-    final RETROFIT_VERSION = '2.1.0'
+    final RETROFIT_VERSION = '2.2.0'
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
