@@ -4,6 +4,7 @@
     <item
         android:id="@+id/main_action_refresh"
         android:orderInCategory="1"
+        android:icon="@drawable/ic_refresh_white_24dp"
         android:title="@string/action_refresh"
         app:showAsAction="ifRoom" />
     <item
