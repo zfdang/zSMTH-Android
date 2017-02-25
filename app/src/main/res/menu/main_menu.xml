@@ -5,7 +5,7 @@
         android:id="@+id/main_action_refresh"
         android:orderInCategory="1"
         android:title="@string/action_refresh"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/mail_list_fragment_newmail"
         android:icon="@drawable/ic_note_add_white_24dp"
