@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 // http://www.race604.com/android-auto-version/
 def cmd = 'git rev-list HEAD --count'
 def gitVersion = cmd.execute().text.trim().toInteger()
-def appVersion = '1.6.1'
+def appVersion = '1.6.2'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -51,7 +51,7 @@ android {
 }
 
 dependencies {
-    final OKHTTP_VERSION = '3.6.0'
+    final OKHTTP_VERSION = '3.7.0'
     final RETROFIT_VERSION = '2.2.0'
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
