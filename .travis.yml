@@ -19,16 +19,16 @@ android:
     - 'google-gdk-license-.+'  
 
 before_cache:
-  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+  #- rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
   
 cache:
   directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
+    #- $HOME/.gradle/caches/
+    #- $HOME/.gradle/wrapper/
     
 before_script:
   # Create and start emulator
-  - sudo apt-get install tree
+  #- sudo apt-get install tree
 
 script: ./gradlew assembleRelease
 
