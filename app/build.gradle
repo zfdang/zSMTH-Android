@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 // http://www.race604.com/android-auto-version/
 def cmd = 'git rev-list HEAD --count'
 def gitVersion = cmd.execute().text.trim().toInteger()
-def appVersion = '1.6.2'
+def appVersion = '1.6.3'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
