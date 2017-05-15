@@ -32,7 +32,10 @@ before_script:
 script: ./gradlew assembleRelease
 
 before_deploy:
-  - ls -l $HOME/
+  - tree
+  - ls android-zSMTH/*
+  - ls -l
+  - ls $HOME/*
 
 deploy:
   provider: releases
