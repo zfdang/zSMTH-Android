@@ -29,9 +29,10 @@ cache:
 before_script:
   # Create and start emulator
 
-script: ./gradlew assembleRelease
+script: ./gradlew assembleRelease --debug
 
 after_success:
+  - pwd
   - tree
   - ls android-zSMTH/*
   - ls -l
