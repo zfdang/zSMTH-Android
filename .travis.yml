@@ -34,11 +34,10 @@ script: ./gradlew assembleRelease
 
 after_success:
   - pwd
-  - tree
   - ls -l
   - ls -l $HOME/
   - ls -l app/
-  - ls -l app/outputs/
+  - ls -l app/build/outputs/apk/
 
 deploy:
   provider: releases
@@ -47,6 +46,5 @@ deploy:
   file_glob: true
   file: app/build/outputs/apk/zSMTH-release-*.apk
   on:
-    tags: true
     repo: zfdang/zSMTH-Android
 
