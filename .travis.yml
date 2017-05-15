@@ -1,0 +1,19 @@
+language: android
+jdk: oraclejdk8
+sudo: false
+
+android:
+  components:
+    - platform-tools
+    - tools
+    - build-tools-24.0.2
+    - android-22
+    - android-24
+    - sys-img-armeabi-v7a-android-22
+    - extra-android-m2repository
+
+before_script:
+  # Create and start emulator
+
+
+script: ./gradlew assembleRelease
