@@ -2,6 +2,8 @@
 
 水木社区BBS的开源Android客户端
 
+https://travis-ci.org/zfdang/zSMTH-Android.svg?branch=master
+
 ![zSMTH](zsmth.png)
 
 # 项目地址：
