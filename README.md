@@ -9,7 +9,7 @@
 
 [http://zsmth-android.zfdang.com/](http://zsmth-android.zfdang.com/)
 
-[![Build Status](https://travis-ci.org/zfdang/zSMTH-Android.svg?branch=master)](https://travis-ci.org/zfdang/zSMTH-Android)
+[![Build Status](https://travis-ci.org/zfdang/zSMTH-Android.svg?branch=master&foo=bar)](https://travis-ci.org/zfdang/zSMTH-Android)
 
 
 # 项目说明：
