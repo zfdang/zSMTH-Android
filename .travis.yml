@@ -28,16 +28,17 @@ cache:
     
 before_script:
   # Create and start emulator
+  - apt-get install tree
 
 script: ./gradlew assembleRelease
 
 after_success:
   - pwd
   - tree
-  - ls android-zSMTH/*
   - ls -l
-  - ls $HOME/*
-  - ls $HOME/zfdang/zSMTH-Android/*
+  - ls -l $HOME/
+  - ls -l app/
+  - ls -l app/outputs/
 
 deploy:
   provider: releases
