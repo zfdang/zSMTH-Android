@@ -29,7 +29,7 @@ cache:
 before_script:
   # Create and start emulator
 
-script: ./gradlew assembleRelease --debug
+script: ./gradlew assembleRelease
 
 after_success:
   - pwd
@@ -37,6 +37,7 @@ after_success:
   - ls android-zSMTH/*
   - ls -l
   - ls $HOME/*
+  - ls $HOME/zfdang/zSMTH-Android/*
 
 deploy:
   provider: releases
