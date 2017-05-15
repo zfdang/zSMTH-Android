@@ -35,7 +35,7 @@ deploy:
   provider: releases
   api_key:
     secure: Flg8H3hLT9KEJLuk4mzCIh/jG7mmAf8WTDGWLnMtmZ6PoOIQp9BvDK2zIUutf+QVe0XP5RKCEUOCq93Ls1UQ1d+XbwOYW4/0AGMIJ1JObLTPg+K3AqYrt3J5GY+XkxRFDH0ghZngQ1rQz7m8SuH5t6B68jQCrHVJj9+hK4CvrJE5A2V2yz0P3zqm6kkRppNzm2/kfGduWUF0H4o/88/E/nx6zOaXL0F/D056NJSs8blDonUi8r8MGxVGtKVD0P8xNyP3Sm9mupnTgoRy6mhfVdKmUgVyHODmQEhG0bvMjESHEuNqUQvRWo2VcmtCGFb5+hLw7qr5VEpTIVqTa6jMUDue2aoc9M+2hDmoCgN0CfiT4l1ws3/5qdUAfmMXgyRPXKju6YnUnQTMyzAnk2p3l8n4o+C5gPqC/XVj+uHIoL+vCdlsUYCmQIdigifXcON+KZlakkjn9EoWhdppsXSzOWjv8lLu8LQtqlDSEzhmbjHyynmH1GkPwn+fI8el6WYqy1PBGyEyEFEjEvl+87D9MYtvEntp7+P3UaRqMqQcWrxSIYcA6kKeDSxflw9AU9AxYb2M/rqJYTMHwBFP0goedFF9SaYYghrDY/zhOE7M+05GXA9Ooz7Q3qbn7nJvQ2fIAx3QkKumDodPsz09JVO0Ryrq9n8X+Pu36072IpTPb+E=
-  file: zSMTH-Android/app/build/outputs/apk/zSMTH-release-*.apk
+  file: app/build/outputs/apk/zSMTH-release-v1.6.2.apk
   on:
     repo: zfdang/zSMTH-Android
 
