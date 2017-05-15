@@ -2,13 +2,15 @@
 
 水木社区BBS的开源Android客户端
 
-[![Build Status](https://travis-ci.org/zfdang/zSMTH-Android.svg?branch=master)](https://travis-ci.org/zfdang/zSMTH-Android)
 
 ![zSMTH](zsmth.png)
 
 # 项目地址：
 
 [http://zsmth-android.zfdang.com/](http://zsmth-android.zfdang.com/)
+
+[![Build Status](https://travis-ci.org/zfdang/zSMTH-Android.svg?branch=master)](https://travis-ci.org/zfdang/zSMTH-Android)
+
 
 # 项目说明：
 
