@@ -2,7 +2,7 @@
 
 水木社区BBS的开源Android客户端
 
-https://travis-ci.org/zfdang/zSMTH-Android.svg?branch=master
+[![Build Status](https://travis-ci.org/zfdang/zSMTH-Android.svg?branch=master)](https://travis-ci.org/zfdang/zSMTH-Android)
 
 ![zSMTH](zsmth.png)
 
