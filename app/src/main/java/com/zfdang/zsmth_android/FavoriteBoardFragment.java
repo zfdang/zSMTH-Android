@@ -39,32 +39,26 @@ public class FavoriteBoardFragment extends Fragment {
     private OnBoardFragmentInteractionListener mListener;
 
     private RecyclerView mRecyclerView = null;
-    private String mOriginalTitle = null;
+    private String mDefaultTitle = null;
 
     // list of favorite paths
     private List<String> mFavoritePaths = null;
     private List<String> mFavoritePathNames = null;
 
-    public void pushFavoritePath(String path, String name) {
-        if(mFavoritePaths == null) {
-            mFavoritePaths = new ArrayList<String>();
-        }
-        if(mFavoritePathNames == null) {
-            mFavoritePathNames = new ArrayList<String>();
-        }
+    public void pushFavoritePathAndName(String path, String name) {
         mFavoritePaths.add(path);
         mFavoritePathNames.add(name.trim());
     }
 
-    public void popFavoritePath() {
-        if(mFavoritePaths != null & mFavoritePaths.size() > 1){
+    public void popFavoritePathAndName() {
+        if(mFavoritePaths.size() > 0 && mFavoritePathNames.size() > 0){
             this.mFavoritePaths.remove(this.mFavoritePaths.size()-1);
             this.mFavoritePathNames.remove(this.mFavoritePathNames.size()-1);
         }
     }
 
     public String getCurrentFavoritePath(){
-        if(mFavoritePaths != null & mFavoritePaths.size() > 0){
+        if(mFavoritePaths.size() > 0){
             return this.mFavoritePaths.get(this.mFavoritePaths.size() - 1);
         } else {
             return "";
@@ -72,7 +66,7 @@ public class FavoriteBoardFragment extends Fragment {
     }
 
     public String getCurrentFavoritePathName(){
-        if(mFavoritePathNames != null & mFavoritePathNames.size() > 0){
+        if(mFavoritePathNames.size() > 0){
             return this.mFavoritePathNames.get(this.mFavoritePathNames.size() - 1);
         } else {
             return "";
@@ -80,7 +74,7 @@ public class FavoriteBoardFragment extends Fragment {
     }
 
     public boolean atFavoriteRoot() {
-        return !(mFavoritePaths != null && mFavoritePaths.size() > 1);
+        return mFavoritePaths.size() == 0;
     }
 
     /**
@@ -95,11 +89,18 @@ public class FavoriteBoardFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        // set the initial favorite path chain
-        mFavoritePaths = new ArrayList<String>();
-        mFavoritePathNames = new ArrayList<String>();
-        pushFavoritePath("", "根目录");
+        if(mFavoritePaths == null) {
+            mFavoritePaths = new ArrayList<String>();
+        }
+        if(mFavoritePathNames == null) {
+            mFavoritePathNames = new ArrayList<String>();
+        }
+        if(mDefaultTitle == null){
+            mDefaultTitle = SMTHApplication.App_Title_Prefix + "收藏夹";
+        }
+        updateFavoriteTitle();
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -242,18 +243,11 @@ public class FavoriteBoardFragment extends Fragment {
             return;
         }
 
-        if(mOriginalTitle == null) {
-            mOriginalTitle = activity.getTitle().toString();
+        String title = "";
+        for(int i = 0; i < mFavoritePathNames.size(); i++) {
+            title += ">" + mFavoritePathNames.get(i);
         }
-        if( mFavoritePathNames != null && mFavoritePathNames.size() > 1) {
-            String path = "";
-            for(int i = 1; i < mFavoritePathNames.size(); i ++) {
-                path += ">" + mFavoritePathNames.get(i);
-            }
-            activity.setTitle(mOriginalTitle + path);
-        } else {
-            activity.setTitle(mOriginalTitle);
-        }
+        activity.setTitle(mDefaultTitle + title);
     }
 
 

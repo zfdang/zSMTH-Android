@@ -439,7 +439,7 @@ public class MainActivity extends SMTHBaseActivity
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         if (fragment instanceof FavoriteBoardFragment) {
             if (!favoriteBoardFragment.atFavoriteRoot()) {
-                favoriteBoardFragment.popFavoritePath();
+                favoriteBoardFragment.popFavoritePathAndName();
                 favoriteBoardFragment.RefreshFavoriteBoards();
                 return;
             }
@@ -626,7 +626,11 @@ public class MainActivity extends SMTHBaseActivity
         if (fragment != null) {
             FragmentManager fm = getSupportFragmentManager();
             fm.beginTransaction().replace(R.id.content_frame, fragment).commit();
-            setTitle(SMTHApplication.App_Title_Prefix + title);
+
+            // favorite board will manage the title by itself. its title will vary depending on folder path
+            if(fragment != favoriteBoardFragment) {
+                setTitle(SMTHApplication.App_Title_Prefix + title);
+            }
         }
 
         mDrawer.closeDrawer(GravityCompat.START);
@@ -687,7 +691,7 @@ public class MainActivity extends SMTHBaseActivity
             // favorite fragment, we might enter a folder
             if (item.isFolder()) {
                 if(item.isValidFolder()) {
-                    favoriteBoardFragment.pushFavoritePath(item.getFolderID(), item.getFolderName());
+                    favoriteBoardFragment.pushFavoritePathAndName(item.getFolderID(), item.getFolderName());
                     favoriteBoardFragment.RefreshFavoriteBoards();
                 }
             } else {
