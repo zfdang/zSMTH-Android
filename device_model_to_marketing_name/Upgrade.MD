@@ -19,5 +19,7 @@ NOTE: please make sure all strings are escaped properly:
     
     http://stackoverflow.com/questions/2406975/how-to-escape-the-equals-sign-in-properties-files
 
+NOTE: please remove supported_devices.csv to reduce package size
+
 3.Update version, build zip file, and upload it to bintray.com
 
