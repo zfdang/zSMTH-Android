@@ -112,8 +112,11 @@ public class Post {
         // <a target="_blank" href="http://att.newsmth.net/nForum/att/AutoWorld/1939790539/4070982">
         // <img border="0" title="单击此查看原图" src="http://att.newsmth.net/nForum/att/AutoWorld/1939790539/4070982/large" class="resizeable">
         // </a>
+        // special image attachment: webp. newsmth does not support webp now, so it's not displayed as img
+        // <a href="http://att.newsmth.net/nForum/att/MMJoke/1634780953/211" target="_blank">1.webp</a>
         Elements as = content.select("a[href]");
         for (Element a : as) {
+            // process each a|href
             Elements imgs = a.select("img[src]");
             if (imgs.size() == 1) {
                 // find one image attachment
@@ -134,6 +137,21 @@ public class Post {
                 // replace a[href] with MARK
                 // we will split the string with MARK, so make sure no two MAKR will stay together
                 a.html(ATTACHMENT_MARK + " ");
+            } else if (imgs.size() == 0) {
+                // does not find any image element, handle the special webp
+                String attachName = a.text();
+                if(attachName != null && attachName.endsWith(".webp")) {
+                    // this is a webp attachment, show it as image
+                    String origImageSrc = a.attr("href");
+                    if (origImageSrc != null && origImageSrc.startsWith("/nForum")) {
+                        origImageSrc = "http://att.newsmth.net" + origImageSrc;
+                    }
+
+                    Attachment attach = new Attachment(origImageSrc, origImageSrc);
+                    this.addAttachFile(attach);
+
+                    a.html(ATTACHMENT_MARK + " ");
+                }
             }
         }
 
