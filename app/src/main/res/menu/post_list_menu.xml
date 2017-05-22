@@ -6,12 +6,13 @@
         android:orderInCategory="1"
         android:title="@string/post_list_action_enter_board"
         android:icon="@drawable/enter_board"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/post_list_action_refresh"
         android:orderInCategory="1"
         android:title="@string/post_list_action_refresh"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_refresh_white_24dp"
+        app:showAsAction="ifRoom" />
 
 </menu>

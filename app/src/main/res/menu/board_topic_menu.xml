@@ -6,7 +6,7 @@
         android:orderInCategory="1"
         android:title="@string/board_topic_action_newpost"
         android:icon="@drawable/ic_note_add_white_24dp"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/board_topic_action_search"
         android:orderInCategory="2"

@@ -331,7 +331,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+        if (Settings.getInstance().isVolumeKeyScroll() && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
             RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, keyCode);
             return true;
         }
@@ -342,7 +342,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         // disable the beep sound when volume up/down is pressed
-        if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP) || (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
+        if (Settings.getInstance().isVolumeKeyScroll() && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
             return true;
         }
         return super.onKeyUp(keyCode, event);

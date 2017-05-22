@@ -34,6 +34,13 @@
             android:summaryOn="快速导航栏已打开"
             android:title="帖子快速导航栏"/>
 
+        <CheckBoxPreference
+            android:defaultValue="on"
+            android:key="setting_volume_key_scroll"
+            android:summaryOff="禁用音量键翻页"
+            android:summaryOn="启用音量键翻页"
+            android:title="音量键翻页"/>
+
         <ListPreference android:title="字体设置"
                         android:key="setting_fontsize_control"
                         android:summary="%s"

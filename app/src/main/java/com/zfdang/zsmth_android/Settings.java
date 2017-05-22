@@ -291,6 +291,19 @@ public class Settings {
         }
     }
 
+    private static final String VOLUME_KEY_SCROLL = "VOLUME_KEY_SCROLL";
+    private boolean bVolumeKeyScroll;
+    public boolean isVolumeKeyScroll() {
+        return bVolumeKeyScroll;
+    }
+    public void setVolumeKeyScroll(boolean bVolumeKeyScroll) {
+        if(this.bVolumeKeyScroll != bVolumeKeyScroll) {
+            this.bVolumeKeyScroll = bVolumeKeyScroll;
+            mEditor.putBoolean(VOLUME_KEY_SCROLL, this.bVolumeKeyScroll);
+            mEditor.commit();
+        }
+    }
+
     private static final String ZSMTH_FONT_INDEX = "ZSMTH_FONT_INDEX";
     private int iFontIndex;  // 0: large font; 1: normal font; 2: small
     public int getFontIndex() {
@@ -384,6 +397,7 @@ public class Settings {
         bLaunchHotTopic = mPreference.getBoolean(LAUNCH_HOTTOPIC_AS_ENTRY, true);
 
         bPostNavBar = mPreference.getBoolean(SHOW_POST_NAVITATION_BAR, true);
+        bVolumeKeyScroll = mPreference.getBoolean(VOLUME_KEY_SCROLL, true);
         iFontIndex = mPreference.getInt(ZSMTH_FONT_INDEX, 1);
 
         mPostCache = mPreference.getString(COMPOSE_POST_CACHE, "");

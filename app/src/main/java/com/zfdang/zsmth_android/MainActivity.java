@@ -309,7 +309,7 @@ public class MainActivity extends SMTHBaseActivity
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+        if (Settings.getInstance().isVolumeKeyScroll() && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
             if (fragment instanceof OnVolumeUpDownListener) {
                 OnVolumeUpDownListener frag = (OnVolumeUpDownListener) fragment;
@@ -325,7 +325,7 @@ public class MainActivity extends SMTHBaseActivity
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         // disable the beep sound when volume up/down is pressed
-        if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP) || (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
+        if (Settings.getInstance().isVolumeKeyScroll() && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
             return true;
         }
         return super.onKeyUp(keyCode, event);

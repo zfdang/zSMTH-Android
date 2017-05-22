@@ -43,6 +43,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     CheckBoxPreference launch_hottopic_as_entry;
     CheckBoxPreference daynight_control;
     CheckBoxPreference setting_post_navigation_control;
+    CheckBoxPreference setting_volume_key_scroll;
     ListPreference setting_fontsize_control;
     CheckBoxPreference image_quality_control;
 
@@ -117,6 +118,21 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
                     bValue = boolVal;
                 }
                 Settings.getInstance().setPostNavBar(bValue);
+                return true;
+            }
+        });
+
+        setting_volume_key_scroll = (CheckBoxPreference) findPreference("setting_volume_key_scroll");
+        setting_volume_key_scroll.setChecked(Settings.getInstance().isVolumeKeyScroll());
+        setting_volume_key_scroll.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                boolean bValue = Settings.getInstance().isVolumeKeyScroll();
+                if(newValue instanceof Boolean){
+                    Boolean boolVal = (Boolean) newValue;
+                    bValue = boolVal;
+                }
+                Settings.getInstance().setVolumeKeyScroll(bValue);
                 return true;
             }
         });
