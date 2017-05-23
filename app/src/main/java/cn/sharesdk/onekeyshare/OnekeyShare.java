@@ -8,20 +8,22 @@
 
 package cn.sharesdk.onekeyshare;
 
-import static com.mob.tools.utils.BitmapHelper.captureView;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+
+import com.mob.MobSDK;
+import com.mob.tools.utils.BitmapHelper;
+import com.mob.tools.utils.ResHelper;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
-import com.mob.tools.utils.R;
 
 /**
 * 快捷分享的入口
@@ -67,14 +69,16 @@ public class OnekeyShare {
 
 	/** imagePath是本地的图片路径，除Linked-In外的所有平台都支持这个字段 */
 	public void setImagePath(String imagePath) {
-		if(!TextUtils.isEmpty(imagePath))
+		if(!TextUtils.isEmpty(imagePath)) {
 			params.put("imagePath", imagePath);
+		}
 	}
 
 	/** imageUrl是图片的网络路径，新浪微博、人人网、QQ空间和Linked-In支持此字段 */
 	public void setImageUrl(String imageUrl) {
-		if (!TextUtils.isEmpty(imageUrl))
+		if (!TextUtils.isEmpty(imageUrl)) {
 			params.put("imageUrl", imageUrl);
+		}
 	}
 
 	/** url在微信（包括好友、朋友圈收藏）和易信（包括好友和朋友圈）中使用，否则可以不提供 */
@@ -154,7 +158,7 @@ public class OnekeyShare {
 
 	/** 返回操作回调 */
 	public PlatformActionListener getCallback() {
-		return R.forceCast(params.get("callback"));
+		return ResHelper.forceCast(params.get("callback"));
 	}
 
 	/** 设置用于分享过程中，根据不同平台自定义分享内容的回调 */
@@ -164,7 +168,7 @@ public class OnekeyShare {
 
 	/** 自定义不同平台分享不同内容的回调 */
 	public ShareContentCustomizeCallback getShareContentCustomizeCallback() {
-		return R.forceCast(params.get("customizeCallback"));
+		return ResHelper.forceCast(params.get("customizeCallback"));
 	}
 
 	/** 设置自己图标和点击事件，可以重复调用添加多次 */
@@ -173,7 +177,7 @@ public class OnekeyShare {
 		cl.logo = logo;
 		cl.label = label;
 		cl.listener = ocl;
-		ArrayList<CustomerLogo> customers = R.forceCast(params.get("customers"));
+		ArrayList<CustomerLogo> customers = ResHelper.forceCast(params.get("customers"));
 		customers.add(cl);
 	}
 
@@ -196,14 +200,14 @@ public class OnekeyShare {
 
 	/** 添加一个隐藏的platform */
 	public void addHiddenPlatform(String platform) {
-		HashMap<String, String> hiddenPlatforms = R.forceCast(params.get("hiddenPlatforms"));
+		HashMap<String, String> hiddenPlatforms = ResHelper.forceCast(params.get("hiddenPlatforms"));
 		hiddenPlatforms.put(platform, platform);
 	}
 
 	/** 设置一个将被截图分享的View , surfaceView是截不了图片的*/
 	public void setViewToShare(View viewToShare) {
 		try {
-			Bitmap bm = captureView(viewToShare, viewToShare.getWidth(), viewToShare.getHeight());
+			Bitmap bm = BitmapHelper.captureView(viewToShare, viewToShare.getWidth(), viewToShare.getHeight());
 			params.put("viewToShare", bm);
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -230,6 +234,7 @@ public class OnekeyShare {
 		HashMap<String, Object> shareParamsMap = new HashMap<String, Object>();
 		shareParamsMap.putAll(params);
 
+		MobSDK.init(context.getApplicationContext());
 		ShareSDK.initSDK(context);
 
 		// 打开分享菜单的统计
@@ -237,7 +242,7 @@ public class OnekeyShare {
 
 		int iTheme = 0;
 		try {
-			iTheme = R.parseInt(String.valueOf(shareParamsMap.remove("theme")));
+			iTheme = ResHelper.parseInt(String.valueOf(shareParamsMap.remove("theme")));
 		} catch (Throwable t) {}
 		OnekeyShareTheme theme = OnekeyShareTheme.fromValue(iTheme);
 		OnekeyShareThemeImpl themeImpl = theme.getImpl();
@@ -253,7 +258,7 @@ public class OnekeyShare {
 			themeImpl.disableSSO();
 		}
 
-		themeImpl.show(context);
+		themeImpl.show(context.getApplicationContext());
 	}
 
 }
