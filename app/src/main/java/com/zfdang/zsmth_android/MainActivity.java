@@ -17,6 +17,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -154,11 +155,18 @@ public class MainActivity extends SMTHBaseActivity
                         boolean canback = getSupportFragmentManager().getBackStackEntryCount() > 0;
                         if (canback) {
                             mToggle.setDrawerIndicatorEnabled(false);
-                            getSupportActionBar().setDisplayShowHomeEnabled(true);
-                            getSupportActionBar().setHomeButtonEnabled(true);
-                            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                            ActionBar bar = getSupportActionBar();
+                            if(bar != null) {
+                                bar.setDisplayShowHomeEnabled(true);
+                                bar.setHomeButtonEnabled(true);
+                                bar.setDisplayHomeAsUpEnabled(true);
+
+                            }
                         } else {
-                            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                            ActionBar bar = getSupportActionBar();
+                            if(bar != null) {
+                                bar.setDisplayHomeAsUpEnabled(false);
+                            }
                             mToggle.setDrawerIndicatorEnabled(true);
                             mDrawer.addDrawerListener(mToggle);
                         }

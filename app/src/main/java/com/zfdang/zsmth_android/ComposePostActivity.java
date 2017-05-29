@@ -3,6 +3,7 @@ package com.zfdang.zsmth_android;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -107,7 +108,10 @@ public class ComposePostActivity extends SMTHBaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);;
+        ActionBar bar = getSupportActionBar();
+        if(bar != null){
+            bar.setDisplayHomeAsUpEnabled(true);;
+        }
 
         mPhotos = new ArrayList<>();
 

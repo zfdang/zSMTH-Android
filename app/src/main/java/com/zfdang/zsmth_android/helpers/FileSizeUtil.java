@@ -77,7 +77,9 @@ public class FileSizeUtil {
             } catch (Exception e) {
                 Log.e(TAG, "getFileSize: " + Log.getStackTraceString(e) );
             } finally {
-                fis.close();
+                if(fis != null) {
+                    fis.close();
+                }
             }
         }
         return size;

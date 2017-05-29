@@ -321,7 +321,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
                     @Override
                     public void onNext(Topic topic) {
                         // Log.d(TAG, topic.toString());
-                        if(!topic.isSticky || (topic.isSticky && mSetting.isShowSticky())) {
+                        if(!topic.isSticky || mSetting.isShowSticky()) {
                             TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
                             mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
                         }

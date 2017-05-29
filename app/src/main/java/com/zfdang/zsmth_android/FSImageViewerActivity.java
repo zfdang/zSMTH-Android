@@ -7,6 +7,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -53,7 +54,10 @@ public class FSImageViewerActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_fs_image_viewer);
-        getSupportActionBar().hide();
+        ActionBar bar = getSupportActionBar();
+        if(bar != null) {
+            bar.hide();
+        }
 
         mViewPager = (HackyViewPager) findViewById(R.id.fullscreen_image_pager);
 
