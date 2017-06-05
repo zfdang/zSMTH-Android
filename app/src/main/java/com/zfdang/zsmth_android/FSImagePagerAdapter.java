@@ -59,22 +59,22 @@ public class FSImagePagerAdapter extends PagerAdapter {
 //                return false;
 //            }
 //        });
-//        image.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
-//            @Override
-//            public void onPhotoTap(View view, float x, float y) {
-//                if (mListener != null && mListener instanceof PhotoViewAttacher.OnPhotoTapListener) {
-//                    ((PhotoViewAttacher.OnPhotoTapListener) mListener).onPhotoTap(view, x, y);
-//                }
-//            }
-//
-//            @Override
-//            public void onOutsidePhotoTap() {
-//                if (mListener != null && mListener instanceof PhotoViewAttacher.OnPhotoTapListener) {
-//                    ((PhotoViewAttacher.OnPhotoTapListener) mListener).onOutsidePhotoTap();
-//                }
-//
-//            }
-//        });
+        image.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+            @Override
+            public void onPhotoTap(View view, float x, float y) {
+                if (mListener != null && mListener instanceof PhotoViewAttacher.OnPhotoTapListener) {
+                    ((PhotoViewAttacher.OnPhotoTapListener) mListener).onPhotoTap(view, x, y);
+                }
+            }
+
+            @Override
+            public void onOutsidePhotoTap() {
+                if (mListener != null && mListener instanceof PhotoViewAttacher.OnPhotoTapListener) {
+                    ((PhotoViewAttacher.OnPhotoTapListener) mListener).onOutsidePhotoTap();
+                }
+
+            }
+        });
 
         container.addView(image, 0);
         return image;

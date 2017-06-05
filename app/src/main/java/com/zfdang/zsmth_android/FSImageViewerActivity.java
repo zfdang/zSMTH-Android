@@ -15,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,8 +35,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import me.relex.circleindicator.CircleIndicator;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
-public class FSImageViewerActivity extends AppCompatActivity{
+public class FSImageViewerActivity extends AppCompatActivity implements PhotoViewAttacher.OnPhotoTapListener{
 
     private static final String TAG = "FullViewer";
 
@@ -45,6 +47,7 @@ public class FSImageViewerActivity extends AppCompatActivity{
     private CircleIndicator mIndicator;
     private ArrayList<String> mURLs;
 
+    private LinearLayout layoutToolbar;
     private ImageView btBack;
     private ImageView btInfo;
     private ImageView btSave;
@@ -76,6 +79,8 @@ public class FSImageViewerActivity extends AppCompatActivity{
         mIndicator = (CircleIndicator) findViewById(R.id.fullscreen_image_indicator);
         mIndicator.setViewPager(mViewPager);
 
+        // initialize toolbar and its child buttons
+        layoutToolbar = (LinearLayout) findViewById(R.id.fullscreen_toolbar);
 
         btBack = (ImageView) findViewById(R.id.fullscreen_button_back);
         btBack.setOnClickListener(new View.OnClickListener() {
@@ -84,7 +89,6 @@ public class FSImageViewerActivity extends AppCompatActivity{
                 finish();
             }
         });
-
 
         btInfo = (ImageView) findViewById(R.id.fullscreen_button_info);
         btInfo.setOnClickListener(new View.OnClickListener() {
@@ -409,5 +413,22 @@ public class FSImageViewerActivity extends AppCompatActivity{
                     }
                 })
                 .show();
+    }
+
+    private void toggleToobarVisibility(){
+        int visibility = layoutToolbar.getVisibility();
+        if(visibility == LinearLayout.GONE) {
+            layoutToolbar.setVisibility(LinearLayout.VISIBLE);
+        } else {
+            layoutToolbar.setVisibility(LinearLayout.GONE);
+        }
+    }
+
+    @Override public void onPhotoTap(View view, float v, float v1) {
+        toggleToobarVisibility();
+    }
+
+    @Override public void onOutsidePhotoTap() {
+        toggleToobarVisibility();
     }
 }
