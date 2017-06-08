@@ -8,4 +8,5 @@
     android:paddingRight="4dp"
     android:text="内容加载中..."
     android:textColor="@color/status_text_night"
-    android:textSize="@dimen/zsmth_font_size_medium"/>
+    android:textSize="@dimen/zsmth_font_size_medium"
+    />

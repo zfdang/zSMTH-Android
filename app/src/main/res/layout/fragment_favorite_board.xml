@@ -12,4 +12,5 @@
     android:scrollbars="vertical"
     app:layoutManager="LinearLayoutManager"
     tools:context=".FavoriteBoardFragment"
-    tools:listitem="@layout/board_item"/>
+    tools:listitem="@layout/board_item"
+    />

@@ -14,42 +14,40 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageView.ScaleType;
 import cn.sharesdk.onekeyshare.OnekeySharePage;
 import cn.sharesdk.onekeyshare.OnekeyShareThemeImpl;
-
 import com.mob.tools.gui.ScaledImageView;
 
 /** 图片浏览的视图类 */
 public class PicViewerPage extends OnekeySharePage implements OnGlobalLayoutListener {
-	private Bitmap pic;
-	/** 图片浏览的缩放控件 */
-	private ScaledImageView sivViewer;
+  private Bitmap pic;
+  /** 图片浏览的缩放控件 */
+  private ScaledImageView sivViewer;
 
-	public PicViewerPage(OnekeyShareThemeImpl impl) {
-		super(impl);
-	}
+  public PicViewerPage(OnekeyShareThemeImpl impl) {
+    super(impl);
+  }
 
-	/** 设置图片用于浏览 */
-	public void setImageBitmap(Bitmap pic) {
-		this.pic = pic;
-	}
+  /** 设置图片用于浏览 */
+  public void setImageBitmap(Bitmap pic) {
+    this.pic = pic;
+  }
 
-	public void onCreate() {
-		activity.getWindow().setBackgroundDrawable(new ColorDrawable(0x4c000000));
+  public void onCreate() {
+    activity.getWindow().setBackgroundDrawable(new ColorDrawable(0x4c000000));
 
-		sivViewer = new ScaledImageView(activity);
-		sivViewer.setScaleType(ScaleType.MATRIX);
-		activity.setContentView(sivViewer);
-		if (pic != null) {
-			sivViewer.getViewTreeObserver().addOnGlobalLayoutListener(this);
-		}
-	}
+    sivViewer = new ScaledImageView(activity);
+    sivViewer.setScaleType(ScaleType.MATRIX);
+    activity.setContentView(sivViewer);
+    if (pic != null) {
+      sivViewer.getViewTreeObserver().addOnGlobalLayoutListener(this);
+    }
+  }
 
-	public void onGlobalLayout() {
-		sivViewer.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-		sivViewer.post(new Runnable() {
-			public void run() {
-				sivViewer.setBitmap(pic);
-			}
-		});
-	}
-
+  public void onGlobalLayout() {
+    sivViewer.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+    sivViewer.post(new Runnable() {
+      public void run() {
+        sivViewer.setBitmap(pic);
+      }
+    });
+  }
 }

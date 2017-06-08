@@ -1,128 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                 xmlns:tools="http://schemas.android.com/tools"
-                                                 android:layout_width="match_parent"
-                                                 android:layout_height="match_parent"
-                                                 android:background="@color/body_background_night"
-                                                 android:fitsSystemWindows="true"
-                                                 tools:context=".MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/body_background_night"
+    android:fitsSystemWindows="true"
+    tools:context=".MainActivity"
+    >
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/post_list_app_bar"
+  <android.support.design.widget.AppBarLayout
+      android:id="@+id/post_list_app_bar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:theme="@style/AppTheme.AppBarOverlay"
+      >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/post_list_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/zsmth_actionbar_size"
+        android:theme="@style/ThemeOverlay.ToolBar"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:titleTextAppearance="@style/Toolbar.TitleText"
+        />
+
+  </android.support.design.widget.AppBarLayout>
+
+  <LinearLayout
+      android:id="@+id/post_list_linear_layout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:paddingLeft="@dimen/activity_horizontal_margin_left"
+      android:paddingRight="@dimen/activity_horizontal_margin_right"
+      android:background="@color/body_background_night"
+      android:orientation="vertical"
+      app:layout_behavior="com.zfdang.zsmth_android.helpers.CustomScrollingViewBehavior"
+      >
+
+    <!--Header-->
+    <TextView
+        android:id="@+id/post_list_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:background="@color/post_title_background"
+        android:paddingLeft="2dp"
+        android:paddingRight="4dp"
+        android:text="@string/post_list_title"
+        android:textColor="@color/status_text_night"
+        android:textSize="@dimen/zsmth_font_size_medium"
+        />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/post_list_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/zsmth_actionbar_size"
-            android:theme="@style/ThemeOverlay.ToolBar"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:titleTextAppearance="@style/Toolbar.TitleText"/>
-
-    </android.support.design.widget.AppBarLayout>
-
-    <LinearLayout
-        android:id="@+id/post_list_linear_layout"
+    <!-- Body -->
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="@dimen/activity_horizontal_margin_left"
-        android:paddingRight="@dimen/activity_horizontal_margin_right"
-        android:background="@color/body_background_night"
-        android:orientation="vertical"
-        app:layout_behavior="com.zfdang.zsmth_android.helpers.CustomScrollingViewBehavior">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
 
-        <!--Header-->
-        <TextView
-            android:id="@+id/post_list_title"
+      <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
+          android:id="@+id/post_list_swipe_refresh_layout"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          app:srl_direction="both"
+          >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/post_list"
+            android:name="com.zfdang.zsmth_android.TopicListFragment"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:scrollbars="vertical"
+            app:layoutManager="LinearLayoutManager"
+            tools:context=".BoardTopicActivity"
+            tools:listitem="@layout/post_item"
+            />
+      </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
+
+      <LinearLayout
+          android:id="@+id/post_list_action_layout"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_gravity="right"
+          android:gravity="center_vertical"
+          android:orientation="vertical"
+          >
+
+        <ImageButton
+            android:id="@+id/post_list_action_top"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/post_title_background"
-            android:paddingLeft="2dp"
-            android:paddingRight="4dp"
-            android:text="@string/post_list_title"
-            android:textColor="@color/status_text_night"
-            android:textSize="@dimen/zsmth_font_size_medium"/>
+            android:layout_marginBottom="10dp"
+            android:background="@null"
+            android:clickable="true"
+            android:src="@drawable/ic_arrow_upward_black_36dp"
+            />
 
-        <!-- Body -->
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+        <ImageButton
+            android:id="@+id/post_list_action_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@null"
+            android:clickable="true"
+            android:src="@drawable/ic_expand_less_black_36dp"
+            />
 
-            <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
-                android:id="@+id/post_list_swipe_refresh_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:srl_direction="both">
+        <ImageButton
+            android:id="@+id/post_list_action_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@null"
+            android:clickable="true"
+            android:src="@drawable/ic_expand_more_black_36dp"
+            />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/post_list"
-                    android:name="com.zfdang.zsmth_android.TopicListFragment"
-                    xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    xmlns:tools="http://schemas.android.com/tools"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="0dp"
-                    android:layout_marginRight="0dp"
-                    android:scrollbars="vertical"
-                    app:layoutManager="LinearLayoutManager"
-                    tools:context=".BoardTopicActivity"
-                    tools:listitem="@layout/post_item"/>
-            </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
+        <ImageButton
+            android:id="@+id/post_list_action_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:clickable="true"
+            android:src="@drawable/ic_arrow_downward_black_36dp"
+            />
+      </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/post_list_action_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="right"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
+    </FrameLayout>
 
-                <ImageButton
-                    android:id="@+id/post_list_action_top"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:background="@null"
-                    android:clickable="true"
-                    android:src="@drawable/ic_arrow_upward_black_36dp"/>
-
-                <ImageButton
-                    android:id="@+id/post_list_action_up"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:background="@null"
-                    android:clickable="true"
-                    android:src="@drawable/ic_expand_less_black_36dp"/>
-
-                <ImageButton
-                    android:id="@+id/post_list_action_down"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:background="@null"
-                    android:clickable="true"
-                    android:src="@drawable/ic_expand_more_black_36dp"/>
-
-                <ImageButton
-                    android:id="@+id/post_list_action_bottom"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:clickable="true"
-                    android:src="@drawable/ic_arrow_downward_black_36dp"/>
-            </LinearLayout>
-
-        </FrameLayout>
-
-        <!-- footer -->
-        <include layout="@layout/post_list_page_navigator"/>
-    </LinearLayout>
+    <!-- footer -->
+    <include layout="@layout/post_list_page_navigator"/>
+  </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="font_size_names">
-        <item>大字体</item>
-        <item>正常字体</item>
-        <item>小字体</item>
-    </string-array>
-    <string-array name="font_size_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
+  <string-array name="font_size_names">
+    <item>大字体</item>
+    <item>正常字体</item>
+    <item>小字体</item>
+  </string-array>
+  <string-array name="font_size_values">
+    <item>0</item>
+    <item>1</item>
+    <item>2</item>
+  </string-array>
 </resources>

@@ -12,27 +12,30 @@
     android:background="@color/body_background_night"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.zfdang.zsmth_android.MailContentActivity"
-    tools:showIn="@layout/activity_mail_content">
+    tools:showIn="@layout/activity_mail_content"
+    >
 
-    <!--Header-->
-    <TextView
-        android:id="@+id/mail_content_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/post_title_background"
-        android:paddingLeft="2dp"
-        android:paddingRight="4dp"
-        android:text="@string/mail_content_title"
-        android:textColor="@color/status_text_night"
-        android:textSize="@dimen/zsmth_font_size_medium"/>
+  <!--Header-->
+  <TextView
+      android:id="@+id/mail_content_title"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@color/post_title_background"
+      android:paddingLeft="2dp"
+      android:paddingRight="4dp"
+      android:text="@string/mail_content_title"
+      android:textColor="@color/status_text_night"
+      android:textSize="@dimen/zsmth_font_size_medium"
+      />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/mail_content_title"
-        android:id="@+id/scrollView">
+  <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_below="@+id/mail_content_title"
+      android:id="@+id/scrollView"
+      >
 
-        <include layout="@layout/post_item"/>
-    </ScrollView>
+    <include layout="@layout/post_item"/>
+  </ScrollView>
 
 </RelativeLayout>

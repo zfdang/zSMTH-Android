@@ -1,121 +1,121 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+  <!-- Base application theme. -->
+  <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <!-- Customize your theme here. -->
+    <item name="colorPrimary">@color/colorPrimary</item>
+    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <item name="colorAccent">@color/colorAccent</item>
 
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
-        <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
-        <!--http://stackoverflow.com/questions/14462226/white-background-during-app-launch-->
-        <item name="android:windowBackground">@color/black_background</item>
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
+    <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
+    <!--http://stackoverflow.com/questions/14462226/white-background-during-app-launch-->
+    <item name="android:windowBackground">@color/black_background</item>
 
-        <item name="preferenceTheme">@style/MyPreferenceThemeOverlay</item>
-    </style>
+    <item name="preferenceTheme">@style/MyPreferenceThemeOverlay</item>
+  </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+  <style name="AppTheme.NoActionBar">
+    <item name="windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
 
-        <!-- Set theme colors from http://www.google.com/design/spec/style/color.html#color-color-palette-->
-        <!-- colorPrimary is used for the default action bar background -->
-        <item name="android:colorPrimary">@color/colorPrimary</item>
-        <!-- colorPrimaryDark is used for the status bar -->
-        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
-        <!-- colorAccent is used as the default value for colorControlActivated
-             which is used to tint widgets -->
-        <item name="android:colorAccent">@color/colorAccent</item>
-    </style>
+    <!-- Set theme colors from http://www.google.com/design/spec/style/color.html#color-color-palette-->
+    <!-- colorPrimary is used for the default action bar background -->
+    <item name="android:colorPrimary">@color/colorPrimary</item>
+    <!-- colorPrimaryDark is used for the status bar -->
+    <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
+    <!-- colorAccent is used as the default value for colorControlActivated
+         which is used to tint widgets -->
+    <item name="android:colorAccent">@color/colorAccent</item>
+  </style>
 
-    <style name="AppTheme.NoActionBar.MainActivity" parent="AppTheme.NoActionBar">
-        <item name="android:windowIsTranslucent">false</item>
-    </style>
+  <style name="AppTheme.NoActionBar.MainActivity" parent="AppTheme.NoActionBar">
+    <item name="android:windowIsTranslucent">false</item>
+  </style>
 
-    <!--AppBar-->
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+  <!--AppBar-->
+  <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <!--Toolbar withtin Appbar-->
-    <style name="ThemeOverlay.ToolBar" parent="ThemeOverlay.AppCompat.ActionBar">
-        <!-- Parent theme sets colorControlNormal to textColorPrimary. -->
-        <!--<item name="android:textColorPrimary">@color/actionbar_title_text</item>-->
-        <item name="android:actionBarSize">@dimen/zsmth_actionbar_size</item>
-        <item name="actionBarSize">@dimen/zsmth_actionbar_size</item>
-    </style>
+  <!--Toolbar withtin Appbar-->
+  <style name="ThemeOverlay.ToolBar" parent="ThemeOverlay.AppCompat.ActionBar">
+    <!-- Parent theme sets colorControlNormal to textColorPrimary. -->
+    <!--<item name="android:textColorPrimary">@color/actionbar_title_text</item>-->
+    <item name="android:actionBarSize">@dimen/zsmth_actionbar_size</item>
+    <item name="actionBarSize">@dimen/zsmth_actionbar_size</item>
+  </style>
 
-    <!--title text style in toolbar-->
-    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textSize">@dimen/zsmth_font_size_app_title</item>
-    </style>
+  <!--title text style in toolbar-->
+  <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+    <item name="android:textSize">@dimen/zsmth_font_size_app_title</item>
+  </style>
 
-    <!--popup menu style in toolbar-->
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
-
-
-    <style name="RecyclerViewSeperatorStyle" parent="@android:style/Theme">
-        <item name="android:textSize">@dimen/zsmth_font_size_app_title</item>
-        <item name="android:textColor">#CFD8DC</item>
-        <item name="android:hint">"load from style 3"</item>
-        <item name="android:textStyle">bold|italic</item>
-        <item name="android:typeface">monospace</item>
-        <item name="android:colorBackground">#607D8B</item>
-    </style>
+  <!--popup menu style in toolbar-->
+  <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
 
-    <!--http://stackoverflow.com/questions/31204320/how-can-i-change-the-navigationviews-item-text-size-->
-    <!--https://android.googlesource.com/platform/frameworks/support/+/46f5ea64c398ae336c85f3aa3a3d9f36398c3576/design/res/layout/design_drawer_item.xml-->
-    <style name="NavigationDrawerStyle">
-        <!-- text size in menu-->
-        <item name="android:textSize">20sp</item>
-        <!-- item size in menu-->
-        <!--<item name="android:listPreferredItemHeightSmall">40dp</item>-->
-    </style>
-
-    <style name="FullscreenTheme" parent="AppTheme">
-        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowBackground">@null</item>
-        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
-        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
-    </style>
-
-    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">@color/black_overlay</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
+  <style name="RecyclerViewSeperatorStyle" parent="@android:style/Theme">
+    <item name="android:textSize">@dimen/zsmth_font_size_app_title</item>
+    <item name="android:textColor">#CFD8DC</item>
+    <item name="android:hint">"load from style 3"</item>
+    <item name="android:textStyle">bold|italic</item>
+    <item name="android:typeface">monospace</item>
+    <item name="android:colorBackground">#607D8B</item>
+  </style>
 
 
-    <!--http://stackoverflow.com/questions/13347539/change-background-of-progressdialog-->
-    <style name="PDialog.MyTheme" parent="@android:style/Theme.Dialog">
-        <!--<item name="android:alertDialogStyle">@style/CustomAlertDialogStyle</item>-->
-        <item name="android:textColorPrimary">@color/status_text_night</item>
-    </style>
+  <!--http://stackoverflow.com/questions/31204320/how-can-i-change-the-navigationviews-item-text-size-->
+  <!--https://android.googlesource.com/platform/frameworks/support/+/46f5ea64c398ae336c85f3aa3a3d9f36398c3576/design/res/layout/design_drawer_item.xml-->
+  <style name="NavigationDrawerStyle">
+    <!-- text size in menu-->
+    <item name="android:textSize">20sp</item>
+    <!-- item size in menu-->
+    <!--<item name="android:listPreferredItemHeightSmall">40dp</item>-->
+  </style>
 
-    <!--<style name="CustomAlertDialogStyle">-->
-        <!--<item name="android:bottomBright">@color/body_background_night</item>-->
-        <!--<item name="android:bottomDark">@color/body_background_night</item>-->
-        <!--<item name="android:bottomMedium">@color/body_background_night</item>-->
-        <!--<item name="android:centerBright">@color/body_background_night</item>-->
-        <!--<item name="android:centerDark">@color/body_background_night</item>-->
-        <!--<item name="android:centerMedium">@color/body_background_night</item>-->
-        <!--<item name="android:fullBright">@color/body_background_night</item>-->
-        <!--<item name="android:fullDark">@color/body_background_night</item>-->
-        <!--<item name="android:topBright">@color/body_background_night</item>-->
-        <!--<item name="android:topDark">@color/body_background_night</item>-->
-    <!--</style>-->
+  <style name="FullscreenTheme" parent="AppTheme">
+    <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+    <item name="android:windowActionBarOverlay">true</item>
+    <item name="android:windowBackground">@null</item>
+    <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+    <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+  </style>
+
+  <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+    <item name="android:background">@color/black_overlay</item>
+    <item name="windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
+  </style>
 
 
-    <style name="MyPreferenceThemeOverlay" parent="PreferenceThemeOverlay.v14.Material">
-        <item name="android:background">@color/body_background_night</item>
-        <item name="android:textColor">@color/status_text_night</item>
-        <item name="android:textColorSecondary">@color/blue_text_night</item>
-    </style>
+  <!--http://stackoverflow.com/questions/13347539/change-background-of-progressdialog-->
+  <style name="PDialog.MyTheme" parent="@android:style/Theme.Dialog">
+    <!--<item name="android:alertDialogStyle">@style/CustomAlertDialogStyle</item>-->
+    <item name="android:textColorPrimary">@color/status_text_night</item>
+  </style>
 
-    <style name="WindowAnimationFadeInOut">
-        <item name="@android:windowEnterAnimation">@animator/fade_in</item>
-        <item name="@android:windowExitAnimation">@animator/fade_out</item>
-    </style>
+  <!--<style name="CustomAlertDialogStyle">-->
+  <!--<item name="android:bottomBright">@color/body_background_night</item>-->
+  <!--<item name="android:bottomDark">@color/body_background_night</item>-->
+  <!--<item name="android:bottomMedium">@color/body_background_night</item>-->
+  <!--<item name="android:centerBright">@color/body_background_night</item>-->
+  <!--<item name="android:centerDark">@color/body_background_night</item>-->
+  <!--<item name="android:centerMedium">@color/body_background_night</item>-->
+  <!--<item name="android:fullBright">@color/body_background_night</item>-->
+  <!--<item name="android:fullDark">@color/body_background_night</item>-->
+  <!--<item name="android:topBright">@color/body_background_night</item>-->
+  <!--<item name="android:topDark">@color/body_background_night</item>-->
+  <!--</style>-->
+
+
+  <style name="MyPreferenceThemeOverlay" parent="PreferenceThemeOverlay.v14.Material">
+    <item name="android:background">@color/body_background_night</item>
+    <item name="android:textColor">@color/status_text_night</item>
+    <item name="android:textColorSecondary">@color/blue_text_night</item>
+  </style>
+
+  <style name="WindowAnimationFadeInOut">
+    <item name="@android:windowEnterAnimation">@animator/fade_in</item>
+    <item name="@android:windowExitAnimation">@animator/fade_out</item>
+  </style>
 </resources>

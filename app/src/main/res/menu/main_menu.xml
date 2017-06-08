@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/main_action_refresh"
-        android:icon="@drawable/ic_refresh_white_24dp"
-        android:title="@string/action_refresh"
-        android:orderInCategory="1"
-        app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/mail_list_fragment_newmail"
-        android:icon="@drawable/ic_note_add_white_24dp"
-        android:orderInCategory="1"
-        android:title="@string/mail_list_fragment_newmail"
-        android:visible="false"
-        app:showAsAction="always"/>
-    <item
-        android:id="@+id/main_action_login"
-        android:orderInCategory="3"
-        android:title="@string/action_login"
-        android:icon="@drawable/ic_account_circle_black_48dp"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/main_action_logout"
-        android:orderInCategory="4"
-        android:title="@string/action_logout"
-        app:showAsAction="never" />
+  <item
+      android:id="@+id/main_action_refresh"
+      android:icon="@drawable/ic_refresh_white_24dp"
+      android:title="@string/action_refresh"
+      android:orderInCategory="1"
+      app:showAsAction="ifRoom"/>
+  <item
+      android:id="@+id/mail_list_fragment_newmail"
+      android:icon="@drawable/ic_note_add_white_24dp"
+      android:orderInCategory="1"
+      android:title="@string/mail_list_fragment_newmail"
+      android:visible="false"
+      app:showAsAction="always"/>
+  <item
+      android:id="@+id/main_action_login"
+      android:orderInCategory="3"
+      android:title="@string/action_login"
+      android:icon="@drawable/ic_account_circle_black_48dp"
+      app:showAsAction="never"/>
+  <item
+      android:id="@+id/main_action_logout"
+      android:orderInCategory="4"
+      android:title="@string/action_logout"
+      app:showAsAction="never"/>
 </menu>

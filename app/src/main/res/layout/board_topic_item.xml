@@ -7,117 +7,128 @@
     android:paddingBottom="2dp"
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
-    android:paddingTop="2dp">
+    android:paddingTop="2dp"
+    >
+
+  <TextView
+      android:id="@+id/category_name"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:background="@color/recycler_view_seperator"
+      android:paddingLeft="4dp"
+      android:text="Category"
+      android:textColor="@color/status_text_night"
+      android:textSize="@dimen/zsmth_font_size_small"
+      />
+
+  <LinearLayout
+      android:id="@+id/topic_title_row"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/category_name"
+      android:layout_margin="0dp"
+      android:orientation="horizontal"
+      >
 
     <TextView
-        android:id="@+id/category_name"
-        android:layout_width="fill_parent"
+        android:id="@+id/topic_title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/recycler_view_seperator"
-        android:paddingLeft="4dp"
-        android:text="Category"
+        android:paddingLeft="2dp"
+        android:paddingRight="8dp"
+        android:text="Topic"
         android:textColor="@color/status_text_night"
-        android:textSize="@dimen/zsmth_font_size_small"/>
+        android:textSize="@dimen/zsmth_font_size_medium"
+        />
 
-    <LinearLayout
-        android:id="@+id/topic_title_row"
-        android:layout_width="match_parent"
+  </LinearLayout>
+
+
+  <LinearLayout
+      android:id="@+id/topic_author_replier_row"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/topic_title_row"
+      android:layout_margin="0dp"
+      android:orientation="horizontal"
+      >
+
+    <TextView
+        android:id="@+id/topic_author"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/category_name"
-        android:layout_margin="0dp"
-        android:orientation="horizontal">
+        android:paddingLeft="0dp"
+        android:paddingRight="4dp"
+        android:text="作者"
+        android:textColor="@color/blue_text_night"
+        />
 
-        <TextView
-            android:id="@+id/topic_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="2dp"
-            android:paddingRight="8dp"
-            android:text="Topic"
-            android:textColor="@color/status_text_night"
-            android:textSize="@dimen/zsmth_font_size_medium"/>
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/topic_author_replier_row"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/topic_public_date"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/topic_title_row"
-        android:layout_margin="0dp"
-        android:orientation="horizontal">
+        android:text="2016-03-24"
+        android:textColor="@color/colorSecondaryText"
+        />
 
-        <TextView
-            android:id="@+id/topic_author"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="0dp"
-            android:paddingRight="4dp"
-            android:text="作者"
-            android:textColor="@color/blue_text_night"/>
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
 
-        <TextView
-            android:id="@+id/topic_public_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2016-03-24"
-            android:textColor="@color/colorSecondaryText"/>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-
-        <TextView
-            android:id="@+id/topic_replier"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="4dp"
-            android:text="回复者"
-            android:textColor="@color/blue_text_night"
-            />
-
-        <TextView
-            android:id="@+id/topic_reply_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="8dp"
-            android:text="2016-03-24"
-            android:textColor="@color/colorSecondaryText"
-            />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/topic_status_row"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/topic_replier"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/topic_author_replier_row"
-        android:layout_margin="0dp"
-        android:orientation="horizontal">
+        android:paddingRight="4dp"
+        android:text="回复者"
+        android:textColor="@color/blue_text_night"
+        />
 
-        <TextView
-            android:id="@+id/topic_status_summary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="6dp"
-            android:text="Like: +15, 分数： -15; 回帖数: 129"
-            android:textColor="@color/colorSecondaryText"/>
+    <TextView
+        android:id="@+id/topic_reply_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingRight="8dp"
+        android:text="2016-03-24"
+        android:textColor="@color/colorSecondaryText"
+        />
+  </LinearLayout>
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
+  <LinearLayout
+      android:id="@+id/topic_status_row"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/topic_author_replier_row"
+      android:layout_margin="0dp"
+      android:orientation="horizontal"
+      >
 
-        <ImageView
-            android:id="@+id/topic_status_attach"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingRight="20dp"
-            android:src="@drawable/ic_attach_file_black_18dp"
-            />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/topic_status_summary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="6dp"
+        android:text="Like: +15, 分数： -15; 回帖数: 129"
+        android:textColor="@color/colorSecondaryText"
+        />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
+
+    <ImageView
+        android:id="@+id/topic_status_attach"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:paddingRight="20dp"
+        android:src="@drawable/ic_attach_file_black_18dp"
+        />
+  </LinearLayout>
 
 
 </RelativeLayout>

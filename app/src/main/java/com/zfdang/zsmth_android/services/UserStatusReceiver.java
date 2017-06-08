@@ -8,28 +8,25 @@ import android.os.ResultReceiver;
 /**
  * Created by zfdang on 2016-4-6.
  */
-@SuppressLint("ParcelCreator")
-public class UserStatusReceiver extends ResultReceiver {
+@SuppressLint("ParcelCreator") public class UserStatusReceiver extends ResultReceiver {
 
-    private Receiver receiver;
+  private Receiver receiver;
 
-    public UserStatusReceiver(Handler handler) {
-        super(handler);
+  public UserStatusReceiver(Handler handler) {
+    super(handler);
+  }
+
+  public void setReceiver(Receiver receiver) {
+    this.receiver = receiver;
+  }
+
+  @Override protected void onReceiveResult(int resultCode, Bundle resultData) {
+    if (receiver != null) {
+      receiver.onReceiveResult(resultCode, resultData);
     }
+  }
 
-    public void setReceiver(Receiver receiver) {
-        this.receiver = receiver;
-    }
-
-    @Override
-    protected void onReceiveResult(int resultCode, Bundle resultData) {
-        if (receiver != null) {
-            receiver.onReceiveResult(resultCode, resultData);
-        }
-    }
-
-
-    public interface Receiver {
-        public void onReceiveResult(int resultCode, Bundle resultData);
-    }
+  public interface Receiver {
+    public void onReceiveResult(int resultCode, Bundle resultData);
+  }
 }

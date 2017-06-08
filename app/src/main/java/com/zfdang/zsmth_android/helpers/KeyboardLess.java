@@ -9,26 +9,20 @@ import android.view.inputmethod.InputMethodManager;
  */
 public final class KeyboardLess {
 
-    /**
-     * 显示输入法
-     * @param context
-     * @param view
-     */
-    public static void $show(Context context, View view) {
-        InputMethodManager imm =
-                (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(view, InputMethodManager.SHOW_FORCED);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-    }
+  /**
+   * 显示输入法
+   */
+  public static void $show(Context context, View view) {
+    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+    imm.showSoftInput(view, InputMethodManager.SHOW_FORCED);
+    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+  }
 
-    /**
-     * 隐藏输入法
-     * @param context
-     * @param view
-     */
-    public static void $hide(Context context, View view) {
-        InputMethodManager imm =
-                (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
+  /**
+   * 隐藏输入法
+   */
+  public static void $hide(Context context, View view) {
+    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+  }
 }

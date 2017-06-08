@@ -13,7 +13,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
-
 import com.wx.wheelview.widget.WheelView;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.models.Post;
@@ -22,182 +21,170 @@ import com.zfdang.zsmth_android.models.Post;
  * Created by zfdang on 2016-4-26.
  */
 public class PopupForwardWindow extends PopupWindow {
-    private static final String TAG = "PopupForwardWindow";
+  private static final String TAG = "PopupForwardWindow";
 
-    Activity mContext;
-    private OnForwardInterface mListener;
-    private View contentView;
-    private WheelView wheelView;
-    private EditText etMessage;
-    static public Post post;
-    private RadioButton mTargetSelf;
-    private RadioButton mTargetOther;
-    private EditText mTargetOtherContent;
-    private CheckBox mThread;
-    private CheckBox mNoRef;
-    private CheckBox mNoAtt;
+  Activity mContext;
+  private OnForwardInterface mListener;
+  private View contentView;
+  private WheelView wheelView;
+  private EditText etMessage;
+  static public Post post;
+  private RadioButton mTargetSelf;
+  private RadioButton mTargetOther;
+  private EditText mTargetOtherContent;
+  private CheckBox mThread;
+  private CheckBox mNoRef;
+  private CheckBox mNoAtt;
 
-    private AutoCompleteTextView mTargetBoard;
-//    private ArrayAdapter<String> mBoarddapter;
+  private AutoCompleteTextView mTargetBoard;
+  //    private ArrayAdapter<String> mBoarddapter;
 
+  // http://stackoverflow.com/questions/23464232/how-would-you-create-a-popover-view-in-android-like-facebook-comments
+  public void initPopupWindow(final Activity context, Post post) {
+    mContext = context;
+    this.post = post;
+    if (context instanceof OnForwardInterface) {
+      mListener = (OnForwardInterface) context;
+    } else {
+      Log.d(TAG, "initPopupWindow: " + "context does not implement SearchInterface");
+    }
 
+    LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    contentView = layoutInflater.inflate(R.layout.popup_forward_layout, null, false);
 
-    // http://stackoverflow.com/questions/23464232/how-would-you-create-a-popover-view-in-android-like-facebook-comments
-    public void initPopupWindow(final Activity context, Post post) {
-        mContext = context;
-        this.post = post;
-        if (context instanceof OnForwardInterface) {
-            mListener = (OnForwardInterface) context;
-        } else {
-            Log.d(TAG, "initPopupWindow: " + "context does not implement SearchInterface");
+    mTargetSelf = (RadioButton) contentView.findViewById(R.id.popup_forward_target_self);
+    mTargetSelf.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        if (mTargetSelf.isChecked()) {
+          mTargetOther.setChecked(false);
+          mTargetOtherContent.setEnabled(false);
         }
+      }
+    });
+    mTargetOther = (RadioButton) contentView.findViewById(R.id.popup_forward_target_other);
+    mTargetOther.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        if (mTargetOther.isChecked()) {
+          mTargetSelf.setChecked(false);
+          mTargetOtherContent.setEnabled(true);
+        }
+      }
+    });
+    mTargetOtherContent = (EditText) contentView.findViewById(R.id.popup_forward_target_other_content);
 
-        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        contentView = layoutInflater.inflate(R.layout.popup_forward_layout, null, false);
+    mThread = (CheckBox) contentView.findViewById(R.id.popup_forward_thread);
+    mThread.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        if (mThread.isChecked()) {
+          mNoRef.setEnabled(true);
+        } else {
+          mNoRef.setEnabled(false);
+        }
+      }
+    });
+    mNoRef = (CheckBox) contentView.findViewById(R.id.popup_forward_noref);
+    mNoAtt = (CheckBox) contentView.findViewById(R.id.popup_forward_noatt);
 
+    // init status
+    mTargetSelf.setChecked(true);
+    mTargetOther.setChecked(false);
+    mTargetOtherContent.setEnabled(false);
+    mTargetOtherContent.setText(Settings.getInstance().getTarget());
+    mThread.setChecked(false);
+    mNoRef.setEnabled(false);
 
-        mTargetSelf = (RadioButton) contentView.findViewById(R.id.popup_forward_target_self);
-        mTargetSelf.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mTargetSelf.isChecked()) {
-                    mTargetOther.setChecked(false);
-                    mTargetOtherContent.setEnabled(false);
-                }
-            }
-        });
-        mTargetOther = (RadioButton) contentView.findViewById(R.id.popup_forward_target_other);
-        mTargetOther.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mTargetOther.isChecked()) {
-                    mTargetSelf.setChecked(false);
-                    mTargetOtherContent.setEnabled(true);
-                }
-            }
-        });
-        mTargetOtherContent = (EditText) contentView.findViewById(R.id.popup_forward_target_other_content);
+    Button cancel = (Button) contentView.findViewById(R.id.popup_forward_cancel);
+    cancel.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        dismiss();
+      }
+    });
 
-        mThread = (CheckBox) contentView.findViewById(R.id.popup_forward_thread);
-        mThread.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mThread.isChecked()) {
-                    mNoRef.setEnabled(true);
-                } else {
-                    mNoRef.setEnabled(false);
-                }
-            }
-        });
-        mNoRef = (CheckBox) contentView.findViewById(R.id.popup_forward_noref);
-        mNoAtt = (CheckBox) contentView.findViewById(R.id.popup_forward_noatt);
+    Button confirm = (Button) contentView.findViewById(R.id.popup_forward_confirm);
+    confirm.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        if (mListener != null) {
+          String target = null;
+          if (SMTHApplication.activeUser != null) {
+            target = SMTHApplication.activeUser.getId();
+          }
+          if (mTargetOther.isChecked()) {
+            target = mTargetOtherContent.getText().toString().trim();
+            Settings.getInstance().setTarget(target);
+          }
+          mListener.OnForwardAction(PopupForwardWindow.post, target, mThread.isChecked(), mNoRef.isChecked(), mNoAtt.isChecked());
+        }
+        dismiss();
+      }
+    });
 
-        // init status
-        mTargetSelf.setChecked(true);
-        mTargetOther.setChecked(false);
-        mTargetOtherContent.setEnabled(false);
-        mTargetOtherContent.setText(Settings.getInstance().getTarget());
-        mThread.setChecked(false);
-        mNoRef.setEnabled(false);
+    // implement post repost part
+    mTargetBoard = (AutoCompleteTextView) contentView.findViewById(R.id.popup_post_target);
+    // AutoCompleteTextView can't be used in PopupWindow
+    //        loadBoardsForAutoCompletion();
 
-        Button cancel = (Button) contentView.findViewById(R.id.popup_forward_cancel);
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+    Button cancel2 = (Button) contentView.findViewById(R.id.popup_post_cancel);
+    cancel2.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        dismiss();
+      }
+    });
 
-        Button confirm = (Button) contentView.findViewById(R.id.popup_forward_confirm);
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mListener != null) {
-                    String target = null;
-                    if(SMTHApplication.activeUser != null) {
-                        target = SMTHApplication.activeUser.getId();
-                    }
-                    if(mTargetOther.isChecked()) {
-                        target = mTargetOtherContent.getText().toString().trim();
-                        Settings.getInstance().setTarget(target);
-                    }
-                    mListener.OnForwardAction(PopupForwardWindow.post, target, mThread.isChecked(), mNoRef.isChecked(), mNoAtt.isChecked());
-                }
-                dismiss();
-            }
-        });
+    Button confirm2 = (Button) contentView.findViewById(R.id.popup_post_confirm);
+    confirm2.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        if (mListener != null) {
+          String target = mTargetBoard.getText().toString().trim();
+          mListener.OnRePostAction(PopupForwardWindow.post, target, "on");
+        }
+        dismiss();
+      }
+    });
 
+    // get device size
+    Display display = context.getWindowManager().getDefaultDisplay();
+    final Point size = new Point();
+    display.getSize(size);
 
-        // implement post repost part
-        mTargetBoard = (AutoCompleteTextView) contentView.findViewById(R.id.popup_post_target);
-        // AutoCompleteTextView can't be used in PopupWindow
-//        loadBoardsForAutoCompletion();
+    this.setContentView(contentView);
+    this.setWidth((int) (size.x * 0.95));
+    this.setHeight((int) (size.y * 0.65));
+    // http://stackoverflow.com/questions/12232724/popupwindow-dismiss-when-clicked-outside
+    // this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+    this.setFocusable(true);
+  }
 
-        Button cancel2 = (Button) contentView.findViewById(R.id.popup_post_cancel);
-        cancel2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+  //    public void loadBoardsForAutoCompletion() {
+  //        final List<String> allboards = new ArrayList<>();
+  //        if(mTargetBoard != null) {
+  //            // all boards loaded in cached file
+  //            Observable.from(SMTHHelper.LoadBoardListFromCache(SMTHHelper.BOARD_TYPE_ALL, null))
+  //                    .subscribeOn(Schedulers.io())
+  //                    .observeOn(AndroidSchedulers.mainThread())
+  //                    .subscribe(new Subscriber<Board>() {
+  //                        @Override
+  //                        public void onCompleted() {
+  //                            mBoarddapter = new ArrayAdapter<String>(mTargetBoard.getContext(), android.R.layout.simple_dropdown_item_1line, allboards);
+  //                            mTargetBoard.setAdapter(mBoarddapter);
+  //                            Log.d(TAG, "onCompleted: " + allboards.size());
+  //                        }
+  //
+  //                        @Override
+  //                        public void onError(Throwable e) {
+  //                            Toast.makeText(SMTHApplication.getAppContext(), e.toString(), Toast.LENGTH_LONG).show();
+  //                        }
+  //
+  //                        @Override
+  //                        public void onNext(Board board) {
+  //                            allboards.add(board.getBoardEngName());
+  //                        }
+  //                    });
+  //        }
+  //    }
 
-        Button confirm2 = (Button) contentView.findViewById(R.id.popup_post_confirm);
-        confirm2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mListener != null) {
-                    String target = mTargetBoard.getText().toString().trim();
-                    mListener.OnRePostAction(PopupForwardWindow.post, target, "on");
-                }
-                dismiss();
-            }
-        });
+  static public interface OnForwardInterface {
+    public void OnForwardAction(Post post, String target, boolean threads, boolean noref, boolean noatt);
 
-
-        // get device size
-        Display display = context.getWindowManager().getDefaultDisplay();
-        final Point size = new Point();
-        display.getSize(size);
-
-        this.setContentView(contentView);
-        this.setWidth((int)(size.x * 0.95));
-        this.setHeight((int)(size.y * 0.65));
-        // http://stackoverflow.com/questions/12232724/popupwindow-dismiss-when-clicked-outside
-        // this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        this.setFocusable(true);
-    }
-
-//    public void loadBoardsForAutoCompletion() {
-//        final List<String> allboards = new ArrayList<>();
-//        if(mTargetBoard != null) {
-//            // all boards loaded in cached file
-//            Observable.from(SMTHHelper.LoadBoardListFromCache(SMTHHelper.BOARD_TYPE_ALL, null))
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe(new Subscriber<Board>() {
-//                        @Override
-//                        public void onCompleted() {
-//                            mBoarddapter = new ArrayAdapter<String>(mTargetBoard.getContext(), android.R.layout.simple_dropdown_item_1line, allboards);
-//                            mTargetBoard.setAdapter(mBoarddapter);
-//                            Log.d(TAG, "onCompleted: " + allboards.size());
-//                        }
-//
-//                        @Override
-//                        public void onError(Throwable e) {
-//                            Toast.makeText(SMTHApplication.getAppContext(), e.toString(), Toast.LENGTH_LONG).show();
-//                        }
-//
-//                        @Override
-//                        public void onNext(Board board) {
-//                            allboards.add(board.getBoardEngName());
-//                        }
-//                    });
-//        }
-//    }
-
-    static public interface OnForwardInterface {
-        public void OnForwardAction(Post post, String target, boolean threads, boolean noref, boolean noatt);
-        public void OnRePostAction(Post post, String target, String outgo);
-    }
-
+    public void OnRePostAction(Post post, String target, String outgo);
+  }
 }

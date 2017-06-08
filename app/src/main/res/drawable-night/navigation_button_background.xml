@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_pressed="true" >
-        <shape>
-            <gradient
-                android:type="radial"
-                android:startColor="@color/navigation_button_background"
-                android:endColor="@color/navigation_button_background_pressed"
-                android:gradientRadius="30dp" />
-            <stroke
-                android:width="0dp"
-                android:color="#000000" />
-            <corners
-                android:radius="4dp" />
-            <padding
-                android:left="2dp"
-                android:top="2dp"
-                android:right="2dp"
-                android:bottom="2dp" />
-        </shape>
-    </item>
-    <item>
-        <shape>
-            <solid
-                android:color="@color/navigation_button_background" />
-            <stroke
-                android:width="0dp"
-                android:color="#000000" />
-            <corners
-                android:radius="4dp" />
-            <padding
-                android:left="2dp"
-                android:top="2dp"
-                android:right="2dp"
-                android:bottom="2dp" />
-        </shape>
-    </item>
+  <item android:state_pressed="true">
+    <shape>
+      <gradient
+          android:type="radial"
+          android:startColor="@color/navigation_button_background"
+          android:endColor="@color/navigation_button_background_pressed"
+          android:gradientRadius="30dp"/>
+      <stroke
+          android:width="0dp"
+          android:color="#000000"/>
+      <corners
+          android:radius="4dp"/>
+      <padding
+          android:left="2dp"
+          android:top="2dp"
+          android:right="2dp"
+          android:bottom="2dp"/>
+    </shape>
+  </item>
+  <item>
+    <shape>
+      <solid
+          android:color="@color/navigation_button_background"/>
+      <stroke
+          android:width="0dp"
+          android:color="#000000"/>
+      <corners
+          android:radius="4dp"/>
+      <padding
+          android:left="2dp"
+          android:top="2dp"
+          android:right="2dp"
+          android:bottom="2dp"/>
+    </shape>
+  </item>
 </selector>

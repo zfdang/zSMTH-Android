@@ -14,7 +14,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
@@ -26,9 +25,7 @@ import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.models.TopicListContent;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
-
 import java.util.List;
-
 import okhttp3.ResponseBody;
 import rx.Observable;
 import rx.Subscriber;
@@ -45,373 +42,337 @@ import rx.schedulers.Schedulers;
  * item details side-by-side using two vertical panes.
  */
 public class BoardTopicActivity extends SMTHBaseActivity
-        implements OnTopicFragmentInteractionListener,
-        SwipeRefreshLayout.OnRefreshListener,
-        PopupSearchWindow.SearchInterface
-{
+    implements OnTopicFragmentInteractionListener, SwipeRefreshLayout.OnRefreshListener, PopupSearchWindow.SearchInterface {
 
-    /**
-     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-     * device.
-     */
+  /**
+   * Whether or not the activity is in two-pane mode, i.e. running on a tablet
+   * device.
+   */
 
-    private final String TAG = "BoardTopicActivity";
+  private final String TAG = "BoardTopicActivity";
 
-    private Board mBoard = null;
+  private Board mBoard = null;
 
-    private int mCurrentPageNo = 1;
-    private int LOAD_MORE_THRESHOLD = 1;
+  private int mCurrentPageNo = 1;
+  private int LOAD_MORE_THRESHOLD = 1;
 
-    private SwipeRefreshLayout mSwipeRefreshLayout = null;
-    private EndlessRecyclerOnScrollListener mScrollListener = null;
-    private RecyclerView mRecyclerView = null;
+  private SwipeRefreshLayout mSwipeRefreshLayout = null;
+  private EndlessRecyclerOnScrollListener mScrollListener = null;
+  private RecyclerView mRecyclerView = null;
 
-    private Settings mSetting;
+  private Settings mSetting;
 
-    private boolean isSearchMode = false;
+  private boolean isSearchMode = false;
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        SwipeBackHelper.onDestroy(this);
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    SwipeBackHelper.onDestroy(this);
+  }
+
+  @Override protected void onPostCreate(Bundle savedInstanceState) {
+    super.onPostCreate(savedInstanceState);
+    SwipeBackHelper.onPostCreate(this);
+  }
+
+  @Override public void onBackPressed() {
+    if (isSearchMode) {
+      onRefresh();
+    } else {
+      super.onBackPressed();
+    }
+  }
+
+  @Override protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    SwipeBackHelper.onCreate(this);
+
+    setContentView(R.layout.activity_board_topic);
+
+    Toolbar toolbar = (Toolbar) findViewById(R.id.board_topic_toolbar);
+    setSupportActionBar(toolbar);
+    assert toolbar != null;
+    toolbar.setTitle(getTitle());
+
+    mSetting = Settings.getInstance();
+
+    // enable pull down to refresh
+    mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+    if (mSwipeRefreshLayout == null) throw new AssertionError();
+    mSwipeRefreshLayout.setOnRefreshListener(this);
+
+    mRecyclerView = (RecyclerView) findViewById(R.id.board_topic_list);
+    assert mRecyclerView != null;
+    mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+    mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL, 0));
+    LinearLayoutManager linearLayoutManager = new WrapContentLinearLayoutManager(this);
+    mRecyclerView.setLayoutManager(linearLayoutManager);
+    mRecyclerView.setAdapter(new BoardTopicRecyclerViewAdapter(TopicListContent.BOARD_TOPICS, this));
+
+    // enable endless loading
+    mScrollListener = new EndlessRecyclerOnScrollListener(linearLayoutManager) {
+      @Override public void onLoadMore(int current_page) {
+        // do something...
+        loadMoreItems();
+      }
+    };
+    mRecyclerView.addOnScrollListener(mScrollListener);
+
+    // Show the Up button in the action bar.
+    ActionBar actionBar = getSupportActionBar();
+    if (actionBar != null) {
+      actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        SwipeBackHelper.onPostCreate(this);
+    // get Board information from launcher
+    Intent intent = getIntent();
+    Board board = intent.getParcelableExtra(SMTHApplication.BOARD_OBJECT);
+    assert board != null;
+    if (mBoard == null || !mBoard.getBoardEngName().equals(board.getBoardEngName())) {
+      mBoard = board;
+      TopicListContent.clearBoardTopics();
+      mCurrentPageNo = 1;
     }
 
-    @Override
-    public void onBackPressed() {
-        if(isSearchMode) {
-            onRefresh();
-        } else {
-            super.onBackPressed();
-        }
+    updateTitle();
+
+    if (TopicListContent.BOARD_TOPICS.size() == 0) {
+      // only load boards on the first time
+      RefreshBoardTopicsWithoutClear();
     }
+  }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        SwipeBackHelper.onCreate(this);
+  public void updateTitle() {
+    String title = mBoard.getBoardChsName();
+    setTitle(title + " - 主题列表");
+  }
 
-        setContentView(R.layout.activity_board_topic);
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int id = item.getItemId();
+    if (id == android.R.id.home) {
+      onBackPressed();
+      return true;
+    } else if (id == R.id.board_topic_action_sticky) {
+      mSetting.toggleShowSticky();
+      this.RefreshBoardTopoFromPageOne();
+    } else if (id == R.id.board_topic_action_refresh) {
+      this.RefreshBoardTopoFromPageOne();
+    } else if (id == R.id.board_topic_action_newpost) {
+      ComposePostContext postContext = new ComposePostContext();
+      postContext.setBoardEngName(mBoard.getBoardEngName());
+      postContext.setComposingMode(ComposePostContext.MODE_NEW_POST);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.board_topic_toolbar);
-        setSupportActionBar(toolbar);
-        assert toolbar != null;
-        toolbar.setTitle(getTitle());
-
-        mSetting = Settings.getInstance();
-
-        // enable pull down to refresh
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
-        if (mSwipeRefreshLayout == null) throw new AssertionError();
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-
-        mRecyclerView = (RecyclerView) findViewById(R.id.board_topic_list);
-        assert mRecyclerView != null;
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL, 0));
-        LinearLayoutManager linearLayoutManager = new WrapContentLinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(linearLayoutManager);
-        mRecyclerView.setAdapter(new BoardTopicRecyclerViewAdapter(TopicListContent.BOARD_TOPICS, this));
-
-        // enable endless loading
-        mScrollListener = new EndlessRecyclerOnScrollListener(linearLayoutManager) {
-            @Override
-            public void onLoadMore(int current_page) {
-                // do something...
-                loadMoreItems();
+      Intent intent = new Intent(this, ComposePostActivity.class);
+      intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
+      startActivity(intent);
+    } else if (id == R.id.board_topic_action_search) {
+      PopupSearchWindow popup = new PopupSearchWindow();
+      popup.initPopupWindow(this);
+      popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+    } else if (id == R.id.board_topic_action_favorite) {
+      SMTHHelper helper = SMTHHelper.getInstance();
+      helper.wService.manageFavoriteBoard("0", "ab", this.mBoard.getBoardEngName())
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(new Subscriber<AjaxResponse>() {
+            @Override public void onCompleted() {
             }
-        };
-        mRecyclerView.addOnScrollListener(mScrollListener);
 
-        // Show the Up button in the action bar.
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+            @Override public void onError(Throwable e) {
+              Toast.makeText(BoardTopicActivity.this, "收藏版面失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
+            }
 
-        // get Board information from launcher
-        Intent intent = getIntent();
-        Board board = intent.getParcelableExtra(SMTHApplication.BOARD_OBJECT);
-        assert board != null;
-        if (mBoard == null || !mBoard.getBoardEngName().equals(board.getBoardEngName())) {
-            mBoard = board;
-            TopicListContent.clearBoardTopics();
-            mCurrentPageNo = 1;
-        }
+            @Override public void onNext(AjaxResponse ajaxResponse) {
+              Log.d(TAG, "onNext: " + ajaxResponse.toString());
+              if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
+                Toast.makeText(BoardTopicActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+              } else {
+                Toast.makeText(BoardTopicActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
+              }
+            }
+          });
+    }
+    return super.onOptionsItemSelected(item);
+  }
 
-        updateTitle();
+  @Override public boolean onCreateOptionsMenu(Menu menu) {
+    // Inflate the menu; this adds items to the action bar if it is present.
+    getMenuInflater().inflate(R.menu.board_topic_menu, menu);
+    return true;
+  }
 
-        if (TopicListContent.BOARD_TOPICS.size() == 0) {
-            // only load boards on the first time
-            RefreshBoardTopicsWithoutClear();
-        }
+  public void clearLoadingHints() {
+    dismissProgress();
+
+    if (mSwipeRefreshLayout != null && mSwipeRefreshLayout.isRefreshing()) {
+      mSwipeRefreshLayout.setRefreshing(false);  // This hides the spinner
     }
 
+    if (mScrollListener != null) {
+      mScrollListener.setLoading(false);
+    }
+  }
 
-    public void updateTitle() {
-        String title = mBoard.getBoardChsName();
-        setTitle(title + " - 主题列表");
+  // load topics from next page, without alert
+  public void loadMoreItems() {
+    if (isSearchMode || mSwipeRefreshLayout.isRefreshing() || pDialog.isShowing()) {
+      return;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            onBackPressed();
-            return true;
-        } else if (id == R.id.board_topic_action_sticky) {
-            mSetting.toggleShowSticky();
-            this.RefreshBoardTopoFromPageOne();
-        } else if (id == R.id.board_topic_action_refresh) {
-            this.RefreshBoardTopoFromPageOne();
-        } else if(id == R.id.board_topic_action_newpost) {
-            ComposePostContext postContext = new ComposePostContext();
-            postContext.setBoardEngName(mBoard.getBoardEngName());
-            postContext.setComposingMode(ComposePostContext.MODE_NEW_POST);
+    mCurrentPageNo += 1;
+    // Log.d(TAG, mCurrentPageNo + " page is loading now...");
+    LoadBoardTopicsFromMobile();
+  }
 
-            Intent intent = new Intent(this, ComposePostActivity.class);
-            intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
-            startActivity(intent);
+  @Override public void onRefresh() {
+    // this method is slightly different with RefreshBoardTopoFromPageOne
+    // this method does not alert since it's triggered by SwipeRefreshLayout
+    mCurrentPageNo = 1;
+    TopicListContent.clearBoardTopics();
+    mRecyclerView.getAdapter().notifyDataSetChanged();
+    LoadBoardTopicsFromMobile();
+  }
 
-        } else if(id == R.id.board_topic_action_search) {
-            PopupSearchWindow popup = new PopupSearchWindow();
-            popup.initPopupWindow(this);
-            popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+  public void RefreshBoardTopoFromPageOne() {
+    showProgress("刷新版面文章...");
 
-        } else if(id == R.id.board_topic_action_favorite) {
-            SMTHHelper helper = SMTHHelper.getInstance();
-            helper.wService.manageFavoriteBoard("0", "ab", this.mBoard.getBoardEngName())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Subscriber<AjaxResponse>() {
-                        @Override
-                        public void onCompleted() {
-                        }
+    TopicListContent.clearBoardTopics();
+    mRecyclerView.getAdapter().notifyDataSetChanged();
 
-                        @Override
-                        public void onError(Throwable e) {
-                            Toast.makeText(BoardTopicActivity.this, "收藏版面失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
-                        }
+    mCurrentPageNo = 1;
+    LoadBoardTopicsFromMobile();
+  }
 
-                        @Override
-                        public void onNext(AjaxResponse ajaxResponse) {
-                            Log.d(TAG, "onNext: " + ajaxResponse.toString());
-                            if(ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
-                                Toast.makeText(BoardTopicActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(BoardTopicActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-        }
-        return super.onOptionsItemSelected(item);
+  public void RefreshBoardTopicsWithoutClear() {
+    showProgress("加载版面文章...");
+
+    LoadBoardTopicsFromMobile();
+  }
+
+  public void LoadBoardTopicsFromMobile() {
+
+    isSearchMode = false;
+    final SMTHHelper helper = SMTHHelper.getInstance();
+
+    helper.wService.getBoardTopicsByPage(mBoard.getBoardEngName(), Integer.toString(mCurrentPageNo))
+        .flatMap(new Func1<ResponseBody, Observable<Topic>>() {
+          @Override public Observable<Topic> call(ResponseBody responseBody) {
+            try {
+              String response = responseBody.string();
+              List<Topic> topics = SMTHHelper.ParseBoardTopicsFromWWW(response);
+              return Observable.from(topics);
+            } catch (Exception e) {
+              Log.e(TAG, "call: " + Log.getStackTraceString(e));
+              return null;
+            }
+          }
+        })
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Subscriber<Topic>() {
+          @Override public void onStart() {
+            super.onStart();
+
+            Topic topic = new Topic(String.format("第%d页:", mCurrentPageNo));
+            topic.isCategory = true;
+            TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
+            mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+          }
+
+          @Override public void onCompleted() {
+            clearLoadingHints();
+          }
+
+          @Override public void onError(Throwable e) {
+            clearLoadingHints();
+
+            Toast.makeText(SMTHApplication.getAppContext(), String.format("获取第%d页的帖子失败!\n", mCurrentPageNo) + e.toString(),
+                Toast.LENGTH_LONG).show();
+            mCurrentPageNo -= 1;
+          }
+
+          @Override public void onNext(Topic topic) {
+            // Log.d(TAG, topic.toString());
+            if (!topic.isSticky || mSetting.isShowSticky()) {
+              TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
+              mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+            }
+          }
+        });
+  }
+
+  @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
+    if (Settings.getInstance().isVolumeKeyScroll() && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
+      RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, keyCode);
+      return true;
     }
+    return super.onKeyDown(keyCode, event);
+  }
 
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.board_topic_menu, menu);
-        return true;
+  // http://stackoverflow.com/questions/4500354/control-volume-keys
+  @Override public boolean onKeyUp(int keyCode, KeyEvent event) {
+    // disable the beep sound when volume up/down is pressed
+    if (Settings.getInstance().isVolumeKeyScroll() && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
+      return true;
     }
+    return super.onKeyUp(keyCode, event);
+  }
 
+  @Override public void onTopicFragmentInteraction(Topic item) {
+    if (item.isCategory) return;
+    Intent intent = new Intent(this, PostListActivity.class);
+    item.setBoardEngName(mBoard.getBoardEngName());
+    item.setBoardChsName(mBoard.getBoardChsName());
+    intent.putExtra(SMTHApplication.TOPIC_OBJECT, item);
+    intent.putExtra(SMTHApplication.FROM_BOARD, SMTHApplication.FROM_BOARD_BOARD);
+    startActivity(intent);
+  }
 
-    public void clearLoadingHints() {
-        dismissProgress();
+  @Override public void OnSearchAction(String keyword, String author, boolean elite, boolean attachment) {
+    Log.d(TAG, "OnSearchAction: " + keyword + author + elite + attachment);
 
-        if (mSwipeRefreshLayout != null && mSwipeRefreshLayout.isRefreshing()) {
-            mSwipeRefreshLayout.setRefreshing(false);  // This hides the spinner
-        }
+    isSearchMode = true;
+    showProgress("加载搜索结果...");
 
-        if(mScrollListener != null) {
-            mScrollListener.setLoading(false);
-        }
+    TopicListContent.BOARD_TOPICS.clear();
+    mRecyclerView.getAdapter().notifyDataSetChanged();
 
-    }
+    String eliteStr = null;
+    if (elite) eliteStr = "on";
 
-    // load topics from next page, without alert
-    public void loadMoreItems() {
-        if(isSearchMode || mSwipeRefreshLayout.isRefreshing() || pDialog.isShowing()) {
-            return;
-        }
+    String attachmentStr = null;
+    if (attachment) attachmentStr = "on";
 
-        mCurrentPageNo += 1;
-        // Log.d(TAG, mCurrentPageNo + " page is loading now...");
-        LoadBoardTopicsFromMobile();
-    }
+    SMTHHelper helper = SMTHHelper.getInstance();
+    helper.wService.searchTopicInBoard(keyword, author, eliteStr, attachmentStr, this.mBoard.getBoardEngName())
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .flatMap(new Func1<ResponseBody, Observable<Topic>>() {
+          @Override public Observable<Topic> call(ResponseBody responseBody) {
+            try {
+              String response = responseBody.string();
+              List<Topic> topics = SMTHHelper.ParseSearchResultFromWWW(response);
+              Topic topic = new Topic("搜索模式 - 下拉或按返回键退出搜索模式");
+              topics.add(0, topic);
+              return Observable.from(topics);
+            } catch (Exception e) {
+              Log.d(TAG, Log.getStackTraceString(e));
+              return null;
+            }
+          }
+        })
+        .subscribe(new Subscriber<Topic>() {
+          @Override public void onCompleted() {
+            dismissProgress();
+          }
 
-    @Override
-    public void onRefresh() {
-        // this method is slightly different with RefreshBoardTopoFromPageOne
-        // this method does not alert since it's triggered by SwipeRefreshLayout
-        mCurrentPageNo = 1;
-        TopicListContent.clearBoardTopics();
-        mRecyclerView.getAdapter().notifyDataSetChanged();
-        LoadBoardTopicsFromMobile();
-    }
+          @Override public void onError(Throwable e) {
+            Toast.makeText(SMTHApplication.getAppContext(), "加载搜索结果失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
+          }
 
-
-    public void RefreshBoardTopoFromPageOne() {
-        showProgress("刷新版面文章...");
-
-        TopicListContent.clearBoardTopics();
-        mRecyclerView.getAdapter().notifyDataSetChanged();
-
-        mCurrentPageNo = 1;
-        LoadBoardTopicsFromMobile();
-    }
-
-    public void RefreshBoardTopicsWithoutClear() {
-        showProgress("加载版面文章...");
-
-        LoadBoardTopicsFromMobile();
-    }
-
-    public void LoadBoardTopicsFromMobile() {
-
-        isSearchMode = false;
-        final SMTHHelper helper = SMTHHelper.getInstance();
-
-        helper.wService.getBoardTopicsByPage(mBoard.getBoardEngName(), Integer.toString(mCurrentPageNo))
-                .flatMap(new Func1<ResponseBody, Observable<Topic>>() {
-                    @Override
-                    public Observable<Topic> call(ResponseBody responseBody) {
-                        try {
-                            String response = responseBody.string();
-                            List<Topic> topics = SMTHHelper.ParseBoardTopicsFromWWW(response);
-                            return Observable.from(topics);
-                        } catch (Exception e) {
-                            Log.e(TAG, "call: " + Log.getStackTraceString(e));
-                            return null;
-                        }
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Topic>() {
-                    @Override
-                    public void onStart() {
-                        super.onStart();
-
-                        Topic topic = new Topic(String.format("第%d页:", mCurrentPageNo));
-                        topic.isCategory = true;
-                        TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
-                        mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
-                    }
-
-                    @Override
-                    public void onCompleted() {
-                        clearLoadingHints();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        clearLoadingHints();
-
-                        Toast.makeText(SMTHApplication.getAppContext(), String.format("获取第%d页的帖子失败!\n", mCurrentPageNo) + e.toString(), Toast.LENGTH_LONG).show();
-                        mCurrentPageNo -= 1;
-                    }
-
-                    @Override
-                    public void onNext(Topic topic) {
-                        // Log.d(TAG, topic.toString());
-                        if(!topic.isSticky || mSetting.isShowSticky()) {
-                            TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
-                            mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
-                        }
-                    }
-                });
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (Settings.getInstance().isVolumeKeyScroll() && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
-            RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, keyCode);
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    // http://stackoverflow.com/questions/4500354/control-volume-keys
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        // disable the beep sound when volume up/down is pressed
-        if (Settings.getInstance().isVolumeKeyScroll() && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
-            return true;
-        }
-        return super.onKeyUp(keyCode, event);
-    }
-
-
-    @Override
-    public void onTopicFragmentInteraction(Topic item) {
-        if(item.isCategory) return;
-        Intent intent = new Intent(this, PostListActivity.class);
-        item.setBoardEngName(mBoard.getBoardEngName());
-        item.setBoardChsName(mBoard.getBoardChsName());
-        intent.putExtra(SMTHApplication.TOPIC_OBJECT, item);
-        intent.putExtra(SMTHApplication.FROM_BOARD, SMTHApplication.FROM_BOARD_BOARD);
-        startActivity(intent);
-    }
-
-
-    @Override
-    public void OnSearchAction(String keyword, String author, boolean elite, boolean attachment) {
-        Log.d(TAG, "OnSearchAction: " + keyword + author + elite + attachment);
-
-        isSearchMode = true;
-        showProgress("加载搜索结果...");
-
-        TopicListContent.BOARD_TOPICS.clear();
-        mRecyclerView.getAdapter().notifyDataSetChanged();
-
-        String eliteStr = null;
-        if(elite) eliteStr = "on";
-
-        String attachmentStr = null;
-        if(attachment) attachmentStr = "on";
-
-        SMTHHelper helper = SMTHHelper.getInstance();
-        helper.wService.searchTopicInBoard(keyword, author, eliteStr, attachmentStr, this.mBoard.getBoardEngName())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .flatMap(new Func1<ResponseBody, Observable<Topic>>() {
-                    @Override
-                    public Observable<Topic> call(ResponseBody responseBody) {
-                        try {
-                            String response = responseBody.string();
-                            List<Topic> topics = SMTHHelper.ParseSearchResultFromWWW(response);
-                            Topic topic = new Topic("搜索模式 - 下拉或按返回键退出搜索模式");
-                            topics.add(0, topic);
-                            return Observable.from(topics);
-                        } catch (Exception e) {
-                            Log.d(TAG, Log.getStackTraceString(e));
-                            return null;
-                        }
-                    }
-                })
-                .subscribe(new Subscriber<Topic>() {
-                    @Override
-                    public void onCompleted() {
-                        dismissProgress();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Toast.makeText(SMTHApplication.getAppContext(), "加载搜索结果失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
-                    }
-
-                    @Override
-                    public void onNext(Topic topic) {
-                        TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
-                        mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
-                    }
-                });
-    }
+          @Override public void onNext(Topic topic) {
+            TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
+            mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+          }
+        });
+  }
 }

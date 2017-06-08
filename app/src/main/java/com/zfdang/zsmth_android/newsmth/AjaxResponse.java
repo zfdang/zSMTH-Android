@@ -24,102 +24,104 @@ import android.os.Parcelable;
 //}
 
 public class AjaxResponse implements Parcelable {
-    public static final int AJAX_RESULT_OK = 1;
-    public static final int AJAX_RESULT_FAILED = 0;
-    public static final int AJAX_RESULT_UNKNOWN = 2;
+  public static final int AJAX_RESULT_OK = 1;
+  public static final int AJAX_RESULT_FAILED = 0;
+  public static final int AJAX_RESULT_UNKNOWN = 2;
 
-    private int ajax_st;
-    private String ajax_code;
-    private String ajax_msg;
-    private String content;
-    private int group_id;
+  private int ajax_st;
+  private String ajax_code;
+  private String ajax_msg;
+  private String content;
+  private int group_id;
 
-    public AjaxResponse() {
+  public AjaxResponse() {
+  }
+
+  public int getAjax_st() {
+    return ajax_st;
+  }
+
+  public void setAjax_st(int ajax_st) {
+    this.ajax_st = ajax_st;
+  }
+
+  public String getAjax_code() {
+    return ajax_code;
+  }
+
+  public void setAjax_code(String ajax_code) {
+    this.ajax_code = ajax_code;
+  }
+
+  public String getAjax_msg() {
+    return ajax_msg;
+  }
+
+  public void setAjax_msg(String ajax_msg) {
+    this.ajax_msg = ajax_msg;
+  }
+
+  public String getContent() {
+    return content;
+  }
+
+  public void setContent(String content) {
+    this.content = content;
+  }
+
+  public int getGroup_id() {
+    return group_id;
+  }
+
+  public void setGroup_id(int group_id) {
+    this.group_id = group_id;
+  }
+
+  @Override public String toString() {
+    return "AjaxResponse{"
+        + "ajax_code='"
+        + ajax_code
+        + '\''
+        + ", ajax_st="
+        + ajax_st
+        + ", ajax_msg='"
+        + ajax_msg
+        + '\''
+        + ", content='"
+        + content
+        + '\''
+        + ", group_id="
+        + group_id
+        + '}';
+  }
+
+  @Override public int describeContents() {
+    return 0;
+  }
+
+  @Override public void writeToParcel(Parcel dest, int flags) {
+    dest.writeInt(this.ajax_st);
+    dest.writeString(this.ajax_code);
+    dest.writeString(this.ajax_msg);
+    dest.writeString(this.content);
+    dest.writeInt(this.group_id);
+  }
+
+  protected AjaxResponse(Parcel in) {
+    this.ajax_st = in.readInt();
+    this.ajax_code = in.readString();
+    this.ajax_msg = in.readString();
+    this.content = in.readString();
+    this.group_id = in.readInt();
+  }
+
+  public static final Creator<AjaxResponse> CREATOR = new Creator<AjaxResponse>() {
+    @Override public AjaxResponse createFromParcel(Parcel source) {
+      return new AjaxResponse(source);
     }
 
-    public int getAjax_st() {
-        return ajax_st;
+    @Override public AjaxResponse[] newArray(int size) {
+      return new AjaxResponse[size];
     }
-
-    public void setAjax_st(int ajax_st) {
-        this.ajax_st = ajax_st;
-    }
-
-    public String getAjax_code() {
-        return ajax_code;
-    }
-
-    public void setAjax_code(String ajax_code) {
-        this.ajax_code = ajax_code;
-    }
-
-    public String getAjax_msg() {
-        return ajax_msg;
-    }
-
-    public void setAjax_msg(String ajax_msg) {
-        this.ajax_msg = ajax_msg;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public int getGroup_id() {
-        return group_id;
-    }
-
-    public void setGroup_id(int group_id) {
-        this.group_id = group_id;
-    }
-
-    @Override
-    public String toString() {
-        return "AjaxResponse{" +
-                "ajax_code='" + ajax_code + '\'' +
-                ", ajax_st=" + ajax_st +
-                ", ajax_msg='" + ajax_msg + '\'' +
-                ", content='" + content + '\'' +
-                ", group_id=" + group_id +
-                '}';
-    }
-
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.ajax_st);
-        dest.writeString(this.ajax_code);
-        dest.writeString(this.ajax_msg);
-        dest.writeString(this.content);
-        dest.writeInt(this.group_id);
-    }
-
-    protected AjaxResponse(Parcel in) {
-        this.ajax_st = in.readInt();
-        this.ajax_code = in.readString();
-        this.ajax_msg = in.readString();
-        this.content = in.readString();
-        this.group_id = in.readInt();
-    }
-
-    public static final Creator<AjaxResponse> CREATOR = new Creator<AjaxResponse>() {
-        @Override
-        public AjaxResponse createFromParcel(Parcel source) {
-            return new AjaxResponse(source);
-        }
-
-        @Override
-        public AjaxResponse[] newArray(int size) {
-            return new AjaxResponse[size];
-        }
-    };
+  };
 }

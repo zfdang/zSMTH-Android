@@ -11,17 +11,16 @@ import android.util.Log;
 // There was actually a bug in RecyclerView and the support 23.1.1 still not fixed.
 // http://stackoverflow.com/questions/31759171/recyclerview-and-java-lang-indexoutofboundsexception-inconsistency-detected-in
 public class WrapContentLinearLayoutManager extends LinearLayoutManager {
-    //... constructor
-    public WrapContentLinearLayoutManager(Context context) {
-        super(context);
-    }
+  //... constructor
+  public WrapContentLinearLayoutManager(Context context) {
+    super(context);
+  }
 
-    @Override
-    public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
-        try {
-            super.onLayoutChildren(recycler, state);
-        } catch (IndexOutOfBoundsException e) {
-            Log.e("probe", "meet a IOOBE in RecyclerView");
-        }
+  @Override public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+    try {
+      super.onLayoutChildren(recycler, state);
+    } catch (IndexOutOfBoundsException e) {
+      Log.e("probe", "meet a IOOBE in RecyclerView");
     }
+  }
 }

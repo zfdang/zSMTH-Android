@@ -1,92 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_margin="5dp"
-              android:background="@color/popupwindow_background"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:background="@color/popupwindow_background"
+    android:orientation="vertical"
+    >
 
 
-    <TextView
-        android:id="@+id/search_caption"
+  <TextView
+      android:id="@+id/search_caption"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:text="@string/search_caption_label"
+      android:textColor="@color/blue_text_night"
+      android:textSize="@dimen/zsmth_font_size_large"
+      />
+
+  <android.support.design.widget.TextInputLayout
+      android:id="@+id/search_keyword_layout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textColorHint="@color/status_text_night"
+      >
+
+    <EditText
+        android:id="@+id/search_keyword"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/search_keyword_label"
+        android:inputType="text"
+        android:singleLine="true"
+        android:textColor="@color/status_text_night"
+        android:textColorHint="@color/status_text_night"
+        />
+  </android.support.design.widget.TextInputLayout>
+
+  <android.support.design.widget.TextInputLayout
+      android:id="@+id/search_author_layout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textColorHint="@color/status_text_night"
+      >
+
+    <EditText
+        android:id="@+id/search_author"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/search_author_label"
+        android:inputType="text"
+        android:singleLine="true"
+        android:textColor="@color/status_text_night"
+        android:textColorHint="@color/status_text_night"
+        />
+  </android.support.design.widget.TextInputLayout>
+
+  <CheckBox
+      android:id="@+id/search_attachment"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/search_attachment_label"
+      android:textColor="@color/status_text_night"
+      />
+
+  <CheckBox
+      android:id="@+id/search_elite"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/search_elite_label"
+      android:textColor="@color/status_text_night"
+      />
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginTop="20dp"
+      android:gravity="center_horizontal"
+      android:orientation="horizontal"
+      >
+
+    <Button
+        android:id="@+id/search_cancel"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/search_caption_label"
-        android:textColor="@color/blue_text_night"
-        android:textSize="@dimen/zsmth_font_size_large"/>
+        android:layout_height="30dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/navigation_button_background"
+        android:textColor="@color/status_text_night"
+        android:text="@string/search_cancel_label"
+        />
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/search_keyword_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColorHint="@color/status_text_night">
-
-        <EditText
-            android:id="@+id/search_keyword"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/search_keyword_label"
-            android:inputType="text"
-            android:singleLine="true"
-            android:textColor="@color/status_text_night"
-            android:textColorHint="@color/status_text_night"/>
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/search_author_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColorHint="@color/status_text_night">
-
-        <EditText
-            android:id="@+id/search_author"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/search_author_label"
-            android:inputType="text"
-            android:singleLine="true"
-            android:textColor="@color/status_text_night"
-            android:textColorHint="@color/status_text_night"/>
-    </android.support.design.widget.TextInputLayout>
-
-    <CheckBox
-        android:id="@+id/search_attachment"
+    <Button
+        android:id="@+id/search_confirm"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/search_attachment_label"
-        android:textColor="@color/status_text_night"/>
-
-    <CheckBox
-        android:id="@+id/search_elite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/search_elite_label"
-        android:textColor="@color/status_text_night"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="20dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/search_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/navigation_button_background"
-            android:textColor="@color/status_text_night"
-            android:text="@string/search_cancel_label"/>
-
-        <Button
-            android:id="@+id/search_confirm"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:background="@drawable/navigation_button_background"
-            android:textColor="@color/status_text_night"
-            android:text="@string/search_confirm_label"/>
-    </LinearLayout>
+        android:layout_height="30dp"
+        android:background="@drawable/navigation_button_background"
+        android:textColor="@color/status_text_night"
+        android:text="@string/search_confirm_label"
+        />
+  </LinearLayout>
 
 </LinearLayout>

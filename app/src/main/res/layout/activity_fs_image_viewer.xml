@@ -1,72 +1,79 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="@android:color/background_dark"
-             tools:context=".FSImageViewerActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/background_dark"
+    tools:context=".FSImageViewerActivity"
+    >
 
-    <!-- The primary full-screen view. This can be replaced with whatever view
-         is needed to present your content, e.g. VideoView, SurfaceView,
-         TextureView, etc. -->
-    <com.zfdang.zsmth_android.HackyViewPager
-        android:id="@+id/fullscreen_image_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </com.zfdang.zsmth_android.HackyViewPager>
+  <!-- The primary full-screen view. This can be replaced with whatever view
+       is needed to present your content, e.g. VideoView, SurfaceView,
+       TextureView, etc. -->
+  <com.zfdang.zsmth_android.HackyViewPager
+      android:id="@+id/fullscreen_image_pager"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      >
+  </com.zfdang.zsmth_android.HackyViewPager>
 
-    <me.relex.circleindicator.CircleIndicator
-        android:id="@+id/fullscreen_image_indicator"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="30dp"
-        app:ci_animator="@animator/indicator_animator"
-        app:ci_animator_reverse="@animator/indicator_animator_reverse"
-        app:ci_drawable="@drawable/green_radius_square"
-        app:ci_height="4dp"
-        app:ci_margin="2dp"
-        app:ci_width="8dp"/>
+  <me.relex.circleindicator.CircleIndicator
+      android:id="@+id/fullscreen_image_indicator"
+      android:layout_width="match_parent"
+      android:layout_height="48dp"
+      android:layout_gravity="bottom|center_horizontal"
+      android:layout_marginBottom="30dp"
+      app:ci_animator="@animator/indicator_animator"
+      app:ci_animator_reverse="@animator/indicator_animator_reverse"
+      app:ci_drawable="@drawable/green_radius_square"
+      app:ci_height="4dp"
+      app:ci_margin="2dp"
+      app:ci_width="8dp"
+      />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:id="@+id/fullscreen_toolbar"
+      android:layout_gravity="bottom|center_horizontal"
+      android:gravity="center_horizontal"
+      android:orientation="horizontal"
+      android:background="#000000"
+      android:alpha="0.6"
+      android:paddingLeft="10dp"
+      android:paddingRight="10dp"
+      >
+
+    <ImageView
+        android:id="@+id/fullscreen_button_back"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/fullscreen_toolbar"
-        android:layout_gravity="bottom|center_horizontal"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:background="#000000"
+        android:layout_marginRight="40dp"
         android:alpha="0.6"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
-
-        <ImageView
-            android:id="@+id/fullscreen_button_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="40dp"
-            android:alpha="0.6"
-            android:focusable="true"
-            android:src="@drawable/ic_keyboard_backspace_white_36dp"/>
+        android:focusable="true"
+        android:src="@drawable/ic_keyboard_backspace_white_36dp"
+        />
 
 
-        <ImageView
-            android:id="@+id/fullscreen_button_save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="40dp"
-            android:alpha="0.6"
-            android:focusable="true"
-            android:src="@drawable/ic_save_white_36dp"/>
+    <ImageView
+        android:id="@+id/fullscreen_button_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="40dp"
+        android:alpha="0.6"
+        android:focusable="true"
+        android:src="@drawable/ic_save_white_36dp"
+        />
 
-        <ImageView
-            android:id="@+id/fullscreen_button_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:alpha="0.6"
-            android:focusable="true"
-            android:src="@drawable/ic_info_white_36dp"/>
+    <ImageView
+        android:id="@+id/fullscreen_button_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0.6"
+        android:focusable="true"
+        android:src="@drawable/ic_info_white_36dp"
+        />
 
-    </LinearLayout>
+  </LinearLayout>
 
 </FrameLayout>

@@ -1,35 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     >
 
-    <SearchView
-        android:id="@+id/all_board_search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginTop="0dp"
-        android:paddingLeft="0dp"
-        android:paddingRight="0dp"
-        android:queryHint="搜索版面中/英文名称..."
-        android:textSize="@dimen/zsmth_font_size_small"/>
+  <SearchView
+      android:id="@+id/all_board_search"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical"
+      android:layout_marginTop="0dp"
+      android:paddingLeft="0dp"
+      android:paddingRight="0dp"
+      android:queryHint="搜索版面中/英文名称..."
+      android:textSize="@dimen/zsmth_font_size_small"
+      />
 
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/all_board_list"
-        android:name="com.zfdang.zsmth_android.AllBoardFragment"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/all_board_search"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:scrollbars="vertical"
-        app:layoutManager="LinearLayoutManager"
-        tools:context="com.zfdang.zsmth_android.AllBoardFragment"
-        tools:listitem="@layout/board_item"/>
+  <android.support.v7.widget.RecyclerView
+      android:id="@+id/all_board_list"
+      android:name="com.zfdang.zsmth_android.AllBoardFragment"
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_below="@+id/all_board_search"
+      android:layout_marginLeft="0dp"
+      android:layout_marginRight="0dp"
+      android:scrollbars="vertical"
+      app:layoutManager="LinearLayoutManager"
+      tools:context="com.zfdang.zsmth_android.AllBoardFragment"
+      tools:listitem="@layout/board_item"
+      />
 </RelativeLayout>

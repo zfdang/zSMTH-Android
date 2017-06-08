@@ -6,23 +6,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.zfdang.zsmth_android.MailContentActivity">
+    tools:context="com.zfdang.zsmth_android.MailContentActivity"
+    >
 
-    <android.support.design.widget.AppBarLayout
+  <android.support.design.widget.AppBarLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:theme="@style/AppTheme.AppBarOverlay"
+      >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="@dimen/zsmth_actionbar_size"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.ToolBar"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/zsmth_actionbar_size"
-            android:background="?attr/colorPrimary"
-            android:theme="@style/ThemeOverlay.ToolBar"
-            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+  </android.support.design.widget.AppBarLayout>
 
-    </android.support.design.widget.AppBarLayout>
-
-    <include layout="@layout/content_mail_content"/>
+  <include layout="@layout/content_mail_content"/>
 
 </android.support.design.widget.CoordinatorLayout>

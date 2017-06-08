@@ -7,69 +7,76 @@
     android:paddingBottom="2dp"
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
-    android:paddingTop="2dp">
+    android:paddingTop="2dp"
+    >
+
+  <TextView
+      android:id="@+id/mail_item_page"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:background="@color/recycler_view_seperator"
+      android:paddingLeft="4dp"
+      android:text="Category"
+      android:textColor="@color/status_text_night"
+      android:textSize="@dimen/zsmth_font_size_small"
+      />
+
+  <TextView
+      android:id="@+id/mail_item_topic"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/mail_item_page"
+      android:paddingLeft="2dp"
+      android:paddingRight="8dp"
+      android:text="Topic"
+      android:textColor="@color/status_text_night"
+      android:textSize="@dimen/zsmth_font_size_medium"
+      />
+
+
+  <LinearLayout
+      android:id="@+id/author_row"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/mail_item_topic"
+      android:layout_marginRight="10dp"
+      android:orientation="horizontal"
+      >
 
     <TextView
-        android:id="@+id/mail_item_page"
-        android:layout_width="fill_parent"
+        android:id="@+id/mail_item_author_label"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/recycler_view_seperator"
-        android:paddingLeft="4dp"
-        android:text="Category"
-        android:textColor="@color/status_text_night"
-        android:textSize="@dimen/zsmth_font_size_small"/>
-
-    <TextView
-        android:id="@+id/mail_item_topic"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/mail_item_page"
+        android:gravity="left"
         android:paddingLeft="2dp"
-        android:paddingRight="8dp"
-        android:text="Topic"
-        android:textColor="@color/status_text_night"
-        android:textSize="@dimen/zsmth_font_size_medium"/>
+        android:text="@string/mail_item_author_label"
+        android:textColor="@color/colorSecondaryText"
+        />
 
-
-    <LinearLayout
-        android:id="@+id/author_row"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/mail_item_author"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/mail_item_topic"
-        android:layout_marginRight="10dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/mail_item_author_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:paddingLeft="2dp"
-            android:text="@string/mail_item_author_label"
-            android:textColor="@color/colorSecondaryText"/>
-
-        <TextView
-            android:id="@+id/mail_item_author"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:paddingLeft="2dp"
-            android:text="作者"
-            android:textColor="@color/blue_text_night"/>
+        android:gravity="left"
+        android:paddingLeft="2dp"
+        android:text="作者"
+        android:textColor="@color/blue_text_night"
+        />
 
 
-        <TextView
-            android:id="@+id/mail_item_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_weight="1"
-            android:paddingRight="8dp"
-            android:text="2016-03-24"
-            android:gravity="right"
-            android:textColor="@color/colorSecondaryText"/>
+    <TextView
+        android:id="@+id/mail_item_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_weight="1"
+        android:paddingRight="8dp"
+        android:text="2016-03-24"
+        android:gravity="right"
+        android:textColor="@color/colorSecondaryText"
+        />
 
-    </LinearLayout>
+  </LinearLayout>
 
 
 </RelativeLayout>

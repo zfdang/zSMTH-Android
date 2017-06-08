@@ -7,24 +7,27 @@
     android:layout_height="match_parent"
     android:background="@color/body_background_night"
     android:fitsSystemWindows="true"
-    tools:context=".QueryUserActivity">
+    tools:context=".QueryUserActivity"
+    >
 
-    <android.support.design.widget.AppBarLayout
+  <android.support.design.widget.AppBarLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:theme="@style/AppTheme.AppBarOverlay"
+      >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="@dimen/zsmth_actionbar_size"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.ToolBar"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        app:titleTextAppearance="@style/Toolbar.TitleText"
+        />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/zsmth_actionbar_size"
-            android:background="?attr/colorPrimary"
-            android:theme="@style/ThemeOverlay.ToolBar"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:titleTextAppearance="@style/Toolbar.TitleText"/>
+  </android.support.design.widget.AppBarLayout>
 
-    </android.support.design.widget.AppBarLayout>
-
-    <include layout="@layout/content_query_user"/>
+  <include layout="@layout/content_query_user"/>
 
 </android.support.design.widget.CoordinatorLayout>

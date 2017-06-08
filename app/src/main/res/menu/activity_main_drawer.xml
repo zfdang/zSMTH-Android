@@ -1,35 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single" android:id="@+id/drawer_menu_group1">
-        <item
-            android:id="@+id/nav_guidance"
-            android:icon="@drawable/ic_whatshot_white_48dp"
-            android:title="十大导读" />
-        <item
-            android:id="@+id/nav_favorite"
-            android:icon="@drawable/ic_star_white_48dp"
-            android:title="收藏夹" />
-        <item
-            android:id="@+id/nav_all_boards"
-            android:icon="@drawable/ic_format_list_bulleted_white_48dp"
-            android:title="所有版面" />
-        <item
-            android:id="@+id/nav_mail"
-            android:icon="@drawable/ic_email_white_48dp"
-            android:title="邮箱" />
+  <group
+      android:checkableBehavior="single"
+      android:id="@+id/drawer_menu_group1">
+    <item
+        android:id="@+id/nav_guidance"
+        android:icon="@drawable/ic_whatshot_white_48dp"
+        android:title="十大导读"/>
+    <item
+        android:id="@+id/nav_favorite"
+        android:icon="@drawable/ic_star_white_48dp"
+        android:title="收藏夹"/>
+    <item
+        android:id="@+id/nav_all_boards"
+        android:icon="@drawable/ic_format_list_bulleted_white_48dp"
+        android:title="所有版面"/>
+    <item
+        android:id="@+id/nav_mail"
+        android:icon="@drawable/ic_email_white_48dp"
+        android:title="邮箱"/>
 
-    </group>
+  </group>
 
-    <group android:checkableBehavior="single" android:id="@+id/drawer_menu_group2">
-            <item
-                android:id="@+id/nav_setting"
-                android:icon="@drawable/ic_settings_white_48dp"
-                android:title="设置" />
-            <item
-                android:id="@+id/nav_about"
-                android:icon="@drawable/ic_info_white_48dp"
-                android:title="关于" />
-    </group>
+  <group
+      android:checkableBehavior="single"
+      android:id="@+id/drawer_menu_group2">
+    <item
+        android:id="@+id/nav_setting"
+        android:icon="@drawable/ic_settings_white_48dp"
+        android:title="设置"/>
+    <item
+        android:id="@+id/nav_about"
+        android:icon="@drawable/ic_info_white_48dp"
+        android:title="关于"/>
+  </group>
 
 </menu>

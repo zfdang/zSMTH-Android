@@ -1,208 +1,233 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:layout_margin="10dp"
-              android:background="@color/popupwindow_background"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp"
+    android:background="@color/popupwindow_background"
+    android:orientation="vertical"
+    >
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="10dp"
+      android:gravity="center_horizontal"
+      android:orientation="horizontal"
+      >
+
+    <TextView
+        android:id="@+id/popup_forward_caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="转寄帖子"
+        android:textColor="@color/blue_text_night"
+        android:textSize="@dimen/zsmth_font_size_large"
+        />
+  </LinearLayout>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="10dp"
+      android:gravity="center_vertical"
+      android:orientation="horizontal"
+      >
+
+    <TextView
+        android:id="@+id/popup_forward_target"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="转寄给:"
+        android:textColor="@color/status_text_night"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        >
 
-        <TextView
-            android:id="@+id/popup_forward_caption"
+      <RadioButton
+          android:id="@+id/popup_forward_target_self"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="自己"
+          android:textColor="@color/status_text_night"
+          />
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:orientation="horizontal"
+          >
+
+        <RadioButton
+            android:id="@+id/popup_forward_target_other"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="转寄帖子"
-            android:textColor="@color/blue_text_night"
-            android:textSize="@dimen/zsmth_font_size_large"/>
-    </LinearLayout>
+            android:text="其他:"
+            android:textColor="@color/status_text_night"
+            />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/popup_forward_target"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="转寄给:"
-            android:textColor="@color/status_text_night"/>
-
-        <LinearLayout
+        <EditText
+            android:id="@+id/popup_forward_target_other_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <RadioButton
-                android:id="@+id/popup_forward_target_self"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="自己"
-                android:textColor="@color/status_text_night"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/popup_forward_target_other"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="其他:"
-                    android:textColor="@color/status_text_night"/>
-
-                <EditText
-                    android:id="@+id/popup_forward_target_other_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:hint="他人ID或者邮箱"
-                    android:singleLine="true"
-                    android:textColor="@color/status_text_night"
-                    android:textColorHint="@color/status_text_night"/>
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:orientation="horizontal">
-
-        <CheckBox
-            android:id="@+id/popup_forward_thread"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="合集转寄"
-            android:textColor="@color/status_text_night"/>
-
-        <CheckBox
-            android:id="@+id/popup_forward_noref"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="不带引文"
-            android:textColor="@color/status_text_night"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:orientation="horizontal">
-
-        <CheckBox
-            android:id="@+id/popup_forward_noatt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="不含附件"
-            android:textColor="@color/status_text_night"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/popup_forward_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/navigation_button_background"
+            android:layout_marginLeft="10dp"
+            android:hint="他人ID或者邮箱"
+            android:singleLine="true"
             android:textColor="@color/status_text_night"
-            android:text="取消"/>
+            android:textColorHint="@color/status_text_night"
+            />
+      </LinearLayout>
 
-        <Button
-            android:id="@+id/popup_forward_confirm"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:background="@drawable/navigation_button_background"
-            android:textColor="@color/status_text_night"
-            android:text="转寄"/>
+
     </LinearLayout>
 
+  </LinearLayout>
 
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="10dp"
+      android:orientation="horizontal"
+      >
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <CheckBox
+        android:id="@+id/popup_forward_thread"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="5dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:text="合集转寄"
+        android:textColor="@color/status_text_night"
+        />
 
-        <TextView
-            android:id="@+id/popup_post_caption"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="转贴至版面"
-            android:textColor="@color/blue_text_night"
-            android:textSize="@dimen/zsmth_font_size_large"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
+    <CheckBox
+        android:id="@+id/popup_forward_noref"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:layout_marginLeft="20dp"
+        android:text="不带引文"
+        android:textColor="@color/status_text_night"
+        />
+  </LinearLayout>
 
-        <TextView
-            android:id="@+id/popup_post_target_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="转贴至:"
-            android:textColor="@color/status_text_night"/>
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="10dp"
+      android:orientation="horizontal"
+      >
 
-        <AutoCompleteTextView
-                              android:id="@+id/popup_post_target"
-                              android:layout_width="fill_parent"
-                              android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
+    <CheckBox
+        android:id="@+id/popup_forward_noatt"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:text="不含附件"
+        android:textColor="@color/status_text_night"
+        />
+  </LinearLayout>
 
-        <Button
-            android:id="@+id/popup_post_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/navigation_button_background"
-            android:textColor="@color/status_text_night"
-            android:text="取消"/>
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="10dp"
+      android:layout_marginBottom="20dp"
+      android:gravity="center_horizontal"
+      android:orientation="horizontal"
+      >
 
-        <Button
-            android:id="@+id/popup_post_confirm"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:background="@drawable/navigation_button_background"
-            android:textColor="@color/status_text_night"
-            android:text="转贴"/>
-    </LinearLayout>
+    <Button
+        android:id="@+id/popup_forward_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/navigation_button_background"
+        android:textColor="@color/status_text_night"
+        android:text="取消"
+        />
+
+    <Button
+        android:id="@+id/popup_forward_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:background="@drawable/navigation_button_background"
+        android:textColor="@color/status_text_night"
+        android:text="转寄"
+        />
+  </LinearLayout>
+
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="10dp"
+      android:layout_marginTop="30dp"
+      android:layout_marginBottom="5dp"
+      android:gravity="center_horizontal"
+      android:orientation="horizontal"
+      >
+
+    <TextView
+        android:id="@+id/popup_post_caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="转贴至版面"
+        android:textColor="@color/blue_text_night"
+        android:textSize="@dimen/zsmth_font_size_large"
+        />
+  </LinearLayout>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="10dp"
+      android:gravity="center_vertical"
+      android:orientation="horizontal"
+      >
+
+    <TextView
+        android:id="@+id/popup_post_target_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="转贴至:"
+        android:textColor="@color/status_text_night"
+        />
+
+    <AutoCompleteTextView
+        android:id="@+id/popup_post_target"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        />
+
+  </LinearLayout>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="10dp"
+      android:gravity="center_horizontal"
+      android:orientation="horizontal"
+      >
+
+    <Button
+        android:id="@+id/popup_post_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/navigation_button_background"
+        android:textColor="@color/status_text_night"
+        android:text="取消"
+        />
+
+    <Button
+        android:id="@+id/popup_post_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:background="@drawable/navigation_button_background"
+        android:textColor="@color/status_text_night"
+        android:text="转贴"
+        />
+  </LinearLayout>
 
 </LinearLayout>

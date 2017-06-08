@@ -8,7 +8,7 @@ import com.zfdang.zsmth_android.models.Board;
  */
 public interface OnBoardFragmentInteractionListener {
 
-    void onBoardFragmentInteraction(Board item);
+  void onBoardFragmentInteraction(Board item);
 
-    void onBoardLongClick(Board item);
+  void onBoardLongClick(Board item);
 }
