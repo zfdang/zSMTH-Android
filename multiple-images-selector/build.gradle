@@ -34,8 +34,8 @@ dependencies {
     compile "com.android.support:recyclerview-v7:$rootProject.SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:support-v4:$rootProject.SUPPORT_LIBRARY_VERSION"
 
-    compile "io.reactivex:rxjava:$rootProject.RXJAVA_VERSION"
-    compile "io.reactivex:rxandroid:$rootProject.RXANDROID_VERSION"
+    compile "io.reactivex.rxjava2:rxjava:$rootProject.RXJAVA2_VERSION"
+    compile "io.reactivex.rxjava2:rxandroid:$rootProject.RXANDROID2_VERSION"
 
     compile "com.facebook.fresco:fresco:$rootProject.FRESCO_VERSION"
     // For animated GIF support

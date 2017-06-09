@@ -94,8 +94,8 @@ dependencies {
     compile "com.android.support:preference-v14:$rootProject.SUPPORT_LIBRARY_VERSION"
 
     // RX
-    compile "io.reactivex:rxjava:$rootProject.RXJAVA_VERSION"
-    compile "io.reactivex:rxandroid:$rootProject.RXANDROID_VERSION"
+    compile "io.reactivex.rxjava2:rxjava:$rootProject.RXJAVA2_VERSION"
+    compile "io.reactivex.rxjava2:rxandroid:$rootProject.RXANDROID2_VERSION"
 
     // OkHttp
     compile 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
