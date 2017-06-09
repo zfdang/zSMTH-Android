@@ -19,12 +19,14 @@ import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.helpers.ActivityUtils;
 import com.zfdang.zsmth_android.helpers.FileLess;
 import com.zfdang.zsmth_android.helpers.FileSizeUtil;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import java.io.File;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by zfdang on 2016-5-2.
@@ -330,21 +332,25 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
   }
 
   public void updateCacheSize(final String folder, final Preference pref) {
-    Observable.just(folder).map(new Func1<String, String>() {
-      @Override public String call(String s) {
+    Observable.just(folder).map(new Function<String, String>() {
+      @Override public String apply(@NonNull String s) throws Exception {
         return FileSizeUtil.getAutoFileOrFolderSize(s);
       }
-    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<String>() {
-      @Override public void onCompleted() {
+    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
+      @Override public void onSubscribe(@NonNull Disposable disposable) {
+
       }
 
-      @Override public void onError(Throwable e) {
+      @Override public void onNext(@NonNull String s) {
+        Log.d(TAG, "onNext: Folder size = " + s);
+        pref.setSummary("缓存大小:" + s);
+      }
+
+      @Override public void onError(@NonNull Throwable e) {
         Toast.makeText(SMTHApplication.getAppContext(), "获取缓存大小失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
       }
 
-      @Override public void onNext(String s) {
-        Log.d(TAG, "onNext: Folder size = " + s);
-        pref.setSummary("缓存大小:" + s);
+      @Override public void onComplete() {
       }
     });
   }

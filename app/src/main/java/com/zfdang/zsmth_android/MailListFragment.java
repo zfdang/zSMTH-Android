@@ -25,15 +25,19 @@ import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.MailListContent;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+import io.reactivex.ObservableSource;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import okhttp3.ResponseBody;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+import org.reactivestreams.Subscriber;
 
 /**
  * A fragment representing a list of Items.
@@ -158,23 +162,26 @@ public class MailListFragment extends Fragment implements View.OnClickListener {
           helper.wService.deleteMailOrReferPost(type, currentFolder, mails)
               .subscribeOn(Schedulers.io())
               .observeOn(AndroidSchedulers.mainThread())
-              .subscribe(new Subscriber<AjaxResponse>() {
-                @Override public void onCompleted() {
+              .subscribe(new Observer<AjaxResponse>() {
+                @Override public void onSubscribe(@NonNull Disposable disposable) {
 
                 }
 
-                @Override public void onError(Throwable e) {
-                  Toast.makeText(SMTHApplication.getAppContext(), "删除邮件失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
-                }
-
-                @Override public void onNext(AjaxResponse ajaxResponse) {
-                  //                                    Log.d(TAG, "onNext: " + ajaxResponse.toString());
-
+                @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
+                  // Log.d(TAG, "onNext: " + ajaxResponse.toString());
                   if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
                     MailListContent.MAILS.remove(viewHolder.getAdapterPosition());
                     recyclerView.getAdapter().notifyItemRemoved(viewHolder.getAdapterPosition());
                   }
                   Toast.makeText(getActivity(), ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+                }
+
+                @Override public void onError(@NonNull Throwable e) {
+                  Toast.makeText(SMTHApplication.getAppContext(), "删除邮件失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
+                }
+
+                @Override public void onComplete() {
+
                 }
               });
         }
@@ -290,33 +297,37 @@ public class MailListFragment extends Fragment implements View.OnClickListener {
     // Log.d(TAG, "LoadReferPosts: " + currentPage);
     SMTHHelper helper = SMTHHelper.getInstance();
 
-    helper.wService.getReferPosts(currentFolder, Integer.toString(currentPage)).flatMap(new Func1<ResponseBody, Observable<Mail>>() {
-      @Override public Observable<Mail> call(ResponseBody responseBody) {
+    helper.wService.getReferPosts(currentFolder, Integer.toString(currentPage)).flatMap(new Function<ResponseBody, ObservableSource<Mail>>() {
+      @Override public ObservableSource<Mail> apply(@NonNull ResponseBody responseBody) throws Exception {
         try {
           String response = responseBody.string();
           List<Mail> results = SMTHHelper.ParseMailsFromWWW(response);
-          return Observable.from(results);
+          return Observable.fromIterable(results);
         } catch (Exception e) {
           Toast.makeText(SMTHApplication.getAppContext(), "加载文章提醒失败\n" + e.toString(), Toast.LENGTH_LONG).show();
         }
         return null;
       }
-    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Mail>() {
-      @Override public void onCompleted() {
-        clearLoadingHints();
-        recyclerView.smoothScrollToPosition(0);
+    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Mail>() {
+      @Override public void onSubscribe(@NonNull Disposable disposable) {
+
       }
 
-      @Override public void onError(Throwable e) {
-        clearLoadingHints();
-        Toast.makeText(getActivity(), "加载相关文章失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
-      }
-
-      @Override public void onNext(Mail mail) {
+      @Override public void onNext(@NonNull Mail mail) {
         // Log.d(TAG, "onNext: " + mail.toString());
-
         MailListContent.addItem(mail);
         recyclerView.getAdapter().notifyItemChanged(MailListContent.MAILS.size() - 1);
+      }
+
+      @Override public void onError(@NonNull Throwable e) {
+        clearLoadingHints();
+        Toast.makeText(getActivity(), "加载相关文章失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
+
+      }
+
+      @Override public void onComplete() {
+        clearLoadingHints();
+        recyclerView.smoothScrollToPosition(0);
       }
     });
   }
@@ -325,33 +336,36 @@ public class MailListFragment extends Fragment implements View.OnClickListener {
     // Log.d(TAG, "LoadMails: " + currentPage);
     SMTHHelper helper = SMTHHelper.getInstance();
 
-    helper.wService.getUserMails(currentFolder, Integer.toString(currentPage)).flatMap(new Func1<ResponseBody, Observable<Mail>>() {
-      @Override public Observable<Mail> call(ResponseBody responseBody) {
+    helper.wService.getUserMails(currentFolder, Integer.toString(currentPage)).flatMap(new Function<ResponseBody, ObservableSource<Mail>>() {
+      @Override public ObservableSource<Mail> apply(@NonNull ResponseBody responseBody) throws Exception {
         try {
           String response = responseBody.string();
           List<Mail> results = SMTHHelper.ParseMailsFromWWW(response);
-          return Observable.from(results);
+          return Observable.fromIterable(results);
         } catch (Exception e) {
           Toast.makeText(SMTHApplication.getAppContext(), "加载邮件错误\n" + e.toString(), Toast.LENGTH_SHORT).show();
         }
         return null;
       }
-    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Mail>() {
-      @Override public void onCompleted() {
-        clearLoadingHints();
-        recyclerView.smoothScrollToPosition(0);
+    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Mail>() {
+      @Override public void onSubscribe(@NonNull Disposable disposable) {
+
       }
 
-      @Override public void onError(Throwable e) {
+      @Override public void onNext(@NonNull Mail mail) {
+        // Log.d(TAG, "onNext: " + mail.toString());
+        MailListContent.addItem(mail);
+        recyclerView.getAdapter().notifyItemChanged(MailListContent.MAILS.size() - 1);
+      }
+
+      @Override public void onError(@NonNull Throwable e) {
         clearLoadingHints();
         Toast.makeText(SMTHApplication.getAppContext(), "加载邮件列表失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
       }
 
-      @Override public void onNext(Mail mail) {
-        // Log.d(TAG, "onNext: " + mail.toString());
-
-        MailListContent.addItem(mail);
-        recyclerView.getAdapter().notifyItemChanged(MailListContent.MAILS.size() - 1);
+      @Override public void onComplete() {
+        clearLoadingHints();
+        recyclerView.smoothScrollToPosition(0);
       }
     });
   }
@@ -392,17 +406,13 @@ public class MailListFragment extends Fragment implements View.OnClickListener {
       helper.wService.readReferPosts(currentFolder, mail.referIndex)
           .subscribeOn(Schedulers.io())
           .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(new Subscriber<AjaxResponse>() {
-            @Override public void onCompleted() {
+          .subscribe(new Observer<AjaxResponse>() {
+            @Override public void onSubscribe(@NonNull Disposable disposable) {
 
             }
 
-            @Override public void onError(Throwable e) {
-              Toast.makeText(SMTHApplication.getAppContext(), "设置已读标记失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
-            }
-
-            @Override public void onNext(AjaxResponse ajaxResponse) {
-              //                            Log.d(TAG, "onNext: " + ajaxResponse.toString());
+            @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
+              // Log.d(TAG, "onNext: " + ajaxResponse.toString());
               if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
                 // succeed to mark the post as read in remote
                 mail.isNew = false;
@@ -411,6 +421,14 @@ public class MailListFragment extends Fragment implements View.OnClickListener {
                 // mark remote failed, show the response message
                 Toast.makeText(getActivity(), ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
               }
+            }
+
+            @Override public void onError(@NonNull Throwable e) {
+              Toast.makeText(SMTHApplication.getAppContext(), "设置已读标记失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
+            }
+
+            @Override public void onComplete() {
+
             }
           });
     }

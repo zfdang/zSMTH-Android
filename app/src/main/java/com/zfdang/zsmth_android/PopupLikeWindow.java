@@ -78,7 +78,7 @@ public class PopupLikeWindow extends PopupWindow {
     this.setFocusable(true);
   }
 
-  static public interface OnLikeInterface {
-    public void OnLikeAction(String score, String msg);
+  public interface OnLikeInterface {
+    void OnLikeAction(String score, String msg);
   }
 }

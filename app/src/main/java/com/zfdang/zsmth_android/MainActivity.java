@@ -52,10 +52,13 @@ import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.services.MaintainUserStatusService;
 import com.zfdang.zsmth_android.services.UserStatusReceiver;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import java.lang.reflect.Field;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import org.reactivestreams.Subscriber;
 
 public class MainActivity extends SMTHBaseActivity
     implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, OnTopicFragmentInteractionListener,
@@ -543,16 +546,21 @@ public class MainActivity extends SMTHBaseActivity
     helper.wService.logout()
         .observeOn(AndroidSchedulers.mainThread())
         .subscribeOn(Schedulers.io())
-        .subscribe(new Subscriber<AjaxResponse>() {
-          @Override public void onCompleted() {
+        .subscribe(new Observer<AjaxResponse>() {
+          @Override public void onSubscribe(@NonNull Disposable disposable) {
+
           }
 
-          @Override public void onError(Throwable e) {
+          @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
+            Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_LONG).show();
+          }
+
+          @Override public void onError(@NonNull Throwable e) {
             Toast.makeText(MainActivity.this, "退出登录失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
           }
 
-          @Override public void onNext(AjaxResponse ajaxResponse) {
-            Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_LONG).show();
+          @Override public void onComplete() {
+
           }
         });
   }
@@ -642,7 +650,7 @@ public class MainActivity extends SMTHBaseActivity
     mailListFragment.markMailAsReaded(position);
     // MailListFragment
     Intent intent = new Intent(this, MailContentActivity.class);
-    intent.putExtra(SMTHApplication.MAIL_OBJECT, (Parcelable) item);
+    intent.putExtra(SMTHApplication.MAIL_OBJECT, item);
     startActivity(intent);
   }
 
@@ -684,21 +692,28 @@ public class MainActivity extends SMTHBaseActivity
             helper.wService.manageFavoriteBoard(favoriteBoardFragment.getCurrentFavoritePath(), "db", board.getBoardEngName())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<AjaxResponse>() {
-                  @Override public void onCompleted() {
+                .subscribe(new Observer<AjaxResponse>() {
+                  @Override public void onSubscribe(@NonNull Disposable disposable) {
+
                   }
 
-                  @Override public void onError(Throwable e) {
-                    Toast.makeText(MainActivity.this, "删除收藏版面失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
-                  }
-
-                  @Override public void onNext(AjaxResponse ajaxResponse) {
+                  @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
                     Log.d(TAG, "onNext: " + ajaxResponse.toString());
                     if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
                       Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg() + "\n" + "请刷新收藏夹！", Toast.LENGTH_SHORT).show();
                     } else {
                       Toast.makeText(MainActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
                     }
+
+                  }
+
+                  @Override public void onError(@NonNull Throwable e) {
+                    Toast.makeText(MainActivity.this, "删除收藏版面失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
+
+                  }
+
+                  @Override public void onComplete() {
+
                   }
                 });
           }

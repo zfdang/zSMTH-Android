@@ -18,9 +18,11 @@ import android.widget.Toast;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * A login screen that offers login to newsmth forum
@@ -122,21 +124,16 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
     helper.wService.login(username, password, cookieDays)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Subscriber<AjaxResponse>() {
-          @Override public void onCompleted() {
+        .subscribe(new Observer<AjaxResponse>() {
+          @Override public void onSubscribe(@NonNull Disposable disposable) {
+
           }
 
-          @Override public void onError(Throwable e) {
+          @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
             dismissProgress();
-            Toast.makeText(SMTHApplication.getAppContext(), "登录失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
-          }
-
-          @Override public void onNext(AjaxResponse ajaxResponse) {
-            dismissProgress();
-
-            //                        {"ajax_st":0,"ajax_code":"0101","ajax_msg":"您的用户名并不存在，或者您的密码错误"}
-            //                        {"ajax_st":0,"ajax_code":"0105","ajax_msg":"请勿频繁登录"}
-            //                        {"ajax_st":1,"ajax_code":"0005","ajax_msg":"操作成功"}
+            // {"ajax_st":0,"ajax_code":"0101","ajax_msg":"您的用户名并不存在，或者您的密码错误"}
+            // {"ajax_st":0,"ajax_code":"0105","ajax_msg":"请勿频繁登录"}
+            // {"ajax_st":1,"ajax_code":"0005","ajax_msg":"操作成功"}
             switch (ajaxResponse.getAjax_st()) {
               case AjaxResponse.AJAX_RESULT_OK:
                 Toast.makeText(getApplicationContext(), "登录成功!", Toast.LENGTH_SHORT).show();
@@ -154,6 +151,15 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
                 Toast.makeText(SMTHApplication.getAppContext(), ajaxResponse.toString(), Toast.LENGTH_LONG).show();
                 break;
             }
+          }
+
+          @Override public void onError(@NonNull Throwable e) {
+            dismissProgress();
+            Toast.makeText(SMTHApplication.getAppContext(), "登录失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
+          }
+
+          @Override public void onComplete() {
+
           }
         });
   }

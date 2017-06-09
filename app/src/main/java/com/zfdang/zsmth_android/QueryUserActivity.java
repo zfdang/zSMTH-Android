@@ -18,9 +18,11 @@ import com.zfdang.zsmth_android.models.ComposePostContext;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.newsmth.UserInfo;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.Observer;
 
 public class QueryUserActivity extends SMTHBaseActivity {
   private static final String TAG = "QueryUserActivity";
@@ -52,7 +54,6 @@ public class QueryUserActivity extends SMTHBaseActivity {
     setSupportActionBar(toolbar);
 
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    ;
 
     assignViews();
 
@@ -129,17 +130,23 @@ public class QueryUserActivity extends SMTHBaseActivity {
     helper.wService.addFriend(userid)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Subscriber<AjaxResponse>() {
-          @Override public void onCompleted() {
+        .subscribe(new Observer<AjaxResponse>() {
+          @Override public void onSubscribe(@NonNull Disposable disposable) {
 
           }
 
-          @Override public void onError(Throwable e) {
-            Toast.makeText(QueryUserActivity.this, "增加好友失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
-          }
-
-          @Override public void onNext(AjaxResponse ajaxResponse) {
+          @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
             Toast.makeText(QueryUserActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_LONG).show();
+
+          }
+
+          @Override public void onError(@NonNull Throwable e) {
+            Toast.makeText(QueryUserActivity.this, "增加好友失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
+
+          }
+
+          @Override public void onComplete() {
+
           }
         });
   }
@@ -151,17 +158,12 @@ public class QueryUserActivity extends SMTHBaseActivity {
     helper.wService.queryUserInformation(mUsername)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Subscriber<UserInfo>() {
-          @Override public void onCompleted() {
+        .subscribe(new Observer<UserInfo>() {
+          @Override public void onSubscribe(@NonNull Disposable disposable) {
 
           }
 
-          @Override public void onError(Throwable e) {
-            dismissProgress();
-            Toast.makeText(QueryUserActivity.this, "加载用户信息失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
-          }
-
-          @Override public void onNext(UserInfo user) {
+          @Override public void onNext(@NonNull UserInfo user) {
             Log.d(TAG, "onNext: " + user.toString());
 
             mUserId.setText(user.getId());
@@ -185,6 +187,17 @@ public class QueryUserActivity extends SMTHBaseActivity {
               mImageView.setImageFromStringURL(user.getFace_url());
             }
             dismissProgress();
+
+          }
+
+          @Override public void onError(@NonNull Throwable e) {
+            dismissProgress();
+            Toast.makeText(QueryUserActivity.this, "加载用户信息失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
+
+          }
+
+          @Override public void onComplete() {
+
           }
         });
   }

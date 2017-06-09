@@ -16,7 +16,7 @@ import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
 public class RecyclerViewGestureListener extends GestureDetector.SimpleOnGestureListener {
 
   public interface OnItemLongClickListener {
-    public boolean onItemLongClicked(int position, View v);
+    boolean onItemLongClicked(int position, View v);
   }
 
   private OnItemLongClickListener mListener;

@@ -50,14 +50,16 @@ import com.zfdang.zsmth_android.models.PostListContent;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import java.util.HashMap;
 import java.util.List;
 import okhttp3.ResponseBody;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * An activity representing a single Topic detail screen. This
@@ -218,12 +220,12 @@ public class PostListActivity extends SMTHBaseActivity
   public void loadPostListByPages() {
     final SMTHHelper helper = SMTHHelper.getInstance();
     helper.wService.getPostListByPage(mTopic.getTopicURL(), mTopic.getTopicID(), mCurrentPageNo, mFilterUser)
-        .flatMap(new Func1<ResponseBody, Observable<Post>>() {
-          @Override public Observable<Post> call(ResponseBody responseBody) {
+        .flatMap(new Function<ResponseBody, Observable<Post>>() {
+          @Override public Observable<Post> apply(@NonNull ResponseBody responseBody) throws Exception {
             try {
               String response = responseBody.string();
               List<Post> posts = SMTHHelper.ParsePostListFromWWW(response, mTopic);
-              return Observable.from(posts);
+              return Observable.fromIterable(posts);
             } catch (Exception e) {
               Log.e(TAG, Log.getStackTraceString(e));
             }
@@ -232,24 +234,28 @@ public class PostListActivity extends SMTHBaseActivity
         })
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Subscriber<Post>() {
-          @Override public void onCompleted() {
+        .subscribe(new Observer<Post>() {
+          @Override public void onSubscribe(@NonNull Disposable disposable) {
+
+          }
+
+          @Override public void onNext(@NonNull Post post) {
+            // Log.d(TAG, post.toString());
+            PostListContent.addItem(post);
+            mRecyclerView.getAdapter().notifyItemInserted(PostListContent.POSTS.size() - 1);
+          }
+
+          @Override public void onError(@NonNull Throwable e) {
+            clearLoadingHints();
+            Toast.makeText(SMTHApplication.getAppContext(), "加载失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
+          }
+
+          @Override public void onComplete() {
             String title = String.format("[%d/%d] %s", mCurrentPageNo, mTopic.getTotalPageNo(), mTopic.getTitle());
             mTitle.setText(title);
             mPageNo.setText(String.format("%d", mCurrentPageNo));
 
             clearLoadingHints();
-          }
-
-          @Override public void onError(Throwable e) {
-            clearLoadingHints();
-            Toast.makeText(SMTHApplication.getAppContext(), "加载失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
-          }
-
-          @Override public void onNext(Post post) {
-            //                        Log.d(TAG, post.toString());
-            PostListContent.addItem(post);
-            mRecyclerView.getAdapter().notifyItemInserted(PostListContent.POSTS.size() - 1);
           }
         });
   }
@@ -567,8 +573,8 @@ public class PostListActivity extends SMTHBaseActivity
   public void deletePost(Post post) {
     SMTHHelper helper = SMTHHelper.getInstance();
 
-    helper.wService.deletePost(mTopic.getBoardEngName(), post.getPostID()).map(new Func1<ResponseBody, String>() {
-      @Override public String call(ResponseBody responseBody) {
+    helper.wService.deletePost(mTopic.getBoardEngName(), post.getPostID()).map(new Function<ResponseBody, String>() {
+      @Override public String apply(@NonNull ResponseBody responseBody) throws Exception {
         try {
           String response = SMTHHelper.DecodeResponseFromWWW(responseBody.bytes());
           return SMTHHelper.parseDeleteResponse(response);
@@ -577,17 +583,22 @@ public class PostListActivity extends SMTHBaseActivity
         }
         return null;
       }
-    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<String>() {
-      @Override public void onCompleted() {
+    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
+      @Override public void onSubscribe(@NonNull Disposable disposable) {
 
       }
 
-      @Override public void onError(Throwable e) {
+      @Override public void onNext(@NonNull String s) {
+          Toast.makeText(PostListActivity.this, s, Toast.LENGTH_LONG).show();
+      }
+
+      @Override public void onError(@NonNull Throwable e) {
         Toast.makeText(PostListActivity.this, "删除帖子失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
+
       }
 
-      @Override public void onNext(String result) {
-        Toast.makeText(PostListActivity.this, result, Toast.LENGTH_LONG).show();
+      @Override public void onComplete() {
+
       }
     });
   }
@@ -676,21 +687,26 @@ public class PostListActivity extends SMTHBaseActivity
     helper.wService.addLike(mTopic.getBoardEngName(), mTopic.getTopicID(), score, msg, "")
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Subscriber<AjaxResponse>() {
-          @Override public void onCompleted() {
+        .subscribe(new Observer<AjaxResponse>() {
+          @Override public void onSubscribe(@NonNull Disposable disposable) {
+
           }
 
-          @Override public void onError(Throwable e) {
-            Toast.makeText(PostListActivity.this, "增加Like失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
-          }
-
-          @Override public void onNext(AjaxResponse ajaxResponse) {
-            //                        Log.d(TAG, "onNext: " + ajaxResponse.toString());
+          @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
+            // Log.d(TAG, "onNext: " + ajaxResponse.toString());
             if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
               Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg() + "\n请刷新查看结果！", Toast.LENGTH_SHORT).show();
             } else {
               Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
             }
+          }
+
+          @Override public void onError(@NonNull Throwable e) {
+            Toast.makeText(PostListActivity.this, "增加Like失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
+          }
+
+          @Override public void onComplete() {
+
           }
         });
   }
@@ -711,29 +727,34 @@ public class PostListActivity extends SMTHBaseActivity
     helper.wService.forwardPost(mTopic.getBoardEngName(), post.getPostID(), target, strThreads, strNoref, strNoatt, strNoansi)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Subscriber<AjaxResponse>() {
-          @Override public void onCompleted() {
+        .subscribe(new Observer<AjaxResponse>() {
+          @Override public void onSubscribe(@NonNull Disposable disposable) {
+
           }
 
-          @Override public void onError(Throwable e) {
-            Toast.makeText(PostListActivity.this, "转寄失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
-          }
-
-          @Override public void onNext(AjaxResponse ajaxResponse) {
-            //                        Log.d(TAG, "onNext: " + ajaxResponse.toString());
+          @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
+            // Log.d(TAG, "onNext: " + ajaxResponse.toString());
             if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
               Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
             } else {
               Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
             }
           }
+
+          @Override public void onError(@NonNull Throwable e) {
+            Toast.makeText(PostListActivity.this, "转寄失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
+          }
+
+          @Override public void onComplete() {
+
+          }
         });
   }
 
   @Override public void OnRePostAction(Post post, String target, String outgo) {
     SMTHHelper helper = SMTHHelper.getInstance();
-    helper.wService.repostPost(mTopic.getBoardEngName(), post.getPostID(), target, outgo).map(new Func1<ResponseBody, String>() {
-      @Override public String call(ResponseBody responseBody) {
+    helper.wService.repostPost(mTopic.getBoardEngName(), post.getPostID(), target, outgo).map(new Function<ResponseBody, String>() {
+      @Override public String apply(@NonNull ResponseBody responseBody) throws Exception {
         try {
           String response = SMTHHelper.DecodeResponseFromWWW(responseBody.bytes());
           return SMTHHelper.parseRepostResponse(response);
@@ -742,17 +763,21 @@ public class PostListActivity extends SMTHBaseActivity
         }
         return null;
       }
-    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<String>() {
-      @Override public void onCompleted() {
+    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
+      @Override public void onSubscribe(@NonNull Disposable disposable) {
 
       }
 
-      @Override public void onError(Throwable e) {
+      @Override public void onNext(@NonNull String s) {
+        Toast.makeText(SMTHApplication.getAppContext(), s, Toast.LENGTH_SHORT).show();
+      }
+
+      @Override public void onError(@NonNull Throwable e) {
         Toast.makeText(SMTHApplication.getAppContext(), e.toString(), Toast.LENGTH_LONG).show();
       }
 
-      @Override public void onNext(String s) {
-        Toast.makeText(SMTHApplication.getAppContext(), s, Toast.LENGTH_SHORT).show();
+      @Override public void onComplete() {
+
       }
     });
   }

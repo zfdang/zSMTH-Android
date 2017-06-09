@@ -26,11 +26,13 @@ import com.zfdang.zsmth_android.models.Post;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import java.util.List;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 public class MailContentActivity extends AppCompatActivity {
 
@@ -88,21 +90,17 @@ public class MailContentActivity extends AppCompatActivity {
 
   public void loadMailContent() {
     SMTHHelper helper = SMTHHelper.getInstance();
-    helper.wService.getMailContent(mMail.url).map(new Func1<AjaxResponse, Post>() {
-      @Override public Post call(AjaxResponse ajaxResponse) {
+    helper.wService.getMailContent(mMail.url).map(new Function<AjaxResponse, Post>() {
+      @Override public Post apply(@NonNull AjaxResponse ajaxResponse) throws Exception {
         mPostGroupId = ajaxResponse.getGroup_id();
         return SMTHHelper.ParseMailContentFromWWW(ajaxResponse.getContent());
       }
-    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Post>() {
-      @Override public void onCompleted() {
+    }).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Post>() {
+      @Override public void onSubscribe(@NonNull Disposable disposable) {
 
       }
 
-      @Override public void onError(Throwable e) {
-        mPostContent.setText("读取内容失败: \n" + e.toString());
-      }
-
-      @Override public void onNext(Post post) {
+      @Override public void onNext(@NonNull Post post) {
         mPost = post;
 
         // copy some attr from mail to post
@@ -114,6 +112,14 @@ public class MailContentActivity extends AppCompatActivity {
         mPostPublishDate.setText(mPost.getFormatedDate());
         mMailTitle.setText(mPost.getTitle());
         inflateContentViewGroup(mViewGroup, mPostContent, mPost);
+      }
+
+      @Override public void onError(@NonNull Throwable e) {
+        mPostContent.setText("读取内容失败: \n" + e.toString());
+      }
+
+      @Override public void onComplete() {
+
       }
     });
   }

@@ -75,7 +75,7 @@ public class PopupSearchWindow extends PopupWindow {
     this.setFocusable(true);
   }
 
-  static public interface SearchInterface {
-    public void OnSearchAction(String keyword, String author, boolean elite, boolean attachment);
+  public interface SearchInterface {
+    void OnSearchAction(String keyword, String author, boolean elite, boolean attachment);
   }
 }

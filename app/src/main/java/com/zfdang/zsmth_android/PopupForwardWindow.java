@@ -42,7 +42,7 @@ public class PopupForwardWindow extends PopupWindow {
   // http://stackoverflow.com/questions/23464232/how-would-you-create-a-popover-view-in-android-like-facebook-comments
   public void initPopupWindow(final Activity context, Post post) {
     mContext = context;
-    this.post = post;
+    PopupForwardWindow.post = post;
     if (context instanceof OnForwardInterface) {
       mListener = (OnForwardInterface) context;
     } else {
@@ -182,9 +182,9 @@ public class PopupForwardWindow extends PopupWindow {
   //        }
   //    }
 
-  static public interface OnForwardInterface {
-    public void OnForwardAction(Post post, String target, boolean threads, boolean noref, boolean noatt);
+  public interface OnForwardInterface {
+    void OnForwardAction(Post post, String target, boolean threads, boolean noref, boolean noatt);
 
-    public void OnRePostAction(Post post, String target, String outgo);
+    void OnRePostAction(Post post, String target, String outgo);
   }
 }

@@ -26,15 +26,16 @@ import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.models.ComposePostContext;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
-import java.util.List;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 public class ComposePostActivity extends SMTHBaseActivity {
 
@@ -104,7 +105,6 @@ public class ComposePostActivity extends SMTHBaseActivity {
     ActionBar bar = getSupportActionBar();
     if (bar != null) {
       bar.setDisplayHomeAsUpEnabled(true);
-      ;
     }
 
     mPhotos = new ArrayList<>();
@@ -307,19 +307,19 @@ public class ComposePostActivity extends SMTHBaseActivity {
 
     // update attachments
     final boolean bCompress = this.mCompress.isChecked();
-    Observable<AjaxResponse> resp1 = Observable.from(mPhotos).map(new Func1<String, BytesContainer>() {
-      @Override public BytesContainer call(String filename) {
+    Observable<AjaxResponse> resp1 = Observable.fromIterable(mPhotos).map(new Function<String, BytesContainer>() {
+      @Override public BytesContainer apply(@NonNull String filename) throws Exception {
         byte[] bytes = SMTHHelper.getBitmapBytesWithResize(filename, bCompress);
         return new BytesContainer(filename, bytes);
       }
-    }).map(new Func1<BytesContainer, AjaxResponse>() {
-      @Override public AjaxResponse call(BytesContainer container) {
+    }).map(new Function<BytesContainer, AjaxResponse>() {
+      @Override public AjaxResponse apply(@NonNull BytesContainer container) throws Exception {
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpeg"), container.bytes);
-        List<AjaxResponse> resps =
+        AjaxResponse resp =
             helper.wService.uploadAttachment(mPostContext.getBoardEngName(), StringUtils.getLastStringSegment(container.filename),
-                requestBody).toList().toBlocking().single();
-        if (resps != null && resps.size() == 1) {
-          return resps.get(0);
+                requestBody).blockingFirst();
+        if (resp != null) {
+          return resp;
         } else {
           Log.d(TAG, "call: " + "failed to upload attachment " + container.filename);
           return null;
@@ -351,8 +351,29 @@ public class ComposePostActivity extends SMTHBaseActivity {
     Observable.concat(resp1, resp2)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Subscriber<AjaxResponse>() {
-          @Override public void onCompleted() {
+        .subscribe(new Observer<AjaxResponse>() {
+          @Override public void onSubscribe(@NonNull Disposable disposable) {
+
+          }
+
+          @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
+            Log.d(TAG, "onNext: " + ajaxResponse.toString());
+            if (ajaxResponse.getAjax_st() != AjaxResponse.AJAX_RESULT_OK) {
+              postPublishResult = AjaxResponse.AJAX_RESULT_FAILED;
+              postPublishMessage += ajaxResponse.getAjax_msg() + "\n";
+            }
+            lastResponse = ajaxResponse;
+            ComposePostActivity.currentStep++;
+            showProgress(String.format(progressHint, ComposePostActivity.currentStep, ComposePostActivity.totalSteps));
+          }
+
+          @Override public void onError(@NonNull Throwable e) {
+            dismissProgress();
+            Toast.makeText(SMTHApplication.getAppContext(), "发生错误:\n" + e.toString(), Toast.LENGTH_LONG).show();
+
+          }
+
+          @Override public void onComplete() {
             dismissProgress();
 
             String message = null;
@@ -377,22 +398,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
                 ComposePostActivity.this.finish();
               }
             }
-          }
 
-          @Override public void onError(Throwable e) {
-            dismissProgress();
-            Toast.makeText(SMTHApplication.getAppContext(), "发生错误:\n" + e.toString(), Toast.LENGTH_LONG).show();
-          }
-
-          @Override public void onNext(AjaxResponse ajaxResponse) {
-            Log.d(TAG, "onNext: " + ajaxResponse.toString());
-            if (ajaxResponse.getAjax_st() != AjaxResponse.AJAX_RESULT_OK) {
-              postPublishResult = AjaxResponse.AJAX_RESULT_FAILED;
-              postPublishMessage += ajaxResponse.getAjax_msg() + "\n";
-            }
-            lastResponse = ajaxResponse;
-            ComposePostActivity.currentStep++;
-            showProgress(String.format(progressHint, ComposePostActivity.currentStep, ComposePostActivity.totalSteps));
           }
         });
   }

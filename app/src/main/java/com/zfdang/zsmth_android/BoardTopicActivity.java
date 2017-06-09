@@ -25,13 +25,16 @@ import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.models.TopicListContent;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+import io.reactivex.ObservableSource;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
 import java.util.List;
 import okhttp3.ResponseBody;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * An activity representing a list of Topics. This activity
@@ -173,21 +176,28 @@ public class BoardTopicActivity extends SMTHBaseActivity
       helper.wService.manageFavoriteBoard("0", "ab", this.mBoard.getBoardEngName())
           .subscribeOn(Schedulers.io())
           .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(new Subscriber<AjaxResponse>() {
-            @Override public void onCompleted() {
+          .subscribe(new Observer<AjaxResponse>() {
+            @Override public void onSubscribe(@NonNull Disposable disposable) {
+
             }
 
-            @Override public void onError(Throwable e) {
-              Toast.makeText(BoardTopicActivity.this, "收藏版面失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
-            }
-
-            @Override public void onNext(AjaxResponse ajaxResponse) {
+            @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
               Log.d(TAG, "onNext: " + ajaxResponse.toString());
               if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
                 Toast.makeText(BoardTopicActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
               } else {
                 Toast.makeText(BoardTopicActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
               }
+
+            }
+
+            @Override public void onError(@NonNull Throwable e) {
+              Toast.makeText(BoardTopicActivity.this, "收藏版面失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override public void onComplete() {
+
             }
           });
     }
@@ -254,12 +264,12 @@ public class BoardTopicActivity extends SMTHBaseActivity
     final SMTHHelper helper = SMTHHelper.getInstance();
 
     helper.wService.getBoardTopicsByPage(mBoard.getBoardEngName(), Integer.toString(mCurrentPageNo))
-        .flatMap(new Func1<ResponseBody, Observable<Topic>>() {
-          @Override public Observable<Topic> call(ResponseBody responseBody) {
+        .flatMap(new Function<ResponseBody, ObservableSource<Topic>>() {
+          @Override public ObservableSource<Topic> apply(@NonNull ResponseBody responseBody) throws Exception {
             try {
               String response = responseBody.string();
               List<Topic> topics = SMTHHelper.ParseBoardTopicsFromWWW(response);
-              return Observable.from(topics);
+              return Observable.fromIterable(topics);
             } catch (Exception e) {
               Log.e(TAG, "call: " + Log.getStackTraceString(e));
               return null;
@@ -268,21 +278,23 @@ public class BoardTopicActivity extends SMTHBaseActivity
         })
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Subscriber<Topic>() {
-          @Override public void onStart() {
-            super.onStart();
-
+        .subscribe(new Observer<Topic>() {
+          @Override public void onSubscribe(@NonNull Disposable disposable) {
             Topic topic = new Topic(String.format("第%d页:", mCurrentPageNo));
             topic.isCategory = true;
             TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
             mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
           }
 
-          @Override public void onCompleted() {
-            clearLoadingHints();
+          @Override public void onNext(@NonNull Topic topic) {
+            // Log.d(TAG, topic.toString());
+            if (!topic.isSticky || mSetting.isShowSticky()) {
+              TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
+              mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+            }
           }
 
-          @Override public void onError(Throwable e) {
+          @Override public void onError(@NonNull Throwable e) {
             clearLoadingHints();
 
             Toast.makeText(SMTHApplication.getAppContext(), String.format("获取第%d页的帖子失败!\n", mCurrentPageNo) + e.toString(),
@@ -290,12 +302,8 @@ public class BoardTopicActivity extends SMTHBaseActivity
             mCurrentPageNo -= 1;
           }
 
-          @Override public void onNext(Topic topic) {
-            // Log.d(TAG, topic.toString());
-            if (!topic.isSticky || mSetting.isShowSticky()) {
-              TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
-              mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
-            }
+          @Override public void onComplete() {
+            clearLoadingHints();
           }
         });
   }
@@ -346,32 +354,38 @@ public class BoardTopicActivity extends SMTHBaseActivity
     helper.wService.searchTopicInBoard(keyword, author, eliteStr, attachmentStr, this.mBoard.getBoardEngName())
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .flatMap(new Func1<ResponseBody, Observable<Topic>>() {
-          @Override public Observable<Topic> call(ResponseBody responseBody) {
+        .flatMap(new Function<ResponseBody, ObservableSource<Topic>>() {
+          @Override public ObservableSource<Topic> apply(@NonNull ResponseBody responseBody) throws Exception {
             try {
               String response = responseBody.string();
               List<Topic> topics = SMTHHelper.ParseSearchResultFromWWW(response);
               Topic topic = new Topic("搜索模式 - 下拉或按返回键退出搜索模式");
               topics.add(0, topic);
-              return Observable.from(topics);
+              return Observable.fromIterable(topics);
             } catch (Exception e) {
               Log.d(TAG, Log.getStackTraceString(e));
               return null;
             }
           }
         })
-        .subscribe(new Subscriber<Topic>() {
-          @Override public void onCompleted() {
-            dismissProgress();
+        .subscribe(new Observer<Topic>() {
+          @Override public void onSubscribe(@NonNull Disposable disposable) {
+
           }
 
-          @Override public void onError(Throwable e) {
-            Toast.makeText(SMTHApplication.getAppContext(), "加载搜索结果失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
-          }
-
-          @Override public void onNext(Topic topic) {
+          @Override public void onNext(@NonNull Topic topic) {
             TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
             mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+
+          }
+
+          @Override public void onError(@NonNull Throwable e) {
+            Toast.makeText(SMTHApplication.getAppContext(), "加载搜索结果失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
+
+          }
+
+          @Override public void onComplete() {
+            dismissProgress();
           }
         });
   }

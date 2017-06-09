@@ -16,13 +16,19 @@ import com.zfdang.zsmth_android.listeners.OnBoardFragmentInteractionListener;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.BoardListContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
 import java.util.ArrayList;
 import java.util.List;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+import org.reactivestreams.Subscriber;
 
 /**
  * A fragment representing a list of Items.
@@ -144,13 +150,13 @@ public class FavoriteBoardFragment extends Fragment {
     SMTHHelper helper = SMTHHelper.getInstance();
 
     // all boards loaded in cached file
-    final Observable<List<Board>> cache = Observable.create(new Observable.OnSubscribe<List<Board>>() {
-      @Override public void call(Subscriber<? super List<Board>> subscriber) {
+    final Observable<List<Board>> cache = Observable.create(new ObservableOnSubscribe<List<Board>>() {
+      @Override public void subscribe(@NonNull ObservableEmitter<List<Board>> observableEmitter) throws Exception {
         List<Board> boards = SMTHHelper.LoadBoardListFromCache(SMTHHelper.BOARD_TYPE_FAVORITE, path);
         if (boards != null && boards.size() > 0) {
-          subscriber.onNext(boards);
+          observableEmitter.onNext(boards);
         } else {
-          subscriber.onCompleted();
+          observableEmitter.onComplete();
         }
       }
     });
@@ -161,55 +167,55 @@ public class FavoriteBoardFragment extends Fragment {
     if (pathName.endsWith("[二级目录]")) {
       // if user create cusomized folder like xxxx.[二级目录], this implementation will fail
       // but let's assume that noboday will do this
-      network = Observable.create(new Observable.OnSubscribe<List<Board>>() {
-        @Override public void call(Subscriber<? super List<Board>> subscriber) {
+      network = Observable.create(new ObservableOnSubscribe<List<Board>>() {
+        @Override public void subscribe(@NonNull ObservableEmitter<List<Board>> observableEmitter) throws Exception {
           List<Board> boards = SMTHHelper.LoadFavoriteBoardsInGroupFromWWW(path);
           if (boards != null && boards.size() > 0) {
-            subscriber.onNext(boards);
+            observableEmitter.onNext(boards);
           } else {
-            subscriber.onCompleted();
+            observableEmitter.onComplete();
           }
         }
       });
     } else {
-      network = Observable.create(new Observable.OnSubscribe<List<Board>>() {
-        @Override public void call(Subscriber<? super List<Board>> subscriber) {
+      network = Observable.create(new ObservableOnSubscribe<List<Board>>() {
+        @Override public void subscribe(@NonNull ObservableEmitter<List<Board>> observableEmitter) throws Exception {
           List<Board> boards = SMTHHelper.LoadFavoriteBoardsByFolderFromWWW(path);
           if (boards != null && boards.size() > 0) {
-            subscriber.onNext(boards);
+            observableEmitter.onNext(boards);
           } else {
-            subscriber.onCompleted();
+            observableEmitter.onComplete();
           }
         }
       });
     }
 
-    Observable.concat(cache, network).first().flatMap(new Func1<List<Board>, Observable<Board>>() {
-      @Override public Observable<Board> call(List<Board> boards) {
-        return Observable.from(boards);
+    List<Board> boards = new ArrayList<>();
+    Observable.concat(cache, network).first(boards).toObservable().flatMap(new Function<List<Board>, ObservableSource<Board>>() {
+      @Override public ObservableSource<Board> apply(@NonNull List<Board> boards) throws Exception {
+        return Observable.fromIterable(boards);
       }
-    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Board>() {
-      @Override public void onStart() {
-
-        super.onStart();
+    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Board>() {
+      @Override public void onSubscribe(@NonNull Disposable disposable) {
         BoardListContent.clearFavorites();
         mRecyclerView.getAdapter().notifyDataSetChanged();
       }
 
-      @Override public void onCompleted() {
-        clearLoadingHints();
-        updateFavoriteTitle();
-      }
-
-      @Override public void onError(Throwable e) {
-        clearLoadingHints();
-        Toast.makeText(SMTHApplication.getAppContext(), "加载收藏夹失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
-      }
-
-      @Override public void onNext(Board board) {
+      @Override public void onNext(@NonNull Board board) {
         BoardListContent.addFavoriteItem(board);
         mRecyclerView.getAdapter().notifyItemInserted(BoardListContent.FAVORITE_BOARDS.size());
-        //                        Log.d(TAG, board.toString());
+        // Log.d(TAG, board.toString());
+      }
+
+      @Override public void onError(@NonNull Throwable e) {
+        clearLoadingHints();
+        Toast.makeText(SMTHApplication.getAppContext(), "加载收藏夹失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
+
+      }
+
+      @Override public void onComplete() {
+        clearLoadingHints();
+        updateFavoriteTitle();
       }
     });
   }

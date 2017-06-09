@@ -13,14 +13,17 @@ import android.text.TextUtils;
 import android.util.Log;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.Settings;
+import com.zfdang.zsmth_android.helpers.MakeList;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.newsmth.UserInfo;
 import com.zfdang.zsmth_android.newsmth.UserStatus;
+import io.reactivex.Observer;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import java.util.List;
-import rx.Subscriber;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * check login status, if not logined, login automatically if possible
@@ -102,20 +105,20 @@ public class MaintainUserStatusService extends IntentService {
     // 4. if user status is a different user, send notification to receiver to update navigationView
 
     final SMTHHelper helper = SMTHHelper.getInstance();
-    //        Log.d(TAG, "1.0 get current UserStatus from remote");
-    helper.wService.queryActiveUserStatus().map(new Func1<UserStatus, UserStatus>() {
-      @Override public UserStatus call(UserStatus userStatus) {
-        //                        Log.d(TAG, "2.0 " + userStatus.toString());
+    // Log.d(TAG, "1.0 get current UserStatus from remote");
+    helper.wService.queryActiveUserStatus().map(new Function<UserStatus, UserStatus>() {
+      @Override public UserStatus apply(@NonNull UserStatus userStatus) throws Exception {
+        // Log.d(TAG, "2.0 " + userStatus.toString());
 
         // check it's logined user, or guest
         if (userStatus != null && userStatus.getId() != null && !userStatus.getId().equals("guest")) {
           // logined user, just return the status for next step
-          //                            Log.d(TAG, "call: 2.1 valid logined user: " + userStatus.getId());
+          // Log.d(TAG, "call: 2.1 valid logined user: " + userStatus.getId());
           return userStatus;
         }
 
         // login first
-        //                        Log.d(TAG, "call: " + "2.2 user not logined, try to login now...");
+        // Log.d(TAG, "call: " + "2.2 user not logined, try to login now...");
         final Settings setting = Settings.getInstance();
         String username = setting.getUsername();
         String password = setting.getPassword();
@@ -123,10 +126,10 @@ public class MaintainUserStatusService extends IntentService {
         boolean bLastSuccess = setting.isLastLoginSuccess();
         boolean bUserOnline = setting.isUserOnline();
         boolean bLoginSuccess = false;
-        //                        Log.d(TAG, "call: 2.2.1 " + String.format("Autologin: %b, LastSuccess: %b, Online: %b", bAutoLogin, bLastSuccess, bUserOnline));
+        // Log.d(TAG, "call: 2.2.1 " + String.format("Autologin: %b, LastSuccess: %b, Online: %b", bAutoLogin, bLastSuccess, bUserOnline));
         if (bAutoLogin && bLastSuccess && bUserOnline) {
-          List<Integer> results = helper.wService.login(username, password, "7").map(new Func1<AjaxResponse, Integer>() {
-            @Override public Integer call(AjaxResponse response) { // 参数类型 String
+          Iterable<Integer> its = helper.wService.login(username, password, "7").map(new Function<AjaxResponse, Integer>() {
+            @Override public Integer apply(@NonNull AjaxResponse response) throws Exception {
               if (response.getAjax_st() == 1) {
                 // {"ajax_st":1,"ajax_code":"0005","ajax_msg":"操作成功"}
                 return AjaxResponse.AJAX_RESULT_OK;
@@ -136,7 +139,9 @@ public class MaintainUserStatusService extends IntentService {
               }
               return AjaxResponse.AJAX_RESULT_UNKNOWN;
             }
-          }).toList().toBlocking().single();
+          }).blockingIterable();
+
+          List<Integer> results = MakeList.makeList(its);
 
           //                            Log.d(TAG, "call: 2.2.2 " + results.size());
           if (results != null && results.size() == 1) {
@@ -155,92 +160,89 @@ public class MaintainUserStatusService extends IntentService {
 
         // try to find new UserStatus only when login success
         if (bLoginSuccess) {
-          //                            Log.d(TAG, "call: " + "2.2.5.1 try to get userstatus again after login action");
-          List<UserStatus> stats = helper.queryActiveUserStatus().toList().toBlocking().single();
-          //                            Log.d(TAG, "call: " + stats.size());
-          if (stats != null && stats.size() == 1) {
-            //                                Log.d(TAG, "call: " + "2.2.5.2 update userStatus");
-            return stats.get(0);
-          }
-          return null;
+          // Log.d(TAG, "call: " + "2.2.5.1 try to get userstatus again after login action");
+          UserStatus stat = SMTHHelper.queryActiveUserStatus().blockingFirst();
+          // Log.d(TAG, "call: " + stats.size());
+          return stat;
         } else {
           return userStatus;
         }
       }
-    }).map(new Func1<UserStatus, UserStatus>() {
-      // try to find user's real faceurl
-      @Override public UserStatus call(UserStatus userStatus) {
-        //                             Log.d(TAG, "3.0 call: " + userStatus.toString());
-
+    }).map(new Function<UserStatus, UserStatus>() {
+      @Override public UserStatus apply(@NonNull UserStatus userStatus) throws Exception {
+        // Log.d(TAG, "3.0 call: " + userStatus.toString());
         String userid = userStatus.getId();
         if (userid != null && !TextUtils.equals(userid, "guest")) {
           // valid logined user
           if (SMTHApplication.activeUser != null && TextUtils.equals(userid, SMTHApplication.activeUser.getId())) {
             // current user is already cached in SMTHApplication
-            //                                     Log.d(TAG, "call: " + "3.1 New user is the same with cached user, copy faceURL from local");
+            // Log.d(TAG, "call: " + "3.1 New user is the same with cached user, copy faceURL from local");
             userStatus.setFace_url(SMTHApplication.activeUser.getFace_url());
           } else {
             // get correct faceURL
-            //                                     Log.d(TAG, "call: " + "3.2 New user is different with cached user, get real face URL from remote");
-            List<UserInfo> users = helper.wService.queryUserInformation(userid).toList().toBlocking().single();
-            if (users != null && users.size() == 1) {
-              UserInfo user = users.get(0);
-              userStatus.setFace_url(user.getFace_url());
+            // Log.d(TAG, "call: " + "3.2 New user is different with cached user, get real face URL from remote");
+            UserInfo userInfo = helper.wService.queryUserInformation(userid).blockingFirst();
+            if (userInfo != null) {
+              userStatus.setFace_url(userInfo.getFace_url());
             }
           }
         } else {
-          //                                 Log.d(TAG, "call: 3.3 " + "invalid logined user");
+          // Log.d(TAG, "call: 3.3 " + "invalid logined user");
         }
         return userStatus;
       }
-    }).observeOn(Schedulers.io()).subscribeOn(Schedulers.io()).subscribe(new Subscriber<UserStatus>() {
-                                                                           @Override public void onCompleted() {
-                                                                           }
+    }).observeOn(Schedulers.io()).subscribeOn(Schedulers.io()).subscribe(new Observer<UserStatus>() {
+      @Override public void onSubscribe(@NonNull Disposable disposable) {
 
-                                                                           @Override public void onError(Throwable e) {
-                                                                             Log.e(TAG, "onError: " + Log.getStackTraceString(e));
-                                                                           }
+      }
 
-                                                                           @Override public void onNext(UserStatus userStatus) {
-                                                                             //                        Log.d(TAG, "4.0 onNext: " + userStatus.toString());
+      @Override public void onNext(@NonNull UserStatus userStatus) {
+        // Log.d(TAG, "4.0 onNext: " + userStatus.toString());
 
-                                                                             if (userStatus == null) return;
-                                                                             String userid = userStatus.getId();
-                                                                             if (userid == null || TextUtils.equals(userid, "guest")) return;
+        if (userStatus == null) return;
+        String userid = userStatus.getId();
+        if (userid == null || TextUtils.equals(userid, "guest")) return;
 
-                                                                             if (SMTHApplication.activeUser != null && TextUtils.equals(SMTHApplication.activeUser.getId(), userid)) {
-                                                                               // the same user, any new event?
-                                                                               String message = getNotificationMessage(userStatus);
-                                                                               if (message.length() > 0) {
-                                                                                 ResultReceiver receiver = intent.getParcelableExtra(SMTHApplication.USER_SERVICE_RECEIVER);
-                                                                                 if (receiver != null) {
-                                                                                   Bundle bundle = new Bundle();
-                                                                                   bundle.putString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE, message);
-                                                                                   // Here we call send passing a resultCode and the bundle of extras
-                                                                                   receiver.send(Activity.RESULT_OK, bundle);
-                                                                                 }
-                                                                               }
-                                                                             } else if (SMTHApplication.activeUser == null || !TextUtils.equals(SMTHApplication.activeUser.getId(), userid)) {
-                                                                               // different user or new user
-                                                                               //                            Log.d(TAG, "onNext: " + "4.2 different user, send notification: ");
-                                                                               SMTHApplication.activeUser = userStatus;
+        if (SMTHApplication.activeUser != null && TextUtils.equals(SMTHApplication.activeUser.getId(), userid)) {
+          // the same user, any new event?
+          String message = getNotificationMessage(userStatus);
+          if (message.length() > 0) {
+            ResultReceiver receiver = intent.getParcelableExtra(SMTHApplication.USER_SERVICE_RECEIVER);
+            if (receiver != null) {
+              Bundle bundle = new Bundle();
+              bundle.putString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE, message);
+              // Here we call send passing a resultCode and the bundle of extras
+              receiver.send(Activity.RESULT_OK, bundle);
+            }
+          }
+        } else if (SMTHApplication.activeUser == null || !TextUtils.equals(SMTHApplication.activeUser.getId(), userid)) {
+          // different user or new user
+          // Log.d(TAG, "onNext: " + "4.2 different user, send notification: ");
+          SMTHApplication.activeUser = userStatus;
 
-                                                                               // send  notification to receiver
-                                                                               ResultReceiver receiver = intent.getParcelableExtra(SMTHApplication.USER_SERVICE_RECEIVER);
-                                                                               if (receiver != null) {
-                                                                                 Bundle bundle = new Bundle();
-                                                                                 String message = getNotificationMessage(userStatus);
-                                                                                 if (message.length() > 0) {
-                                                                                   bundle.putString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE, message);
-                                                                                 }
-                                                                                 // Here we call send passing a resultCode and the bundle of extras
-                                                                                 receiver.send(Activity.RESULT_OK, bundle);
-                                                                               }
-                                                                             } else {
-                                                                               //                            Log.d(TAG, "onNext: " + "4.3 Same user without new mail, skip notification!");
-                                                                             }
-                                                                           }
-                                                                         } // new Subscriber<UserStatus>()
-    ); // .subscribe
+          // send  notification to receiver
+          ResultReceiver receiver = intent.getParcelableExtra(SMTHApplication.USER_SERVICE_RECEIVER);
+          if (receiver != null) {
+            Bundle bundle = new Bundle();
+            String message = getNotificationMessage(userStatus);
+            if (message.length() > 0) {
+              bundle.putString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE, message);
+            }
+            // Here we call send passing a resultCode and the bundle of extras
+            receiver.send(Activity.RESULT_OK, bundle);
+          }
+        } else {
+          // Log.d(TAG, "onNext: " + "4.3 Same user without new mail, skip notification!");
+        }
+      }
+
+      @Override public void onError(@NonNull Throwable e) {
+        Log.e(TAG, "onError: " + Log.getStackTraceString(e));
+      }
+
+      @Override public void onComplete() {
+
+      }
+    }); // .subscribe
   }
 }

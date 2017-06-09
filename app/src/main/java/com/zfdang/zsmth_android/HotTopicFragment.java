@@ -21,13 +21,16 @@ import com.zfdang.zsmth_android.listeners.OnVolumeUpDownListener;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.models.TopicListContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import java.util.List;
 import okhttp3.ResponseBody;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * A fragment representing a list of Items.
@@ -120,41 +123,41 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
   public void RefreshGuidanceFromWWW() {
     final SMTHHelper helper = SMTHHelper.getInstance();
 
-    helper.wService.getAllHotTopics().flatMap(new Func1<ResponseBody, Observable<Topic>>() {
-      @Override public Observable<Topic> call(ResponseBody responseBody) {
+    helper.wService.getAllHotTopics().flatMap(new Function<ResponseBody, ObservableSource<Topic>>() {
+      @Override public ObservableSource<Topic> apply(@NonNull ResponseBody responseBody) throws Exception {
         try {
           String response = responseBody.string();
           List<Topic> results = SMTHHelper.ParseHotTopicsFromWWW(response);
-          return Observable.from(results);
+          return Observable.fromIterable(results);
         } catch (Exception e) {
           Log.d(TAG, Log.getStackTraceString(e));
         }
         return null;
       }
-    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Topic>() {
-      @Override public void onStart() {
+    }).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Topic>() {
+      @Override public void onSubscribe(@NonNull Disposable disposable) {
         // clearHotTopics current hot topics
         TopicListContent.clearHotTopics();
         mRecyclerView.getAdapter().notifyDataSetChanged();
       }
 
-      @Override public void onCompleted() {
+      @Override public void onNext(@NonNull Topic topic) {
+        //                        Log.d(TAG, topic.toString());
+        TopicListContent.addHotTopic(topic);
+        mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.HOT_TOPICS.size() - 1);
+      }
+
+      @Override public void onError(@NonNull Throwable e) {
+        clearLoadingHints();
+        Toast.makeText(SMTHApplication.getAppContext(), "获取热帖失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
+      }
+
+      @Override public void onComplete() {
         Topic topic = new Topic("-- END --");
         TopicListContent.addHotTopic(topic);
         mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.HOT_TOPICS.size() - 1);
 
         clearLoadingHints();
-      }
-
-      @Override public void onError(Throwable e) {
-        clearLoadingHints();
-        Toast.makeText(SMTHApplication.getAppContext(), "获取热帖失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
-      }
-
-      @Override public void onNext(Topic topic) {
-        //                        Log.d(TAG, topic.toString());
-        TopicListContent.addHotTopic(topic);
-        mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.HOT_TOPICS.size() - 1);
       }
     });
   }

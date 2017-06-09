@@ -20,12 +20,17 @@ import com.zfdang.zsmth_android.listeners.OnVolumeUpDownListener;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.BoardListContent;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+import java.util.ArrayList;
 import java.util.List;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * A fragment representing a list of Items.
@@ -115,52 +120,43 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
     showLoadingHints();
 
     // all boards loaded in cached file
-    final Observable<List<Board>> cache = Observable.create(new Observable.OnSubscribe<List<Board>>() {
-      @Override public void call(Subscriber<? super List<Board>> subscriber) {
+    final Observable<List<Board>> cache = Observable.create(new ObservableOnSubscribe<List<Board>>() {
+      @Override public void subscribe(@NonNull ObservableEmitter<List<Board>> observableEmitter) throws Exception {
         List<Board> boards = SMTHHelper.LoadBoardListFromCache(SMTHHelper.BOARD_TYPE_ALL, null);
         if (boards != null && boards.size() > 0) {
-          subscriber.onNext(boards);
+          observableEmitter.onNext(boards);
         } else {
-          subscriber.onCompleted();
+          observableEmitter.onComplete();
         }
       }
     });
 
     // all boards loaded from network
-    final Observable<List<Board>> network = Observable.create(new Observable.OnSubscribe<List<Board>>() {
-      @Override public void call(Subscriber<? super List<Board>> subscriber) {
+    final Observable<List<Board>> network = Observable.create(new ObservableOnSubscribe<List<Board>>() {
+      @Override public void subscribe(@NonNull ObservableEmitter<List<Board>> observableEmitter) throws Exception {
         List<Board> boards = SMTHHelper.LoadAllBoardsFromWWW();
         if (boards != null && boards.size() > 0) {
-          subscriber.onNext(boards);
+          observableEmitter.onNext(boards);
         } else {
-          subscriber.onCompleted();
+          observableEmitter.onComplete();
         }
       }
     });
 
     // use the first available source to load all boards
-    Observable.concat(cache, network).first().flatMap(new Func1<List<Board>, Observable<Board>>() {
-      @Override public Observable<Board> call(List<Board> boards) {
-        return Observable.from(boards);
+    List<Board> boards = new ArrayList<>();
+    Observable.concat(cache, network).first(boards).toObservable().flatMap(new Function<List<Board>, Observable<Board>>() {
+      @Override public Observable<Board> apply(@NonNull List<Board> boards) throws Exception {
+        return Observable.fromIterable(boards);
       }
-    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Board>() {
-      @Override public void onStart() {
-        super.onStart();
+    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Board>() {
+      @Override public void onSubscribe(@NonNull Disposable disposable) {
         BoardListContent.clearAllBoards();
         mRecyclerView.getAdapter().notifyDataSetChanged();
       }
 
-      @Override public void onCompleted() {
-        clearLoadingHints();
-      }
-
-      @Override public void onError(Throwable e) {
-        clearLoadingHints();
-        Toast.makeText(SMTHApplication.getAppContext(), "加载所有版面失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
-      }
-
-      @Override public void onNext(Board board) {
-        //                        Log.d(TAG, board.toString());
+      @Override public void onNext(@NonNull Board board) {
+        // Log.d(TAG, board.toString());
         BoardListContent.addAllBoardItem(board);
         int size = BoardListContent.ALL_BOARDS.size();
         mRecyclerView.getAdapter().notifyItemInserted(size - 1);
@@ -168,6 +164,17 @@ public class AllBoardFragment extends Fragment implements OnVolumeUpDownListener
           // if 50 items have been shown already, stop the loading hints
           clearLoadingHints();
         }
+      }
+
+      @Override public void onError(@NonNull Throwable e) {
+        clearLoadingHints();
+        Toast.makeText(SMTHApplication.getAppContext(), "加载所有版面失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
+
+      }
+
+      @Override public void onComplete() {
+        clearLoadingHints();
+
       }
     });
   }

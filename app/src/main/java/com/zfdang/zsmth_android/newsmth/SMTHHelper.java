@@ -17,6 +17,7 @@ import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.helpers.MakeList;
 import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.BoardListContent;
@@ -25,6 +26,11 @@ import com.zfdang.zsmth_android.models.Mail;
 import com.zfdang.zsmth_android.models.MailListContent;
 import com.zfdang.zsmth_android.models.Post;
 import com.zfdang.zsmth_android.models.Topic;
+import io.reactivex.Observable;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
+import io.reactivex.schedulers.Schedulers;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -49,12 +55,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
-import rx.Observable;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by zfdang on 2016-3-16.
@@ -150,7 +153,7 @@ public class SMTHHelper {
     //        mService = mRetrofit.create(SMTHMobileService.class);
 
     wRetrofit = new Retrofit.Builder().baseUrl(SMTH_WWW_URL)
-        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .addConverterFactory(ScalarsConverterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
         .client(mHttpClient)
@@ -165,14 +168,13 @@ public class SMTHHelper {
     return helper.wService.queryActiveUserStatus()
         .subscribeOn(Schedulers.io())
         .observeOn(Schedulers.io())
-        .map(new Func1<UserStatus, UserStatus>() {
-          @Override public UserStatus call(UserStatus userStatus) {
+        .map(new Function<UserStatus, UserStatus>() {
+          @Override public UserStatus apply(@NonNull UserStatus userStatus) throws Exception {
             String userid = userStatus.getId();
             if (userid != null && !userid.equals("guest")) {
               // get correct faceURL
-              List<UserInfo> users = helper.wService.queryUserInformation(userid).toList().toBlocking().single();
-              if (users.size() == 1) {
-                UserInfo user = users.get(0);
+              UserInfo user = helper.wService.queryUserInformation(userid).blockingFirst();
+              if (user != null) {
                 userStatus.setFace_url(user.getFace_url());
               }
             }
@@ -1124,20 +1126,22 @@ public class SMTHHelper {
   }
 
   public static List<Board> LoadFavoriteBoardsByFolderFromWWW(final String path) {
-    List<Board> results = SMTHHelper.getInstance().wService.getFavoriteByPath(path).flatMap(new Func1<ResponseBody, Observable<Board>>() {
-      @Override public Observable<Board> call(ResponseBody resp) {
+    Iterable<Board> its = SMTHHelper.getInstance().wService.getFavoriteByPath(path).flatMap(new Function<ResponseBody, Observable<Board>>() {
+      @Override public Observable<Board> apply(@NonNull ResponseBody responseBody) throws Exception {
         try {
-          String response = SMTHHelper.DecodeResponseFromWWW(resp.bytes());
-          //                            Log.d(TAG, response);
+          String response = SMTHHelper.DecodeResponseFromWWW(responseBody.bytes());
+          // Log.d(TAG, response);
           List<Board> boards = SMTHHelper.ParseFavoriteBoardsFromWWW(response);
-          return Observable.from(boards);
+          return Observable.fromIterable(boards);
         } catch (Exception e) {
           Log.e(TAG, "Failed to load favorite {" + path + "}");
           Log.e(TAG, Log.getStackTraceString(e));
           return null;
         }
       }
-    }).toList().toBlocking().single();
+    }).blockingIterable();
+
+    List<Board> results = MakeList.makeList(its);
 
     SaveBoardListToCache(results, BOARD_TYPE_FAVORITE, path);
 
@@ -1145,20 +1149,22 @@ public class SMTHHelper {
   }
 
   public static List<Board> LoadFavoriteBoardsInGroupFromWWW(final String path) {
-    List<Board> results = SMTHHelper.getInstance().wService.getBoardsInGroup(path).flatMap(new Func1<ResponseBody, Observable<Board>>() {
-      @Override public Observable<Board> call(ResponseBody resp) {
+    Iterable<Board> its = SMTHHelper.getInstance().wService.getBoardsInGroup(path).flatMap(new Function<ResponseBody, Observable<Board>>() {
+      @Override public Observable<Board> apply(@NonNull ResponseBody responseBody) throws Exception {
         try {
-          String response = SMTHHelper.DecodeResponseFromWWW(resp.bytes());
-          //                            Log.d(TAG, response);
+          String response = SMTHHelper.DecodeResponseFromWWW(responseBody.bytes());
+          // Log.d(TAG, response);
           List<Board> boards = SMTHHelper.ParseFavoriteBoardsFromWWW(response);
-          return Observable.from(boards);
+          return Observable.fromIterable(boards);
         } catch (Exception e) {
           Log.e(TAG, "Failed to load favorite {" + path + "}");
           Log.e(TAG, Log.getStackTraceString(e));
           return null;
         }
       }
-    }).toList().toBlocking().single();
+    }).blockingIterable();
+
+    List<Board> results = MakeList.makeList(its);
 
     SaveBoardListToCache(results, BOARD_TYPE_FAVORITE, path);
 
@@ -1178,22 +1184,24 @@ public class SMTHHelper {
       sections.add(section);
     }
 
-    List<Board> boards = Observable.from(sections).flatMap(new Func1<BoardSection, Observable<Board>>() {
-      @Override public Observable<Board> call(BoardSection section) {
-        return SMTHHelper.loadBoardsInSectionFromWWW(section);
-      }
-    }).flatMap(new Func1<Board, Observable<Board>>() {
-      @Override public Observable<Board> call(Board board) {
-        return SMTHHelper.loadChildBoardsRecursivelyFromWWW(board);
-      }
-    }).filter(new Func1<Board, Boolean>() {
-      @Override public Boolean call(Board board) {
-        // keep board only
-        return !board.isFolder();
-      }
-    })
-        // http://stackoverflow.com/questions/26311513/convert-observable-to-list
-        .toList().toBlocking().single();
+    Iterable<Board> its =
+        Observable.fromIterable(sections).flatMap(new Function<BoardSection, Observable<Board>>() {
+          @Override public Observable<Board> apply(@NonNull BoardSection boardSection) throws Exception {
+            return SMTHHelper.loadBoardsInSectionFromWWW(boardSection);
+          }
+        }).flatMap(new Function<Board, Observable<Board>>() {
+          @Override public Observable<Board> apply(@NonNull Board board) throws Exception {
+            return SMTHHelper.loadChildBoardsRecursivelyFromWWW(board);
+          }
+        }).filter(new Predicate<Board>() {
+          @Override public boolean test(@NonNull Board board) throws Exception {
+            return !board.isFolder();
+          }
+        }).blockingIterable();
+
+
+    List<Board> boards = MakeList.makeList(its);
+
 
     // sort the board list by chinese name
     Collections.sort(boards, new BoardListContent.ChineseComparator());
@@ -1216,8 +1224,8 @@ public class SMTHHelper {
       return SMTHHelper.loadBoardsInSectionFromWWW(section)
           .subscribeOn(Schedulers.io())
           .observeOn(Schedulers.io())
-          .flatMap(new Func1<Board, Observable<Board>>() {
-            @Override public Observable<Board> call(Board board) {
+          .flatMap(new Function<Board, Observable<Board>>() {
+            @Override public Observable<Board> apply(@NonNull Board board) throws Exception {
               return loadChildBoardsRecursivelyFromWWW(board);
             }
           });
@@ -1228,12 +1236,12 @@ public class SMTHHelper {
 
   public static Observable<Board> loadBoardsInSectionFromWWW(final BoardSection section) {
     String sectionURL = section.sectionURL;
-    return SMTHHelper.getInstance().wService.getBoardsBySection(sectionURL).flatMap(new Func1<ResponseBody, Observable<Board>>() {
-      @Override public Observable<Board> call(ResponseBody responseBody) {
+    return SMTHHelper.getInstance().wService.getBoardsBySection(sectionURL).flatMap(new Function<ResponseBody, Observable<Board>>() {
+      @Override public Observable<Board> apply(@NonNull ResponseBody responseBody) throws Exception {
         try {
           String response = responseBody.string();
           List<Board> boards = SMTHHelper.ParseBoardsInSectionFromWWW(response, section);
-          return Observable.from(boards);
+          return Observable.fromIterable(boards);
         } catch (Exception e) {
           Log.e(TAG, Log.getStackTraceString(e));
           return null;
