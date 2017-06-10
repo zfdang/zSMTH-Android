@@ -258,11 +258,12 @@ public class MainActivity extends SMTHBaseActivity
     mReceiver.setReceiver(new UserStatusReceiver.Receiver() {
       @Override public void onReceiveResult(int resultCode, Bundle resultData) {
         if (resultCode == RESULT_OK) {
-          // Log.d(TAG, "onReceiveResult: " + "to update navigationview" + SMTHApplication.activeUser.toString());
+          //Log.d(TAG, "onReceiveResult: " + "to update navigationview" + SMTHApplication.activeUser.toString());
           UpdateNavigationViewHeader();
 
           // show notification if necessary
           String message = resultData.getString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE);
+          //Log.d(TAG, "OnReceiveResult" + message);
           if (message != null) {
             showNotification(message);
           }

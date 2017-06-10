@@ -7,7 +7,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.ResultReceiver;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
@@ -34,23 +33,33 @@ public class MaintainUserStatusService extends IntentService {
 
   private static final String Service_Name = "MaintainUserStatusService";
   private static final String TAG = "UserStatusService";
+  private static UserStatusReceiver userStatusReceiver = null;
 
   public MaintainUserStatusService() {
     super(Service_Name);
   }
 
+  @Override public void onCreate() {
+    super.onCreate();
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+  }
+
+  // this service can be scheduled as periodical service, call the following two methods to achieve this
   public static void schedule(Context context, UserStatusReceiver receiver) {
     // Construct an intent that will execute the AlarmReceiver
     Intent intent = new Intent(context, MaintainUserStatusService.class);
-    intent.putExtra(SMTHApplication.USER_SERVICE_RECEIVER, receiver);
+    userStatusReceiver = receiver;
 
     // Create a PendingIntent to be triggered when the alarm goes off
     final PendingIntent pIntent =
         PendingIntent.getService(context, MaintainUserStatusService.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
     AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-    // first triggered in 20 second, repeated every 2 minute,
-    alarm.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 20000, AlarmManager.INTERVAL_FIFTEEN_MINUTES / 7,
+    // first triggered in 20 second, repeated every 1 minute
+    alarm.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 20000, AlarmManager.INTERVAL_FIFTEEN_MINUTES / 15,
         pIntent);
   }
 
@@ -60,17 +69,6 @@ public class MaintainUserStatusService extends IntentService {
         PendingIntent.getService(context, MaintainUserStatusService.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     alarm.cancel(pIntent);
-  }
-
-  @Override public void onCreate() {
-    super.onCreate();
-    // If a Context object is needed, call getApplicationContext() here.
-  }
-
-  // this service can be scheduled as periodical service, call the following two methods to achieve this
-
-  @Override public void onDestroy() {
-    super.onDestroy();
   }
 
   public String getNotificationMessage(UserStatus userStatus) {
@@ -88,6 +86,7 @@ public class MaintainUserStatusService extends IntentService {
     if (userStatus.getNew_reply() > 0 && settings.isNotificationReply()) {
       message += SMTHApplication.NOTIFICATION_NEW_REPLY + "  ";
     }
+    //Log.d(TAG, message);
     return message;
   }
 
@@ -105,20 +104,20 @@ public class MaintainUserStatusService extends IntentService {
     // 4. if user status is a different user, send notification to receiver to update navigationView
 
     final SMTHHelper helper = SMTHHelper.getInstance();
-    // Log.d(TAG, "1.0 get current UserStatus from remote");
+    //Log.d(TAG, "1.0 get current UserStatus from remote");
     helper.wService.queryActiveUserStatus().map(new Function<UserStatus, UserStatus>() {
       @Override public UserStatus apply(@NonNull UserStatus userStatus) throws Exception {
-        // Log.d(TAG, "2.0 " + userStatus.toString());
+        //Log.d(TAG, "2.0 " + userStatus.toString());
 
         // check it's logined user, or guest
         if (userStatus != null && userStatus.getId() != null && !userStatus.getId().equals("guest")) {
           // logined user, just return the status for next step
-          // Log.d(TAG, "call: 2.1 valid logined user: " + userStatus.getId());
+          //Log.d(TAG, "call: 2.1 valid logined user: " + userStatus.getId());
           return userStatus;
         }
 
         // login first
-        // Log.d(TAG, "call: " + "2.2 user not logined, try to login now...");
+        //Log.d(TAG, "call: " + "2.2 user not logined, try to login now...");
         final Settings setting = Settings.getInstance();
         String username = setting.getUsername();
         String password = setting.getPassword();
@@ -126,7 +125,7 @@ public class MaintainUserStatusService extends IntentService {
         boolean bLastSuccess = setting.isLastLoginSuccess();
         boolean bUserOnline = setting.isUserOnline();
         boolean bLoginSuccess = false;
-        // Log.d(TAG, "call: 2.2.1 " + String.format("Autologin: %b, LastSuccess: %b, Online: %b", bAutoLogin, bLastSuccess, bUserOnline));
+        //Log.d(TAG, "call: 2.2.1 " + String.format("Autologin: %b, LastSuccess: %b, Online: %b", bAutoLogin, bLastSuccess, bUserOnline));
         if (bAutoLogin && bLastSuccess && bUserOnline) {
           Iterable<Integer> its = helper.wService.login(username, password, "7").map(new Function<AjaxResponse, Integer>() {
             @Override public Integer apply(@NonNull AjaxResponse response) throws Exception {
@@ -143,16 +142,16 @@ public class MaintainUserStatusService extends IntentService {
 
           List<Integer> results = MakeList.makeList(its);
 
-          //                            Log.d(TAG, "call: 2.2.2 " + results.size());
+          //Log.d(TAG, "call: 2.2.2 " + results.size());
           if (results != null && results.size() == 1) {
             int result = results.get(0);
             if (result == AjaxResponse.AJAX_RESULT_OK) {
               // set flag, so that we will query user status again
-              //                                    Log.d(TAG, "call: 2.2.3. Login success");
+              //Log.d(TAG, "call: 2.2.3. Login success");
               bLoginSuccess = true;
             } else if (result == AjaxResponse.AJAX_RESULT_FAILED) {
               // set flag, so that we will not login again next time
-              //                                    Log.d(TAG, "call: 2.2.4. Login failed");
+              //Log.d(TAG, "call: 2.2.4. Login failed");
               setting.setLastLoginSuccess(false);
             }
           }
@@ -160,9 +159,9 @@ public class MaintainUserStatusService extends IntentService {
 
         // try to find new UserStatus only when login success
         if (bLoginSuccess) {
-          // Log.d(TAG, "call: " + "2.2.5.1 try to get userstatus again after login action");
+          //Log.d(TAG, "call: " + "2.2.5.1 try to get userstatus again after login action");
           UserStatus stat = SMTHHelper.queryActiveUserStatus().blockingFirst();
-          // Log.d(TAG, "call: " + stats.size());
+          //Log.d(TAG, "call: " + stats.size());
           return stat;
         } else {
           return userStatus;
@@ -170,24 +169,24 @@ public class MaintainUserStatusService extends IntentService {
       }
     }).map(new Function<UserStatus, UserStatus>() {
       @Override public UserStatus apply(@NonNull UserStatus userStatus) throws Exception {
-        // Log.d(TAG, "3.0 call: " + userStatus.toString());
+        //Log.d(TAG, "3.0 call: " + userStatus.toString());
         String userid = userStatus.getId();
         if (userid != null && !TextUtils.equals(userid, "guest")) {
           // valid logined user
           if (SMTHApplication.activeUser != null && TextUtils.equals(userid, SMTHApplication.activeUser.getId())) {
             // current user is already cached in SMTHApplication
-            // Log.d(TAG, "call: " + "3.1 New user is the same with cached user, copy faceURL from local");
+            //Log.d(TAG, "call: " + "3.1 New user is the same with cached user, copy faceURL from local");
             userStatus.setFace_url(SMTHApplication.activeUser.getFace_url());
           } else {
             // get correct faceURL
-            // Log.d(TAG, "call: " + "3.2 New user is different with cached user, get real face URL from remote");
+            //Log.d(TAG, "call: " + "3.2 New user is different with cached user, get real face URL from remote");
             UserInfo userInfo = helper.wService.queryUserInformation(userid).blockingFirst();
             if (userInfo != null) {
               userStatus.setFace_url(userInfo.getFace_url());
             }
           }
         } else {
-          // Log.d(TAG, "call: 3.3 " + "invalid logined user");
+          //Log.d(TAG, "call: 3.3 " + "invalid logined user");
         }
         return userStatus;
       }
@@ -197,42 +196,26 @@ public class MaintainUserStatusService extends IntentService {
       }
 
       @Override public void onNext(@NonNull UserStatus userStatus) {
-        // Log.d(TAG, "4.0 onNext: " + userStatus.toString());
-
-        if (userStatus == null) return;
+        //Log.d(TAG, "4.0 onNext: " + userStatus.toString());
         String userid = userStatus.getId();
         if (userid == null || TextUtils.equals(userid, "guest")) return;
 
-        if (SMTHApplication.activeUser != null && TextUtils.equals(SMTHApplication.activeUser.getId(), userid)) {
-          // the same user, any new event?
-          String message = getNotificationMessage(userStatus);
-          if (message.length() > 0) {
-            ResultReceiver receiver = intent.getParcelableExtra(SMTHApplication.USER_SERVICE_RECEIVER);
-            if (receiver != null) {
-              Bundle bundle = new Bundle();
-              bundle.putString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE, message);
-              // Here we call send passing a resultCode and the bundle of extras
-              receiver.send(Activity.RESULT_OK, bundle);
-            }
-          }
-        } else if (SMTHApplication.activeUser == null || !TextUtils.equals(SMTHApplication.activeUser.getId(), userid)) {
+        // activeUser & userStatus combinations
+        // cache user if necessary
+        if (SMTHApplication.activeUser == null || !TextUtils.equals(SMTHApplication.activeUser.getId(), userid)) {
           // different user or new user
-          // Log.d(TAG, "onNext: " + "4.2 different user, send notification: ");
+          //Log.d(TAG, "onNext: " + "4.1 cache userStatus as activeUser");
           SMTHApplication.activeUser = userStatus;
+        }
 
-          // send  notification to receiver
-          ResultReceiver receiver = intent.getParcelableExtra(SMTHApplication.USER_SERVICE_RECEIVER);
-          if (receiver != null) {
-            Bundle bundle = new Bundle();
-            String message = getNotificationMessage(userStatus);
-            if (message.length() > 0) {
-              bundle.putString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE, message);
-            }
-            // Here we call send passing a resultCode and the bundle of extras
-            receiver.send(Activity.RESULT_OK, bundle);
-          }
-        } else {
-          // Log.d(TAG, "onNext: " + "4.3 Same user without new mail, skip notification!");
+        // send notification if necessary
+        String message = getNotificationMessage(userStatus);
+        if (message.length() > 0 && userStatusReceiver != null) {
+          //Log.d(TAG, "4.2 cached user, valid message, valid receiver, send message");
+          Bundle bundle = new Bundle();
+          bundle.putString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE, message);
+          // Here we call send passing a resultCode and the bundle of extras
+          userStatusReceiver.send(Activity.RESULT_OK, bundle);
         }
       }
 
