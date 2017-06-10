@@ -200,20 +200,22 @@ public class MaintainUserStatusService extends IntentService {
         String userid = userStatus.getId();
         if (userid == null || TextUtils.equals(userid, "guest")) return;
 
-        // activeUser & userStatus combinations
-        // cache user if necessary
-        if (SMTHApplication.activeUser == null || !TextUtils.equals(SMTHApplication.activeUser.getId(), userid)) {
-          // different user or new user
-          //Log.d(TAG, "onNext: " + "4.1 cache userStatus as activeUser");
+        // cache user if necessary, so we don't have to query User avatar url again in the future
+        boolean updateUserIcon = false;
+        if (!SMTHApplication.isValidUser()) {
+          // Log.d(TAG, "onNext: " + "4.1 cache userStatus as activeUser");
           SMTHApplication.activeUser = userStatus;
+          updateUserIcon = true;
         }
 
-        // send notification if necessary
+        // send notification: 1. new message 2. new activeUser to update Sidebar status
         String message = getNotificationMessage(userStatus);
-        if (message.length() > 0 && userStatusReceiver != null) {
+        if ((updateUserIcon || message.length() > 0) && userStatusReceiver != null) {
           //Log.d(TAG, "4.2 cached user, valid message, valid receiver, send message");
           Bundle bundle = new Bundle();
-          bundle.putString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE, message);
+          if(message.length() > 0) {
+            bundle.putString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE, message);
+          }
           // Here we call send passing a resultCode and the bundle of extras
           userStatusReceiver.send(Activity.RESULT_OK, bundle);
         }
