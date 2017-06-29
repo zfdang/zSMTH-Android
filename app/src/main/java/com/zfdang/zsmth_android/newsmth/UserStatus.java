@@ -130,7 +130,7 @@ public class UserStatus implements Parcelable {
   }
 
   public String getFace_url() {
-    return face_url;
+    return SMTHHelper.preprocessSMTHImageURL(face_url);
   }
 
   public void setFace_url(String face_url) {

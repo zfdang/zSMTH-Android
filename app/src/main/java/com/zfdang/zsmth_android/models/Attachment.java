@@ -1,5 +1,7 @@
 package com.zfdang.zsmth_android.models;
 
+import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+
 /**
  * Created by zfdang on 2016-3-16.
  */
@@ -11,8 +13,8 @@ public class Attachment {
   private int type;
 
   public Attachment(String originalImgSrc, String resizedImageSrc) {
-    this.mOriginalImageSource = originalImgSrc;
-    this.mResizedImageSource = resizedImageSrc;
+    this.mOriginalImageSource = SMTHHelper.preprocessSMTHImageURL(originalImgSrc);
+    this.mResizedImageSource = SMTHHelper.preprocessSMTHImageURL(resizedImageSrc);
   }
 
   public String getOriginalImageSource() {

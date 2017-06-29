@@ -1316,4 +1316,21 @@ public class SMTHHelper {
     * All Boards related methods
     * Ends here
      */
+
+    // smth images might be relative URLs
+    public static String preprocessSMTHImageURL(String original) {
+      if(null != original) {
+        if (original.startsWith("/nForum")) {
+          return "http://att.newsmth.net" + original;
+        } else if (original.startsWith("//att.newsmth.net")) {
+          // images in post
+          return "http:" + original;
+        } else if (original.startsWith("//images.newsmth.net")) {
+          // avatar image
+          return "http:" + original;
+        }
+      }
+      return original;
+    }
+
 }

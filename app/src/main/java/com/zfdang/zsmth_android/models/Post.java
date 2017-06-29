@@ -101,7 +101,7 @@ public class Post {
     // save likes
     this.likes = likes;
 
-    //                Log.d("setLikesAndPostContent", content.html());
+    // Log.d("setLikesAndPostContent", content.html());
 
     // find all attachment from node
     // <a target="_blank" href="http://att.newsmth.net/nForum/att/AutoWorld/1939790539/4070982">
@@ -109,6 +109,11 @@ public class Post {
     // </a>
     // special image attachment: webp. newsmth does not support webp now, so it's not displayed as img
     // <a href="http://att.newsmth.net/nForum/att/MMJoke/1634780953/211" target="_blank">1.webp</a>
+
+    // new image URL after 2017-06-28
+    // <a target="_blank" href="//att.newsmth.net/nForum/att/Picture/1726713/228774">
+    // <img border="0" title="单击此查看原图" src="//att.newsmth.net/nForum/att/Picture/1726713/228774/large" class="resizeable" /></a>
+
     Elements as = content.select("a[href]");
     for (Element a : as) {
       // process each a|href
@@ -116,15 +121,9 @@ public class Post {
       if (imgs.size() == 1) {
         // find one image attachment
         String origImageSrc = a.attr("href");
-        if (origImageSrc != null && origImageSrc.startsWith("/nForum")) {
-          origImageSrc = "http://att.newsmth.net" + origImageSrc;
-        }
 
         Element img = imgs.first();
         String resizedImageSrc = img.attr("src");
-        if (resizedImageSrc != null && resizedImageSrc.startsWith("/nForum")) {
-          resizedImageSrc = "http://att.newsmth.net" + resizedImageSrc;
-        }
 
         Attachment attach = new Attachment(origImageSrc, resizedImageSrc);
         this.addAttachFile(attach);
@@ -138,10 +137,6 @@ public class Post {
         if (attachName != null && attachName.endsWith(".webp")) {
           // this is a webp attachment, show it as image
           String origImageSrc = a.attr("href");
-          if (origImageSrc != null && origImageSrc.startsWith("/nForum")) {
-            origImageSrc = "http://att.newsmth.net" + origImageSrc;
-          }
-
           Attachment attach = new Attachment(origImageSrc, origImageSrc);
           this.addAttachFile(attach);
 
