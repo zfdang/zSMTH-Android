@@ -68,7 +68,7 @@ android {
 }
 
 dependencies {
-    final OKHTTP_VERSION = '3.8.0'
+    final OKHTTP_VERSION = '3.8.1'
     final RETROFIT_VERSION = '2.3.0'
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
@@ -112,7 +112,7 @@ dependencies {
     // umeng analytics
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.github.maksim88:PasswordEditText:v0.9'
-    compile 'org.jsoup:jsoup:1.10.2'
+    compile 'org.jsoup:jsoup:1.10.3'
     compile 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
     compile 'com.jude:swipebackhelper:3.1.2'
     compile 'me.relex:circleindicator:1.2.2@aar'
