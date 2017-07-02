@@ -331,21 +331,31 @@ public class Settings {
     }
   }
 
+  // defined in arrays.xml
+  // 0: large font; 1: normal font; 2: small, 3: extra small 4: extra large 5: extremely large
+  // defaut: 1 - normal font
   private static final String ZSMTH_FONT_INDEX = "ZSMTH_FONT_INDEX";
-  private int iFontIndex;  // 0: large font; 1: normal font; 2: small
+  private int iFontIndex;
 
   public int getFontIndex() {
     return iFontIndex;
   }
 
   public float getFontSizeFloatValue() {
-    if (iFontIndex == 0) {
-      return 1.15f;
+    if (iFontIndex == 1) {
+      return 1.0f;
     } else if (iFontIndex == 2) {
       return 0.85f;
-    } else {
-      return 1.0f;
+    } else if (iFontIndex == 0) {
+      return 1.15f;
+    } else if (iFontIndex == 3) {
+      return 0.65f;
+    } else if (iFontIndex == 4) {
+      return 1.35f;
+    } else if (iFontIndex == 5) {
+      return 1.55f;
     }
+    return 1.0f;
   }
 
   public void setFontIndex(int iFontIndex) {
