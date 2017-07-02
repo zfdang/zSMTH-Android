@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string-array name="font_size_names">
-    <item>超大字体(155%)</item>
-    <item>特大字体(135%)</item>
     <item>大字体(115%)</item>
     <item>正常字体(100%)</item>
     <item>小字体(85%)</item>
     <item>特小字体(65%)</item>
+    <item>特大字体(135%)</item>
+    <item>超大字体(155%)</item>
   </string-array>
   <string-array name="font_size_values">
-    <item>5</item>
-    <item>4</item>
     <item>0</item>
     <item>1</item>
     <item>2</item>
     <item>3</item>
+    <item>4</item>
+    <item>5</item>
   </string-array>
 </resources>
