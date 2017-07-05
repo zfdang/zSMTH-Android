@@ -97,6 +97,15 @@ public class PostListActivity extends SMTHBaseActivity
     SwipeBackHelper.onPostCreate(this);
   }
 
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if(requestCode == ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE) {
+      // returned from Compose activity, refresh current post
+      // TODO: check resultCode
+      reloadPostList();
+    }
+    super.onActivityResult(requestCode, resultCode, data);
+  }
+
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     SwipeBackHelper.onCreate(this);
@@ -479,7 +488,7 @@ public class PostListActivity extends SMTHBaseActivity
 
       Intent intent = new Intent(this, ComposePostActivity.class);
       intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
-      startActivity(intent);
+      startActivityForResult(intent, ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE);
     } else if (which == 1) {
       // like
       // Toast.makeText(PostListActivity.this, "Like:TBD", Toast.LENGTH_SHORT).show();
