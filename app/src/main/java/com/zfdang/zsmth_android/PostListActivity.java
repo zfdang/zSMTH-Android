@@ -704,7 +704,8 @@ public class PostListActivity extends SMTHBaseActivity
           @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
             // Log.d(TAG, "onNext: " + ajaxResponse.toString());
             if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
-              Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg() + "\n请刷新查看结果！", Toast.LENGTH_SHORT).show();
+              Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+              reloadPostList();
             } else {
               Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
             }
