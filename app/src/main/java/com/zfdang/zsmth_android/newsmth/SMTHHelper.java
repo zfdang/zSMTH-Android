@@ -81,7 +81,6 @@ public class SMTHHelper {
   // this interface is not used any longer
   //    private final String SMTH_MOBILE_URL = "http://m.newsmth.net";
   //    private Retrofit mRetrofit = null;
-  //    public SMTHMobileService mService = null;
 
   // All boards cache file
   public static int BOARD_TYPE_FAVORITE = 1;
@@ -150,7 +149,6 @@ public class SMTHHelper {
     //                .addConverterFactory(ScalarsConverterFactory.create())
     //                .client(mHttpClient)
     //                .build();
-    //        mService = mRetrofit.create(SMTHMobileService.class);
 
     wRetrofit = new Retrofit.Builder().baseUrl(SMTH_WWW_URL)
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
