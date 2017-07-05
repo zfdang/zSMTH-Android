@@ -279,6 +279,7 @@ public class MainActivity extends SMTHBaseActivity
       notificationIntent.putExtra(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE, text);
       // http://stackoverflow.com/questions/26608627/how-to-open-fragment-page-when-pressed-a-notification-in-android
       notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+      // notification will be handled by MainActivity.onNewIntent
       PendingIntent resultPendingIntent =
           PendingIntent.getActivity(MainActivity.this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -351,6 +352,8 @@ public class MainActivity extends SMTHBaseActivity
         MailListContent.clear();
 
         fm.beginTransaction().replace(R.id.content_frame, mailListFragment).commitAllowingStateLoss();
+        // switch title of mainActivity
+        setTitle(SMTHApplication.App_Title_Prefix + "邮件");
       }
     }
   }
