@@ -39,6 +39,7 @@ import okhttp3.RequestBody;
 
 public class ComposePostActivity extends SMTHBaseActivity {
 
+  public static final int COMPOSE_ACTIVITY_REQUEST_CODE = 107;
   private static final int REQUEST_CODE = 653;
   private static final String TAG = "ComposePostActivity";
   private final String UPLOAD_TEMPLATE = "  [upload=%d][/upload]  ";

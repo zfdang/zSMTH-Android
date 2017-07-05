@@ -77,6 +77,15 @@ public class BoardTopicActivity extends SMTHBaseActivity
     SwipeBackHelper.onPostCreate(this);
   }
 
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if(requestCode == ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE) {
+      // returned from compose activity
+      // ideally, we should also check the resultCode
+      RefreshBoardTopicFromPageOne();
+    }
+    super.onActivityResult(requestCode, resultCode, data);
+  }
+
   @Override public void onBackPressed() {
     if (isSearchMode) {
       onRefresh();
@@ -156,9 +165,9 @@ public class BoardTopicActivity extends SMTHBaseActivity
       return true;
     } else if (id == R.id.board_topic_action_sticky) {
       mSetting.toggleShowSticky();
-      this.RefreshBoardTopoFromPageOne();
+      this.RefreshBoardTopicFromPageOne();
     } else if (id == R.id.board_topic_action_refresh) {
-      this.RefreshBoardTopoFromPageOne();
+      this.RefreshBoardTopicFromPageOne();
     } else if (id == R.id.board_topic_action_newpost) {
       ComposePostContext postContext = new ComposePostContext();
       postContext.setBoardEngName(mBoard.getBoardEngName());
@@ -166,7 +175,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
       Intent intent = new Intent(this, ComposePostActivity.class);
       intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
-      startActivity(intent);
+      startActivityForResult(intent, ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE);
     } else if (id == R.id.board_topic_action_search) {
       PopupSearchWindow popup = new PopupSearchWindow();
       popup.initPopupWindow(this);
@@ -230,35 +239,35 @@ public class BoardTopicActivity extends SMTHBaseActivity
 
     mCurrentPageNo += 1;
     // Log.d(TAG, mCurrentPageNo + " page is loading now...");
-    LoadBoardTopicsFromMobile();
+    LoadBoardTopics();
   }
 
   @Override public void onRefresh() {
-    // this method is slightly different with RefreshBoardTopoFromPageOne
+    // this method is slightly different with RefreshBoardTopicFromPageOne
     // this method does not alert since it's triggered by SwipeRefreshLayout
     mCurrentPageNo = 1;
     TopicListContent.clearBoardTopics();
     mRecyclerView.getAdapter().notifyDataSetChanged();
-    LoadBoardTopicsFromMobile();
+    LoadBoardTopics();
   }
 
-  public void RefreshBoardTopoFromPageOne() {
+  public void RefreshBoardTopicFromPageOne() {
     showProgress("刷新版面文章...");
 
     TopicListContent.clearBoardTopics();
     mRecyclerView.getAdapter().notifyDataSetChanged();
 
     mCurrentPageNo = 1;
-    LoadBoardTopicsFromMobile();
+    LoadBoardTopics();
   }
 
   public void RefreshBoardTopicsWithoutClear() {
     showProgress("加载版面文章...");
 
-    LoadBoardTopicsFromMobile();
+    LoadBoardTopics();
   }
 
-  public void LoadBoardTopicsFromMobile() {
+  public void LoadBoardTopics() {
 
     isSearchMode = false;
     final SMTHHelper helper = SMTHHelper.getInstance();
