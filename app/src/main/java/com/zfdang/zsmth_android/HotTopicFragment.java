@@ -3,7 +3,6 @@ package com.zfdang.zsmth_android;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +13,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
 import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
@@ -38,14 +40,14 @@ import okhttp3.ResponseBody;
  * Activities containing this fragment MUST implement the {@link OnTopicFragmentInteractionListener}
  * interface.
  */
-public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, OnVolumeUpDownListener {
+public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener {
 
   private final String TAG = "HotTopicFragment";
 
   private OnTopicFragmentInteractionListener mListener;
 
   private RecyclerView mRecyclerView = null;
-  private SwipeRefreshLayout mSwipeRefreshLayout = null;
+  private SmartRefreshLayout mRefreshLayout = null;
 
   /**
    * Mandatory empty constructor for the fragment manager to instantiate the
@@ -66,8 +68,13 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
 
     // http://sapandiwakar.in/pull-to-refresh-for-android-recyclerview-or-any-other-vertically-scrolling-view/
     // pull to refresh for android recyclerview
-    mSwipeRefreshLayout = (SwipeRefreshLayout) rootView;
-    mSwipeRefreshLayout.setOnRefreshListener(this);
+    mRefreshLayout = (SmartRefreshLayout) rootView;
+    mRefreshLayout.setEnableLoadmore(false);
+    mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+      @Override public void onRefresh(RefreshLayout refreshLayout) {
+        RefreshGuidance();
+      }
+    });
 
     // http://blog.csdn.net/lmj623565791/article/details/45059587
     // 你想要控制Item间的间隔（可绘制），请通过ItemDecoration
@@ -92,12 +99,6 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
     return rootView;
   }
 
-  @Override public void onRefresh() {
-    // triggered by SwipeRefreshLayout
-    // setRefreshing(false) should be called later
-    RefreshGuidance();
-  }
-
   public void showLoadingHints() {
     MainActivity activity = (MainActivity) getActivity();
     if (activity != null) activity.showProgress("获取导读信息...");
@@ -110,8 +111,10 @@ public class HotTopicFragment extends Fragment implements SwipeRefreshLayout.OnR
       activity.dismissProgress();
     }
 
-    // disable SwipeFreshLayout
-    mSwipeRefreshLayout.setRefreshing(false);
+    // disable SmartFreshLayout
+    if(mRefreshLayout.isRefreshing()) {
+      mRefreshLayout.finishRefresh(200);
+    }
   }
 
   public void RefreshGuidance() {

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -37,8 +38,10 @@ import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 import com.jude.swipbackhelper.SwipeBackHelper;
-import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
-import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
 import com.zfdang.zsmth_android.models.Attachment;
@@ -81,7 +84,7 @@ public class PostListActivity extends SMTHBaseActivity
 
   private Topic mTopic = null;
 
-  private SwipyRefreshLayout mSwipeRefreshLayout;
+  private SmartRefreshLayout mRefreshLayout;
   private String mFrom;
 
   private GestureDetector mGestureDetector;
@@ -126,16 +129,18 @@ public class PostListActivity extends SMTHBaseActivity
     assert mPageNo != null;
 
     // define swipe refresh function
-    mSwipeRefreshLayout = (SwipyRefreshLayout) findViewById(R.id.post_list_swipe_refresh_layout);
-    mSwipeRefreshLayout.setOnRefreshListener(new SwipyRefreshLayout.OnRefreshListener() {
-      @Override public void onRefresh(SwipyRefreshLayoutDirection direction) {
-        if (direction == SwipyRefreshLayoutDirection.TOP) {
-          // reload current page
-          reloadPostListWithoutAlert();
-        } else {
-          // load next page if available
-          goToNextPage();
-        }
+    mRefreshLayout = (SmartRefreshLayout) findViewById(R.id.post_list_swipe_refresh_layout);
+    mRefreshLayout.setEnableAutoLoadmore(false);
+    mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+      @Override public void onRefresh(RefreshLayout refreshLayout) {
+        // reload current page
+        reloadPostListWithoutAlert();
+      }
+    });
+    mRefreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
+      @Override public void onLoadmore(RefreshLayout refreshLayout) {
+        // load next page if available
+        goToNextPage();
       }
     });
 
@@ -208,9 +213,22 @@ public class PostListActivity extends SMTHBaseActivity
   public void clearLoadingHints() {
     dismissProgress();
 
-    if (mSwipeRefreshLayout.isRefreshing()) {
-      mSwipeRefreshLayout.setRefreshing(false);
+    if (mRefreshLayout.isRefreshing()) {
+      mRefreshLayout.finishRefresh(100);
     }
+    if(mRefreshLayout.isLoading()) {
+      mRefreshLayout.finishLoadmore(100);
+    }
+
+    // scroll to top, the loadmore animation can't be finished in 1000ms
+    final Handler handler = new Handler();
+    handler.postDelayed(new Runnable() {
+      @Override
+      public void run() {
+        // Do something after 1100ms
+        mRecyclerView.scrollToPosition(0);
+      }
+    }, 1100);
   }
 
   public void reloadPostListWithoutAlert() {

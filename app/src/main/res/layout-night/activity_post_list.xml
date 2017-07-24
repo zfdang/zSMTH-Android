@@ -59,19 +59,22 @@
         android:layout_weight="1"
         >
 
-      <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
+      <com.scwang.smartrefresh.layout.SmartRefreshLayout
           android:id="@+id/post_list_swipe_refresh_layout"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          app:srl_direction="both"
           >
+        <com.scwang.smartrefresh.layout.header.ClassicsHeader
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/post_list"
-            android:name="com.zfdang.zsmth_android.TopicListFragment"
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/post_list"
+            android:name="com.zfdang.zsmth_android.TopicListFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="0dp"
@@ -81,7 +84,11 @@
             tools:context=".BoardTopicActivity"
             tools:listitem="@layout/post_item"
             />
-      </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
+        <com.scwang.smartrefresh.layout.footer.ClassicsFooter
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+      </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
       <LinearLayout
           android:id="@+id/post_list_action_layout"
