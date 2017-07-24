@@ -72,7 +72,7 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
     mRefreshLayout.setEnableLoadmore(false);
     mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
       @Override public void onRefresh(RefreshLayout refreshLayout) {
-        RefreshGuidance();
+        RefreshGuidanceFromWWW();
       }
     });
 
@@ -113,7 +113,7 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
 
     // disable SmartFreshLayout
     if(mRefreshLayout.isRefreshing()) {
-      mRefreshLayout.finishRefresh(200);
+      mRefreshLayout.finishRefresh(100);
     }
   }
 
