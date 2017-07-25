@@ -218,17 +218,18 @@ public class PostListActivity extends SMTHBaseActivity
     }
     if (mRefreshLayout.isLoading()) {
       mRefreshLayout.finishLoadmore(100);
-    }
 
-    if (bRefresh) {
-      // scroll to top, the loadmore animation can't be finished in 1000ms
-      final Handler handler = new Handler();
-      handler.postDelayed(new Runnable() {
-        @Override public void run() {
-          // Do something after 1100ms
-          mRecyclerView.scrollToPosition(0);
-        }
-      }, 1100);
+      // pull up to next page, scroll to top
+      if (bRefresh) {
+        // scroll to top, the loadmore animation can't be finished in 1000ms
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+          @Override public void run() {
+            // Do something after 1100ms
+            mRecyclerView.scrollToPosition(0);
+          }
+        }, 1100);
+      }
     }
   }
 
