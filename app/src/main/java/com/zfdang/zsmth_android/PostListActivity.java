@@ -210,25 +210,26 @@ public class PostListActivity extends SMTHBaseActivity
     imageButton.setOnClickListener(this);
   }
 
-  public void clearLoadingHints() {
+  public void clearLoadingHints(boolean bRefresh) {
     dismissProgress();
 
     if (mRefreshLayout.isRefreshing()) {
       mRefreshLayout.finishRefresh(100);
     }
-    if(mRefreshLayout.isLoading()) {
+    if (mRefreshLayout.isLoading()) {
       mRefreshLayout.finishLoadmore(100);
     }
 
-    // scroll to top, the loadmore animation can't be finished in 1000ms
-    final Handler handler = new Handler();
-    handler.postDelayed(new Runnable() {
-      @Override
-      public void run() {
-        // Do something after 1100ms
-        mRecyclerView.scrollToPosition(0);
-      }
-    }, 1100);
+    if (bRefresh) {
+      // scroll to top, the loadmore animation can't be finished in 1000ms
+      final Handler handler = new Handler();
+      handler.postDelayed(new Runnable() {
+        @Override public void run() {
+          // Do something after 1100ms
+          mRecyclerView.scrollToPosition(0);
+        }
+      }, 1100);
+    }
   }
 
   public void reloadPostListWithoutAlert() {
@@ -273,7 +274,7 @@ public class PostListActivity extends SMTHBaseActivity
           }
 
           @Override public void onError(@NonNull Throwable e) {
-            clearLoadingHints();
+            clearLoadingHints(true);
             Toast.makeText(SMTHApplication.getAppContext(), "加载失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
           }
 
@@ -282,7 +283,7 @@ public class PostListActivity extends SMTHBaseActivity
             mTitle.setText(title);
             mPageNo.setText(String.format("%d", mCurrentPageNo));
 
-            clearLoadingHints();
+            clearLoadingHints(true);
           }
         });
   }
@@ -400,7 +401,7 @@ public class PostListActivity extends SMTHBaseActivity
   public void goToNextPage() {
     if (mCurrentPageNo == mTopic.getTotalPageNo()) {
       Toast.makeText(PostListActivity.this, "已在末页！", Toast.LENGTH_SHORT).show();
-      clearLoadingHints();
+      clearLoadingHints(false);
     } else {
       mCurrentPageNo += 1;
       reloadPostList();
