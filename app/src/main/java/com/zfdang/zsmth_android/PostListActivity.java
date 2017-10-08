@@ -219,6 +219,7 @@ public class PostListActivity extends SMTHBaseActivity
     if (mRefreshLayout.isLoading()) {
       mRefreshLayout.finishLoadmore(100);
 
+      // bug with SmartRefreshLayout, so we have to scroll to top explicitly
       // pull up to next page, scroll to top
       if (bRefresh) {
         // scroll to top, the loadmore animation can't be finished in 1000ms
