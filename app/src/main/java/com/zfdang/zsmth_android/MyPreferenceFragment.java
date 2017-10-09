@@ -2,6 +2,7 @@ package com.zfdang.zsmth_android;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.os.Bundle;
@@ -302,8 +303,10 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
 
     Activity activity = getActivity();
     if (activity != null) {
-      activity.getWindow().setWindowAnimations(R.style.WindowAnimationFadeInOut);
-      activity.recreate();
+      Intent intent = new Intent(activity.getApplicationContext(), MainActivity.class);
+      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+      startActivity(intent);
+      activity.finish();
     }
   }
 
