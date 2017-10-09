@@ -40,6 +40,8 @@ import cn.sharesdk.onekeyshare.OnekeyShare;
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zfdang.SMTHApplication;
@@ -83,6 +85,24 @@ public class PostListActivity extends SMTHBaseActivity
   private String mFilterUser = null;
 
   private Topic mTopic = null;
+
+  static {
+    ClassicsHeader.REFRESH_HEADER_PULLDOWN = "下拉可以刷新";
+    ClassicsHeader.REFRESH_HEADER_REFRESHING = "正在刷新...";
+    ClassicsHeader.REFRESH_HEADER_LOADING = "正在加载...";
+    ClassicsHeader.REFRESH_HEADER_RELEASE = "释放立即刷新";
+    ClassicsHeader.REFRESH_HEADER_FINISH = "刷新完成";
+    ClassicsHeader.REFRESH_HEADER_FAILED = "刷新失败";
+    ClassicsHeader.REFRESH_HEADER_LASTTIME = "上次更新 M-d HH:mm";
+
+    ClassicsFooter.REFRESH_FOOTER_PULLUP = "上拉可以翻页";
+    ClassicsFooter.REFRESH_FOOTER_RELEASE = "释放立即翻页";
+    ClassicsFooter.REFRESH_FOOTER_REFRESHING = "正在刷新...";
+    ClassicsFooter.REFRESH_FOOTER_LOADING = "正在加载下一页...";
+    ClassicsFooter.REFRESH_FOOTER_FINISH = "翻页完成";
+    ClassicsFooter.REFRESH_FOOTER_FAILED = "翻页失败";
+    ClassicsFooter.REFRESH_FOOTER_ALLLOADED = "全部加载完成";
+  }
 
   private SmartRefreshLayout mRefreshLayout;
   private String mFrom;
