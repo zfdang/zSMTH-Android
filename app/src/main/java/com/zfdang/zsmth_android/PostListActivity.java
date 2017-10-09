@@ -151,6 +151,7 @@ public class PostListActivity extends SMTHBaseActivity
     mRefreshLayout = (SmartRefreshLayout) findViewById(R.id.post_list_swipe_refresh_layout);
     mRefreshLayout.setEnableAutoLoadmore(false);
     mRefreshLayout.setEnableScrollContentWhenLoaded(false);
+    mRefreshLayout.setEnableOverScrollBounce(false);
     mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
       @Override public void onRefresh(RefreshLayout refreshLayout) {
         // reload current page
