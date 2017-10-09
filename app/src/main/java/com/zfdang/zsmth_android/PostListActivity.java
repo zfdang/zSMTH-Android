@@ -151,6 +151,7 @@ public class PostListActivity extends SMTHBaseActivity
     // define swipe refresh function
     mRefreshLayout = (SmartRefreshLayout) findViewById(R.id.post_list_swipe_refresh_layout);
     mRefreshLayout.setEnableAutoLoadmore(false);
+    mRefreshLayout.setEnableScrollContentWhenLoaded(false);
     mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
       @Override public void onRefresh(RefreshLayout refreshLayout) {
         // reload current page
@@ -230,7 +231,7 @@ public class PostListActivity extends SMTHBaseActivity
     imageButton.setOnClickListener(this);
   }
 
-  public void clearLoadingHints(boolean bRefresh) {
+  public void clearLoadingHints() {
     dismissProgress();
 
     if (mRefreshLayout.isRefreshing()) {
@@ -238,19 +239,6 @@ public class PostListActivity extends SMTHBaseActivity
     }
     if (mRefreshLayout.isLoading()) {
       mRefreshLayout.finishLoadmore(100);
-
-      // bug with SmartRefreshLayout, so we have to scroll to top explicitly
-      // pull up to next page, scroll to top
-      if (bRefresh) {
-        // scroll to top, the loadmore animation can't be finished in 1000ms
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-          @Override public void run() {
-            // Do something after 1100ms
-            mRecyclerView.scrollToPosition(0);
-          }
-        }, 1100);
-      }
     }
   }
 
@@ -296,7 +284,7 @@ public class PostListActivity extends SMTHBaseActivity
           }
 
           @Override public void onError(@NonNull Throwable e) {
-            clearLoadingHints(true);
+            clearLoadingHints();
             Toast.makeText(SMTHApplication.getAppContext(), "加载失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
           }
 
@@ -305,7 +293,7 @@ public class PostListActivity extends SMTHBaseActivity
             mTitle.setText(title);
             mPageNo.setText(String.format("%d", mCurrentPageNo));
 
-            clearLoadingHints(true);
+            clearLoadingHints();
           }
         });
   }
@@ -423,7 +411,7 @@ public class PostListActivity extends SMTHBaseActivity
   public void goToNextPage() {
     if (mCurrentPageNo == mTopic.getTotalPageNo()) {
       Toast.makeText(PostListActivity.this, "已在末页！", Toast.LENGTH_SHORT).show();
-      clearLoadingHints(false);
+      clearLoadingHints();
     } else {
       mCurrentPageNo += 1;
       reloadPostList();
