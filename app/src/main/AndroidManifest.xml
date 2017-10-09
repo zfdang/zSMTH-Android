@@ -152,6 +152,10 @@
         android:name="UMENG_CHANNEL"
         android:value="ZFDANG"/>
 
+    <!--http://www.jianshu.com/p/a386434458be-->
+    <!--aadapt to S8 and Mix2 -->
+    <meta-data android:name="android.max_aspect" android:value="2.5" />
+
   </application>
 
 </manifest>
