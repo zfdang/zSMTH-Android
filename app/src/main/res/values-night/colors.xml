@@ -23,12 +23,13 @@
   <color name="status_text_night">#ABC2DA</color>
   <color name="blue_text_night">#FBA50E</color>
 
-  <color name="recycler_view_seperator">#666666</color>
+  <!--seperator指的是类别item-->
+  <color name="recycler_view_seperator">#3a3b3e</color>
   <color name="recycler_view_item_normal">#000000</color>
   <color name="recycler_view_item_pressed">#777777</color>
   <color name="recycler_view_item_sticky">#273864</color>
   <color name="recycler_view_item_new">#6600cc</color>
-  <color name="recycler_view_divider">#232529</color>
+  <color name="recycler_view_divider">#3a3b3e</color>
 
   <!--used in FullscreenActionBarStyle-->
   <color name="black_overlay">#66000000</color>
@@ -37,12 +38,12 @@
 
   <color name="post_title_background">#3a3b3e</color>
 
-  <color name="mail_folder_button_background">#333E4B</color>
+  <color name="mail_folder_button_background">#3a3b3e</color>
 
   <color name="progress_dialog_background">#FFFFFF</color>
   <color name="progress_dialog_text">#000000</color>
 
-  <color name="navigation_button_background">#4F4F4F</color>
+  <color name="navigation_button_background">#3a3b3e</color>
   <color name="navigation_button_background_pressed">#878686</color>
 
   <color name="popupwindow_background">#607D8B</color>

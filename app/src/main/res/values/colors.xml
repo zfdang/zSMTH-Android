@@ -15,34 +15,35 @@
 
   <color name="simple_text_color">#FF52991F</color>
 
-  <color name="nav_background">#cee4d3</color>
-  <color name="nav.item.background.active">#7aae85</color>
-  <color name="nav.item.background.default">#cee4d3</color>
+  <color name="nav_background">#ffffff</color>
+  <color name="nav.item.background.active">#cee4d3</color>
+  <color name="nav.item.background.default">#ffffff</color>
 
-  <color name="body_background_night">#ebebeb</color>
+  <color name="body_background_night">#FFFFFF</color>
   <color name="status_text_night">#000000</color>
   <color name="blue_text_night">#0099FF</color>
 
-  <color name="recycler_view_seperator">#BBBBBB</color>
-  <color name="recycler_view_item_normal">#ebebeb</color>
+  <!--seperator指的是类别item-->
+  <color name="recycler_view_seperator">#c6d4d4</color>
+  <color name="recycler_view_item_normal">#FFFFFF</color>
   <color name="recycler_view_item_pressed">#777777</color>
-  <color name="recycler_view_item_sticky">#f1cdf1</color>
+  <color name="recycler_view_item_sticky">#c6d4d4</color>
   <color name="recycler_view_item_new">#bbadca</color>
-  <color name="recycler_view_divider">#dde0e6</color>
+  <color name="recycler_view_divider">#c6d4d4</color>
 
   <!--used in FullscreenActionBarStyle-->
   <color name="black_overlay">#66000000</color>
 
   <color name="avatar_border_color">#FFFFFF</color>
 
-  <color name="post_title_background">#cee4d3</color>
+  <color name="post_title_background">#c6d4d4</color>
 
-  <color name="mail_folder_button_background">#bcc3cc</color>
+  <color name="mail_folder_button_background">#c6d4d4</color>
 
   <color name="progress_dialog_background">#FFFFFF</color>
   <color name="progress_dialog_text">#000000</color>
 
-  <color name="navigation_button_background">#cee4d3</color>
+  <color name="navigation_button_background">#c6d4d4</color>
   <color name="navigation_button_background_pressed">#bebbbb</color>
 
   <color name="popupwindow_background">#b3dcbc</color>
