@@ -26,7 +26,7 @@
   <!--seperator指的是类别item-->
   <color name="recycler_view_seperator">#c6d4d4</color>
   <color name="recycler_view_item_normal">#FFFFFF</color>
-  <color name="recycler_view_item_pressed">#777777</color>
+  <color name="recycler_view_item_pressed">#cee4d3</color>
   <color name="recycler_view_item_sticky">#c6d4d4</color>
   <color name="recycler_view_item_new">#bbadca</color>
   <color name="recycler_view_divider">#c6d4d4</color>
