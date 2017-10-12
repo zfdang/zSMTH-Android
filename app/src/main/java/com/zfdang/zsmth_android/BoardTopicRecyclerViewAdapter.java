@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.listeners.OnTopicFragmentInteractionListener;
@@ -96,8 +97,8 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
     public final ImageView mAttach;
 
     public final LinearLayout mTitleRow;
-    public final LinearLayout mAuthorReplierRow;
-    public final LinearLayout mStatusRow;
+    public final RelativeLayout mAuthorReplierRow;
+    public final RelativeLayout mStatusRow;
 
     public Topic mTopic;
 
@@ -114,8 +115,8 @@ public class BoardTopicRecyclerViewAdapter extends RecyclerView.Adapter<BoardTop
       mAttach = (ImageView) view.findViewById(R.id.topic_status_attach);
 
       mTitleRow = (LinearLayout) view.findViewById(R.id.topic_title_row);
-      mAuthorReplierRow = (LinearLayout) view.findViewById(R.id.topic_author_replier_row);
-      mStatusRow = (LinearLayout) view.findViewById(R.id.topic_status_row);
+      mAuthorReplierRow = (RelativeLayout) view.findViewById(R.id.topic_author_replier_row);
+      mStatusRow = (RelativeLayout) view.findViewById(R.id.topic_status_row);
     }
 
     @Override public String toString() {

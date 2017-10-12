@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/recyclerview_item_bg"
     android:paddingBottom="2dp"
@@ -15,7 +16,7 @@
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:background="@color/recycler_view_seperator"
-      android:paddingLeft="4dp"
+      android:paddingLeft="2dp"
       android:text="Category"
       android:textColor="@color/status_text_night"
       android:textSize="@dimen/zsmth_font_size_small"
@@ -35,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="2dp"
-        android:paddingRight="8dp"
+        android:paddingRight="6dp"
         android:text="Topic"
         android:textColor="@color/status_text_night"
         android:textSize="@dimen/zsmth_font_size_medium"
@@ -44,91 +45,98 @@
   </LinearLayout>
 
 
-  <LinearLayout
+  <RelativeLayout
       android:id="@+id/topic_author_replier_row"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_below="@+id/topic_title_row"
       android:layout_margin="0dp"
-      android:orientation="horizontal"
+      android:padding="0dp"
       >
 
-    <TextView
-        android:id="@+id/topic_author"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="0dp"
-        android:paddingRight="4dp"
-        android:text="作者"
-        android:textColor="@color/blue_text_night"
-        />
-
-    <TextView
-        android:id="@+id/topic_public_date"
+        android:orientation="horizontal"
+        android:layout_margin="0dp"
+        android:padding="0dp"
+        >
+      <TextView
+          android:id="@+id/topic_author"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:paddingLeft="2dp"
+          android:text="作者"
+          android:textColor="@color/blue_text_night"
+          />
+      <TextView
+          android:id="@+id/topic_public_date"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_toRightOf="@id/topic_author"
+          android:layout_weight="1"
+          android:paddingLeft="4dp"
+          android:text="2012-09-18"
+          android:textColor="@color/colorSecondaryText"
+          />
+    </LinearLayout>
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="2016-03-24"
-        android:textColor="@color/colorSecondaryText"
-        />
+        android:layout_alignParentRight="true"
+        android:orientation="horizontal"
+        android:layout_margin="0dp"
+        android:padding="0dp"
+        >
+      <TextView
+          android:id="@+id/topic_replier"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:paddingRight="4dp"
+          android:text="回复者"
+          android:textColor="@color/blue_text_night"
+          />
+      <TextView
+          android:id="@+id/topic_reply_date"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:paddingRight="6dp"
+          android:text="2012-09-18"
+          android:textColor="@color/colorSecondaryText"
+          />
+    </LinearLayout>
 
-    <View
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        />
+  </RelativeLayout>
 
-    <TextView
-        android:id="@+id/topic_replier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingRight="4dp"
-        android:text="回复者"
-        android:textColor="@color/blue_text_night"
-        />
-
-    <TextView
-        android:id="@+id/topic_reply_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingRight="8dp"
-        android:text="2016-03-24"
-        android:textColor="@color/colorSecondaryText"
-        />
-  </LinearLayout>
-
-  <LinearLayout
+  <RelativeLayout
       android:id="@+id/topic_status_row"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_below="@+id/topic_author_replier_row"
       android:layout_margin="0dp"
-      android:orientation="horizontal"
+      android:padding="0dp"
       >
 
     <TextView
         android:id="@+id/topic_status_summary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="6dp"
+        android:paddingLeft="9dp"
         android:text="Like: +15, 分数： -15; 回帖数: 129"
         android:textColor="@color/colorSecondaryText"
         />
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        />
-
     <ImageView
         android:id="@+id/topic_status_attach"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
         android:layout_gravity="center_vertical"
-        android:paddingRight="20dp"
+        android:paddingRight="6dp"
         android:src="@drawable/ic_attach_file_white_18dp"
         />
-  </LinearLayout>
-
+  </RelativeLayout>
 
 </RelativeLayout>
