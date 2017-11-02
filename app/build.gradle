@@ -118,7 +118,7 @@ dependencies {
     compile 'com.jude:swipebackhelper:3.1.2'
     compile 'me.relex:circleindicator:1.2.2@aar'
     compile 'com.commit451:PhotoView:1.2.5'
-    compile('com.mikepenz:aboutlibraries:6.0.0@aar') {
+    compile('com.mikepenz:aboutlibraries:5.9.8@aar') {
         transitive = true
     }
     compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
