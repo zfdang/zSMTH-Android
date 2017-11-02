@@ -32,3 +32,8 @@ proguard/
 
 # Mac dot file
 .DS_Store
+
+# freeline
+freeline.py
+freeline_project_description.json
+freeline/
