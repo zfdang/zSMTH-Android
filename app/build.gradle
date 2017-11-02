@@ -39,9 +39,9 @@ android {
     android.applicationVariants.all { variant ->
         variant.outputs.all { output ->
             if(buildType.name == "release") {
-                output.outputFileName = new File(output.outputFile.parent, "zSMTH" + "-" + buildType.name + "-v" + defaultConfig.versionName + ".apk" );
+                output.outputFileName = new File("zSMTH" + "-" + buildType.name + "-v" + defaultConfig.versionName + ".apk" );
             } else {
-                output.outputFileName = new File(output.outputFile.parent, "zSMTH" + "-" + buildType.name + "-v" + defaultConfig.versionName + ".apk" );
+                output.outputFileName = new File("zSMTH" + "-" + buildType.name + "-v" + defaultConfig.versionName + ".apk" );
             }
         }
     }
