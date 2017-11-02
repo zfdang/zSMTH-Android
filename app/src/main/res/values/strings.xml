@@ -90,7 +90,7 @@
   <!--About fragment-->
   <string name="aboutLibraries_description_showIcon">true</string>
   <string name="aboutLibraries_description_showVersion">true</string>
-  <string name="aboutLibraries_description_text"><![CDATA[ zSMTH是水木社区BBS的一款开源Android客户端。项目地址为 <A href="http://zSMTH-Android.zfdang.com/">http://zSMTH-Android.zfdang.com/</A>。<br /><br />© 2016 zfdang <br /><A href="http://www.zfdang.com">Visit Homepage</A> ]]></string>
+  <string name="aboutLibraries_description_text"><![CDATA[ zSMTH是水木社区BBS的一款开源Android客户端。项目地址为 <A href="http://zSMTH-Android.zfdang.com/">http://zSMTH-Android.zfdang.com/</A>。<br /><br />© 2017 zfdang <br /><A href="http://www.zfdang.com">Visit Homepage</A> ]]></string>
   <string name="search_author_label">请输入作者ID</string>
   <string name="search_keyword_label">请输入关键字</string>
   <string name="search_attachment_label">带附件</string>
