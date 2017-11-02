@@ -93,6 +93,7 @@ dependencies {
     // https://github.com/Gericop/Android-Support-Preference-V7-Fix
     compile "com.android.support:preference-v7:$rootProject.SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:preference-v14:$rootProject.SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:cardview-v7:$rootProject.SUPPORT_LIBRARY_VERSION"
 
     // RX
     compile "io.reactivex.rxjava2:rxjava:$rootProject.RXJAVA2_VERSION"
@@ -118,7 +119,7 @@ dependencies {
     compile 'com.jude:swipebackhelper:3.1.2'
     compile 'me.relex:circleindicator:1.2.2@aar'
     compile 'com.commit451:PhotoView:1.2.5'
-    compile('com.mikepenz:aboutlibraries:5.9.8@aar') {
+    compile('com.mikepenz:aboutlibraries:6.0.0@aar') {
         transitive = true
     }
     compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
