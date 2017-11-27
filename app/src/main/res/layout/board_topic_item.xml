@@ -135,7 +135,7 @@
         android:layout_alignParentRight="true"
         android:layout_gravity="center_vertical"
         android:paddingRight="6dp"
-        android:src="@drawable/ic_attach_file_black_18dp"
+        android:src="@drawable/ic_attach_file_18dp"
         />
   </RelativeLayout>
 

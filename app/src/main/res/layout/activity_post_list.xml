@@ -106,7 +106,7 @@
             android:layout_marginBottom="10dp"
             android:background="@null"
             android:clickable="true"
-            android:src="@drawable/ic_arrow_upward_black_36dp"
+            android:src="@drawable/ic_arrow_upward_36dp"
             />
 
         <ImageButton
@@ -116,7 +116,7 @@
             android:layout_marginBottom="10dp"
             android:background="@null"
             android:clickable="true"
-            android:src="@drawable/ic_expand_less_black_36dp"
+            android:src="@drawable/ic_expand_less_36dp"
             />
 
         <ImageButton
@@ -126,7 +126,7 @@
             android:layout_marginBottom="10dp"
             android:background="@null"
             android:clickable="true"
-            android:src="@drawable/ic_expand_more_black_36dp"
+            android:src="@drawable/ic_expand_more_36dp"
             />
 
         <ImageButton
@@ -135,7 +135,7 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:clickable="true"
-            android:src="@drawable/ic_arrow_downward_black_36dp"
+            android:src="@drawable/ic_arrow_downward_36dp"
             />
       </LinearLayout>
 
