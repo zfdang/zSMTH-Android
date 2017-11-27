@@ -28,7 +28,6 @@
       android:layout_height="wrap_content"
       android:layout_below="@+id/category_name"
       android:layout_margin="0dp"
-      android:background="@color/body_background_night"
       android:orientation="horizontal"
       >
 
@@ -52,7 +51,6 @@
       android:layout_height="wrap_content"
       android:layout_below="@+id/topic_title_row"
       android:layout_margin="0dp"
-      android:background="@color/body_background_night"
       android:padding="0dp"
       >
 
@@ -119,7 +117,6 @@
       android:layout_height="wrap_content"
       android:layout_below="@+id/topic_author_replier_row"
       android:layout_margin="0dp"
-      android:background="@color/body_background_night"
       android:padding="0dp"
       >
 
