@@ -34,7 +34,7 @@ script: ./gradlew assembleRelease
 
 after_success:
   - ls -l app/build/outputs/apk/
-  - cp app/build/outputs/apk/zSMTH-release-v*.apk app/build/outputs/apk/zSMTH-release.apk
+  - cp app/build/outputs/apk/release/zSMTH-release-v*.apk app/build/outputs/apk/zSMTH-release.apk
 
 deploy:
   provider: releases
