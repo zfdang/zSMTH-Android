@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/body_background_night"
+    android:fitsSystemWindows="true"
+    tools:context=".MainActivity"
+    >
+
+  <android.support.design.widget.AppBarLayout
+      android:id="@+id/board_topic_app_bar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:theme="@style/AppTheme.AppBarOverlay"
+      >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/board_topic_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/zsmth_actionbar_size"
+        android:theme="@style/ThemeOverlay.ToolBar"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:titleTextAppearance="@style/Toolbar.TitleText"
+        />
+
+  </android.support.design.widget.AppBarLayout>
+
+  <FrameLayout
+      android:id="@+id/frameLayout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:paddingLeft="@dimen/activity_horizontal_margin_left"
+      android:paddingRight="@dimen/activity_horizontal_margin_right"
+      android:background="@color/body_background_night"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior"
+      >
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/board_topic_list"
+          android:name="com.zfdang.zsmth_android.TopicListFragment"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:app="http://schemas.android.com/apk/res-auto"
+          xmlns:tools="http://schemas.android.com/tools"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_marginLeft="0dp"
+          android:layout_marginRight="0dp"
+          android:scrollbars="vertical"
+          app:layoutManager="LinearLayoutManager"
+          tools:context=".BoardTopicActivity"
+          app:layout_behavior="@string/appbar_scrolling_view_behavior"
+          tools:listitem="@layout/board_topic_item"
+          />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+  </FrameLayout>
+
+</android.support.design.widget.CoordinatorLayout>
