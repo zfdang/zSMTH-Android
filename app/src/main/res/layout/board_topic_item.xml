@@ -117,8 +117,8 @@
         android:id="@+id/topic_status_pinned"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/topic_status_attach"
         android:layout_gravity="center_vertical"
+        android:layout_toLeftOf="@+id/topic_status_attach"
         android:paddingRight="6dp"
         android:src="@drawable/ic_post_pinner_18p"
         />
