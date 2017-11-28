@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/recyclerview_item_bg"
+    android:orientation="vertical"
     android:paddingBottom="2dp"
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="2dp"
     >
-
   <TextView
-      android:id="@+id/category_name"
-      android:layout_width="fill_parent"
+      android:id="@+id/topic_page_indicator"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:background="@color/recycler_view_seperator"
       android:paddingLeft="2dp"
@@ -21,34 +21,20 @@
       android:textColor="@color/status_text_night"
       android:textSize="@dimen/zsmth_font_size_small"
       />
-
-  <LinearLayout
-      android:id="@+id/topic_title_row"
+  <TextView
+      android:id="@+id/topic_title"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_below="@+id/category_name"
-      android:layout_margin="0dp"
-      android:orientation="horizontal"
-      >
-
-    <TextView
-        android:id="@+id/topic_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="2dp"
-        android:paddingRight="6dp"
-        android:text="Topic"
-        android:textColor="@color/status_text_night"
-        android:textSize="@dimen/zsmth_font_size_medium"
-        />
-
-  </LinearLayout>
-
-
+      android:paddingLeft="2dp"
+      android:paddingRight="6dp"
+      android:text="Topic"
+      android:textColor="@color/status_text_night"
+      android:textSize="@dimen/zsmth_font_size_medium"
+      />
   <RelativeLayout
       android:id="@+id/topic_author_replier_row"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="match_parent"
       android:layout_below="@+id/topic_title_row"
       android:layout_margin="0dp"
       android:padding="0dp"
@@ -57,8 +43,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_margin="0dp"
+        android:orientation="horizontal"
         android:padding="0dp"
         >
       <TextView
@@ -85,8 +71,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:orientation="horizontal"
         android:layout_margin="0dp"
+        android:orientation="horizontal"
         android:padding="0dp"
         >
       <TextView
@@ -110,11 +96,10 @@
     </LinearLayout>
 
   </RelativeLayout>
-
   <RelativeLayout
       android:id="@+id/topic_status_row"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="match_parent"
       android:layout_below="@+id/topic_author_replier_row"
       android:layout_margin="0dp"
       android:padding="0dp"
@@ -129,6 +114,15 @@
         android:textColor="@color/colorSecondaryText"
         />
     <ImageView
+        android:id="@+id/topic_status_pinned"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/topic_status_attach"
+        android:layout_gravity="center_vertical"
+        android:paddingRight="6dp"
+        android:src="@drawable/ic_post_pinner_18p"
+        />
+    <ImageView
         android:id="@+id/topic_status_attach"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -138,5 +132,4 @@
         android:src="@drawable/ic_attach_file_18dp"
         />
   </RelativeLayout>
-
-</RelativeLayout>
+</LinearLayout>
