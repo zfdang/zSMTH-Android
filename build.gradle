@@ -7,7 +7,8 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0'
+        // https://developer.android.com/studio/releases/gradle-plugin.html
+        classpath 'com.android.tools.build:gradle:3.0.1'
 
         // https://github.com/ben-manes/gradle-versions-plugin
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
@@ -35,6 +36,6 @@ ext {
     buildToolsVersion = '26.0.2'
     FRESCO_VERSION = '1.5.0'
     SUPPORT_LIBRARY_VERSION = '26.0.2'
-    RXJAVA2_VERSION = '2.1.6'
+    RXJAVA2_VERSION = '2.1.7'
     RXANDROID2_VERSION = '2.0.1'
 }
