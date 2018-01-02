@@ -32,10 +32,10 @@ task clean(type: Delete) {
 ext {
     minSdkVersion = 17
     targetSdkVersion = 22
-    compileSdkVersion = 26
+    compileSdkVersion = 26a
     buildToolsVersion = '26.0.2'
-    FRESCO_VERSION = '1.5.0'
+    FRESCO_VERSION = '1.7.1'
     SUPPORT_LIBRARY_VERSION = '26.0.2'
-    RXJAVA2_VERSION = '2.1.7'
+    RXJAVA2_VERSION = '2.1.8'
     RXANDROID2_VERSION = '2.0.1'
 }
