@@ -193,7 +193,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
             @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
               Log.d(TAG, "onNext: " + ajaxResponse.toString());
               if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
-                Toast.makeText(BoardTopicActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(BoardTopicActivity.this, ajaxResponse.getAjax_msg() + "\n请手动刷新收藏夹！", Toast.LENGTH_SHORT).show();
               } else {
                 Toast.makeText(BoardTopicActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
               }
