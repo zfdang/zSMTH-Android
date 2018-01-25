@@ -42,7 +42,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
   public static final int COMPOSE_ACTIVITY_REQUEST_CODE = 107;
   private static final int REQUEST_CODE = 653;
   private static final String TAG = "ComposePostActivity";
-  private final String UPLOAD_TEMPLATE = "  [upload=%d][/upload]  ";
+  private final String UPLOAD_TEMPLATE = " [upload=%d][/upload] ";
 
   private Button mButton;
   private LinearLayout mUserRow;
@@ -91,7 +91,8 @@ public class ComposePostActivity extends SMTHBaseActivity {
           attachments += String.format(UPLOAD_TEMPLATE, i + 1);
         }
 
-        mContent.setText(attachments + mContent.getText().toString());
+        // https://stackoverflow.com/questions/3609174/android-insert-text-into-edittext-at-current-position
+        mContent.getText().insert(mContent.getSelectionStart(), attachments);
       }
     }
   }
@@ -122,6 +123,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
     mButton = (Button) findViewById(R.id.compose_post_attach_button);
     mButton.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
+        KeyboardLess.$hide(v.getContext(), mContent);
         startImageSelector();
       }
     });

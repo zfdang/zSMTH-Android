@@ -36,6 +36,7 @@
                 android:layout_width="@dimen/recyclerview_fast_scroller_width"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
+                android:layout_marginTop="5dp"
                 android:layout_marginBottom="30dp"/>
 
             <RelativeLayout
