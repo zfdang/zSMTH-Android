@@ -34,8 +34,8 @@ ext {
     targetSdkVersion = 22
     compileSdkVersion = 26
     buildToolsVersion = '26.0.2'
-    FRESCO_VERSION = '1.7.1'
+    FRESCO_VERSION = '1.8.0'
     SUPPORT_LIBRARY_VERSION = '26.0.2'
-    RXJAVA2_VERSION = '2.1.8'
+    RXJAVA2_VERSION = '2.1.9'
     RXANDROID2_VERSION = '2.0.1'
 }

@@ -227,7 +227,7 @@ public class ImagesSelectorActivity extends AppCompatActivity
 
                 Uri contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
                 String where = MediaStore.Images.Media.SIZE + " > " + SelectorSettings.mMinImageSize;
-                String sortOrder = MediaStore.Images.Media.DATE_ADDED + " DESC";
+                String sortOrder = MediaStore.Images.Media.DATE_TAKEN + " DESC";
 
                 contentResolver = getContentResolver();
                 Cursor cursor = contentResolver.query(contentUri, projections, where, null, sortOrder);
