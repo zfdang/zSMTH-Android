@@ -8,8 +8,8 @@
     <item name="colorAccent">@color/colorAccent</item>
 
     <item name="android:windowIsTranslucent">true</item>
-    <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
-    <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
+    <item name="android:windowAnimationStyle">@style/ActivityAnimFade</item>
+
     <!--http://stackoverflow.com/questions/14462226/white-background-during-app-launch-->
     <item name="android:windowBackground">@color/black_background</item>
 
@@ -114,8 +114,12 @@
     <item name="android:textColorSecondary">@color/blue_text_night</item>
   </style>
 
-  <style name="WindowAnimationFadeInOut">
-    <item name="@android:windowEnterAnimation">@animator/fade_in</item>
-    <item name="@android:windowExitAnimation">@animator/fade_out</item>
+  <!--activity animation style-->
+  <style name="ActivityAnimFade" parent="@android:style/Animation.Activity">
+    <item name="android:activityOpenEnterAnimation">@anim/activity_fade_in</item>
+    <item name="android:activityOpenExitAnimation">@anim/activity_hold</item>
+    <item name="android:activityCloseEnterAnimation">@anim/activity_fade_in</item>
+    <item name="android:activityCloseExitAnimation">@anim/activity_fade_out</item>
   </style>
+
 </resources>
