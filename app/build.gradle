@@ -130,6 +130,8 @@ dependencies {
     compile 'com.klinkerapps:link_builder:1.6.1'
     compile 'com.esotericsoftware:kryo:4.0.1'
 
+    compile 'com.github.nisrulz:screenshott:2.0.0'
+
     // my gradles
     implementation project(':multiple-images-selector')
     implementation project(':device_model_to_marketing_name')

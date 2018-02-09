@@ -119,6 +119,8 @@
   <string name="image_info_end">.END.</string>
   <string name="share">社会化分享</string>
   <string name="post_like_post">Like文章</string>
+  <string name="post_edit_post">修改文章</string>
+  <string name="post_convert_image">生成图片</string>
 
   <string name="mail_item_author_label">来自:</string>
   <string name="mail_button_inbox_label">收件箱</string>
@@ -138,5 +140,4 @@
   <string name="about_close">关闭</string>
   <string name="mail_content_menu_open_post">打开原贴</string>
   <string name="mail_content_title">加载中...</string>
-  <string name="post_edit_post">修改文章</string>
 </resources>

@@ -3,15 +3,20 @@ package com.zfdang.zsmth_android;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Parcelable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -54,6 +59,7 @@ import com.zfdang.zsmth_android.models.PostListContent;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+import github.nisrulz.screenshott.ScreenShott;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -61,6 +67,11 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.List;
 import okhttp3.ResponseBody;
@@ -452,6 +463,7 @@ public class PostListActivity extends SMTHBaseActivity
         new PostActionAlertDialogItem(getString(R.string.post_share), R.drawable.ic_share_black_48dp), // 8
         new PostActionAlertDialogItem(getString(R.string.post_delete_post), R.drawable.ic_delete_black_48dp), // 9
         new PostActionAlertDialogItem(getString(R.string.post_edit_post), R.drawable.ic_edit_black_48dp), // 10
+        new PostActionAlertDialogItem(getString(R.string.post_convert_image), R.drawable.ic_photo_black_48dp), // 11
     };
 
     ListAdapter adapter = new ArrayAdapter<PostActionAlertDialogItem>(getApplicationContext(), R.layout.post_popup_menu_item, menuItems) {
@@ -605,6 +617,54 @@ public class PostListActivity extends SMTHBaseActivity
       Intent intent = new Intent(this, ComposePostActivity.class);
       intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
       startActivity(intent);
+    } else if (which == 11) {
+      // generate screenshot of current post
+      View v = mRecyclerView.getLayoutManager().findViewByPosition(position);
+
+      // convert title + post to image
+      captureView(mTitle, v, post.getPostID());
+    }
+  }
+
+  public void captureView(View v1, View v2, String postID){
+    //Create a Bitmap with the same dimensions
+    Bitmap image = Bitmap.createBitmap(v1.getWidth(), v1.getHeight() + v2.getHeight(), Bitmap.Config.RGB_565);
+    //Draw the view inside the Bitmap
+    Canvas canvas = new Canvas(image);
+
+    if(Settings.getInstance().isNightMode()) {
+      canvas.drawColor(Color.BLACK);
+    } else {
+      canvas.drawColor(Color.WHITE);
+    }
+    v1.draw(canvas);
+    canvas.translate(0, v1.getHeight());
+    v2.draw(canvas);
+    canvas.save();
+
+    // save image to sdcard
+    try {
+      if (TextUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED)) {
+        String path = Environment.getExternalStorageDirectory().getPath() + "/zSMTH/";
+        File dir = new File(path);
+        if (!dir.exists()) {
+          dir.mkdirs();
+        }
+
+        String IMAGE_FILE_PREFIX = "post-";
+        String IMAGE_FILE_SUFFIX = ".jpg";
+        File outFile = new File(dir, IMAGE_FILE_PREFIX + postID + IMAGE_FILE_SUFFIX);
+        FileOutputStream out = new FileOutputStream(outFile);
+
+        image.compress(Bitmap.CompressFormat.JPEG, 90, out); //Output
+        Toast.makeText(PostListActivity.this, "截图已存为: /zSMTH/" + outFile.getName(), Toast.LENGTH_SHORT).show();
+
+        // make sure the new file can be recognized soon
+        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(outFile)));
+      }
+    } catch (Exception e) {
+      Log.e(TAG, "saveImageToFile: " + Log.getStackTraceString(e));
+      Toast.makeText(PostListActivity.this, "保存截图失败:\n" + e.toString(), Toast.LENGTH_LONG).show();
     }
   }
 
