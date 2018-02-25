@@ -61,11 +61,11 @@ public class UserStatus implements Parcelable {
   // // sometime, this is a boolean, sometime, it is a integer. SMTH is inconsistent
   private int new_like;
 
-  public int getNew_reply() {
+  public boolean getNew_reply() {
     return new_reply;
   }
 
-  public void setNew_reply(int new_reply) {
+  public void setNew_reply(boolean new_reply) {
     this.new_reply = new_reply;
   }
 
@@ -77,11 +77,11 @@ public class UserStatus implements Parcelable {
     this.new_like = new_like;
   }
 
-  public int getNew_at() {
+  public boolean getNew_at() {
     return new_at;
   }
 
-  public void setNew_at(int new_at) {
+  public void setNew_at(boolean new_at) {
     this.new_at = new_at;
   }
 
@@ -93,8 +93,8 @@ public class UserStatus implements Parcelable {
     this.full_mail = full_mail;
   }
 
-  private int new_reply;
-  private int new_at;
+  private boolean new_reply;
+  private boolean new_at;
   //    private int new_msg;
 
   private int ajax_st;
@@ -203,8 +203,8 @@ public class UserStatus implements Parcelable {
     dest.writeByte(new_mail ? (byte) 1 : (byte) 0);
     dest.writeByte(full_mail ? (byte) 1 : (byte) 0);
     dest.writeInt(this.new_like);
-    dest.writeInt(this.new_reply);
-    dest.writeInt(this.new_at);
+    dest.writeByte(this.new_reply ? (byte)1 : (byte)0);
+    dest.writeByte(this.new_at ? (byte)1 : (byte)0);
     dest.writeInt(this.ajax_st);
     dest.writeString(this.ajax_code);
     dest.writeString(this.ajax_msg);
@@ -220,8 +220,8 @@ public class UserStatus implements Parcelable {
     this.new_mail = in.readByte() != 0;
     this.full_mail = in.readByte() != 0;
     this.new_like = in.readInt();
-    this.new_reply = in.readInt();
-    this.new_at = in.readInt();
+    this.new_reply = in.readByte() != 0;
+    this.new_at = in.readByte() != 0;
     this.ajax_st = in.readInt();
     this.ajax_code = in.readString();
     this.ajax_msg = in.readString();
