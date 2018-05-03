@@ -7,6 +7,7 @@ import android.os.Parcelable;
  * used by Observable<UserStatus> queryActiveUserStatus()
  * Created by zfdang on 2016-4-5.
  */
+
 //{
 //        "id": "guest",
 //        "user_name": "和谐水木",
@@ -48,6 +49,46 @@ import android.os.Parcelable;
 //        "ajax_code": "0005",
 //        "ajax_msg": "操作成功"
 //}
+
+// {"id":"mozilla",
+// "user_name":"Delivery Done!",
+// "face_url":"//images.newsmth.net/nForum/img/face_default_m.jpg",
+// "face_width":null,
+// "face_height":null,
+// "gender":"m",
+// "astro":"白羊座",
+// "life":"楠木",
+// "lifelevel":12,
+// "qq":null,
+// "msn":null,
+// "home_page":null,
+// "level":"用户",
+// "is_online":true,
+// "post_count":9232,
+// "last_login_time":1519616309,
+// "last_login_ip":"111.202.212.157",
+// "is_hide":true,
+// "is_activated":true,
+// "is_register":true,
+// "login_count":34127,
+// "is_admin":false,
+// "first_login_time":1066982906,
+// "stay_count":118183936,
+// "score_user":62961,
+// "score_manager":0,
+// "is_login":true,
+// "forum_totol_count":45983,
+// "forum_user_count":16411,
+// "forum_guest_count":29572,
+// "new_mail":false,
+// "full_mail":false,
+// "new_like":0,
+// "new_reply":0,
+// "new_at":0,
+// "new_msg":0,
+// "ajax_st":1,
+// "ajax_code":"0005",
+// "ajax_msg":"操作成功"}
 
 public class UserStatus implements Parcelable {
 
