@@ -46,7 +46,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
-import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
@@ -160,7 +160,7 @@ public class PostListActivity extends SMTHBaseActivity
 
     // define swipe refresh function
     mRefreshLayout = (SmartRefreshLayout) findViewById(R.id.post_list_swipe_refresh_layout);
-    mRefreshLayout.setEnableAutoLoadmore(false);
+    mRefreshLayout.setEnableAutoLoadMore(false);
     mRefreshLayout.setEnableScrollContentWhenLoaded(false);
     mRefreshLayout.setEnableOverScrollBounce(false);
     mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -169,8 +169,8 @@ public class PostListActivity extends SMTHBaseActivity
         reloadPostListWithoutAlert();
       }
     });
-    mRefreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
-      @Override public void onLoadmore(RefreshLayout refreshLayout) {
+    mRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+      @Override public void onLoadMore(RefreshLayout refreshLayout) {
         // load next page if available
         goToNextPage();
       }

@@ -69,7 +69,7 @@ public class HotTopicFragment extends Fragment implements OnVolumeUpDownListener
     // http://sapandiwakar.in/pull-to-refresh-for-android-recyclerview-or-any-other-vertically-scrolling-view/
     // pull to refresh for android recyclerview
     mRefreshLayout = (SmartRefreshLayout) rootView;
-    mRefreshLayout.setEnableLoadmore(false);
+    mRefreshLayout.setEnableLoadMore(false);
     mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
       @Override public void onRefresh(RefreshLayout refreshLayout) {
         RefreshGuidanceFromWWW();

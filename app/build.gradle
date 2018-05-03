@@ -69,8 +69,8 @@ android {
 }
 
 dependencies {
-    final OKHTTP_VERSION = '3.9.1'
-    final RETROFIT_VERSION = '2.3.0'
+    final OKHTTP_VERSION = '3.10.0'
+    final RETROFIT_VERSION = '2.4.0'
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
@@ -114,21 +114,21 @@ dependencies {
     // umeng analytics
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.github.maksim88:PasswordEditText:v0.9'
-    compile 'org.jsoup:jsoup:1.11.2'
+    compile 'org.jsoup:jsoup:1.11.3'
     compile 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
     compile 'com.jude:swipebackhelper:3.1.2'
     compile 'me.relex:circleindicator:1.2.2@aar'
     compile 'com.commit451:PhotoView:1.2.5'
-    compile('com.mikepenz:aboutlibraries:6.0.2@aar') {
+    compile('com.mikepenz:aboutlibraries:6.0.8@aar') {
         transitive = true
     }
     compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
     compile files('libs/ShareSDK-Core-2.8.3.jar')
     compile 'com.wx.wheelview:wheelview:1.3.4'
-    compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.4-7'
-//    compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.2'
+    compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.5.1'
+//    compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.5.1'
     compile 'com.klinkerapps:link_builder:1.6.1'
-    compile 'com.esotericsoftware:kryo:4.0.1'
+    compile 'com.esotericsoftware:kryo:4.0.2'
 
     compile 'com.github.nisrulz:screenshott:2.0.0'
 
