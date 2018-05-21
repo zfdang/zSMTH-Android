@@ -29,9 +29,9 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile "com.android.support:appcompat-v7:$rootProject.SUPPORT_LIBRARY_VERSION"
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'junit:junit:4.12'
+    implementation "com.android.support:appcompat-v7:$rootProject.SUPPORT_LIBRARY_VERSION"
 }
 
 // https://github.com/blundell/release-android-library
