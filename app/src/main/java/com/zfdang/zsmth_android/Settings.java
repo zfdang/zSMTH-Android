@@ -461,7 +461,7 @@ public class Settings {
 
     bUserOnline = mPreference.getBoolean(USER_ONLINE, false);
 
-    bLoadOriginalImage = mPreference.getBoolean(LOAD_ORIGINAL_IMAGE, true);
+    bLoadOriginalImage = mPreference.getBoolean(LOAD_ORIGINAL_IMAGE, false);
 
     bNightMode = mPreference.getBoolean(NIGHT_MODE, true);
 

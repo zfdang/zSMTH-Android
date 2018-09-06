@@ -1,12 +1,17 @@
 package com.zfdang.zsmth_android;
 
+import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -52,12 +57,21 @@ import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.services.MaintainUserStatusService;
 import com.zfdang.zsmth_android.services.UserStatusReceiver;
+
+import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 import java.lang.reflect.Field;
+import java.util.Random;
+
 import org.reactivestreams.Subscriber;
 
 public class MainActivity extends SMTHBaseActivity
@@ -180,6 +194,20 @@ public class MainActivity extends SMTHBaseActivity
           showInfoDialog();
         }
       }, 2000);
+    }
+
+
+    if(Settings.getInstance().isBonusOn() && Settings.getInstance().isNewDay()) {
+      // copy alipay bonus code to clipboard
+      final Handler handler = new Handler();
+      int delay = 180 + new Random().nextInt(120); // delay 180 ~ 300 seconds
+      handler.postDelayed(new Runnable() {
+        @Override public void run() {
+          copyBonusCode();
+        }
+      }, delay * 1000);
+
+      Settings.getInstance().markTodayAsOld();
     }
   }
 
@@ -470,6 +498,59 @@ public class MainActivity extends SMTHBaseActivity
     finish();
     android.os.Process.killProcess(android.os.Process.myPid());
     System.exit(0);
+  }
+
+  // copy alipay bonus code to clipboard
+  private void copyBonusCode() {
+    String BONUS_URL = "http://zsmth-android.zfdang.com/promotion";
+
+    Observable.just(BONUS_URL).map(new Function<String, String>() {
+      @Override
+      public String apply(String s) throws Exception {
+        OkHttpClient client = new OkHttpClient();
+        Response response = client.newCall(new Request.Builder().url(s).build()).execute();
+        return response.body().string();
+      }
+    }).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Observer<String>() {
+              @Override
+              public void onSubscribe(Disposable d) {
+
+              }
+
+              @Override
+              public void onNext(String s) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                  final android.content.ClipboardManager clipboardManager =
+                          (android.content.ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                  final android.content.ClipData clipData = android.content.ClipData.newPlainText("ID", s);
+                  clipboardManager.setPrimaryClip(clipData);
+                } else {
+                  final android.text.ClipboardManager clipboardManager =
+                          (android.text.ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                  clipboardManager.setText(s);
+                }
+
+                try {
+                  Uri uri = Uri.parse("alipayqr://platformapi/startapp?saId=88886666");
+                  Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                  getApplicationContext().startActivity(intent);
+                } catch (Exception e) {
+                }
+
+              }
+
+              @Override
+              public void onError(Throwable e) {
+
+              }
+
+              @Override
+              public void onComplete() {
+
+              }
+            });
   }
 
   // show information dialog, called by first run
