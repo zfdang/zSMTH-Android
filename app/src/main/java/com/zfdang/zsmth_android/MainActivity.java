@@ -533,7 +533,7 @@ public class MainActivity extends SMTHBaseActivity
                 }
 
                 try {
-                  Uri uri = Uri.parse("alipayqr://platformapi/startapp?saId=88886666");
+                  Uri uri = Uri.parse("alipayqr://platformapi/startapp");
                   Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                   getApplicationContext().startActivity(intent);
                 } catch (Exception e) {
