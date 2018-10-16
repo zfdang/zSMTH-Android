@@ -103,7 +103,7 @@
 
   <PreferenceCategory android:title="更多">
     <CheckBoxPreference
-        android:defaultValue="on"
+        android:defaultValue="off"
         android:key="setting_app_bonus"
         android:summaryOff="领红包你也不亏，支持一下作者吧"
         android:summaryOn="领取红包，支持作者!"

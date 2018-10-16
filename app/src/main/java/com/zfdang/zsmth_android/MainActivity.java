@@ -502,7 +502,7 @@ public class MainActivity extends SMTHBaseActivity
 
   // copy alipay bonus code to clipboard
   private void copyBonusCode() {
-    String BONUS_URL = "http://zsmth-android.zfdang.com/promotion.txt";
+    String BONUS_URL = "http://zsmth-android.zfdang.com/promotions.txt";
 
     Observable.just(BONUS_URL).map(new Function<String, String>() {
       @Override

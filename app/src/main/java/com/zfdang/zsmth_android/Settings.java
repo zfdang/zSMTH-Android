@@ -472,7 +472,7 @@ public class Settings {
     bNotificationLike = mPreference.getBoolean(NOTIFICATION_LIKE, true);
     bNotificationReply = mPreference.getBoolean(NOTIFICATION_REPLY, true);
 
-    bBonus = mPreference.getBoolean(APP_BONUS, true);
+    bBonus = mPreference.getBoolean(APP_BONUS, false);
 
     bLaunchHotTopic = mPreference.getBoolean(LAUNCH_HOTTOPIC_AS_ENTRY, true);
 
