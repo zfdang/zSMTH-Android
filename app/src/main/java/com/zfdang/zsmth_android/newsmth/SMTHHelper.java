@@ -463,6 +463,15 @@ public class SMTHHelper {
     nodes = content.getElementsByTag("p");
     if (nodes.size() >= 1) {
       Element node = nodes.first();
+
+      // on Oct.19, SMTH add topic id in front of author
+      // <font style="display: none">1026567117</font>发信人: areshuang (壹剑客), 信区: SecondDigi
+      // remove this meaningless block
+      for( Element font : node.select("font[style='display: none']") )
+      {
+        font.remove();
+      }
+
       // 2. set post content
       post.setLikesAndPostContent(likes, node);
     }
