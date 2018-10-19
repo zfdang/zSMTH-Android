@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatDelegate;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.mob.MobSDK;
 import com.zfdang.zsmth_android.Settings;
 import com.zfdang.zsmth_android.helpers.GEODatabase;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
@@ -62,7 +63,7 @@ public class SMTHApplication extends Application {
     geoDB = new GEODatabase(this);
 
     // init shareSDK
-//    MobSDK.init(this);
+    MobSDK.init(this);
 
 
     //        Set<RequestListener> requestListeners = new HashSet<>();
