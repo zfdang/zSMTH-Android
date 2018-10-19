@@ -1,0 +1,19 @@
+本程序会使用两个SDK: 
+
+1. ShareSDK用以分享内容到微信、微博等
+2. UMeng SDK用以分析版本和使用情况
+
+所有需要使用到的权限如下：
+
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+  <!--<uses-permission android:name="android.permission.READ_PHONE_STATE"/>-->
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+  <uses-permission
+      android:name="android.permission.VIBRATE"
+      android:maxSdkVersion="18"/>
+  <!-- <uses-permission android:name="android.permission.CAMERA" /> -->
+
+本程序不会收集任何用户的隐私。
