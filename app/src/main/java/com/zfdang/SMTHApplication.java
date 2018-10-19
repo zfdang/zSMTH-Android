@@ -61,6 +61,10 @@ public class SMTHApplication extends Application {
     // init IP lookup database
     geoDB = new GEODatabase(this);
 
+    // init shareSDK
+//    MobSDK.init(this);
+
+
     //        Set<RequestListener> requestListeners = new HashSet<>();
     //        requestListeners.add(new RequestLoggingListener());
     // init Fresco
