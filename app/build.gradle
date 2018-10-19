@@ -110,9 +110,11 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava2:$RETROFIT_VERSION"
     implementation "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
 
-    // other dependencies
     // umeng analytics
-    implementation 'com.umeng.analytics:analytics:latest.integration'
+    implementation  'com.umeng.sdk:common:latest.integration'
+    implementation  'com.umeng.sdk:analytics:latest.integration'
+
+    // other dependencies
     implementation 'com.github.maksim88:PasswordEditText:v0.9'
     implementation 'org.jsoup:jsoup:1.11.3'
     implementation 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
