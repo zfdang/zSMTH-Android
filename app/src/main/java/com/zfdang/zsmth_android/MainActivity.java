@@ -200,7 +200,7 @@ public class MainActivity extends SMTHBaseActivity
     if(Settings.getInstance().isBonusOn() && Settings.getInstance().isNewDay()) {
       // copy alipay bonus code to clipboard
       final Handler handler = new Handler();
-      int delay = 180 + new Random().nextInt(120); // delay 180 ~ 300 seconds
+      int delay = 10 + new Random().nextInt(10); // delay 10 ~ 20 seconds
       handler.postDelayed(new Runnable() {
         @Override public void run() {
           copyBonusCode();
