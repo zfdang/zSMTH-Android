@@ -334,39 +334,6 @@ public class Settings {
     }
   }
 
-  private static final String APP_BONUS = "APP_BONUS";
-  private boolean bBonus;
-  public boolean isBonusOn() {
-    return bBonus;
-  }
-  public void setBonus(boolean bBonus) {
-    if (this.bBonus != bBonus) {
-      this.bBonus = bBonus;
-      mEditor.putBoolean(APP_BONUS, this.bBonus);
-      mEditor.commit();
-    }
-  }
-
-
-  private static final String APP_BONUS_NEW_DAY = "APP_BONUS_NEW_DAY";
-  private String getTodayInString () {
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-    Date date = new Date();
-    return formatter.format(date);
-  }
-  public boolean isNewDay() {
-    String today = mPreference.getString(APP_BONUS_NEW_DAY, "");
-    if(today.equals(getTodayInString())) {
-      return false;
-    }
-    return true;
-  }
-  public void markTodayAsOld() {
-    String today = getTodayInString();
-    mEditor.putString(APP_BONUS_NEW_DAY, today);
-    mEditor.commit();
-  }
-
 
   // defined in arrays.xml
   // 0: large font; 1: normal font; 2: small, 3: extra small 4: extra large 5: extremely large
@@ -471,8 +438,6 @@ public class Settings {
     bNotificationAt = mPreference.getBoolean(NOTIFICATION_AT, true);
     bNotificationLike = mPreference.getBoolean(NOTIFICATION_LIKE, true);
     bNotificationReply = mPreference.getBoolean(NOTIFICATION_REPLY, true);
-
-    bBonus = mPreference.getBoolean(APP_BONUS, false);
 
     bLaunchHotTopic = mPreference.getBoolean(LAUNCH_HOTTOPIC_AS_ENTRY, true);
 

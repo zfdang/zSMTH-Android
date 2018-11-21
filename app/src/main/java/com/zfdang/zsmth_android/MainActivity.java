@@ -196,19 +196,6 @@ public class MainActivity extends SMTHBaseActivity
       }, 2000);
     }
 
-
-    if(Settings.getInstance().isBonusOn() && Settings.getInstance().isNewDay()) {
-      // copy alipay bonus code to clipboard
-      final Handler handler = new Handler();
-      int delay = 10 + new Random().nextInt(10); // delay 10 ~ 20 seconds
-      handler.postDelayed(new Runnable() {
-        @Override public void run() {
-          copyBonusCode();
-        }
-      }, delay * 1000);
-
-      Settings.getInstance().markTodayAsOld();
-    }
   }
 
   private void initCircularActionMenu(FloatingActionButton fab) {
@@ -498,67 +485,6 @@ public class MainActivity extends SMTHBaseActivity
     finish();
     android.os.Process.killProcess(android.os.Process.myPid());
     System.exit(0);
-  }
-
-  // copy alipay bonus code to clipboard
-  private void copyBonusCode() {
-    String BONUS_URL = "http://zsmth-android.zfdang.com/promotions.txt";
-
-    Observable.just(BONUS_URL).map(new Function<String, String>() {
-      @Override
-      public String apply(String s) throws Exception {
-        OkHttpClient client = new OkHttpClient();
-        Response response = client.newCall(new Request.Builder().url(s).build()).execute();
-        return response.body().string();
-      }
-    }).subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Observer<String>() {
-              @Override
-              public void onSubscribe(Disposable d) {
-
-              }
-
-              @Override
-              public void onNext(String s) {
-                if(s.length() < 10) {
-                  // empty code
-                  return;
-                }
-                // select code randomly from one line
-                String lines[] = s.split("\\r?\\n");
-                s = lines[new Random().nextInt(lines.length)];
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                  final android.content.ClipboardManager clipboardManager =
-                          (android.content.ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                  final android.content.ClipData clipData = android.content.ClipData.newPlainText("ID", s);
-                  clipboardManager.setPrimaryClip(clipData);
-                } else {
-                  final android.text.ClipboardManager clipboardManager =
-                          (android.text.ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                  clipboardManager.setText(s);
-                }
-
-                try {
-                  Uri uri = Uri.parse("alipayqr://platformapi/startapp");
-                  Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                  getApplicationContext().startActivity(intent);
-                } catch (Exception e) {
-                }
-
-              }
-
-              @Override
-              public void onError(Throwable e) {
-
-              }
-
-              @Override
-              public void onComplete() {
-
-              }
-            });
   }
 
   // show information dialog, called by first run

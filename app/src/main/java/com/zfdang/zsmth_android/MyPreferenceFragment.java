@@ -52,7 +52,6 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
   CheckBoxPreference notification_control_reply;
   CheckBoxPreference notification_control_at;
 
-  CheckBoxPreference app_bonus;
   Preference app_version;
 
   @Override public void onCreate(Bundle savedInstanceState) {
@@ -278,20 +277,6 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
       }
     });
 
-
-    app_bonus = (CheckBoxPreference) findPreference("setting_app_bonus");
-    app_bonus.setChecked(Settings.getInstance().isBonusOn());
-    app_bonus.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-      @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
-        boolean bValue = Settings.getInstance().isBonusOn();
-        if (newValue instanceof Boolean) {
-          Boolean boolVal = (Boolean) newValue;
-          bValue = boolVal;
-        }
-        Settings.getInstance().setBonus(bValue);
-        return true;
-      }
-    });
 
 
     app_version = findPreference("setting_app_version");
