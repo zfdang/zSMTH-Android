@@ -118,8 +118,7 @@ dependencies {
     implementation 'com.github.maksim88:PasswordEditText:v0.9'
     implementation 'org.jsoup:jsoup:1.11.3'
     implementation 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
-    implementation 'com.jude:swipebackhelper:3.1.2'pwd
-    ll
+    implementation 'com.jude:swipebackhelper:3.1.2'
     implementation 'me.relex:circleindicator:1.2.2@aar'
     implementation 'com.commit451:PhotoView:1.2.5'
     implementation('com.mikepenz:aboutlibraries:6.2.0@aar') {
