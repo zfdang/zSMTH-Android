@@ -9,7 +9,7 @@ import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 public class GEODatabase extends SQLiteAssetHelper {
 
   private static final String DATABASE_NAME = "qqwry.db";
-  private static final int DATABASE_VERSION = 16; // updated to 2018-04-25
+  private static final int DATABASE_VERSION = 17; // updated to 2018-11-20
 
   public GEODatabase(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
