@@ -227,7 +227,7 @@ public class WrapContentDraweeView extends SimpleDraweeView {
         dst.bottom = accumulatedHeight + (int) ((float) src.bottom / (float) src.right * getWidth());
         canvas.drawBitmap(bmp, src, dst, paint);
 
-        accumulatedHeight = dst.bottom + 1;
+        accumulatedHeight = dst.bottom;
       }
     }
   }
