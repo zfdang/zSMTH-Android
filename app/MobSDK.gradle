@@ -63,4 +63,7 @@ MobSDK {
             }
         }
     }
+    permissions {
+        exclude "android.permission.READ_SMS", "android.permission.GET_TASKS", "android.permission.RECEIVE_SMS", "android.permission.PACKAGE_USAGE_STATS"
+    }
 }
