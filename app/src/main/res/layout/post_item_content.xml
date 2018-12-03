@@ -4,6 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:paddingTop="2dp"
+    android:paddingBottom="0dp"
     android:paddingLeft="2dp"
     android:paddingRight="4dp"
     android:text="内容加载中..."
