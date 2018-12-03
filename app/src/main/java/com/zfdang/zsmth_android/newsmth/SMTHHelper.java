@@ -349,12 +349,10 @@ public class SMTHHelper {
   }
 
   public static Post ParseMailContentFromWWW(String content) {
-    Post post = new Post();
-
-    List<String> likes = new ArrayList<>();
     Document doc = Jsoup.parse(content);
-    post.setLikesAndPostContent(likes, doc);
 
+    Post post = new Post();
+    post.parsePostContent(doc, false);
     return post;
   }
 
@@ -414,9 +412,8 @@ public class SMTHHelper {
       // find & parse post content
       Elements contents = table.select("td.a-content");
       if (contents.size() == 1) {
-        ParsePostContentFromWWW(contents.get(0), post);
+        post.parsePostContent(contents.get(0), true);
       }
-      //            Log.d(TAG, post.toString());
       results.add(post);
     }
 
@@ -445,59 +442,6 @@ public class SMTHHelper {
     return results;
   }
 
-  // called by ParsePostListFromWWW
-  // this method will call ParseLikeElementInPostContent & ParsePostBodyFromWWW
-  // sample response: assets/post_content_from_www.html
-  public static void ParsePostContentFromWWW(Element content, Post post) {
-    // 1. find, parse and remove likes node first
-    // <div class="likes">
-    Elements nodes = content.select("div.likes");
-    List<String> likes = null;
-    if (nodes.size() == 1) {
-      Element node = nodes.first();
-      likes = ParseLikeElementInPostContent(node);
-    }
-
-    // 2. find post content, the first <p> node in the td.a-content
-    // <button class="button add_like"
-    nodes = content.getElementsByTag("p");
-    if (nodes.size() >= 1) {
-      Element node = nodes.first();
-
-      // on Oct.19, SMTH add topic id in front of author
-      // <font style="display: none">1026567117</font>发信人: areshuang (壹剑客), 信区: SecondDigi
-      // remove this meaningless block
-      for( Element font : node.select("font[style='display: none']") )
-      {
-        font.remove();
-      }
-
-      // 2. set post content
-      post.setLikesAndPostContent(likes, node);
-    }
-  }
-
-  // parse like list in post content
-  public static List<String> ParseLikeElementInPostContent(Element like) {
-    List<String> likes = new ArrayList<>();
-
-    // <div class="like_name">有36位用户评价了这篇文章：</div>
-    Elements nodes = like.select("div.like_name");
-    if (nodes.size() == 1) {
-      Element node = nodes.first();
-      likes.add(node.text());
-    }
-
-    // <li><span class="like_score_0">[&nbsp;&nbsp;]</span><span class="like_user">fly891198061:</span>
-    // <span class="like_msg">无法忍受，我不会变节，先斗智，不行就自杀！来个痛快的~！</span>
-    // <span class="like_time">(2016-03-27 15:04)</span></li>
-    nodes = like.select("li");
-    for (Element n : nodes) {
-      likes.add(n.text());
-    }
-
-    return likes;
-  }
 
   public static Topic ParseTopicFromElement(Element ele, String type) {
     if ("top10".equals(type) || "sectionhot".equals(type)) {

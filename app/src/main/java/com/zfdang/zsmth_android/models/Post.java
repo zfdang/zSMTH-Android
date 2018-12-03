@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -33,7 +34,7 @@ public class Post {
   private List<Attachment> attachFiles;
 
   private String htmlContent; // likes are not included
-  //    private String htmlCompleteContent; // likes are included
+  private String htmlContentAndLikes; // contents and likes are merged together
   private List<ContentSegment> mSegments;  // parsed from htmlCompleteContent
 
   public Post() {
@@ -96,13 +97,75 @@ public class Post {
     this.position = position;
   }
 
-  // set likes and content together, then merge them to htmlCompleteContent, then split it into htmlSegments
-  public void setLikesAndPostContent(List<String> likes, Element content) {
-    // save likes
-    this.likes = likes;
+  public void parsePostContent(Element content, boolean isPost) {
+    Element pureContent = null;
+    if (isPost) {
+      // 1. parse likes node first
+      // <div class="likes">
+      Elements likeNodes = content.select("div.likes");
+      if (likeNodes.size() == 1) {
+        Element likeNode = likeNodes.first();
+        ParseLikeElementInPostContent(likeNode);
+        likeNode.remove();
+      }
 
-    // Log.d("setLikesAndPostContent", content.html());
+      // 2. remove like button
+      // <button class="button add_like"
+      Elements likeButtons = content.select("button.add_like");
+      if(likeButtons.size() == 1) {
+        Element likeButton = likeButtons.get(0);
+        likeButton.remove();
+      }
 
+      // on Oct.19, SMTH add topic id in front of author
+      // <font style="display: none">1026567117</font>发信人: areshuang (壹剑客), 信区: SecondDigi
+      // remove this meaningless block
+      for (Element font : content.select("font[style='display: none']")) {
+        font.remove();
+      }
+
+      // 4. take td content as the pure post content
+      pureContent = Jsoup.parse(content.html());
+    } else {
+      // from email, content not enclosed by <p> tag
+      pureContent = content;
+    }
+
+    // 2. parse post pure content, result in htmlContent
+    parsePostPureContent(pureContent);
+
+    // 3. merge contents and likes, result in htmlContentAndLikes
+    mergePureContentAndLikes();
+
+    // 4. parse contents into segments
+    parseContentToSegments();
+  }
+
+    // parse like list in post content
+    public void ParseLikeElementInPostContent(Element likeNode) {
+      if(likes == null) {
+          likes = new ArrayList<>();
+      }
+      likes.clear();
+
+        // <div class="like_name">有36位用户评价了这篇文章：</div>
+        Elements nodes = likeNode.select("div.like_name");
+        if (nodes.size() == 1) {
+            Element node = nodes.first();
+            likes.add(node.text());
+        }
+
+        // <li><span class="like_score_0">[&nbsp;&nbsp;]</span><span class="like_user">fly891198061:</span>
+        // <span class="like_msg">无法忍受，我不会变节，先斗智，不行就自杀！来个痛快的~！</span>
+        // <span class="like_time">(2016-03-27 15:04)</span></li>
+        nodes = likeNode.select("li");
+        for (Element n : nodes) {
+            likes.add(n.text());
+        }
+    }
+
+  // parse post pure content, then merge them to htmlCompleteContent, then split it into htmlSegments
+  public void parsePostPureContent(Element content) {
     // find all attachment from node
     // <a target="_blank" href="http://att.newsmth.net/nForum/att/AutoWorld/1939790539/4070982">
     // <img border="0" title="单击此查看原图" src="http://att.newsmth.net/nForum/att/AutoWorld/1939790539/4070982/large" class="resizeable">
@@ -146,31 +209,29 @@ public class Post {
     }
 
     // process pure post content
-    String formattedPlainText = Html.fromHtml(content.html()).toString();
-    this.htmlContent = this.processPostContent(formattedPlainText);
-
     // it's important to know that not all HTML tags are supported by Html.fromHtml, see the supported list
     // https://commonsware.com/blog/Android/2010/05/26/html-tags-supported-by-textview.html
     // http://stackoverflow.com/questions/18295881/android-textview-html-font-size-tag
-    String htmlCompleteContent = this.htmlContent;
+    String formattedPlainText = Html.fromHtml(content.html()).toString();
+    this.htmlContent = this.parsePostPureContentFormat(formattedPlainText);
+  }
 
-    if (likes != null && likes.size() > 0) {
-      StringBuilder wordList = new StringBuilder();
-      wordList.append("<br/><small><cite>");
-      for (String word : likes) {
-        wordList.append(word).append("<br/>");
+  public void mergePureContentAndLikes(){
+      htmlContentAndLikes = this.htmlContent;
+
+      if (likes != null && likes.size() > 0) {
+          StringBuilder wordList = new StringBuilder();
+          wordList.append("<br/><small><cite>");
+          for (String word : likes) {
+              wordList.append(word).append("<br/>");
+          }
+          wordList.append("</cite></small>");
+          htmlContentAndLikes += new String(wordList);
       }
-      wordList.append("</cite></small>");
-      htmlCompleteContent += new String(wordList);
-    }
-    // now htmlCompleteContent has both post content and likes content
-
-    // parse htmlCompleteContent to htmlSegments
-    parseContentToSegments(htmlCompleteContent);
   }
 
   // split complete content with ATTACHMENT_MARK
-  private void parseContentToSegments(String htmlCompleteContent) {
+  private void parseContentToSegments() {
     if (mSegments == null) {
       mSegments = new ArrayList<>();
     }
@@ -178,10 +239,10 @@ public class Post {
 
     if (attachFiles == null || attachFiles.size() == 0) {
       // no attachment, add all content as one segment
-      mSegments.add(new ContentSegment(ContentSegment.SEGMENT_TEXT, htmlCompleteContent));
+      mSegments.add(new ContentSegment(ContentSegment.SEGMENT_TEXT, htmlContentAndLikes));
     } else {
       // when there are attachments here, separate them one by one
-      String[] segments = htmlCompleteContent.split(ATTACHMENT_MARK);
+      String[] segments = htmlContentAndLikes.split(ATTACHMENT_MARK);
 
       // add segments and attachments together
       int attachIndex = 0;
@@ -227,7 +288,7 @@ public class Post {
   the expected input is formatted plain text, no html tag is expected
   line break by \n, but not <br>
   */
-  private String processPostContent(String content) {
+  private String parsePostPureContentFormat(String content) {
     // &nbsp; is converted as code=160, but not a whitespace (ascii=32)
     // http://stackoverflow.com/questions/4728625/why-trim-is-not-working
     content = content.replace(String.valueOf((char) 160), " ");
@@ -364,10 +425,12 @@ public class Post {
     return Html.fromHtml(this.htmlContent.replace(ATTACHMENT_MARK, "")).toString();
   }
 
-  // this method should not be called, unless we set error message
+  // this method will be called when post content can't be fetched properly
+  // error message is returned in this case
   public void setRawContent(String rawContent) {
     this.htmlContent = rawContent;
-    parseContentToSegments(this.htmlContent);
+    this.htmlContentAndLikes = rawContent;
+    parseContentToSegments();
   }
 
   public void addAttachFile(Attachment attach) {
