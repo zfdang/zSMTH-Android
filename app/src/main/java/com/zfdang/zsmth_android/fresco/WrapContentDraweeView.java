@@ -20,6 +20,7 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
+import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.BasePostprocessor;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -162,7 +163,7 @@ public class WrapContentDraweeView extends SimpleDraweeView {
             if (imageAspectRatio < 1) {
               imageMaxAllowedHeight = (int) (ImageUtils.getMaxHeight() * imageAspectRatio) - 5;
             } else {
-              imageMaxAllowedHeight = ImageUtils.getMaxHeight() - 5;
+              imageMaxAllowedHeight = ImageUtils.getMaxHeight();
             }
             int imageCount = getTimes(imageTotalHeight, imageMaxAllowedHeight);
             //                        Log.d(TAG, "process: h = " + imageTotalHeight + " w = " + destBitmap.getWidth() + " allowed: " + imageMaxAllowedHeight + " count: " + imageCount);
@@ -195,7 +196,7 @@ public class WrapContentDraweeView extends SimpleDraweeView {
 
     ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri).setAutoRotateEnabled(true)
         // this will reduce image's size if it's wider than screen width
-        //                .setResizeOptions(new ResizeOptions(WindowWidth, Integer.MAX_VALUE))
+                        .setResizeOptions(new ResizeOptions(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE))
         .setPostprocessor(postProcessor).build();
 
     DraweeController controller = ((PipelineDraweeControllerBuilder) getControllerBuilder()).setImageRequest(request)

@@ -50,6 +50,6 @@ public class ImageUtils {
   }
 
   public static int getMaxHeight() {
-    return maxHeight;
+    return maxHeight - 6;
   }
 }

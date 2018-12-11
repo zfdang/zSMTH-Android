@@ -69,16 +69,16 @@ public class SMTHApplication extends Application {
     // init umeng SDK
     UMConfigure.init(this, "56e8c05567e58e0a9e0011cc", "UMENG_CHANNEL", UMConfigure.DEVICE_TYPE_PHONE, null);
 
-    //        Set<RequestListener> requestListeners = new HashSet<>();
-    //        requestListeners.add(new RequestLoggingListener());
     // init Fresco
+    // Set<RequestListener> requestListeners = new HashSet<>();
+    // requestListeners.add(new RequestLoggingListener());
     OkHttpClient httpClient = SMTHHelper.getInstance().mHttpClient;
     ImagePipelineConfig config = OkHttpImagePipelineConfigFactory.newBuilder(context, httpClient)
         //                .setRequestListeners(requestListeners)
-        //                .setDownsampleEnabled(true)
+                        .setDownsampleEnabled(false)
         .build();
     Fresco.initialize(context, config);
-    //        FLog.setMinimumLoggingLevel(FLog.VERBOSE);
+    // FLog.setMinimumLoggingLevel(FLog.VERBOSE);
 
     boolean bNightMode = Settings.getInstance().isNightMode();
     if (bNightMode) {

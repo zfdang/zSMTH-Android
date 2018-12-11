@@ -16,6 +16,7 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.DraweeHolder;
+import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
@@ -46,7 +47,7 @@ public class MyPhotoView extends PhotoView {
   private void selfInit() {
     if (mDraweeHolder == null) {
       final GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder(getResources()).setProgressBarImage(
-          new LoadingProgressDrawable(SMTHApplication.getAppContext())).setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER).build();
+          new LoadingProgressDrawable(SMTHApplication.getAppContext())).setActualImageScaleType(ScalingUtils.ScaleType.CENTER).build();
 
       mDraweeHolder = DraweeHolder.create(hierarchy, getContext());
     }
@@ -82,9 +83,11 @@ public class MyPhotoView extends PhotoView {
   }
 
   public void setImageUri(String uri) {
-
     final ImageRequest imageRequest =
-        ImageRequestBuilder.newBuilderWithSource(Uri.parse(uri)).setResizeOptions(null).setAutoRotateEnabled(true).build();
+        ImageRequestBuilder.newBuilderWithSource(Uri.parse(uri))
+                .setResizeOptions(new ResizeOptions(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE))
+                .setAutoRotateEnabled(true)
+                .build();
     final ImagePipeline imagePipeline = Fresco.getImagePipeline();
     final DataSource<CloseableReference<CloseableImage>> dataSource = imagePipeline.fetchDecodedImage(imageRequest, this);
     final AbstractDraweeController controller = Fresco.newDraweeControllerBuilder()
