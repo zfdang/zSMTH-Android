@@ -166,7 +166,7 @@ public class WrapContentDraweeView extends SimpleDraweeView {
               imageMaxAllowedHeight = ImageUtils.getMaxHeight();
             }
             int imageCount = getTimes(imageTotalHeight, imageMaxAllowedHeight);
-            //                        Log.d(TAG, "process: h = " + imageTotalHeight + " w = " + destBitmap.getWidth() + " allowed: " + imageMaxAllowedHeight + " count: " + imageCount);
+            // Log.d(TAG, "process: h = " + imageTotalHeight + " w = " + destBitmap.getWidth() + " allowed: " + imageMaxAllowedHeight + " count: " + imageCount);
             if (imageCount > 1) {
               bmps = new ArrayList<Bitmap>();
               Rect bsrc = new Rect();
@@ -225,7 +225,7 @@ public class WrapContentDraweeView extends SimpleDraweeView {
         dst.left = 0;
         dst.top = accumulatedHeight;
         dst.right = getWidth();
-        dst.bottom = accumulatedHeight + (int) ((float) src.bottom / (float) src.right * getWidth());
+        dst.bottom = accumulatedHeight + (int) ((double) src.bottom / (double) src.right * getWidth());
         canvas.drawBitmap(bmp, src, dst, paint);
 
         accumulatedHeight = dst.bottom;
