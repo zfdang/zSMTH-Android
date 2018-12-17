@@ -157,7 +157,7 @@ public class ImagesSelectorActivity extends AppCompatActivity
     public void requestReadStorageRuntimePermission() {
         if (ContextCompat.checkSelfPermission(ImagesSelectorActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(ImagesSelectorActivity.this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     MY_PERMISSIONS_REQUEST_STORAGE_CODE);
         } else {
             LoadFolderAndImages();

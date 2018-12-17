@@ -277,10 +277,6 @@ public class SMTHHelper {
       }
     } catch (Exception e) {
       Log.e(TAG, "saveBitmapToFile: ", e);
-
-      if(e.toString().contains("Permission")) {
-        ActivityUtils.showAppInfoPage(SMTHApplication.getAppContext());
-      }
     }
     return null;
   }
