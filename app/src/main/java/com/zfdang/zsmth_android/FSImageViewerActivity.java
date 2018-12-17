@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBar;
@@ -22,6 +23,7 @@ import com.jude.swipbackhelper.SwipeBackHelper;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.FrescoUtils;
 import com.zfdang.zsmth_android.fresco.MyPhotoView;
+import com.zfdang.zsmth_android.helpers.ActivityUtils;
 import com.zfdang.zsmth_android.helpers.FileSizeUtil;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -207,6 +209,10 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
     } catch (Exception e) {
       Log.e(TAG, "saveImageToFile: " + Log.getStackTraceString(e));
       Toast.makeText(FSImageViewerActivity.this, "保存图片失败:\n" + e.toString(), Toast.LENGTH_LONG).show();
+
+      if(e.toString().contains("Permission")) {
+        ActivityUtils.showAppInfoPage(this);
+      }
     }
   }
 

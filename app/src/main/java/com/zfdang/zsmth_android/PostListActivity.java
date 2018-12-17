@@ -45,6 +45,7 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.helpers.ActivityUtils;
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
 import com.zfdang.zsmth_android.models.Attachment;
 import com.zfdang.zsmth_android.models.Board;
@@ -665,6 +666,10 @@ public class PostListActivity extends SMTHBaseActivity
     } catch (Exception e) {
       Log.e(TAG, "saveImageToFile: " + Log.getStackTraceString(e));
       Toast.makeText(PostListActivity.this, "保存截图失败:\n" + e.toString(), Toast.LENGTH_LONG).show();
+
+      if(e.toString().contains("Permission")) {
+        ActivityUtils.showAppInfoPage(this);
+      }
     }
   }
 

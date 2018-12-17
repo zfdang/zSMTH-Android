@@ -1,8 +1,10 @@
 package com.zfdang.zsmth_android.helpers;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -92,5 +94,33 @@ public class ActivityUtils {
     links.add(emaillink);
 
     return links;
+  }
+
+  // show application info page
+  public static void showAppInfoPage(final Context context){
+    AlertDialog.Builder builder;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert);
+    } else {
+      builder = new AlertDialog.Builder(context);
+    }
+    builder.setTitle("zSMTH需要文件读写权限")
+            .setMessage("现在前往\"应用程序信息\"里设置zSMTH的权限么？")
+            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int which) {
+                // open app setting page
+                Uri packageURI=Uri.parse("package:" + "com.zfdang.zsmth_android");
+                Intent intent=new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,packageURI);
+                context.startActivity(intent);
+              }
+            })
+            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int which) {
+                // do nothing
+              }
+            })
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .show();
+
   }
 }
