@@ -17,6 +17,7 @@ import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.helpers.ActivityUtils;
 import com.zfdang.zsmth_android.helpers.MakeList;
 import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.models.Board;
@@ -276,6 +277,10 @@ public class SMTHHelper {
       }
     } catch (Exception e) {
       Log.e(TAG, "saveBitmapToFile: ", e);
+
+      if(e.toString().contains("Permission")) {
+        ActivityUtils.showAppInfoPage(SMTHApplication.getAppContext());
+      }
     }
     return null;
   }
