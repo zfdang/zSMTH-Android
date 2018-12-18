@@ -209,10 +209,6 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
     } catch (Exception e) {
       Log.e(TAG, "saveImageToFile: " + Log.getStackTraceString(e));
       Toast.makeText(FSImageViewerActivity.this, "保存图片失败:\n" + e.toString(), Toast.LENGTH_LONG).show();
-
-      if(e.toString().contains("Permission")) {
-        ActivityUtils.showAppInfoPage(this);
-      }
     }
   }
 
