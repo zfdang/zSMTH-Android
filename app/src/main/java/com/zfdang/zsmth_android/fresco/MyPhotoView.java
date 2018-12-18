@@ -47,7 +47,7 @@ public class MyPhotoView extends PhotoView {
   private void selfInit() {
     if (mDraweeHolder == null) {
       final GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder(getResources()).setProgressBarImage(
-          new LoadingProgressDrawable(SMTHApplication.getAppContext())).setActualImageScaleType(ScalingUtils.ScaleType.CENTER).build();
+          new LoadingProgressDrawable(SMTHApplication.getAppContext())).setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER).build();
 
       mDraweeHolder = DraweeHolder.create(hierarchy, getContext());
     }
