@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/popupwindow_background"
+              android:gravity="center_vertical|center_horizontal">
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+        <com.wx.wheelview.widget.WheelView
+                android:id="@+id/ban_reason_select"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+        />
+
+        <EditText
+                android:id="@+id/ban_reason"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:gravity="top"
+                android:hint="输入封禁原因"
+                android:inputType="textMultiLine"
+                android:textColor="@color/status_text_night"
+                android:textColorHint="@color/status_text_night"
+        />
+
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:hint="请输入封禁天数"
+                android:id="@+id/ban_day"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+    >
+
+        <Button
+                android:id="@+id/ban_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/navigation_button_background"
+                android:textColor="@color/status_text_night"
+                android:text="取消"
+        />
+
+        <Button
+                android:id="@+id/ban_submit"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:background="@drawable/navigation_button_background"
+                android:textColor="@color/status_text_night"
+                android:text="确定"
+        />
+    </LinearLayout>
+</LinearLayout>

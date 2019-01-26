@@ -58,6 +58,9 @@
   <string name="post_delete_post">删除文章</string>
   <string name="post_share">分享</string>
 
+  <string name="post_topic_delete">同主题删除</string>
+  <string name="post_ban_id">封ID</string>
+
   <string name="write_label_post">发表</string>
   <string name="post_attach">附件</string>
 

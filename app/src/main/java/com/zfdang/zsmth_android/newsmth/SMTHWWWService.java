@@ -116,4 +116,18 @@ public interface SMTHWWWService {
   // target=test&outgo=on
   @FormUrlEncoded @POST("/bbsccc.php?do") Observable<ResponseBody> repostPost(@Query("board") String boardEngName,
       @Query("id") String postID, @Field("target") String target, @Field("outgo") String outgo);
+
+  @FormUrlEncoded
+  @Headers("X-Requested-With:XMLHttpRequest")
+  @POST("/nForum/article/{boardEngName}/ajax_manage/{postID}.json") Observable<AjaxResponse> deleteTopic(
+          @Path("boardEngName") String boardEngName, @Path("postID") String postID,
+          @Field("gid") String topicID, @Field("top") String top);
+
+  @FormUrlEncoded
+  @Headers("X-Requested-With:XMLHttpRequest")
+  @POST("/nForum/article/{boardEngName}/ajax_deny/{postID}.json") Observable<AjaxResponse> banID(
+          @Path("boardEngName") String boardEngName, @Path("postID") String postID,
+          @Field("reason") String reason, @Field("day") Integer day);
+
+
 }
