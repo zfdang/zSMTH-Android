@@ -73,7 +73,7 @@ android {
 
 dependencies {
     final OKHTTP_VERSION = '3.12.0'
-    final RETROFIT_VERSION = '2.5.0'
+    final RETROFIT_VERSION = '2.6.2'
 
     implementation 'com.android.support:multidex:1.0.3'
 
@@ -121,7 +121,7 @@ dependencies {
 
     // other dependencies
     implementation 'com.github.maksim88:PasswordEditText:v0.9'
-    implementation 'org.jsoup:jsoup:1.11.3'
+    implementation 'org.jsoup:jsoup:1.12.1'
     implementation 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
     implementation 'com.jude:swipebackhelper:3.1.2'
     implementation 'me.relex:circleindicator:1.2.2@aar'
