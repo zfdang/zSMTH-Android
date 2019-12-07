@@ -3,7 +3,7 @@ apply from: 'MobSDK.gradle'
 
 // http://www.race604.com/android-auto-version/
 def cmd = 'git rev-list HEAD --count'
-def gitVersion = cmd.execute().text.trim().toInteger()
+def gitVersion = cmd.execute().text.trim().toInteger() + 100
 def appVersion = '1.8.3'
 
 android {
@@ -16,6 +16,9 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
         versionCode gitVersion
         versionName appVersion
+
+        // Enabling multidex support.
+        multiDexEnabled true
     }
     signingConfigs {
         release {
@@ -71,6 +74,8 @@ android {
 dependencies {
     final OKHTTP_VERSION = '3.12.0'
     final RETROFIT_VERSION = '2.5.0'
+
+    implementation 'com.android.support:multidex:1.0.3'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'junit:junit:4.12'
