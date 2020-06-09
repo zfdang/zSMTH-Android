@@ -1270,16 +1270,16 @@ public class SMTHHelper {
      */
 
     // smth images might be relative URLs
+    // <a target="_blank" href="//static.mysmth.net/nForum/att/FamilyLife/1763462541/17096">
+    // <img border="0" title="单击此查看原图" src="//static.mysmth.net/nForum/att/FamilyLife/1763462541/17096/large" class="resizeable" /></a>
+
     public static String preprocessSMTHImageURL(String original) {
       if(null != original) {
-        if (original.startsWith("/nForum")) {
+        if (original.startsWith("//")) {
+          // images in post or avatar
+          return "http:" + original;
+        } else if (original.startsWith("/nForum")) {
           return "http://att.newsmth.net" + original;
-        } else if (original.startsWith("//att.newsmth.net")) {
-          // images in post
-          return "http:" + original;
-        } else if (original.startsWith("//images.newsmth.net")) {
-          // avatar image
-          return "http:" + original;
         }
       }
       return original;
