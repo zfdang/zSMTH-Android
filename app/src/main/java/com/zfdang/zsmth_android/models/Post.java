@@ -177,6 +177,10 @@ public class Post {
     // <a target="_blank" href="//att.newsmth.net/nForum/att/Picture/1726713/228774">
     // <img border="0" title="单击此查看原图" src="//att.newsmth.net/nForum/att/Picture/1726713/228774/large" class="resizeable" /></a>
 
+    // new image url after 2020-06-10
+    // <a target="_blank" href="//static.mysmth.net/nForum/att/FamilyLife/1763462541/17096">
+    // <img border="0" title="单击此查看原图" src="//static.mysmth.net/nForum/att/FamilyLife/1763462541/17096/large" class="resizeable" /></a>
+  
     Elements as = content.select("a[href]");
     for (Element a : as) {
       // process each a|href
