@@ -4,7 +4,7 @@ apply from: 'MobSDK.gradle'
 // http://www.race604.com/android-auto-version/
 def cmd = 'git rev-list HEAD --count'
 def gitVersion = cmd.execute().text.trim().toInteger() + 100
-def appVersion = '1.8.3'
+def appVersion = '1.8.4'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
