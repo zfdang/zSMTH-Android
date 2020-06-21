@@ -13,6 +13,7 @@ import com.zfdang.zsmth_android.helpers.GEODatabase;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.newsmth.UserStatus;
 import okhttp3.OkHttpClient;
+import android.support.multidex.MultiDex;
 
 /**
  * Created by zfdang on 2016-3-18.
@@ -51,6 +52,12 @@ public class SMTHApplication extends Application {
 
   public static boolean isValidUser() {
     return activeUser != null && !activeUser.getId().equals("guest");
+  }
+
+  @Override
+  protected void attachBaseContext(Context base) {
+    super.attachBaseContext(base);
+    MultiDex.install(this);
   }
 
   // current logined user

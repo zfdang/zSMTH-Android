@@ -10,6 +10,7 @@
 # Generated files
 bin/
 gen/
+tmpmob/
 
 # Gradle files
 .gradle/

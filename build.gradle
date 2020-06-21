@@ -8,10 +8,10 @@ buildscript {
     }
     dependencies {
         // https://developer.android.com/studio/releases/gradle-plugin.html
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:4.0.0'
 
         // https://github.com/ben-manes/gradle-versions-plugin
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.28.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
 
@@ -38,9 +38,9 @@ ext {
     compileSdkVersion = 26
     // https://developer.android.com/studio/releases/build-tools
     buildToolsVersion = '28.0.3'
-    FRESCO_VERSION = '1.11.0'
+    FRESCO_VERSION = '1.13.0'
     // https://developer.android.com/topic/libraries/support-library/revisions
     SUPPORT_LIBRARY_VERSION = '27.1.1'
-    RXJAVA2_VERSION = '2.2.4'
-    RXANDROID2_VERSION = '2.1.0'
+    RXJAVA2_VERSION = '2.2.19'
+    RXANDROID2_VERSION = '2.1.1'
 }
