@@ -73,7 +73,7 @@ public class SMTHHelper {
   public OkHttpClient mHttpClient;
 
   // WWW service of SMTH, but actually most of services are actually from nForum
-  private final String SMTH_WWW_URL = "http://www.newsmth.net";
+  private final String SMTH_WWW_URL = "https://www.newsmth.net";
   private Retrofit wRetrofit = null;
   public SMTHWWWService wService = null;
   static private final String SMTH_WWW_ENCODING = "GB2312";
