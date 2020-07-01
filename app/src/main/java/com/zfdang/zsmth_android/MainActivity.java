@@ -2,6 +2,7 @@ package com.zfdang.zsmth_android;
 
 import android.app.Application;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ClipboardManager;
@@ -298,7 +299,7 @@ public class MainActivity extends SMTHBaseActivity
       PendingIntent resultPendingIntent =
           PendingIntent.getActivity(MainActivity.this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-      NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_launcher)
+      Notification.Builder mBuilder = new Notification.Builder(this).setSmallIcon(R.drawable.ic_launcher)
           .setContentTitle("zSMTH提醒")
           .setWhen(System.currentTimeMillis())
           .setAutoCancel(true)
@@ -306,9 +307,20 @@ public class MainActivity extends SMTHBaseActivity
           .setDefaults(Notification.DEFAULT_VIBRATE)
           .setContentText(text)
           .setContentIntent(resultPendingIntent);
-      Notification notification = mBuilder.build();
 
       NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        mBuilder.setChannelId(getPackageName()); //必须添加（Android 8.0） 【唯一标识】
+        NotificationChannel channel = new NotificationChannel(
+                getPackageName(),
+                "zSMTH通知消息",
+                NotificationManager.IMPORTANCE_DEFAULT
+        );
+        mNotifyMgr.createNotificationChannel(channel);
+      }
+
+      Notification notification = mBuilder.build();
       mNotifyMgr.notify(notificationID, notification);
     } catch (Exception se) {
       Log.e(TAG, "showNotification: " + se.toString());
