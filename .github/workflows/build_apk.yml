@@ -26,3 +26,9 @@ jobs:
       uses: vgaidarji/android-github-actions-build@v1.0.1
       with:
         args: "./gradlew assembleRelease --stacktrace"
+        
+    - name: Upload apk
+      uses: actions/upload-artifact@v1
+      with:
+        name: zSMTH
+        path: ./app/build/outputs/apk
