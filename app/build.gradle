@@ -9,6 +9,7 @@ def appVersion = '1.8.5'
 android {
     compileSdkVersion rootProject.compileSdkVersion
     buildToolsVersion rootProject.buildToolsVersion
+    ndkVersion "21.3.6528147"
 
     defaultConfig {
         applicationId "com.zfdang.zsmth_android"
