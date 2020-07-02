@@ -19,8 +19,10 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
+    - name: checkout codes
+      uses: actions/checkout@v2
       with:
         fetch-depth: '0' # 0 indicates all history, this is needed for git revision 
 
@@ -29,11 +31,11 @@ jobs:
       with:
         java-version: 1.8
 
-    - name: Assemble Debug APK
+    - name: Assemble Release APK
       run: ./gradlew assembleRelease --stacktrace
-        
-    - name: Upload apk
+  
+    - name: Upload APK to artifacts
       uses: actions/upload-artifact@v1
       with:
         name: zSMTH
-        path: ./app/build/outputs/apk
+        path: ./app/build/outputs/apk/
