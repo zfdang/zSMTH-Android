@@ -57,7 +57,7 @@
           android:layout_height="wrap_content"
           android:hint="@string/login_label_password"
           android:inputType="textPassword"
-          android:longClickable="false"
+          android:longClickable="true"
           />
     </android.support.design.widget.TextInputLayout>
 
