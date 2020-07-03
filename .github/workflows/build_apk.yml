@@ -48,8 +48,8 @@ jobs:
     - name: Get git revision
       id: get_git_revision
       run: |
-        echo "::set-output name=tag_name::$(git rev-list HEAD --count)"
-        echo "::set-output name=release_name::$(git rev-list HEAD --count)"
+        echo "::set-output name=tag_name::$(expr $(git rev-list HEAD --count)+100)"
+        echo "::set-output name=release_name::$(expr $(git rev-list HEAD --count)+100)"
 
     - name: Create Release
       id: create_release
