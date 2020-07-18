@@ -4,11 +4,12 @@ apply from: 'MobSDK.gradle'
 // http://www.race604.com/android-auto-version/
 def cmd = 'git rev-list HEAD --count'
 def gitVersion = cmd.execute().text.trim().toInteger() + 100
-def appVersion = '1.8.5'
+def appVersion = '1.8.6'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
     buildToolsVersion rootProject.buildToolsVersion
+    ndkVersion "21.3.6528147"
 
     defaultConfig {
         applicationId "com.zfdang.zsmth_android"

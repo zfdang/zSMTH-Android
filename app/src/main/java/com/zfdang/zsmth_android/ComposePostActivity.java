@@ -207,26 +207,38 @@ public class ComposePostActivity extends SMTHBaseActivity {
     if (mPostContext.getComposingMode() == ComposePostContext.MODE_NEW_POST) {
       mUserRow.setVisibility(View.GONE);
       setTitle(String.format("发表文章@%s", mPostContext.getBoardEngName()));
+      // set focus to title
+      mTitle.requestFocus();
     } else if (mPostContext.getComposingMode() == ComposePostContext.MODE_REPLY_POST) {
       mUserRow.setVisibility(View.GONE);
       setTitle(String.format("回复文章@%s", mPostContext.getBoardEngName()));
+      // set focus to content
+      mContent.requestFocus();
     } else if (mPostContext.getComposingMode() == ComposePostContext.MODE_EDIT_POST) {
       mUserRow.setVisibility(View.GONE);
       mAttachRow.setVisibility(View.GONE);
       setTitle(String.format("修改文章@%s", mPostContext.getBoardEngName()));
+      // set focus to content
+      mContent.requestFocus();
     } else if (mPostContext.getComposingMode() == ComposePostContext.MODE_NEW_MAIL) {
       mAttachRow.setVisibility(View.GONE);
       setTitle("写新信件");
+      // set focus to recipient
+      mUserID.requestFocus();
     } else if (mPostContext.getComposingMode() == ComposePostContext.MODE_NEW_MAIL_TO_USER) {
       mAttachRow.setVisibility(View.GONE);
       setTitle("写新信件");
       mUserID.setText(mPostContext.getPostAuthor());
       mUserID.setEnabled(false);
+      // set focus to content
+      mContent.requestFocus();
     } else if (mPostContext.getComposingMode() == ComposePostContext.MODE_REPLY_MAIL) {
       mAttachRow.setVisibility(View.GONE);
       setTitle("回复信件");
       mUserID.setText(mPostContext.getPostAuthor());
       mUserID.setEnabled(false);
+      // set focus to content
+      mContent.requestFocus();
     }
 
     // set post title & content
@@ -256,8 +268,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
         mContent.setText(new String(wordList));
       }
 
-      // focus content, and move cursor to the beginning
-      mContent.requestFocus();
+      // if the content is not empty, set cursor to the beginning
       mContent.setSelection(0);
     }
   }

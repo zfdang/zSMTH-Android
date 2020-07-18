@@ -136,7 +136,10 @@ public class SMTHHelper {
       // for error response, do not cache its content
       @Override public Response intercept(Chain chain) throws IOException {
         Response originalResponse = chain.proceed(chain.request());
-        if (originalResponse.isSuccessful()) {
+//        if (originalResponse.isSuccessful() && originalResponse.body().toString().contains("您未登录,请登录后继续操作")) {
+        if (originalResponse.isSuccessful() && originalResponse.body().contentLength() > 4096) {
+          // only cache large response
+          // the size of response with "您未登录,请登录后继续操作" is 2033
           return originalResponse;
         } else {
           return originalResponse.newBuilder().header("Cache-Control", "no-cache").build();
