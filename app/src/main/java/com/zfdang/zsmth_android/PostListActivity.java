@@ -467,6 +467,8 @@ public class PostListActivity extends SMTHBaseActivity
         new PostActionAlertDialogItem(getString(R.string.post_convert_image), R.drawable.ic_photo_black_48dp), // 11
         new PostActionAlertDialogItem(getString(R.string.post_topic_delete), R.drawable.ic_delete_black_48dp), // 12
         new PostActionAlertDialogItem(getString(R.string.post_ban_id), R.drawable.ic_person_black_48dp), // 13
+        new PostActionAlertDialogItem(getString(R.string.post_mark_m), R.drawable.ic_email_black_48dp), // 14
+        new PostActionAlertDialogItem(getString(R.string.post_topic_readonly), R.drawable.ic_content_copy_black_48dp), // 15
     };
 
     ListAdapter adapter = new ArrayAdapter<PostActionAlertDialogItem>(getApplicationContext(), R.layout.post_popup_menu_item, menuItems) {
@@ -627,11 +629,15 @@ public class PostListActivity extends SMTHBaseActivity
       // convert title + post to image
       captureView(mTitle, v, post.getPostID());
     } else if (which == 12) {
-        deleteTopic(post);
+      deleteTopic(post);
     } else if (which == 13) {
-        PopupBanWindow popup = new PopupBanWindow();
-        popup.initPopupWindow(this, post);
-        popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 100);
+      PopupBanWindow popup = new PopupBanWindow();
+      popup.initPopupWindow(this, post);
+      popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 100);
+    } else if (which == 14) {
+      markPost(post);
+    } else if (which == 15) {
+      readonlyTopic(post);
     }
   }
 
@@ -947,5 +953,65 @@ public class PostListActivity extends SMTHBaseActivity
 
       }
     });
+  }
+
+  public void markPost(Post post) {
+    SMTHHelper helper = SMTHHelper.getInstance();
+
+    helper.wService.markPost(mTopic.getBoardEngName(), post.getPostID(), mTopic.getTopicID(), "m")
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Observer<AjaxResponse>() {
+              @Override public void onSubscribe(@NonNull Disposable disposable) {
+
+              }
+
+              @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
+                if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
+                  Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+                } else {
+                  Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
+                }
+              }
+
+              @Override public void onError(@NonNull Throwable e) {
+                Toast.makeText(PostListActivity.this, "设置/取消m标记！\n" + e.toString(), Toast.LENGTH_LONG).show();
+
+              }
+
+              @Override public void onComplete() {
+
+              }
+            });
+  }
+
+  public void readonlyTopic(Post post) {
+    SMTHHelper helper = SMTHHelper.getInstance();
+
+    helper.wService.readonlyTopic(mTopic.getBoardEngName(), post.getPostID(), mTopic.getTopicID(), ";")
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Observer<AjaxResponse>() {
+              @Override public void onSubscribe(@NonNull Disposable disposable) {
+
+              }
+
+              @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
+                if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
+                  Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+                } else {
+                  Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
+                }
+              }
+
+              @Override public void onError(@NonNull Throwable e) {
+                Toast.makeText(PostListActivity.this, "设置同主题不可回复！\n" + e.toString(), Toast.LENGTH_LONG).show();
+
+              }
+
+              @Override public void onComplete() {
+
+              }
+            });
   }
 }

@@ -10,8 +10,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupWindow;
+import android.widget.Toast;
+
 import com.wx.wheelview.adapter.ArrayWheelAdapter;
 import com.wx.wheelview.widget.WheelView;
+import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.models.Post;
 
 import java.util.Arrays;
@@ -77,8 +80,13 @@ public class PopupBanWindow extends PopupWindow {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 if (mListener != null) {
-                    mListener.OnBanIDAction(PopupBanWindow.post, banReason.getText().toString(),
-                            Integer.parseInt(banDay.getText().toString()));
+                    try {
+                        Integer banDays = Integer.parseInt(banDay.getText().toString());
+                        mListener.OnBanIDAction(PopupBanWindow.post, banReason.getText().toString(),
+                                Integer.parseInt(banDay.getText().toString()));
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(SMTHApplication.getAppContext(), "封禁天数不合法", Toast.LENGTH_LONG).show();
+                    }
                 }
                 dismiss();
             }

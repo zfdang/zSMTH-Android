@@ -179,5 +179,18 @@ public interface SMTHWWWService {
             @Path("boardEngName") String boardEngName, @Path("postID") String postID,
             @Field("reason") String reason, @Field("day") Integer day);
 
+    @FormUrlEncoded
+    @Headers("X-Requested-With:XMLHttpRequest")
+    @POST("/nForum/article/{boardEngName}/ajax_manage/{postID}.json")
+    Observable<AjaxResponse> markPost(
+            @Path("boardEngName") String boardEngName, @Path("postID") String postID,
+            @Field("gid") String topicID, @Field("op") String op);
+
+    @FormUrlEncoded
+    @Headers("X-Requested-With:XMLHttpRequest")
+    @POST("/nForum/article/{boardEngName}/ajax_manage/{postID}.json")
+    Observable<AjaxResponse> readonlyTopic(
+            @Path("boardEngName") String boardEngName, @Path("postID") String postID,
+            @Field("gid") String topicID, @Field("top") String top);
 
 }
