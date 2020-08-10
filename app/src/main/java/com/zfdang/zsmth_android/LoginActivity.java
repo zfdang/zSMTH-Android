@@ -15,14 +15,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.zfdang.SMTHApplication;
-import com.zfdang.zsmth_android.newsmth.AjaxResponse;
-import com.zfdang.zsmth_android.newsmth.SMTHHelper;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * A login screen that offers login to newsmth forum
@@ -124,6 +118,8 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
     if (requestCode == LOGIN_ACTIVITY_REQUEST_CODE) {
       Log.d(TAG, "receive login result");
       if (resultCode == RESULT_OK) {
+        Toast.makeText(SMTHApplication.getAppContext(), "登录完成!", Toast.LENGTH_SHORT).show();
+
         Intent resultIntent = new Intent();
         setResult(Activity.RESULT_OK, resultIntent);
         finish();
