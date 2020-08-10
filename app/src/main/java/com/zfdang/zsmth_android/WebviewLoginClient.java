@@ -40,10 +40,14 @@ public class WebviewLoginClient extends WebViewClient {
         if (url.equals("https://www.newsmth.net/")) {
             // login page, input id and passwd automatically
             final String js = "javascript: " +
-                    "var ids = document.getElementsByName('id');" +
-                    "ids[0].value = '" + this.username + "';" +
-                    "var passwds = document.getElementsByName('passwd');" +
-                    "passwds[0].value = '" + this.password + "';";
+                    "document.getElementById('id').value = '" + this.username + "';" +
+                    "document.getElementById('pwd').value = '" + this.password + "';" +
+                    "var cookies = document.getElementsByName('CookieDate');" +
+                    "cookies[0].style.display = 'none';" +
+                    "document.getElementById('s-mode').style.display = 'none';" +
+                    "document.getElementById('b_reset').style.display = 'none';" +
+                    "document.getElementById('b_guest').style.display = 'none';" +
+                    "document.getElementById('b_reg').style.display = 'none';";
 
             if (Build.VERSION.SDK_INT >= 19) {
                 view.evaluateJavascript(js, new ValueCallback<String>() {

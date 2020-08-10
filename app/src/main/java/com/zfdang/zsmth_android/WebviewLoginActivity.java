@@ -1,5 +1,6 @@
 package com.zfdang.zsmth_android;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -25,19 +26,21 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
         password = extras.getString(LoginActivity.PASSWORD);
 
         mWebView = (WebView) findViewById(R.id.webview_login);
-        mWebView.getSettings().setAppCacheEnabled(false);
-        mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-        mWebView.getSettings().setDatabaseEnabled(false);
-        mWebView.getSettings().setDomStorageEnabled(false );
+        mWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
         mWebView.getSettings().setGeolocationEnabled(false);
-        mWebView.getSettings().setSaveFormData(true);
+        mWebView.getSettings().setSaveFormData(false);
         mWebView.getSettings().setSavePassword(false);
         mWebView.getSettings().setJavaScriptEnabled(true); ///------- 设置javascript 可用
 
         // https://stackoverflow.com/questions/9602124/enable-horizontal-scrolling-in-a-webview
-//        mWebView.getSettings().setLoadWithOverviewMode(true);
+        mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
-        mWebView.setInitialScale(100);
+        mWebView.setInitialScale(120);
+        mWebView.getSettings().setTextZoom(200);
+
+        //支持屏幕缩放
+        mWebView.getSettings().setSupportZoom(true);
+        mWebView.getSettings().setBuiltInZoomControls(true);
 
         mWebView.setWebChromeClient(new WebChromeClient()
         {
