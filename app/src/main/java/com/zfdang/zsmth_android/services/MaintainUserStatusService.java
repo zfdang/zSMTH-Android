@@ -10,19 +10,18 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
+
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.Settings;
-import com.zfdang.zsmth_android.helpers.MakeList;
-import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.newsmth.UserInfo;
 import com.zfdang.zsmth_android.newsmth.UserStatus;
+
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import java.util.List;
 
 /**
  * check login status, if not logined, login automatically if possible
@@ -58,8 +57,8 @@ public class MaintainUserStatusService extends IntentService {
         PendingIntent.getService(context, MaintainUserStatusService.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
     AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-    // first triggered in 20 second, repeated every 1 minute
-    alarm.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 20000, AlarmManager.INTERVAL_FIFTEEN_MINUTES / 15,
+    // first triggered in 5 second, repeated every 1 minute
+    alarm.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 5000, AlarmManager.INTERVAL_FIFTEEN_MINUTES / 15,
         pIntent);
   }
 
