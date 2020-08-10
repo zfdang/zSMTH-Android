@@ -151,11 +151,12 @@ public class ImagesSelectorActivity extends AppCompatActivity
 
         updateDoneButton();
 
-        requestReadStorageRuntimePermission();
+        requestReadWriteStorageRuntimePermission();
     }
 
-    public void requestReadStorageRuntimePermission() {
-        if (ContextCompat.checkSelfPermission(ImagesSelectorActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+    public void requestReadWriteStorageRuntimePermission() {
+        if (ContextCompat.checkSelfPermission(ImagesSelectorActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+        || ContextCompat.checkSelfPermission(ImagesSelectorActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(ImagesSelectorActivity.this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     MY_PERMISSIONS_REQUEST_STORAGE_CODE);

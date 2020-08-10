@@ -2,6 +2,7 @@ package com.zfdang.multiple_images_selector;
 
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +46,9 @@ public class ImageRecyclerViewAdapter extends RecyclerView.Adapter<ImageRecycler
         if (!imageItem.isCamera()) {
             // draw image first
             File imageFile = new File(imageItem.path);
+//            Log.d(TAG, imageItem.path);
             if (imageFile.exists()) {
+//                Log.d(TAG, "imageFile does not exist!");
                 newURI = Uri.fromFile(imageFile);
             } else {
                 newURI = FileUtils.getUriByResId(R.drawable.default_image);
