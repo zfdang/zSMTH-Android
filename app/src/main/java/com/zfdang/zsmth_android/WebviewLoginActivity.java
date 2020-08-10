@@ -9,8 +9,8 @@ import android.webkit.WebView;
 public class WebviewLoginActivity extends SMTHBaseActivity {
 
     private WebView mWebView;
-    private String url = "https://www.newsmth.net/";
-//    private String url = "https://wap.newsmth.net/login";
+//    private String url = "https://www.newsmth.net/";
+    private String url = "https://m.newsmth.net/index";
 
     private String username;
     private String password;
@@ -35,8 +35,8 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
         // https://stackoverflow.com/questions/9602124/enable-horizontal-scrolling-in-a-webview
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
-        mWebView.setInitialScale(120);
-        mWebView.getSettings().setTextZoom(200);
+//        mWebView.setInitialScale(120);
+//        mWebView.getSettings().setTextZoom(200);
 
         //支持屏幕缩放
         mWebView.getSettings().setSupportZoom(true);

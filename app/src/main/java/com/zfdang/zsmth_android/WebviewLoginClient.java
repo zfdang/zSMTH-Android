@@ -3,6 +3,7 @@ package com.zfdang.zsmth_android;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 import android.webkit.ValueCallback;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
@@ -23,7 +24,8 @@ public class WebviewLoginClient extends WebViewClient {
     }
 
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        if (url.startsWith("https://www.newsmth.net/nForum/")) {
+//        Log.d(TAG, "shouldOverrideUrlLoading" + url);
+        if (url.startsWith("https://m.newsmth.net/index?m=")) {
             Intent resultIntent = new Intent();
             activity.setResult(Activity.RESULT_OK, resultIntent);
             activity.finish();
@@ -37,17 +39,14 @@ public class WebviewLoginClient extends WebViewClient {
     }
 
     public void onPageFinished(WebView view, String url) {
-        if (url.equals("https://www.newsmth.net/")) {
+//        Log.d(TAG, "onPageFinished" + url);
+        if (url.equals("https://m.newsmth.net/index")) {
             // login page, input id and passwd automatically
             final String js = "javascript: " +
-                    "document.getElementById('id').value = '" + this.username + "';" +
-                    "document.getElementById('pwd').value = '" + this.password + "';" +
-                    "var cookies = document.getElementsByName('CookieDate');" +
-                    "cookies[0].style.display = 'none';" +
-                    "document.getElementById('s-mode').style.display = 'none';" +
-                    "document.getElementById('b_reset').style.display = 'none';" +
-                    "document.getElementById('b_guest').style.display = 'none';" +
-                    "document.getElementById('b_reg').style.display = 'none';";
+                    "var ids = document.getElementsByName('id');" +
+                    "ids[0].value = '" + this.username + "';" +
+                    "var passwds = document.getElementsByName('passwd');" +
+                    "passwds[0].value = '" + this.password + "';";
 
             if (Build.VERSION.SDK_INT >= 19) {
                 view.evaluateJavascript(js, new ValueCallback<String>() {
