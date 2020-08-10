@@ -1,10 +1,17 @@
 apply plugin: 'com.android.application'
 apply from: 'MobSDK.gradle'
 
+
 // http://www.race604.com/android-auto-version/
+// use git count as build number, as current date as build version
+def getDate() {
+    def date = new Date()
+    def formattedDate = date.format('yyyy.MM.dd')
+    return formattedDate
+}
 def cmd = 'git rev-list HEAD --count'
 def gitVersion = cmd.execute().text.trim().toInteger() + 100
-def appVersion = '1.8.7'
+def appVersion = getDate()
 
 android {
     compileSdkVersion rootProject.compileSdkVersion

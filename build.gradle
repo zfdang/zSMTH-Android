@@ -37,7 +37,7 @@ ext {
     targetSdkVersion = 29
     compileSdkVersion = 26
     // https://developer.android.com/studio/releases/build-tools
-    buildToolsVersion = '28.0.3'
+    buildToolsVersion = '29.0.2'
     FRESCO_VERSION = '1.13.0'
     // https://developer.android.com/topic/libraries/support-library/revisions
     SUPPORT_LIBRARY_VERSION = '27.1.1'
