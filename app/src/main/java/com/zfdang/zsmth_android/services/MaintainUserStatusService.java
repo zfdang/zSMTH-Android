@@ -94,10 +94,6 @@ public class MaintainUserStatusService extends IntentService {
     // This describes what will happen when service is triggered
     // process here:
     // 1. get user status
-    // 2.1 if it's not guest, go to step 3
-    // 2.2 if it's guest, login;
-    // 2.2.1 if login success, get user status (2.2.1.1) again. go to step 3
-    // 2.2.2 if login failed, go to step 3
     // 3. check whether user status == SMTHApplication.activeUser
     // 3.1 if they are same, just return SMTHApplication.activeUser
     // 3.2 if not, get real face URL
@@ -107,65 +103,7 @@ public class MaintainUserStatusService extends IntentService {
     //Log.d(TAG, "1.0 get current UserStatus from remote");
     helper.wService.queryActiveUserStatus().map(new Function<UserStatus, UserStatus>() {
       @Override public UserStatus apply(@NonNull UserStatus userStatus) throws Exception {
-        //Log.d(TAG, "2.0 " + userStatus.toString());
-
-        // check it's logined user, or guest
-        if (userStatus != null && userStatus.getId() != null && !userStatus.getId().equals("guest")) {
-          // logined user, just return the status for next step
-          //Log.d(TAG, "call: 2.1 valid logined user: " + userStatus.getId());
-          return userStatus;
-        }
-
-        // login first
-        //Log.d(TAG, "call: " + "2.2 user not logined, try to login now...");
-        final Settings setting = Settings.getInstance();
-        String username = setting.getUsername();
-        String password = setting.getPassword();
-        boolean bAutoLogin = setting.isAutoLogin();
-        boolean bLastSuccess = setting.isLastLoginSuccess();
-        boolean bUserOnline = setting.isUserOnline();
-        boolean bLoginSuccess = false;
-        //Log.d(TAG, "call: 2.2.1 " + String.format("Autologin: %b, LastSuccess: %b, Online: %b", bAutoLogin, bLastSuccess, bUserOnline));
-        if (bAutoLogin && bLastSuccess && bUserOnline) {
-          Iterable<Integer> its = helper.wService.login(username, password, "7").map(new Function<AjaxResponse, Integer>() {
-            @Override public Integer apply(@NonNull AjaxResponse response) throws Exception {
-              if (response.getAjax_st() == 1) {
-                // {"ajax_st":1,"ajax_code":"0005","ajax_msg":"操作成功"}
-                return AjaxResponse.AJAX_RESULT_OK;
-              } else if (response.getAjax_code().equals("0005")) {
-                // {"ajax_st":0,"ajax_code":"0101","ajax_msg":"您的用户名并不存在，或者您的密码错误"}
-                return AjaxResponse.AJAX_RESULT_FAILED;
-              }
-              return AjaxResponse.AJAX_RESULT_UNKNOWN;
-            }
-          }).blockingIterable();
-
-          List<Integer> results = MakeList.makeList(its);
-
-          //Log.d(TAG, "call: 2.2.2 " + results.size());
-          if (results != null && results.size() == 1) {
-            int result = results.get(0);
-            if (result == AjaxResponse.AJAX_RESULT_OK) {
-              // set flag, so that we will query user status again
-              //Log.d(TAG, "call: 2.2.3. Login success");
-              bLoginSuccess = true;
-            } else if (result == AjaxResponse.AJAX_RESULT_FAILED) {
-              // set flag, so that we will not login again next time
-              //Log.d(TAG, "call: 2.2.4. Login failed");
-              setting.setLastLoginSuccess(false);
-            }
-          }
-        } // if (bAutoLogin && bLastSuccess)
-
-        // try to find new UserStatus only when login success
-        if (bLoginSuccess) {
-          //Log.d(TAG, "call: " + "2.2.5.1 try to get userstatus again after login action");
-          UserStatus stat = SMTHHelper.queryActiveUserStatus().blockingFirst();
-          //Log.d(TAG, "call: " + stats.size());
-          return stat;
-        } else {
-          return userStatus;
-        }
+        return userStatus;
       }
     }).map(new Function<UserStatus, UserStatus>() {
       @Override public UserStatus apply(@NonNull UserStatus userStatus) throws Exception {

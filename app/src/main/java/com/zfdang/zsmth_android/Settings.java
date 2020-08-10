@@ -56,32 +56,17 @@ public class Settings {
     }
   }
 
-  private static final String AUTO_LOGIN = "auto_login";
-  private boolean bAutoLogin;
+  private static final String SAVE_INFO = "save_info";
+  private boolean bSaveInfo;
 
-  public boolean isAutoLogin() {
-    return bAutoLogin;
+  public boolean isSaveInfo() {
+    return bSaveInfo;
   }
 
-  public void setAutoLogin(boolean mAutoLogin) {
-    if (this.bAutoLogin != mAutoLogin) {
-      this.bAutoLogin = mAutoLogin;
-      mEditor.putBoolean(AUTO_LOGIN, this.bAutoLogin);
-      mEditor.commit();
-    }
-  }
-
-  private static final String LAST_LOGIN_SUCCESS = "last_login_success";
-  private boolean bLastLoginSuccess;
-
-  public boolean isLastLoginSuccess() {
-    return bLastLoginSuccess;
-  }
-
-  public void setLastLoginSuccess(boolean bLastLoginSuccess) {
-    if (this.bLastLoginSuccess != bLastLoginSuccess) {
-      this.bLastLoginSuccess = bLastLoginSuccess;
-      mEditor.putBoolean(LAST_LOGIN_SUCCESS, this.bLastLoginSuccess);
+  public void setSaveInfo(boolean mSaveInfo) {
+    if (this.bSaveInfo != mSaveInfo) {
+      this.bSaveInfo = mSaveInfo;
+      mEditor.putBoolean(SAVE_INFO, this.bSaveInfo);
       mEditor.commit();
     }
   }
@@ -413,9 +398,7 @@ public class Settings {
     mShowSticky = mPreference.getBoolean(SHOW_STICKY_TOPIC, false);
     mUsername = mPreference.getString(USERNAME_KEY, "");
     mPassword = mPreference.getString(PASSWORD_KEY, "");
-    bAutoLogin = mPreference.getBoolean(AUTO_LOGIN, true);
-
-    bLastLoginSuccess = mPreference.getBoolean(LAST_LOGIN_SUCCESS, false);
+    bSaveInfo = mPreference.getBoolean(SAVE_INFO, true);
 
     bUseSignature = mPreference.getBoolean(USE_DEVICE_SIGNATURE, true);
     mSignature = mPreference.getString(DEVICE_SIGNATURE, "");

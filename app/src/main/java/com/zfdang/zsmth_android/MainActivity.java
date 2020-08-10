@@ -404,7 +404,9 @@ public class MainActivity extends SMTHBaseActivity
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
+    Log.d(TAG, "receive login result" + requestCode);
     if (requestCode == LOGIN_ACTIVITY_REQUEST_CODE) {
+      Log.d(TAG, "receive login result");
       if (resultCode == RESULT_OK) {
         updateUserStatusNow();
       }
@@ -562,6 +564,7 @@ public class MainActivity extends SMTHBaseActivity
   }
 
   public void onLogin() {
+//    Intent intent = new Intent(this, WebviewLoginActivity.class);
     Intent intent = new Intent(this, LoginActivity.class);
     startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
   }

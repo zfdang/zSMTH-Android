@@ -73,6 +73,7 @@ android {
 }
 
 dependencies {
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     final OKHTTP_VERSION = '3.14.9'
     final RETROFIT_VERSION = '2.9.0'
 
@@ -106,7 +107,6 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:$rootProject.RXANDROID2_VERSION"
 
     // OkHttp
-    implementation 'com.github.franmontiel:PersistentCookieJar:1.0.1'
     implementation "com.squareup.okhttp3:okhttp:$OKHTTP_VERSION"
     implementation "com.squareup.okhttp3:logging-interceptor:$OKHTTP_VERSION"
 

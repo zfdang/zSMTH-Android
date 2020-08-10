@@ -12,11 +12,8 @@ import android.util.Log;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.franmontiel.persistentcookiejar.ClearableCookieJar;
-import com.franmontiel.persistentcookiejar.PersistentCookieJar;
-import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
-import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.WebviewCookieHandler;
 import com.zfdang.zsmth_android.helpers.ActivityUtils;
 import com.zfdang.zsmth_android.helpers.MakeList;
 import com.zfdang.zsmth_android.helpers.StringUtils;
@@ -69,7 +66,6 @@ public class SMTHHelper {
   public static final String USER_AGENT =
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.101 Safari/537.36";
 
-  public ClearableCookieJar mCookieJar;
   public OkHttpClient mHttpClient;
 
   // WWW service of SMTH, but actually most of services are actually from nForum
@@ -118,10 +114,6 @@ public class SMTHHelper {
     HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
     logging.setLevel(HttpLoggingInterceptor.Level.NONE);
 
-    // https://github.com/franmontiel/PersistentCookieJar
-    // A persistent CookieJar implementation for OkHttp 3 based on SharedPreferences.
-    mCookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
-
     //设置缓存路径
     File httpCacheDirectory = new File(SMTHApplication.getAppContext().getCacheDir(), "Responses");
     int cacheSize = 250 * 1024 * 1024; // 250 MiB
@@ -145,7 +137,8 @@ public class SMTHHelper {
           return originalResponse.newBuilder().header("Cache-Control", "no-cache").build();
         }
       }
-    }).cookieJar(mCookieJar).cache(cache).readTimeout(15, TimeUnit.SECONDS).connectTimeout(10, TimeUnit.SECONDS).build();
+    }).cookieJar(new WebviewCookieHandler())  // https://gist.github.com/scitbiz/8cb6d8484bb20e47d241cc8e117fa705
+      .cache(cache).readTimeout(15, TimeUnit.SECONDS).connectTimeout(10, TimeUnit.SECONDS).build();
 
     //        mRetrofit = new Retrofit.Builder()
     //                .baseUrl(SMTH_MOBILE_URL)

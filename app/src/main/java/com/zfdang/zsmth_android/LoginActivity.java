@@ -31,7 +31,11 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
 
   private EditText m_userNameEditText;
   private EditText m_passwordEditText;
-  private CheckBox mAutoLogin;
+  private CheckBox mSaveInfo;
+
+  static final int LOGIN_ACTIVITY_REQUEST_CODE = 9528;  // The request code
+  static final String USERNAME = "USERNAME";
+  static final String PASSWORD = "PASSWORD";
 
   private final String TAG = "LoginActivity";
 
@@ -41,17 +45,19 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
 
     // these two variables should be loaded from preference
     Settings setting = Settings.getInstance();
-    String username = setting.getUsername();
-    String password = setting.getPassword();
-    boolean autologin = setting.isAutoLogin();
 
-    m_userNameEditText = (EditText) findViewById(R.id.username_edit);
-    m_userNameEditText.setText(username);
-    m_passwordEditText = (EditText) findViewById(R.id.password_edit);
-    m_passwordEditText.setText(password);
+    boolean saveinfo = setting.isSaveInfo();
+    mSaveInfo = (CheckBox) findViewById(R.id.save_info);
+    mSaveInfo.setChecked(saveinfo);
 
-    mAutoLogin = (CheckBox) findViewById(R.id.auto_login);
-    mAutoLogin.setChecked(autologin);
+    if(saveinfo) {
+      String username = setting.getUsername();
+      String password = setting.getPassword();
+      m_userNameEditText = (EditText) findViewById(R.id.username_edit);
+      m_userNameEditText.setText(username);
+      m_passwordEditText = (EditText) findViewById(R.id.password_edit);
+      m_passwordEditText.setText(password);
+    }
 
     TextView registerLink = (TextView) findViewById(R.id.register_link);
     registerLink.setMovementMethod(LinkMovementMethod.getInstance());
@@ -71,105 +77,58 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
 
   @Override public void onClick(View view) {
     if (view.getId() == R.id.signin_button) {
-      // login with provided username and password
+      // verify username & password
       String username = m_userNameEditText.getText().toString();
       String password = m_passwordEditText.getText().toString();
 
-      boolean cancel = false;
       View focusView = null;
-
-      // Check for a valid password, if the user entered one.
-      // this code should be refined
-      if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-        focusView = m_passwordEditText;
-        cancel = true;
-      }
-
       // Check for a valid username.
       if (TextUtils.isEmpty(username)) {
         focusView = m_userNameEditText;
-        cancel = true;
-      } else if (!isUsernameValid(username)) {
-        focusView = m_userNameEditText;
-        cancel = true;
+      } else if (TextUtils.isEmpty(password)) {
+        // Check for a valid password
+        focusView = m_passwordEditText;
       }
 
-      if (cancel) {
+      if (focusView != null) {
         // There was an error; don't attempt login and focus the first
         // form field with an error.
         focusView.requestFocus();
       } else {
-        Settings.getInstance().setAutoLogin(mAutoLogin.isChecked());
-        Settings.getInstance().setLastLoginSuccess(false);
-        attemptLoginFromWWW(username, password);
+        // save info if selected
+        boolean saveinfo = mSaveInfo.isChecked();
+        Settings.getInstance().setSaveInfo(saveinfo);
+
+        if(saveinfo) {
+          // save
+          Settings.getInstance().setUsername(username);
+          Settings.getInstance().setPassword(password);
+        } else {
+          // clean existed
+          Settings.getInstance().setUsername("");
+          Settings.getInstance().setPassword("");
+        }
+
+        // continue to login with nforum web
+        Intent intent = new Intent(this, WebviewLoginActivity.class);
+        intent.putExtra(USERNAME, username);
+        intent.putExtra(PASSWORD, password);
+        startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
       }
     }
   }
 
-  // login from WWW, then nforum / www / m are all logined
-  private void attemptLoginFromWWW(final String username, final String password) {
-    // perform the user login attempt.
-    showProgress("登录中...");
-
-    Log.d(TAG, "start login now...");
-    // use attempt to login, so set userOnline = true
-    Settings.getInstance().setUserOnline(true);
-
-    // RxJava & Retrofit: VERY VERY good article
-    // http://gank.io/post/560e15be2dca930e00da1083
-    SMTHHelper helper = SMTHHelper.getInstance();
-    // clear cookies upon login
-    helper.mCookieJar.clear();
-    final String cookieDays = "2";
-    helper.wService.login(username, password, cookieDays)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Observer<AjaxResponse>() {
-          @Override public void onSubscribe(@NonNull Disposable disposable) {
-
-          }
-
-          @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
-            dismissProgress();
-            // {"ajax_st":0,"ajax_code":"0101","ajax_msg":"您的用户名并不存在，或者您的密码错误"}
-            // {"ajax_st":0,"ajax_code":"0105","ajax_msg":"请勿频繁登录"}
-            // {"ajax_st":1,"ajax_code":"0005","ajax_msg":"操作成功"}
-            switch (ajaxResponse.getAjax_st()) {
-              case AjaxResponse.AJAX_RESULT_OK:
-                Toast.makeText(getApplicationContext(), "登录成功!", Toast.LENGTH_SHORT).show();
-
-                // save username & passworld
-                Settings.getInstance().setUsername(username);
-                Settings.getInstance().setPassword(password);
-                Settings.getInstance().setLastLoginSuccess(true);
-
-                Intent resultIntent = new Intent();
-                setResult(Activity.RESULT_OK, resultIntent);
-                finish();
-                break;
-              default:
-                Toast.makeText(SMTHApplication.getAppContext(), ajaxResponse.toString(), Toast.LENGTH_LONG).show();
-                break;
-            }
-          }
-
-          @Override public void onError(@NonNull Throwable e) {
-            dismissProgress();
-            Toast.makeText(SMTHApplication.getAppContext(), "登录失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
-          }
-
-          @Override public void onComplete() {
-
-          }
-        });
-  }
-
-  private boolean isUsernameValid(String username) {
-    return username.length() > 0;
-  }
-
-  private boolean isPasswordValid(String password) {
-    return password.length() > 0;
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    Log.d(TAG, "receive login result" + requestCode);
+    if (requestCode == LOGIN_ACTIVITY_REQUEST_CODE) {
+      Log.d(TAG, "receive login result");
+      if (resultCode == RESULT_OK) {
+        Intent resultIntent = new Intent();
+        setResult(Activity.RESULT_OK, resultIntent);
+        finish();
+      }
+    }
   }
 
   @Override public void onStart() {
