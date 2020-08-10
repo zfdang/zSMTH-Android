@@ -85,7 +85,7 @@ import okhttp3.ResponseBody;
  */
 public class PostListActivity extends SMTHBaseActivity
     implements View.OnClickListener, OnTouchListener, RecyclerViewGestureListener.OnItemLongClickListener, PopupLikeWindow.OnLikeInterface,
-    PopupForwardWindow.OnForwardInterface {
+    PopupForwardWindow.OnForwardInterface, PopupBanWindow.OnBanIDInterface {
 
   private static final String TAG = "PostListActivity";
   public RecyclerView mRecyclerView = null;
@@ -465,6 +465,10 @@ public class PostListActivity extends SMTHBaseActivity
         new PostActionAlertDialogItem(getString(R.string.post_delete_post), R.drawable.ic_delete_black_48dp), // 9
         new PostActionAlertDialogItem(getString(R.string.post_edit_post), R.drawable.ic_edit_black_48dp), // 10
         new PostActionAlertDialogItem(getString(R.string.post_convert_image), R.drawable.ic_photo_black_48dp), // 11
+        new PostActionAlertDialogItem(getString(R.string.post_topic_delete), R.drawable.ic_delete_black_48dp), // 12
+        new PostActionAlertDialogItem(getString(R.string.post_ban_id), R.drawable.ic_person_black_48dp), // 13
+        new PostActionAlertDialogItem(getString(R.string.post_mark_m), R.drawable.ic_email_black_48dp), // 14
+        new PostActionAlertDialogItem(getString(R.string.post_topic_readonly), R.drawable.ic_content_copy_black_48dp), // 15
     };
 
     ListAdapter adapter = new ArrayAdapter<PostActionAlertDialogItem>(getApplicationContext(), R.layout.post_popup_menu_item, menuItems) {
@@ -624,6 +628,16 @@ public class PostListActivity extends SMTHBaseActivity
 
       // convert title + post to image
       captureView(mTitle, v, post.getPostID());
+    } else if (which == 12) {
+      deleteTopic(post);
+    } else if (which == 13) {
+      PopupBanWindow popup = new PopupBanWindow();
+      popup.initPopupWindow(this, post);
+      popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 100);
+    } else if (which == 14) {
+      markPost(post);
+    } else if (which == 15) {
+      readonlyTopic(post);
     }
   }
 
@@ -693,6 +707,66 @@ public class PostListActivity extends SMTHBaseActivity
 
       @Override public void onError(@NonNull Throwable e) {
         Toast.makeText(PostListActivity.this, "删除帖子失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
+
+      }
+
+      @Override public void onComplete() {
+
+      }
+    });
+  }
+
+  public void deleteTopic(Post post) {
+    SMTHHelper helper = SMTHHelper.getInstance();
+
+    helper.wService.deleteTopic(mTopic.getBoardEngName(), post.getPostID(), mTopic.getTopicID(), "d")
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Observer<AjaxResponse>() {
+      @Override public void onSubscribe(@NonNull Disposable disposable) {
+
+      }
+
+      @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
+        if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
+          Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+        } else {
+          Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
+        }
+      }
+
+      @Override public void onError(@NonNull Throwable e) {
+        Toast.makeText(PostListActivity.this, "删除主题失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
+
+      }
+
+      @Override public void onComplete() {
+
+      }
+    });
+  }
+
+  public void OnBanIDAction(Post post, String banReason, Integer day) {
+    SMTHHelper helper = SMTHHelper.getInstance();
+
+    helper.wService.banID(mTopic.getBoardEngName(), post.getPostID(), banReason, day)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Observer<AjaxResponse>() {
+      @Override public void onSubscribe(@NonNull Disposable disposable) {
+
+      }
+
+      @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
+        if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
+          Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+        } else {
+          Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
+        }
+      }
+
+      @Override public void onError(@NonNull Throwable e) {
+        Toast.makeText(PostListActivity.this, "封禁ID失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
 
       }
 
@@ -879,5 +953,65 @@ public class PostListActivity extends SMTHBaseActivity
 
       }
     });
+  }
+
+  public void markPost(Post post) {
+    SMTHHelper helper = SMTHHelper.getInstance();
+
+    helper.wService.markPost(mTopic.getBoardEngName(), post.getPostID(), mTopic.getTopicID(), "m")
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Observer<AjaxResponse>() {
+              @Override public void onSubscribe(@NonNull Disposable disposable) {
+
+              }
+
+              @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
+                if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
+                  Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+                } else {
+                  Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
+                }
+              }
+
+              @Override public void onError(@NonNull Throwable e) {
+                Toast.makeText(PostListActivity.this, "设置/取消m标记！\n" + e.toString(), Toast.LENGTH_LONG).show();
+
+              }
+
+              @Override public void onComplete() {
+
+              }
+            });
+  }
+
+  public void readonlyTopic(Post post) {
+    SMTHHelper helper = SMTHHelper.getInstance();
+
+    helper.wService.readonlyTopic(mTopic.getBoardEngName(), post.getPostID(), mTopic.getTopicID(), ";")
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Observer<AjaxResponse>() {
+              @Override public void onSubscribe(@NonNull Disposable disposable) {
+
+              }
+
+              @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
+                if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
+                  Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+                } else {
+                  Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
+                }
+              }
+
+              @Override public void onError(@NonNull Throwable e) {
+                Toast.makeText(PostListActivity.this, "设置同主题不可回复！\n" + e.toString(), Toast.LENGTH_LONG).show();
+
+              }
+
+              @Override public void onComplete() {
+
+              }
+            });
   }
 }

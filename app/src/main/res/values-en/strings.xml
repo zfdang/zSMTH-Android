@@ -58,6 +58,11 @@
   <string name="post_delete_post">删除文章</string>
   <string name="post_share">分享</string>
 
+  <string name="post_topic_delete">同主题删除(版主专用)</string>
+  <string name="post_ban_id">封ID(版主专用)</string>
+  <string name="post_mark_m">设置/取消m标记(版主专用)</string>
+  <string name="post_topic_readonly">同主题不可回复(版主专用)</string>
+
   <string name="write_label_post">发表</string>
   <string name="post_attach">附件</string>
 
