@@ -58,6 +58,11 @@
     <string name="post_delete_post">删除文章</string>
     <string name="post_share">分享</string>
 
+    <string name="post_topic_delete">同主题删除(版主专用)</string>
+    <string name="post_ban_id">封ID(版主专用)</string>
+    <string name="post_mark_m">设置/取消m标记(版主专用)</string>
+    <string name="post_topic_readonly">同主题不可回复(版主专用)</string>
+
     <string name="write_label_post">发表</string>
     <string name="post_attach">附件</string>
 
@@ -90,7 +95,7 @@
     <!--About fragment-->
     <string name="aboutLibraries_description_showIcon">true</string>
     <string name="aboutLibraries_description_showVersion">true</string>
-    <string name="aboutLibraries_description_text"><![CDATA[ zSMTH是水木社区BBS的一款开源Android客户端。项目地址为 <A href="http://zSMTH-Android.zfdang.com/">http://zSMTH-Android.zfdang.com/</A>。<br /><br />© 2017 zfdang <br /><A href="http://www.zfdang.com">Visit Homepage</A> ]]></string>
+    <string name="aboutLibraries_description_text"><![CDATA[ zSMTH是水木社区BBS的一款开源Android客户端。项目地址为 <A href="http://zSMTH-Android.zfdang.com/">http://zSMTH-Android.zfdang.com/</A>。<br /><br />© 2016 zfdang <br /><A href="http://www.zfdang.com">Visit Homepage</A> ]]></string>
     <string name="search_author_label">请输入作者ID</string>
     <string name="search_keyword_label">请输入关键字</string>
     <string name="search_attachment_label">带附件</string>
@@ -136,7 +141,7 @@
 
     <!-- 关于 -->
     <string name="about_title">关于zSMTH</string>
-    <string name="about_content" formatted="false">版本: %s(%d).\nzSMTH-Android是水木社区BBS的开源Android客户端。\n\n1.在帖子内容处，长按将弹出‘回复’等操作菜单！\n2.点击十大帖子右上角的图标可跳至对应版面\n3.邮件左划删除\n4.使用保存图片的功能，需要在系统设置里授予zSMTH读写存储的权限。\n\n获取更新和使用说明:\nhttp://zsmth-android.zfdang.com/\n\nby zfdang.</string>
+    <string name="about_content" formatted="false">版本: %s(%d).\nzSMTH-Android是水木社区BBS的开源Android客户端。\n\n1.在帖子内容处，长按将弹出‘回复’等操作菜单！\n2.点击十大帖子右上角的图标可跳至对应版面\n3.邮件左划删除\n\n获取更新和使用说明:\nhttp://zsmth-android.zfdang.com/\n\nby zfdang.</string>
     <string name="about_close">关闭</string>
     <string name="mail_content_menu_open_post">打开原贴</string>
     <string name="mail_content_title">加载中...</string>
