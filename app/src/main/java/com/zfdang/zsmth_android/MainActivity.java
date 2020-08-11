@@ -169,8 +169,8 @@ public class MainActivity extends SMTHBaseActivity
 
     // start service to maintain user status
     setupUserStatusReceiver();
-    UpdateNavigationViewHeader();
     updateUserStatusNow();
+    UpdateNavigationViewHeader();
 
     // schedule the periodical run
     AlarmBroadcastReceiver.schedule(getApplicationContext(), mReceiver);
@@ -395,6 +395,7 @@ public class MainActivity extends SMTHBaseActivity
       Log.d(TAG, "receive login result");
       if (resultCode == RESULT_OK) {
         updateUserStatusNow();
+        UpdateNavigationViewHeader();
       }
     }
   }
