@@ -683,7 +683,7 @@ public class PostListActivity extends SMTHBaseActivity
       }
     } catch (Exception e) {
       Log.e(TAG, "saveImageToFile: " + Log.getStackTraceString(e));
-      Toast.makeText(PostListActivity.this, "保存截图失败:\n" + e.toString(), Toast.LENGTH_LONG).show();
+      Toast.makeText(PostListActivity.this, "保存截图失败:\n请授予应用存储权限！\n" + e.toString(), Toast.LENGTH_LONG).show();
     }
   }
 
