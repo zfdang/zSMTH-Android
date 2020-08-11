@@ -176,6 +176,23 @@ public class Settings {
     }
   }
 
+  // show board master only items in postlist actions
+  private static final String BOARD_MASTER_ONLY = "BOARD_MASTER_ONLY";
+  private boolean bBoardMasterOnly;
+
+  public boolean isBoardMasterOnly() {
+    return bBoardMasterOnly;
+  }
+
+  public void setBoardMasterOnly(boolean bBoardMasterOnly) {
+    if (this.bBoardMasterOnly != bBoardMasterOnly) {
+      this.bBoardMasterOnly = bBoardMasterOnly;
+      mEditor.putBoolean(BOARD_MASTER_ONLY, this.bBoardMasterOnly);
+      mEditor.commit();
+    }
+  }
+
+  // night mode
   private static final String NIGHT_MODE = "NIGHT_MODE";
   private boolean bNightMode;
 
@@ -412,6 +429,8 @@ public class Settings {
     bUserOnline = mPreference.getBoolean(USER_ONLINE, false);
 
     bLoadOriginalImage = mPreference.getBoolean(LOAD_ORIGINAL_IMAGE, false);
+
+    bBoardMasterOnly = mPreference.getBoolean(BOARD_MASTER_ONLY, false);
 
     bNightMode = mPreference.getBoolean(NIGHT_MODE, true);
 

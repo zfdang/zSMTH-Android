@@ -46,6 +46,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
   CheckBoxPreference setting_volume_key_scroll;
   ListPreference setting_fontsize_control;
   CheckBoxPreference image_quality_control;
+  CheckBoxPreference board_master_only;
 
   CheckBoxPreference notification_control_mail;
   CheckBoxPreference notification_control_like;
@@ -160,6 +161,21 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         return true;
       }
     });
+
+    board_master_only = (CheckBoxPreference) findPreference("setting_board_master_only");
+    board_master_only.setChecked(Settings.getInstance().isBoardMasterOnly());
+    board_master_only.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+      @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
+        boolean bBoardMasterOnly = Settings.getInstance().isBoardMasterOnly();
+        if (newValue instanceof Boolean) {
+          Boolean boolVal = (Boolean) newValue;
+          bBoardMasterOnly = boolVal;
+        }
+        Settings.getInstance().setBoardMasterOnly(bBoardMasterOnly);
+        return true;
+      }
+    });
+
 
     daynight_control = (CheckBoxPreference) findPreference("setting_daynight_control");
     daynight_control.setChecked(Settings.getInstance().isNightMode());

@@ -73,6 +73,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import okhttp3.ResponseBody;
@@ -449,27 +450,30 @@ public class PostListActivity extends SMTHBaseActivity
 
   @Override public boolean onItemLongClicked(final int position, View v) {
     if (position == RecyclerView.NO_POSITION || position >= PostListContent.POSTS.size()) return false;
+//    Log.d(TAG, String.format("Post by %s is long clicked", PostListContent.POSTS.get(position).getAuthor()));
+    List<PostActionAlertDialogItem> menuItemsArray = new ArrayList<PostActionAlertDialogItem>();
+    menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_reply_post), R.drawable.ic_reply_black_48dp));  // 0
+    menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_like_post), R.drawable.like_black)); // 1
+    menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_reply_mail), R.drawable.ic_email_black_48dp)); // 2
+    menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_query_author), R.drawable.ic_person_black_48dp)); // 3
+    menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_filter_author), R.drawable.ic_find_in_page_black_48dp)); // 4
+    menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_copy_content), R.drawable.ic_content_copy_black_48dp)); // 5
+    menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_foward), R.drawable.ic_send_black_48dp)); // 6
+    menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_view_in_browser), R.drawable.ic_open_in_browser_black_48dp)); // 7
+    menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_share), R.drawable.ic_share_black_48dp)); // 8
+    menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_delete_post), R.drawable.ic_delete_black_48dp));  // 9
+    menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_edit_post), R.drawable.ic_edit_black_48dp)); // 10
+    menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_convert_image), R.drawable.ic_photo_black_48dp)); // 11
 
-    Log.d(TAG, String.format("Post by %s is long clicked", PostListContent.POSTS.get(position).getAuthor()));
+    if(Settings.getInstance().isBoardMasterOnly()){
+      menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_topic_delete), R.drawable.baseline_admin_panel_settings_black_48)); // 12
+      menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_ban_id), R.drawable.baseline_admin_panel_settings_black_48));  // 13
+      menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_mark_m), R.drawable.baseline_admin_panel_settings_black_48)); // 14
+      menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_topic_readonly), R.drawable.baseline_admin_panel_settings_black_48)); // 15
+    }
 
-    final PostActionAlertDialogItem[] menuItems = {
-        new PostActionAlertDialogItem(getString(R.string.post_reply_post), R.drawable.ic_reply_black_48dp),       // 0
-        new PostActionAlertDialogItem(getString(R.string.post_like_post), R.drawable.like_black),       // 1
-        new PostActionAlertDialogItem(getString(R.string.post_reply_mail), R.drawable.ic_email_black_48dp),    // 2
-        new PostActionAlertDialogItem(getString(R.string.post_query_author), R.drawable.ic_person_black_48dp),    // 3
-        new PostActionAlertDialogItem(getString(R.string.post_filter_author), R.drawable.ic_find_in_page_black_48dp),    // 4
-        new PostActionAlertDialogItem(getString(R.string.post_copy_content), R.drawable.ic_content_copy_black_48dp),    // 5
-        new PostActionAlertDialogItem(getString(R.string.post_foward), R.drawable.ic_send_black_48dp),     // 6
-        new PostActionAlertDialogItem(getString(R.string.post_view_in_browser), R.drawable.ic_open_in_browser_black_48dp), // 7
-        new PostActionAlertDialogItem(getString(R.string.post_share), R.drawable.ic_share_black_48dp), // 8
-        new PostActionAlertDialogItem(getString(R.string.post_delete_post), R.drawable.ic_delete_black_48dp), // 9
-        new PostActionAlertDialogItem(getString(R.string.post_edit_post), R.drawable.ic_edit_black_48dp), // 10
-        new PostActionAlertDialogItem(getString(R.string.post_convert_image), R.drawable.ic_photo_black_48dp), // 11
-        new PostActionAlertDialogItem(getString(R.string.post_topic_delete), R.drawable.ic_delete_black_48dp), // 12
-        new PostActionAlertDialogItem(getString(R.string.post_ban_id), R.drawable.ic_person_black_48dp), // 13
-        new PostActionAlertDialogItem(getString(R.string.post_mark_m), R.drawable.ic_email_black_48dp), // 14
-        new PostActionAlertDialogItem(getString(R.string.post_topic_readonly), R.drawable.ic_content_copy_black_48dp), // 15
-    };
+    PostActionAlertDialogItem[] menuItems = new PostActionAlertDialogItem[menuItemsArray.size()];
+    menuItemsArray.toArray(menuItems);
 
     ListAdapter adapter = new ArrayAdapter<PostActionAlertDialogItem>(getApplicationContext(), R.layout.post_popup_menu_item, menuItems) {
       ViewHolder holder;
