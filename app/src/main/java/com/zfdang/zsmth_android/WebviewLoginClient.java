@@ -35,6 +35,9 @@ public class WebviewLoginClient extends WebViewClient {
 
     @Override
     public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+        if(url.contains("ads")) {
+            return new WebResourceResponse("text/javascript", "UTF-8", null);
+        }
         return null;
     }
 
@@ -46,7 +49,8 @@ public class WebviewLoginClient extends WebViewClient {
                     "var ids = document.getElementsByName('id');" +
                     "ids[0].value = '" + this.username + "';" +
                     "var passwds = document.getElementsByName('passwd');" +
-                    "passwds[0].value = '" + this.password + "';";
+                    "passwds[0].value = '" + this.password + "';" +
+                    "document.getElementById('TencentCaptcha').click();";
 
             if (Build.VERSION.SDK_INT >= 19) {
                 view.evaluateJavascript(js, new ValueCallback<String>() {

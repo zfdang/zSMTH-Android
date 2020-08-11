@@ -1,17 +1,13 @@
 package com.zfdang.zsmth_android;
 
-import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,7 +16,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -56,24 +51,17 @@ import com.zfdang.zsmth_android.models.MailListContent;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+import com.zfdang.zsmth_android.services.AlarmBroadcastReceiver;
 import com.zfdang.zsmth_android.services.MaintainUserStatusService;
 import com.zfdang.zsmth_android.services.UserStatusReceiver;
 
-import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 import java.lang.reflect.Field;
-import java.util.Random;
-
-import org.reactivestreams.Subscriber;
 
 public class MainActivity extends SMTHBaseActivity
     implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, OnTopicFragmentInteractionListener,
@@ -181,11 +169,11 @@ public class MainActivity extends SMTHBaseActivity
 
     // start service to maintain user status
     setupUserStatusReceiver();
-    updateUserStatusNow();
     UpdateNavigationViewHeader();
+    updateUserStatusNow();
 
     // schedule the periodical run
-    MaintainUserStatusService.schedule(MainActivity.this, mReceiver);
+    AlarmBroadcastReceiver.schedule(getApplicationContext(), mReceiver);
 
     if (Settings.getInstance().isFirstRun()) {
       // show info dialog after 5 seconds for the first run
@@ -194,7 +182,7 @@ public class MainActivity extends SMTHBaseActivity
         @Override public void run() {
           showInfoDialog();
         }
-      }, 2000);
+      }, 1000);
     }
 
   }
@@ -264,9 +252,7 @@ public class MainActivity extends SMTHBaseActivity
 
   // triger the background service right now
   private void updateUserStatusNow() {
-    Intent intent = new Intent(this, MaintainUserStatusService.class);
-    intent.putExtra(SMTHApplication.USER_SERVICE_RECEIVER, mReceiver);
-    startService(intent);
+    AlarmBroadcastReceiver.runJobNow(getApplicationContext(), mReceiver);
   }
 
   private void setupUserStatusReceiver() {
@@ -493,7 +479,7 @@ public class MainActivity extends SMTHBaseActivity
 
   private void quitNow() {
     // stop background service
-    MaintainUserStatusService.unschedule(MainActivity.this);
+    AlarmBroadcastReceiver.unschedule();
 
     // quit
     finish();
