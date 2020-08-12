@@ -37,16 +37,16 @@ public class MaintainUserStatusService extends JobIntentService {
     public String getNotificationMessage(UserStatus userStatus) {
         String message = "";
         Settings settings = Settings.getInstance();
-        if (userStatus.isNew_mail() && settings.isNotificationMail()) {
+        if (userStatus.hasNewMail() && settings.isNotificationMail()) {
             message = SMTHApplication.NOTIFICATION_NEW_MAIL + "  ";
         }
-        if (userStatus.getNew_like() > 0 && settings.isNotificationLike()) {
+        if (userStatus.hasNewLike() && settings.isNotificationLike()) {
             message += SMTHApplication.NOTIFICATION_NEW_LIKE + "  ";
         }
-        if (userStatus.getNew_at() > 0 && settings.isNotificationAt()) {
+        if (userStatus.hasNewAt() && settings.isNotificationAt()) {
             message += SMTHApplication.NOTIFICATION_NEW_AT + "  ";
         }
-        if (userStatus.getNew_reply() > 0 && settings.isNotificationReply()) {
+        if (userStatus.hasNewReply() && settings.isNotificationReply()) {
             message += SMTHApplication.NOTIFICATION_NEW_REPLY + "  ";
         }
         //Log.d(TAG, message);
@@ -66,7 +66,7 @@ public class MaintainUserStatusService extends JobIntentService {
 
                     @Override
                     public void onNext(@NonNull UserStatus userStatus) {
-//                        Log.d(TAG, "1.0 User Status: " + userStatus.getId());
+//                        Log.d(TAG, "1.0 User Status: " + userStatus.toString());
 //                        if (SMTHApplication.activeUser != null) {
 //                            Log.d(TAG, "1.0 Cached User: " + SMTHApplication.activeUser.getId());
 //                        } else {

@@ -2,6 +2,7 @@ package com.zfdang.zsmth_android.newsmth;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 /**
  * used by Observable<UserStatus> queryActiveUserStatus()
@@ -96,33 +97,33 @@ public class UserStatus implements Parcelable {
   private String face_url;
   private boolean is_login;
 
-  private boolean new_mail;
+  private String new_mail;
   private boolean full_mail;
 
   // // sometime, this is a boolean, sometime, it is a integer. SMTH is inconsistent
-  private int new_like;
+  private String new_like;
 
-  public int getNew_reply() {
+  public String getNew_reply() {
     return new_reply;
   }
 
-  public void setNew_reply(int new_reply) {
+  public void setNew_reply(String new_reply) {
     this.new_reply = new_reply;
   }
 
-  public int getNew_like() {
+  public String getNew_like() {
     return new_like;
   }
 
-  public void setNew_like(int new_like) {
+  public void setNew_like(String new_like) {
     this.new_like = new_like;
   }
 
-  public int getNew_at() {
+  public String getNew_at() {
     return new_at;
   }
 
-  public void setNew_at(int new_at) {
+  public void setNew_at(String new_at) {
     this.new_at = new_at;
   }
 
@@ -134,8 +135,8 @@ public class UserStatus implements Parcelable {
     this.full_mail = full_mail;
   }
 
-  private int new_reply;
-  private int new_at;
+  private String new_reply;
+  private String new_at;
   //    private int new_msg;
 
   private int ajax_st;
@@ -194,13 +195,49 @@ public class UserStatus implements Parcelable {
     this.is_login = is_login;
   }
 
-  public boolean isNew_mail() {
+  public String isNew_mail() {
     return new_mail;
   }
 
-  public void setNew_mail(boolean new_mail) {
+  public void setNew_mail(String new_mail) {
     this.new_mail = new_mail;
   }
+
+  public boolean hasNewMail(){
+    return hasNewFromString(this.new_mail);
+  }
+
+  public boolean hasNewLike(){
+    return hasNewFromString(this.new_like);
+  }
+
+  public boolean hasNewReply(){
+    return hasNewFromString(this.new_reply);
+  }
+
+  public boolean hasNewAt(){
+    return hasNewFromString(this.new_at);
+  }
+
+  private boolean hasNewFromString(String value) {
+    if(value != null){
+      if(TextUtils.equals("true", value)){
+        // true, return true
+        return true;
+      }
+      try {
+        int v = Integer.parseInt(value);
+        if(v > 0) {
+          // integer > 0, return true
+          return true;
+        }
+      } catch (NumberFormatException e) {
+      }
+    }
+
+    return false;
+  }
+
 
   @Override public String toString() {
     return "UserStatus{"
@@ -241,11 +278,11 @@ public class UserStatus implements Parcelable {
     dest.writeString(this.id);
     dest.writeString(this.face_url);
     dest.writeByte(is_login ? (byte) 1 : (byte) 0);
-    dest.writeByte(new_mail ? (byte) 1 : (byte) 0);
+    dest.writeString(new_mail);
     dest.writeByte(full_mail ? (byte) 1 : (byte) 0);
-    dest.writeInt(this.new_like);
-    dest.writeInt(this.new_reply);
-    dest.writeInt(this.new_at);
+    dest.writeString(this.new_like);
+    dest.writeString(this.new_reply);
+    dest.writeString(this.new_at);
     dest.writeInt(this.ajax_st);
     dest.writeString(this.ajax_code);
     dest.writeString(this.ajax_msg);
@@ -258,11 +295,11 @@ public class UserStatus implements Parcelable {
     this.id = in.readString();
     this.face_url = in.readString();
     this.is_login = in.readByte() != 0;
-    this.new_mail = in.readByte() != 0;
+    this.new_mail = in.readString();
     this.full_mail = in.readByte() != 0;
-    this.new_like = in.readInt();
-    this.new_reply = in.readInt();
-    this.new_at = in.readInt();
+    this.new_like = in.readString();
+    this.new_reply = in.readString();
+    this.new_at = in.readString();
     this.ajax_st = in.readInt();
     this.ajax_code = in.readString();
     this.ajax_msg = in.readString();
