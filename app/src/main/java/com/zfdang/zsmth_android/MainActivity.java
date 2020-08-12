@@ -557,7 +557,6 @@ public class MainActivity extends SMTHBaseActivity
   }
 
   public void onLogout() {
-    Settings.getInstance().setUserOnline(false);
     if (SMTHApplication.activeUser != null) {
       SMTHApplication.activeUser.setId("guest");
     }

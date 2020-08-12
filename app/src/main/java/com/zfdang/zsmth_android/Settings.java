@@ -71,24 +71,6 @@ public class Settings {
     }
   }
 
-  // after user init login action, set online = true;
-  // after user init logout action, set online = false;
-  // this value will impact autoLogin behaviour of service
-  private static final String USER_ONLINE = "user_online";
-  private boolean bUserOnline;
-
-  public boolean isUserOnline() {
-    return bUserOnline;
-  }
-
-  public void setUserOnline(boolean bUserOnline) {
-    if (this.bUserOnline != bUserOnline) {
-      this.bUserOnline = bUserOnline;
-      mEditor.putBoolean(USER_ONLINE, this.bUserOnline);
-      mEditor.commit();
-    }
-  }
-
   private static final String USE_DEVICE_SIGNATURE = "use_device_signature";
   private boolean bUseSignature;
 
@@ -425,8 +407,6 @@ public class Settings {
     }
 
     mTarget = mPreference.getString(FORWARD_TAEGET, "");
-
-    bUserOnline = mPreference.getBoolean(USER_ONLINE, false);
 
     bLoadOriginalImage = mPreference.getBoolean(LOAD_ORIGINAL_IMAGE, false);
 
