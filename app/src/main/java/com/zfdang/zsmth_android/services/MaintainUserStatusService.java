@@ -25,7 +25,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class MaintainUserStatusService extends JobIntentService {
     private static final int JOB_ID = 1483252;
-    private static final String TAG = "MaintainUserStatusService";
+    private static final String TAG = "UserStatusService"; //Limit to 23 characters for logging
 
     private static UserStatusReceiver mUserStatusReceiver = null;
 
@@ -106,6 +106,7 @@ public class MaintainUserStatusService extends JobIntentService {
                                 // do nothing
 //                                Log.d(TAG, "1.3 invalid user, and not cached");
                                 caseID = 3;
+                                SMTHApplication.activeUser = userStatus;  //Save "guest" case for activeuser initialization
                             } else {
                                 // case 1.4, clear login information
                                 SMTHApplication.activeUser = null;
