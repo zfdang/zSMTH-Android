@@ -53,5 +53,7 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
         });
         mWebView.setWebViewClient(new WebviewLoginClient(this, username, password));
         mWebView.loadUrl(url);
+        Settings.getInstance().setUsername(username);
+        Settings.getInstance().setPassword(password);
     }
 }
