@@ -120,10 +120,18 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
       if (resultCode == RESULT_OK) {
         Toast.makeText(SMTHApplication.getAppContext(), "登录完成!", Toast.LENGTH_SHORT).show();
 
+         if (SMTHApplication.activeUser != null) {
+          SMTHApplication.activeUser.setId(Settings.getInstance().getUsername());
+        }
+
         Intent resultIntent = new Intent();
         setResult(Activity.RESULT_OK, resultIntent);
         finish();
       }
+     else
+      {
+        Settings.getInstance().setUsername("");
+        Settings.getInstance().setPassword("");
     }
   }
 
