@@ -43,10 +43,10 @@ public class MaintainUserStatusService extends JobIntentService {
         if (userStatus.getNew_like() > 0 && settings.isNotificationLike()) {
             message += SMTHApplication.NOTIFICATION_NEW_LIKE + "  ";
         }
-        if (userStatus.getNew_at() > 0 && settings.isNotificationAt()) {
+        if (userStatus.getNew_at()  && settings.isNotificationAt()) {
             message += SMTHApplication.NOTIFICATION_NEW_AT + "  ";
         }
-        if (userStatus.getNew_reply() > 0 && settings.isNotificationReply()) {
+        if (userStatus.getNew_reply()  && settings.isNotificationReply()) {
             message += SMTHApplication.NOTIFICATION_NEW_REPLY + "  ";
         }
         //Log.d(TAG, message);
