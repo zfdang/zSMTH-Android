@@ -5,6 +5,9 @@ buildscript {
     repositories {
         jcenter()
         google()
+        maven {
+            url "http://mvn.mob.com/android/";
+        }
     }
     dependencies {
         // https://developer.android.com/studio/releases/gradle-plugin.html

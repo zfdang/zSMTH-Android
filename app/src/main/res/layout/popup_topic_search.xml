@@ -18,7 +18,7 @@
       android:textSize="@dimen/zsmth_font_size_large"
       />
 
-  <android.support.design.widget.TextInputLayout
+  <com.google.android.material.textfield.TextInputLayout
       android:id="@+id/search_keyword_layout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -35,9 +35,9 @@
         android:textColor="@color/status_text_night"
         android:textColorHint="@color/status_text_night"
         />
-  </android.support.design.widget.TextInputLayout>
+  </com.google.android.material.textfield.TextInputLayout>
 
-  <android.support.design.widget.TextInputLayout
+  <com.google.android.material.textfield.TextInputLayout
       android:id="@+id/search_author_layout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -54,7 +54,7 @@
         android:textColor="@color/status_text_night"
         android:textColorHint="@color/status_text_night"
         />
-  </android.support.design.widget.TextInputLayout>
+  </com.google.android.material.textfield.TextInputLayout>
 
   <CheckBox
       android:id="@+id/search_attachment"

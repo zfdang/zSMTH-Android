@@ -3,7 +3,7 @@ package com.zfdang.zsmth_android;
 import android.app.ProgressDialog;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Created by zfdang on 2016-5-10.

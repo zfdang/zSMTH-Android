@@ -18,7 +18,7 @@
       />
 
 
-  <android.support.v7.widget.RecyclerView
+  <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/all_board_list"
       android:name="com.zfdang.zsmth_android.AllBoardFragment"
       xmlns:android="http://schemas.android.com/apk/res/android"

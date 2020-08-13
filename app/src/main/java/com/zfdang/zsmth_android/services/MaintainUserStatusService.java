@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.JobIntentService;
+import androidx.core.app.JobIntentService;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -54,7 +54,7 @@ public class MaintainUserStatusService extends JobIntentService {
     }
 
     @Override
-    protected void onHandleWork(@android.support.annotation.NonNull Intent intent) {
+    protected void onHandleWork(@androidx.annotation.NonNull Intent intent) {
         // This describes what will happen when service is triggered
         final SMTHHelper helper = SMTHHelper.getInstance();
 //        Log.d(TAG, "onHandleWork");

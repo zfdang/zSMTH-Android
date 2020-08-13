@@ -1,6 +1,6 @@
 package com.zfdang.zsmth_android.helpers;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.KeyEvent;
 
 /**
