@@ -9,6 +9,10 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+// login chains:
+// http://m.newsmth.net/index
+//   ==> POST: https://m.newsmth.net/user/login
+//     ==> 302 location: http://m.newsmth.net/index?m=0108
 public class WebviewLoginClient extends WebViewClient {
 
     private static final String TAG = "WebviewLoginClient";
