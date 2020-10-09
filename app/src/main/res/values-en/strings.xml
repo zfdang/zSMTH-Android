@@ -25,7 +25,7 @@
   <string name="login_label_username">用户名</string>
   <string name="login_label_password">密码</string>
   <string name="login_label_signin">登录</string>
-  <string name="login_label_saveinfo">保存账号密码</string>
+  <string name="login_label_autologin">自动登录</string>
   <string name="login_register_link">没有帐号？  <a href="http://www.newsmth.net/bbsreg0.html">注册</a></string>
   <string name="login_asm_help">zSMTH  <a href="http://zsmth-android.zfdang.com/">使用说明</a></string>
 
@@ -141,7 +141,7 @@
 
   <!-- 关于 -->
   <string name="about_title">关于zSMTH</string>
-  <string name="about_content" formatted="false">版本: %s(%d).\nzSMTH-Android是水木社区BBS的开源Android客户端。\n\n1.在帖子内容处，长按将弹出‘回复’等操作菜单！\n2.点击十大帖子右上角的图标可跳至对应版面\n3.邮件左划删除\n\n获取更新和使用说明:\nhttp://zsmth-android.zfdang.com/\n\nby zfdang.</string>
+  <string name="about_content" formatted="false">版本: %s (%d).\nzSMTH-Android是水木社区BBS的开源Android客户端。\n\n1.在帖子内容处，长按将弹出‘回复’等操作菜单！\n2.点击十大帖子右上角的图标可跳至对应版面\n3.邮件左划删除\n4.使用保存图片的功能，需要在系统设置里授予zSMTH读写存储的权限。\n\n获取更新和使用说明:\nhttp://zsmth-android.zfdang.com/\n\nby zfdang.</string>
   <string name="about_close">关闭</string>
   <string name="mail_content_menu_open_post">打开原贴</string>
   <string name="mail_content_title">加载中...</string>

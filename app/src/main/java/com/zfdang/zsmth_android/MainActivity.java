@@ -12,16 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
@@ -35,6 +25,18 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
@@ -54,13 +56,13 @@ import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import com.zfdang.zsmth_android.services.AlarmBroadcastReceiver;
 import com.zfdang.zsmth_android.services.UserStatusReceiver;
 
+import java.lang.reflect.Field;
+
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-
-import java.lang.reflect.Field;
 
 public class MainActivity extends SMTHBaseActivity
     implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, OnTopicFragmentInteractionListener,
@@ -166,13 +168,13 @@ public class MainActivity extends SMTHBaseActivity
       }
     });
 
-    // start service to maintain user status
+    // setup receiver to receive user status update from periodical background service
     setupUserStatusReceiver();
-    updateUserStatusNow();
-    UpdateNavigationViewHeader();
 
-    // schedule the periodical run
+    // schedule the periodical background service
     AlarmBroadcastReceiver.schedule(getApplicationContext(), mReceiver);
+    // run the background service now
+    updateUserStatusNow();
 
     if (Settings.getInstance().isFirstRun()) {
       // show info dialog after 5 seconds for the first run
@@ -389,13 +391,10 @@ public class MainActivity extends SMTHBaseActivity
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    Log.d(TAG, "receive login result" + requestCode);
+    Log.d(TAG, "receive login result, requestCode = " + requestCode);
     if (requestCode == LOGIN_ACTIVITY_REQUEST_CODE) {
-      Log.d(TAG, "receive login result");
-      if (resultCode == RESULT_OK) {
-        updateUserStatusNow();
-        UpdateNavigationViewHeader();
-      }
+      Log.d(TAG, "receive login result, resultCode = " + resultCode);
+      updateUserStatusNow();
     }
   }
 
@@ -550,12 +549,16 @@ public class MainActivity extends SMTHBaseActivity
   }
 
   public void onLogin() {
-//    Intent intent = new Intent(this, WebviewLoginActivity.class);
+    // new method to login, using webview & native smth login webpage
+    // Intent intent = new Intent(this, WebviewLoginActivity.class);
+
+    // still use the previous login method
     Intent intent = new Intent(this, LoginActivity.class);
     startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
   }
 
   public void onLogout() {
+    Settings.getInstance().setUserOnline(false);
     if (SMTHApplication.activeUser != null) {
       SMTHApplication.activeUser.setId("guest");
     }

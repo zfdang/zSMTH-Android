@@ -5,7 +5,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- <uses-permission android:name="android.permission.READ_PHONE_STATE"/> -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- <uses-permission android:name="android.permission.READ_PHONE_STATE"/> -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -24,7 +25,6 @@
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
         tools:replace="android:name">
-        <activity android:name=".WebviewLoginActivity"></activity>
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -39,6 +39,7 @@
             android:name=".LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_login" />
+        <activity android:name=".WebviewLoginActivity"></activity>
         <activity
             android:name=".BoardTopicActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -48,7 +49,8 @@
             android:name=".MailContentActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_mail_content"
-            android:theme="@style/AppTheme.NoActionBar"></activity> <!-- // OpenGLRenderer: Shape too large to be rendered into a texture (1428x42739, max=8192x8192) -->
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <!-- // OpenGLRenderer: Shape too large to be rendered into a texture (1428x42739, max=8192x8192) -->
         <!-- so we disable hardwareAccelerated for postListActivity & FSImageViewer -->
         <activity
             android:name=".PostListActivity"
@@ -64,16 +66,20 @@
             android:name=".QueryUserActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_query_user"
-            android:theme="@style/AppTheme.NoActionBar"></activity> <!-- full screen activities -->
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <!-- full screen activities -->
         <activity
             android:name=".FSImageViewerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:hardwareAccelerated="false"
             android:label="@string/title_activity_fullscreen_image_viewer"
-            android:theme="@style/FullscreenTheme"></activity> <!-- External activities -->
+            android:theme="@style/FullscreenTheme"></activity>
+        <!-- External activities -->
         <activity
             android:name="com.zfdang.multiple_images_selector.ImagesSelectorActivity"
-            android:configChanges="orientation|screenSize" /> <!-- service -->
+            android:configChanges="orientation|screenSize" />
+
+        <!-- service -->
         <service
             android:name=".services.MaintainUserStatusService"
             android:permission="android.permission.BIND_JOB_SERVICE"

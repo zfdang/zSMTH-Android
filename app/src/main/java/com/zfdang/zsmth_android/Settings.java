@@ -56,21 +56,59 @@ public class Settings {
     }
   }
 
-  private static final String SAVE_INFO = "save_info";
-  private boolean bSaveInfo;
+  // auto login
+  private static final String AUTO_LOGIN = "auto_login";
+  private boolean bAutoLogin;
 
-  public boolean isSaveInfo() {
-    return bSaveInfo;
+  public boolean isAutoLogin() {
+    return bAutoLogin;
   }
 
-  public void setSaveInfo(boolean mSaveInfo) {
-    if (this.bSaveInfo != mSaveInfo) {
-      this.bSaveInfo = mSaveInfo;
-      mEditor.putBoolean(SAVE_INFO, this.bSaveInfo);
+  public void setAutoLogin(boolean mAutoLogin) {
+    if (this.bAutoLogin != mAutoLogin) {
+      this.bAutoLogin = mAutoLogin;
+      mEditor.putBoolean(AUTO_LOGIN, this.bAutoLogin);
       mEditor.commit();
     }
   }
 
+
+  // last login success
+  private static final String LAST_LOGIN_SUCCESS = "last_login_success";
+  private boolean bLastLoginSuccess;
+
+  public boolean isLastLoginSuccess() {
+    return bLastLoginSuccess;
+  }
+
+  public void setLastLoginSuccess(boolean bLastLoginSuccess) {
+    if (this.bLastLoginSuccess != bLastLoginSuccess) {
+      this.bLastLoginSuccess = bLastLoginSuccess;
+      mEditor.putBoolean(LAST_LOGIN_SUCCESS, this.bLastLoginSuccess);
+      mEditor.commit();
+    }
+  }
+
+  // after user init login action, set online = true;
+  // after user init logout action, set online = false;
+  // this value will impact autoLogin behaviour of service
+  private static final String USER_ONLINE = "user_online";
+  private boolean bUserOnline;
+
+  public boolean isUserOnline() {
+    return bUserOnline;
+  }
+
+  public void setUserOnline(boolean bUserOnline) {
+    if (this.bUserOnline != bUserOnline) {
+      this.bUserOnline = bUserOnline;
+      mEditor.putBoolean(USER_ONLINE, this.bUserOnline);
+      mEditor.commit();
+    }
+  }
+
+
+  // use device signature or not
   private static final String USE_DEVICE_SIGNATURE = "use_device_signature";
   private boolean bUseSignature;
 
@@ -86,6 +124,7 @@ public class Settings {
     }
   }
 
+  // customized device signature
   private static final String DEVICE_SIGNATURE = "device_signature";
   private String mSignature;
 
@@ -105,6 +144,7 @@ public class Settings {
     }
   }
 
+  // show sticky topics or not
   private static final String SHOW_STICKY_TOPIC = "show_sticky_topic";
   private boolean mShowSticky;
 
@@ -126,6 +166,7 @@ public class Settings {
     mEditor.commit();
   }
 
+  // save forward target
   private static final String FORWARD_TAEGET = "forward_target";
   private String mTarget;
 
@@ -397,7 +438,9 @@ public class Settings {
     mShowSticky = mPreference.getBoolean(SHOW_STICKY_TOPIC, false);
     mUsername = mPreference.getString(USERNAME_KEY, "");
     mPassword = mPreference.getString(PASSWORD_KEY, "");
-    bSaveInfo = mPreference.getBoolean(SAVE_INFO, true);
+    bAutoLogin = mPreference.getBoolean(AUTO_LOGIN, true);
+    bLastLoginSuccess = mPreference.getBoolean(LAST_LOGIN_SUCCESS, false);
+    bUserOnline = mPreference.getBoolean(USER_ONLINE, false);
 
     bUseSignature = mPreference.getBoolean(USE_DEVICE_SIGNATURE, true);
     mSignature = mPreference.getString(DEVICE_SIGNATURE, "");

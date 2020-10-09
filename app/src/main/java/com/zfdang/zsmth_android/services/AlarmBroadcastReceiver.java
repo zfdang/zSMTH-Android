@@ -19,7 +19,7 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-//        Log.d(TAG, "onReceive");
+//        Log.d(TAG, "onReceive, run background job now");
         Intent nIntent = new Intent(mContext, MaintainUserStatusService.class);
         MaintainUserStatusService.enqueueWork(mContext, nIntent, mUserStatusReceiver);
     }
@@ -35,7 +35,7 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
         pendingIntent = PendingIntent.getBroadcast(context, REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        // first triggered in 3 second, repeated every 1 minute
+        // first triggered in 3 seconds, repeated every 1 minute
         alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 3000, 60000, pendingIntent);
     }
 
