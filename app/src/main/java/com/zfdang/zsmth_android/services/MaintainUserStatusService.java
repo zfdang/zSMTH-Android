@@ -80,7 +80,7 @@ public class MaintainUserStatusService extends JobIntentService {
         helper.wService.queryActiveUserStatus().map(new Function<UserStatus, UserStatus>() {
             @Override
             public UserStatus apply(UserStatus userStatus) throws Exception {
-                Log.d(TAG, "2.0 " + userStatus.toString());
+//                Log.d(TAG, "2.0 " + userStatus.toString());
 
                 // check it's logined user, or guest
                 if (userStatus != null && !TextUtils.equals(userStatus.getId(), "guest")) {

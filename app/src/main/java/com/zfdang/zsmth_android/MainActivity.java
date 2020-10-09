@@ -175,6 +175,7 @@ public class MainActivity extends SMTHBaseActivity
     AlarmBroadcastReceiver.schedule(getApplicationContext(), mReceiver);
     // run the background service now
     updateUserStatusNow();
+    UpdateNavigationViewHeader();
 
     if (Settings.getInstance().isFirstRun()) {
       // show info dialog after 5 seconds for the first run

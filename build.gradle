@@ -14,7 +14,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:4.0.1'
 
         // https://github.com/ben-manes/gradle-versions-plugin
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.28.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.33.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
 
@@ -44,6 +44,6 @@ ext {
     FRESCO_VERSION = '1.13.0'
     // https://developer.android.com/topic/libraries/support-library/revisions
     SUPPORT_LIBRARY_VERSION = '27.1.1'
-    RXJAVA2_VERSION = '2.2.19'
+    RXJAVA2_VERSION = '2.2.20'
     RXANDROID2_VERSION = '2.1.1'
 }
