@@ -83,7 +83,7 @@ dependencies {
     final OKHTTP_VERSION = '3.14.9'
     final RETROFIT_VERSION = '2.9.0'
 
-    implementation 'androidx.multidex:multidex:2.0.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'junit:junit:4.12'
