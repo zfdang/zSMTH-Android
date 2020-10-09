@@ -5,6 +5,7 @@ QQIP地址数据库（纯真版）
 #### 1.download latest qqwry.dat from the following website:
 
 	http://www.cz88.net/fox/ipdat.shtml
+	https://github.com/out0fmemory/qqwry.dat
 	
 put qqwrt.data in this folder
 
