@@ -3,6 +3,8 @@ package com.zfdang.zsmth_android.models;
 import android.text.Html;
 import com.zfdang.zsmth_android.Settings;
 import com.zfdang.zsmth_android.helpers.StringUtils;
+import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -180,7 +182,10 @@ public class Post {
     // new image url after 2020-06-10
     // <a target="_blank" href="//static.mysmth.net/nForum/att/FamilyLife/1763462541/17096">
     // <img border="0" title="单击此查看原图" src="//static.mysmth.net/nForum/att/FamilyLife/1763462541/17096/large" class="resizeable" /></a>
-  
+
+    // other attachment
+    // 		<a href="//static.mysmth.net/nForum/att/Test/943486/245" target="_blank">《三国演义》_(果麦经典)_罗贯中.epub</a>
+
     Elements as = content.select("a[href]");
     for (Element a : as) {
       // process each a|href
@@ -208,6 +213,13 @@ public class Post {
           this.addAttachFile(attach);
 
           a.html(ATTACHMENT_MARK + " ");
+        } else {
+          // other attachment, add link for downloading
+          String downloadURL = a.attr("href");
+          downloadURL = SMTHHelper.preprocessSMTHImageURL(downloadURL);
+          if (downloadURL.contains("/nForum/att/")){
+            a.append("<br>" + downloadURL);
+          }
         }
       }
     }
