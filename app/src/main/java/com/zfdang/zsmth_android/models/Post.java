@@ -1,6 +1,8 @@
 package com.zfdang.zsmth_android.models;
 
 import android.text.Html;
+import android.util.Log;
+
 import com.zfdang.zsmth_android.Settings;
 import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
@@ -32,7 +34,7 @@ public class Post {
   private Date date;
   private String position;
 
-  private List<String> likes;
+  private List<Like> likes;
   private List<Attachment> attachFiles;
 
   private String htmlContent; // likes are not included
@@ -154,7 +156,6 @@ public class Post {
         Elements nodes = likeNode.select("div.like_name");
         if (nodes.size() == 1) {
             Element node = nodes.first();
-            likes.add(node.text());
         }
 
         // <li><span class="like_score_0">[&nbsp;&nbsp;]</span><span class="like_user">fly891198061:</span>
@@ -162,7 +163,11 @@ public class Post {
         // <span class="like_time">(2016-03-27 15:04)</span></li>
         nodes = likeNode.select("li");
         for (Element n : nodes) {
-            likes.add(n.text());
+          Elements spans = n.select("span");
+          if(spans.size() == 4) {
+            Like like = new Like(spans.get(0).text(), spans.get(1).text(), spans.get(2).text(), spans.get(3).text());
+            likes.add(like);
+          }
         }
     }
 
@@ -236,14 +241,20 @@ public class Post {
       htmlContentAndLikes = this.htmlContent;
 
       if (likes != null && likes.size() > 0) {
-          StringBuilder wordList = new StringBuilder();
-          wordList.append("<br/><small><cite>");
-          for (String word : likes) {
-              wordList.append(word).append("<br/>");
-          }
-          wordList.append("</cite></small>");
-          htmlContentAndLikes += new String(wordList);
-      }
+        StringBuilder wordList = new StringBuilder();
+        wordList.append("有" + likes.size() + "位用户评价了这篇文章:");
+        wordList.append("<br/>");
+        wordList.append("<small>");
+        for (Like like : likes) {
+          wordList.append("<font face='monospace'>" + like.score + "</font>");
+          wordList.append(" " + like.msg);
+          wordList.append(" ( " + like.user);
+          wordList.append(" @ " + like.time);
+          wordList.append(" )<br/>");
+        }
+        wordList.append("</small>");
+        htmlContentAndLikes += new String(wordList);
+    }
   }
 
   // split complete content with ATTACHMENT_MARK
