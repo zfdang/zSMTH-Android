@@ -339,7 +339,8 @@ public class PostListActivity extends SMTHBaseActivity
     } else if (id == R.id.post_list_action_refresh) {
       reloadPostList();
     } else if (id == R.id.post_list_action_enter_board) {
-      Board board = new Board("", mTopic.getBoardChsName(), mTopic.getBoardEngName());
+      Board board = new Board();
+      board.initAsBoard(mTopic.getBoardEngName(), mTopic.getBoardChsName(), "", "");
       Intent intent = new Intent(this, BoardTopicActivity.class);
       intent.putExtra(SMTHApplication.BOARD_OBJECT, (Parcelable) board);
       startActivity(intent);

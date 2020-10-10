@@ -1,6 +1,8 @@
 package com.zfdang.zsmth_android;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,15 +39,24 @@ public class BoardRecyclerViewAdapter extends RecyclerView.Adapter<BoardRecycler
   @Override public void onBindViewHolder(final ViewHolder holder, int position) {
     holder.mItem = mBoards.get(position);
     Board board = holder.mItem;
+
     if (board.isFolder()) {
       holder.mCategoryView.setText("[" + board.getCategoryName() + "]");
       holder.mModeratorView.setVisibility(View.GONE);
       holder.mNameView.setText(board.getFolderName());
-    } else {
+    } else if (board.isSection()) {
+      holder.mCategoryView.setText("[" + board.getCategoryName() + "]");
+      holder.mModeratorView.setVisibility(View.GONE);
+      holder.mNameView.setText(board.getSectionName());
+    } else if(board.isBoard()){
       holder.mCategoryView.setText("[" + board.getCategoryName() + "]");
       holder.mModeratorView.setVisibility(View.VISIBLE);
       holder.mModeratorView.setText(board.getModerator());
-      holder.mNameView.setText("[" + board.getBoardEngName() + "]" + board.getBoardChsName());
+      holder.mNameView.setText(board.getBoardName());
+    } else if(board.isInvalid()) {
+      holder.mCategoryView.setText("[" + board.getCategoryName() + "]");
+      holder.mModeratorView.setVisibility(View.GONE);
+      holder.mNameView.setText(board.getBoardName());
     }
 
     holder.mView.setOnClickListener(new View.OnClickListener() {

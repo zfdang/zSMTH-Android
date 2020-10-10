@@ -8,11 +8,20 @@ public class BoardSection {
   public String sectionName;
   public String parentName;
 
-  public String getBoardCategory() {
+  public String getSectionPath() {
     if (parentName == null || parentName.length() == 0) {
       return sectionName;
     } else {
-      return String.format("%s %s", parentName, sectionName);
+      return String.format("%s | %s", parentName, sectionName);
     }
+  }
+
+  @Override
+  public String toString() {
+    return "BoardSection{" +
+            "sectionURL='" + sectionURL + '\'' +
+            ", sectionName='" + sectionName + '\'' +
+            ", parentName='" + parentName + '\'' +
+            '}';
   }
 }

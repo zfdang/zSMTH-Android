@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,41 +43,44 @@ public class FavoriteBoardFragment extends Fragment {
   private OnBoardFragmentInteractionListener mListener;
 
   private RecyclerView mRecyclerView = null;
-  private String mDefaultTitle = null;
+  private String mDefaultTitle = "收藏夹";
 
   // list of favorite paths
-  private List<String> mFavoritePaths = null;
-  private List<String> mFavoritePathNames = null;
+  private List<Board> mFavoritePaths = null;
 
-  public void pushFavoritePathAndName(String path, String name) {
-    mFavoritePaths.add(path);
-    mFavoritePathNames.add(name.trim());
+  public void pushPath(Board board) {
+    mFavoritePaths.add(board);
   }
 
-  public void popFavoritePathAndName() {
-    if (mFavoritePaths.size() > 0 && mFavoritePathNames.size() > 0) {
+  public void popPath() {
+    if (mFavoritePaths.size() > 0) {
       this.mFavoritePaths.remove(this.mFavoritePaths.size() - 1);
-      this.mFavoritePathNames.remove(this.mFavoritePathNames.size() - 1);
     }
   }
 
-  public String getCurrentFavoritePath() {
+  public Board getCurrentPath() {
     if (mFavoritePaths.size() > 0) {
       return this.mFavoritePaths.get(this.mFavoritePaths.size() - 1);
     } else {
-      return "";
+      return null;
     }
   }
 
-  public String getCurrentFavoritePathName() {
-    if (mFavoritePathNames.size() > 0) {
-      return this.mFavoritePathNames.get(this.mFavoritePathNames.size() - 1);
-    } else {
+  public String getCurrentPathInString() {
+    Board board = getCurrentPath();
+    if (board == null) {
       return "";
     }
+    if(board.isSection()) {
+      return board.getSectionID();
+    }
+    if(board.isFolder()) {
+      return board.getFolderID();
+    }
+    return "";
   }
 
-  public boolean atFavoriteRoot() {
+  public boolean isAtRoot() {
     return mFavoritePaths.size() == 0;
   }
 
@@ -91,13 +96,7 @@ public class FavoriteBoardFragment extends Fragment {
     setHasOptionsMenu(true);
 
     if (mFavoritePaths == null) {
-      mFavoritePaths = new ArrayList<String>();
-    }
-    if (mFavoritePathNames == null) {
-      mFavoritePathNames = new ArrayList<String>();
-    }
-    if (mDefaultTitle == null) {
-      mDefaultTitle = SMTHApplication.App_Title_Prefix + "收藏夹";
+      mFavoritePaths = new ArrayList<Board>();
     }
     updateFavoriteTitle();
   }
@@ -136,22 +135,25 @@ public class FavoriteBoardFragment extends Fragment {
   }
 
   public void RefreshFavoriteBoardsWithCache() {
-    SMTHHelper.ClearBoardListCache(SMTHHelper.BOARD_TYPE_FAVORITE, getCurrentFavoritePath());
+    SMTHHelper.ClearBoardListCache(SMTHHelper.BOARD_TYPE_FAVORITE, getCurrentPathInString());
     RefreshFavoriteBoards();
   }
 
   public void RefreshFavoriteBoards() {
     showLoadingHints();
-    LoadFavoriteBoardsByPath(getCurrentFavoritePath());
+    LoadFavoriteBoardsByPath();
   }
 
-  protected void LoadFavoriteBoardsByPath(final String path) {
+  protected void LoadFavoriteBoardsByPath() {
     SMTHHelper helper = SMTHHelper.getInstance();
+
+    Board board = getCurrentPath();
+    final String finalCurrentPath = getCurrentPathInString();
 
     // all boards loaded in cached file
     final Observable<List<Board>> cache = Observable.create(new ObservableOnSubscribe<List<Board>>() {
       @Override public void subscribe(@NonNull ObservableEmitter<List<Board>> observableEmitter) throws Exception {
-        List<Board> boards = SMTHHelper.LoadBoardListFromCache(SMTHHelper.BOARD_TYPE_FAVORITE, path);
+        List<Board> boards = SMTHHelper.LoadBoardListFromCache(SMTHHelper.BOARD_TYPE_FAVORITE, finalCurrentPath);
         if (boards != null && boards.size() > 0) {
           observableEmitter.onNext(boards);
         } else {
@@ -162,13 +164,11 @@ public class FavoriteBoardFragment extends Fragment {
 
     // all boards loaded from network
     Observable<List<Board>> network = null;
-    String pathName = getCurrentFavoritePathName();
-    if (pathName.endsWith("[二级目录]")) {
-      // if user create cusomized folder like xxxx.[二级目录], this implementation will fail
-      // but let's assume that noboday will do this
+    if (board == null || board.isFolder()) {
+      // 用户在收藏夹里创建的目录
       network = Observable.create(new ObservableOnSubscribe<List<Board>>() {
         @Override public void subscribe(@NonNull ObservableEmitter<List<Board>> observableEmitter) throws Exception {
-          List<Board> boards = SMTHHelper.LoadFavoriteBoardsInGroupFromWWW(path);
+          List<Board> boards = SMTHHelper.LoadFavoriteBoardsInFolder(finalCurrentPath);
           if (boards != null && boards.size() > 0) {
             observableEmitter.onNext(boards);
           } else {
@@ -176,10 +176,11 @@ public class FavoriteBoardFragment extends Fragment {
           }
         }
       });
-    } else {
+    } else if(board != null && board.isSection()){
+      // 用户在收藏夹里收藏的系统的二级目录
       network = Observable.create(new ObservableOnSubscribe<List<Board>>() {
         @Override public void subscribe(@NonNull ObservableEmitter<List<Board>> observableEmitter) throws Exception {
-          List<Board> boards = SMTHHelper.LoadFavoriteBoardsByFolderFromWWW(path);
+          List<Board> boards = SMTHHelper.LoadFavoriteBoardsInSection(finalCurrentPath);
           if (boards != null && boards.size() > 0) {
             observableEmitter.onNext(boards);
           } else {
@@ -209,7 +210,6 @@ public class FavoriteBoardFragment extends Fragment {
       @Override public void onError(@NonNull Throwable e) {
         clearLoadingHints();
         Toast.makeText(SMTHApplication.getAppContext(), "加载收藏夹失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
-
       }
 
       @Override public void onComplete() {
@@ -226,10 +226,20 @@ public class FavoriteBoardFragment extends Fragment {
     }
 
     String title = "";
-    for (int i = 0; i < mFavoritePathNames.size(); i++) {
-      title += ">" + mFavoritePathNames.get(i);
+    if(mFavoritePaths.size() == 0) {
+      title = SMTHApplication.App_Title_Prefix + mDefaultTitle;
+    } else {
+      title = mDefaultTitle;
+      for (int i = 0; i < mFavoritePaths.size(); i++) {
+        Board board = mFavoritePaths.get(i);
+        if(board.isFolder()) {
+          title += " | " + mFavoritePaths.get(i).getFolderName();
+        } else if(board.isSection()) {
+          title += " | " + mFavoritePaths.get(i).getSectionName();
+        }
+      }
     }
-    activity.setTitle(mDefaultTitle + title);
+    activity.setTitle(title);
   }
 
   @Override public void onAttach(Context context) {

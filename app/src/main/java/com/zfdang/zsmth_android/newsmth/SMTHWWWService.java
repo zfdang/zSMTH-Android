@@ -32,13 +32,16 @@ public interface SMTHWWWService {
     @GET("/nForum/user/ajax_logout.json")
     Observable<AjaxResponse> logout();
 
+    // 用户在收藏夹里创建的目录
     // http://www.newsmth.net/bbsfav.php?select=1
     @GET("/bbsfav.php")
-    Observable<ResponseBody> getFavoriteByPath(@Query("select") String path);
+    Observable<ResponseBody> getFavoriteBoardsInFolder(@Query("select") String path);
 
-    // http://www.newsmth.net/bbsboa.php?group2=1368
-    @GET("/bbsboa.php")
-    Observable<ResponseBody> getBoardsInGroup(@Query("group2") String group2);
+    // 收藏夹里的二级版面
+    // https://www.newsmth.net/bbsdoc.php?board=SecondHand
+    //   ==> bbsboa.php?group=5&group2=677
+    @GET("/bbsdoc.php")
+    Observable<ResponseBody> getFavoriteBoardsInSection(@Query("board") String boardEngName);
 
     @GET("/nForum/section/{section}?ajax")
     Observable<ResponseBody> getBoardsBySection(@Path("section") String section);

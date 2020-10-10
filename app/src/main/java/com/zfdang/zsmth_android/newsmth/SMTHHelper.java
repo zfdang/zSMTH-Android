@@ -17,8 +17,6 @@ import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.zfdang.SMTHApplication;
-import com.zfdang.zsmth_android.WebviewCookieHandler;
-import com.zfdang.zsmth_android.helpers.ActivityUtils;
 import com.zfdang.zsmth_android.helpers.MakeList;
 import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.models.Board;
@@ -832,56 +830,59 @@ public class SMTHHelper {
   public static List<Board> ParseFavoriteBoardsFromWWW(String content) {
     List<Board> boards = new ArrayList<>();
 
-    //        o.f(1,'favFolder1 ',0,'');
-    //        o.o(false,1,896,22556,'[站务]','Advice','水木发展','SYSOP',7026,895,4);
-    //        o.o(false,1,619,2332235,'[生活]','CouponsLife','辣妈羊毛党','hmilytt XZCL',897207,618,1601);
-    //        o.o(false,1,179,808676665,'[数码]','DSLR','数码单反','jerryxiao',153110,178,57);
-    //        o.o(true,1,1368,0,'[数码]','SmartLife','智能生活','[目录]',0,1367,0);
+//    o.f(1,'次常用版面 ',5,'');
+//    o.o(false,1,134,84878,'[生活]','AutoWorld','汽车世界','solorist freshcool hairstal alba',13450,133,2);
+//    o.o(false,1,1250,435,'[学科]','ChildEducation','儿童教育','cococi',391,1249,0);
+//    o.o(true,1,678,59144,'[供求]','SecondHand','二手货交易','[目录]',981,677,0);
+//    o.o(false,1,1108,87992,'[游戏]','TVGame','视频游戏','ibriano',68756,1107,0);
 
     final String error_msg = "您还没有登录，或者长时间没有动作，请您重新登录";
     if (content.contains(error_msg)) {
-      Board board = new Board(Board.Invalid_Folder_ID, error_msg + "\n" + "登录后，请在右上角菜单里'刷新'收藏夹");
+      Board board = new Board();
+      board.initAsInvalid(error_msg + "！\n" + "登录后，请点击右上角'刷新'收藏夹内容。");
       boards.add(board);
 
       return boards;
     }
 
-    // 先提取目录
+    // 先提取用户创建的目录
+    // o.f(1,'次常用版面 ',5,'');
     Pattern pattern = Pattern.compile("o\\.f\\((\\d+),'([^']+)',\\d+,''\\);");
     Matcher matcher = pattern.matcher(content);
-    //        List<String> list = new ArrayList<String>();
     while (matcher.find()) {
-      //            list.add(matcher.group(1));
-      Board board = new Board(matcher.group(1), matcher.group(2));
+      Board board = new Board();
+      board.initAsFolder(matcher.group(1), matcher.group(2));
+
+//      Log.d(TAG, board.toString());
       boards.add(board);
     }
 
-    // 再提取收藏的版面
+    // 再提取收藏的版面, 或者系统的二级目录
     // o.o(false,1,998,22156,'[站务]','Ask','新用户疑难解答','haning BJH',733,997,0);
-    pattern = Pattern.compile("o\\.o\\(\\w+,\\d+,(\\d+),\\d+,'\\[([^']+)\\]','([^']+)','([^']+)','([^']*)',\\d+,\\d+,\\d+\\)");
+    // o.o(true,1,678,59144,'[供求]','SecondHand','二手货交易','[目录]',981,677,0);
+    pattern = Pattern.compile("o\\.o\\((\\w+),\\d+,(\\d+),\\d+,'\\[([^']+)\\]','([^']+)','([^']+)','([^']*)',\\d+,\\d+,\\d+\\)");
     matcher = pattern.matcher(content);
     while (matcher.find()) {
-      String boardID = matcher.group(1);
-      String category = matcher.group(2);
-      String engName = matcher.group(3);
-      String chsName = matcher.group(4);
-      String moderator = matcher.group(5);
+      String boardType = matcher.group(1);
+      String boardID = matcher.group(2);
+      String category = matcher.group(3);
+      String engName = matcher.group(4);
+      String chsName = matcher.group(5);
+      String moderator = matcher.group(6);
 
-      Board board = null;
-      if (TextUtils.equals(moderator, "[目录]")) {
-        //              o.o(true,1,1368,0,'[数码]','SmartLife','智能生活','[目录]',0,1367,0);
-        board = new Board(boardID, chsName + "[二级目录]");
+      Board board = new Board();
+      if(TextUtils.equals(boardType, "true") || TextUtils.equals(moderator, "[目录]")) {
+        // o.o(true,1,1368,0,'[数码]','SmartLife','智能生活','[目录]',0,1367,0);
+        board.initAsSection(engName, chsName);
       } else {
-        if (moderator.length() > 25) {
-          moderator = moderator.substring(0, 21) + "...";
-        }
-        board = new Board(boardID, chsName, engName);
-        board.setModerator(moderator);
-        board.setCategoryName(category);
+        board.initAsBoard(engName, chsName, category, moderator);
       }
+
+//      Log.d(TAG, board.toString());
       boards.add(board);
     }
 
+//    Log.d(TAG, boards.toString());
     return boards;
   }
 
@@ -1083,8 +1084,8 @@ public class SMTHHelper {
     }
   }
 
-  public static List<Board> LoadFavoriteBoardsByFolderFromWWW(final String path) {
-    Iterable<Board> its = SMTHHelper.getInstance().wService.getFavoriteByPath(path).flatMap(new Function<ResponseBody, Observable<Board>>() {
+  public static List<Board> LoadFavoriteBoardsInFolder(final String path) {
+    Iterable<Board> its = SMTHHelper.getInstance().wService.getFavoriteBoardsInFolder(path).flatMap(new Function<ResponseBody, Observable<Board>>() {
       @Override public Observable<Board> apply(@NonNull ResponseBody responseBody) throws Exception {
         try {
           String response = SMTHHelper.DecodeResponseFromWWW(responseBody.bytes());
@@ -1106,8 +1107,8 @@ public class SMTHHelper {
     return results;
   }
 
-  public static List<Board> LoadFavoriteBoardsInGroupFromWWW(final String path) {
-    Iterable<Board> its = SMTHHelper.getInstance().wService.getBoardsInGroup(path).flatMap(new Function<ResponseBody, Observable<Board>>() {
+  public static List<Board> LoadFavoriteBoardsInSection(final String path) {
+    Iterable<Board> its = SMTHHelper.getInstance().wService.getFavoriteBoardsInSection(path).flatMap(new Function<ResponseBody, Observable<Board>>() {
       @Override public Observable<Board> apply(@NonNull ResponseBody responseBody) throws Exception {
         try {
           String response = SMTHHelper.DecodeResponseFromWWW(responseBody.bytes());
@@ -1153,13 +1154,12 @@ public class SMTHHelper {
           }
         }).filter(new Predicate<Board>() {
           @Override public boolean test(@NonNull Board board) throws Exception {
-            return !board.isFolder();
+            return board.isBoard();
           }
         }).blockingIterable();
 
 
     List<Board> boards = MakeList.makeList(its);
-
 
     // sort the board list by chinese name
     Collections.sort(boards, new BoardListContent.ChineseComparator());
@@ -1172,11 +1172,13 @@ public class SMTHHelper {
   }
 
   public static Observable<Board> loadChildBoardsRecursivelyFromWWW(Board board) {
-    if (board.isFolder()) {
+    if (board.isSection()) {
       BoardSection section = new BoardSection();
-      section.sectionURL = board.getFolderID();
-      section.sectionName = board.getFolderName();
-      section.parentName = board.getCategoryName();
+      section.sectionURL = board.getSectionID();
+      section.sectionName = board.getSectionName();
+      section.parentName = board.sectionPath;
+
+//      Log.d(TAG, section.toString());
 
       // load recruisively
       return SMTHHelper.loadBoardsInSectionFromWWW(section)
@@ -1219,7 +1221,7 @@ public class SMTHHelper {
     // get all tr
     Elements trs = doc.select("table.board-list tr");
     for (Element tr : trs) {
-      //            Log.d("Node", tr.toString());
+      // Log.d("Node", tr.toString());
 
       Elements t1links = tr.select("td.title_1 a[href]");
       if (t1links.size() == 1) {
@@ -1246,10 +1248,12 @@ public class SMTHHelper {
             moderator = link2.text();
           }
 
-          Board board = new Board("", chsBoardName, engBoardName);
-          board.setModerator(moderator);
-          board.setCategoryName(section.getBoardCategory());
+          Board board = new Board();
+          board.initAsBoard(engBoardName, chsBoardName, section.getSectionPath(), moderator);
+
           boards.add(board);
+
+//          Log.d(TAG, board.toString());
         }
 
         Pattern sectionPattern = Pattern.compile("/nForum/section/(\\w+)");
@@ -1259,12 +1263,13 @@ public class SMTHHelper {
           folderEngName = sectionMatcher.group(1);
           folderChsName = link1.text();
 
-          Board board = new Board(folderEngName, folderChsName);
-          board.setCategoryName(section.sectionName);
+          Board board = new Board();
+          board.initAsSection(folderEngName, folderChsName);
+          board.sectionPath = section.getSectionPath();
           boards.add(board);
-        }
 
-        //                Log.d("parse", String.format("%s, %s, %s, %s, %s", chsBoardName, engBoardName, folderChsName, folderEngName, moderator));
+//          Log.d(TAG, board.toString());
+        }
       }
     }
 
@@ -1274,6 +1279,7 @@ public class SMTHHelper {
     * All Boards related methods
     * Ends here
      */
+
 
     // smth images might be relative URLs
     // <a target="_blank" href="//static.mysmth.net/nForum/att/FamilyLife/1763462541/17096">

@@ -440,8 +440,8 @@ public class MainActivity extends SMTHBaseActivity
     // handle back button for all fragment
     Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
     if (fragment instanceof FavoriteBoardFragment) {
-      if (!favoriteBoardFragment.atFavoriteRoot()) {
-        favoriteBoardFragment.popFavoritePathAndName();
+      if (!favoriteBoardFragment.isAtRoot()) {
+        favoriteBoardFragment.popPath();
         favoriteBoardFragment.RefreshFavoriteBoards();
         return;
       }
@@ -680,17 +680,18 @@ public class MainActivity extends SMTHBaseActivity
   @Override public void onBoardFragmentInteraction(Board item) {
     // shared by FavoriteBoard & AllBoard fragment
     Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+    Log.d(TAG, item.toString());
     if (fragment == favoriteBoardFragment) {
-      // favorite fragment, we might enter a folder
-      if (item.isFolder()) {
-        if (item.isValidFolder()) {
-          favoriteBoardFragment.pushFavoritePathAndName(item.getFolderID(), item.getFolderName());
+      // favorite fragment, we might enter a folder or section
+      if (item.isFolder() || item.isSection()) {
+          favoriteBoardFragment.pushPath(item);
           favoriteBoardFragment.RefreshFavoriteBoards();
-        }
-      } else {
-        startBoardTopicActivity(item);
+          return;
       }
-    } else if (fragment == allBoardFragment) {
+    }
+
+    // if it's a normal board, show postlist in the board
+    if(item.isBoard()) {
       startBoardTopicActivity(item);
     }
   }
@@ -701,7 +702,7 @@ public class MainActivity extends SMTHBaseActivity
     Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
     if (fragment == favoriteBoardFragment) {
       // favorite fragment, remove the board
-      if (!board.isFolder()) {
+      if (board.isBoard()) {
         // confirm dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String title = String.format("将版面\"%s\"从收藏夹中删除么？", board.getBoardName());
@@ -712,12 +713,11 @@ public class MainActivity extends SMTHBaseActivity
             dialog.dismiss();
 
             SMTHHelper helper = SMTHHelper.getInstance();
-            helper.wService.manageFavoriteBoard(favoriteBoardFragment.getCurrentFavoritePath(), "db", board.getBoardEngName())
+            helper.wService.manageFavoriteBoard(favoriteBoardFragment.getCurrentPathInString(), "db", board.getBoardEngName())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<AjaxResponse>() {
                   @Override public void onSubscribe(@NonNull Disposable disposable) {
-
                   }
 
                   @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
@@ -727,16 +727,13 @@ public class MainActivity extends SMTHBaseActivity
                     } else {
                       Toast.makeText(MainActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
                     }
-
                   }
 
                   @Override public void onError(@NonNull Throwable e) {
                     Toast.makeText(MainActivity.this, "删除收藏版面失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
-
                   }
 
                   @Override public void onComplete() {
-
                   }
                 });
           }
