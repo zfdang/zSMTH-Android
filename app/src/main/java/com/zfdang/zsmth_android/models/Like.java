@@ -13,7 +13,8 @@ public class Like {
         this.time = time;
 
         // expand empty score to 2 spaces
-        if(this.score.equals("[ ]")) this.score = "[&nbsp;&nbsp;]";
+        this.score = this.score.replace("[", "").replace("]", "");
+        if(this.score.equals(" ")) this.score = "&nbsp;&nbsp;";
 
         this.user = this.user.replace(":", "");
         this.time = this.time.replace("(", "").replace(")", "");

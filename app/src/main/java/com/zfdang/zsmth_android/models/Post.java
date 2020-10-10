@@ -246,7 +246,7 @@ public class Post {
         wordList.append("<br/>");
         wordList.append("<small>");
         for (Like like : likes) {
-          wordList.append("<font face='monospace'>" + like.score + "</font>");
+          wordList.append("[<font face='monospace'>" + like.score + "</font>]");
           wordList.append(" " + like.msg);
           wordList.append(" ( " + like.user);
           wordList.append(" @ " + like.time);
