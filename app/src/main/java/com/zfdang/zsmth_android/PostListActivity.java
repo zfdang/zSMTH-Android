@@ -796,7 +796,7 @@ public class PostListActivity extends SMTHBaseActivity
     content += String.format("...\nLink:%s", postURL);
 
     // default: use zSMTH logo
-    String imageURL = "http://zsmth-android.zfdang.com/zsmth.png";
+    String imageURL = "http://zsmth.zfdang.com/zsmth.png";
     List<Attachment> attaches = post.getAttachFiles();
     if (attaches != null && attaches.size() > 0) {
       // use the first attached image
