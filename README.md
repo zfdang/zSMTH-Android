@@ -7,7 +7,7 @@
 
 # 项目地址：
 
-[http://zsmth-android.zfdang.com/](http://zsmth-android.zfdang.com/)
+[http://zsmth.zfdang.com/](http://zsmth.zfdang.com/)
 
 ![Build_zSMTH_APK](https://github.com/zfdang/zSMTH-Android/workflows/Build_zSMTH_APK/badge.svg)
 
