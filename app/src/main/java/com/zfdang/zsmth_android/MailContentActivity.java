@@ -2,9 +2,7 @@ package com.zfdang.zsmth_android;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +11,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.klinker.android.link_builder.LinkBuilder;
 import com.klinker.android.link_builder.LinkConsumableTextView;
@@ -26,13 +29,15 @@ import com.zfdang.zsmth_android.models.Post;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+
+import java.util.List;
+
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import java.util.List;
 
 public class MailContentActivity extends AppCompatActivity {
 
@@ -92,6 +97,10 @@ public class MailContentActivity extends AppCompatActivity {
     SMTHHelper helper = SMTHHelper.getInstance();
     helper.wService.getMailContent(mMail.url).map(new Function<AjaxResponse, Post>() {
       @Override public Post apply(@NonNull AjaxResponse ajaxResponse) throws Exception {
+        String msg = ajaxResponse.getAjax_msg();
+        if( !TextUtils.equals(msg, "操作成功")) {
+          throw new Exception(msg);
+        }
         mPostGroupId = ajaxResponse.getGroup_id();
         return SMTHHelper.ParseMailContentFromWWW(ajaxResponse.getContent());
       }
@@ -115,7 +124,7 @@ public class MailContentActivity extends AppCompatActivity {
       }
 
       @Override public void onError(@NonNull Throwable e) {
-        mPostContent.setText("读取内容失败: \n" + e.toString());
+        mPostContent.setText("读取内容失败: \n" + e.getMessage());
       }
 
       @Override public void onComplete() {
