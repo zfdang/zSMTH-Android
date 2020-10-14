@@ -40,7 +40,7 @@
       android:background="#000000"
       android:gravity="center_horizontal"
       android:orientation="horizontal"
-      android:layout_marginBottom="60dp"
+      android:layout_marginBottom="80dp"
       android:paddingLeft="10dp"
       android:paddingRight="10dp"
       >
