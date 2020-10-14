@@ -21,6 +21,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.github.chrisbanes.photoview.OnOutsidePhotoTapListener;
+import com.github.chrisbanes.photoview.OnPhotoTapListener;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.FrescoUtils;
@@ -35,9 +39,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import me.relex.circleindicator.CircleIndicator;
-import uk.co.senab.photoview.PhotoViewAttacher;
+import com.github.chrisbanes.photoview.OnPhotoTapListener;
 
-public class FSImageViewerActivity extends AppCompatActivity implements PhotoViewAttacher.OnPhotoTapListener {
+public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoTapListener, OnOutsidePhotoTapListener {
 
   private static final String TAG = "FullViewer";
 
@@ -146,7 +150,8 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
                     // content doesn't resize when the system bars hide and show.
                     | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+    );
   }
 
   // Shows the system bars by removing all the flags
@@ -438,11 +443,13 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
     }
   }
 
-  @Override public void onPhotoTap(View view, float v, float v1) {
+  @Override
+  public void onOutsidePhotoTap(ImageView imageView) {
     toggleToobarVisibility();
   }
 
-  @Override public void onOutsidePhotoTap() {
+  @Override
+  public void onPhotoTap(ImageView view, float x, float y) {
     toggleToobarVisibility();
   }
 }
