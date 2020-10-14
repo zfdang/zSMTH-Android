@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import androidx.appcompat.app.ActionBar;
@@ -14,6 +15,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -52,15 +55,19 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    setContentView(R.layout.activity_fs_image_viewer);
-    ActionBar bar = getSupportActionBar();
-    if (bar != null) {
-      bar.hide();
+    // 延伸显示区域到刘海
+    Window window = this.getWindow();
+    WindowManager.LayoutParams lp = this.getWindow().getAttributes();
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+      lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
     }
+    window.setAttributes(lp);
+
+    setContentView(R.layout.activity_fs_image_viewer);
 
     mViewPager = (HackyViewPager) findViewById(R.id.fullscreen_image_pager);
 
-    // find paramenters from parent
+    // find parameters from parent
     mURLs = getIntent().getStringArrayListExtra(SMTHApplication.ATTACHMENT_URLS);
     assert mURLs != null;
     int pos = getIntent().getIntExtra(SMTHApplication.ATTACHMENT_CURRENT_POS, 0);
@@ -111,23 +118,47 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
       }
     });
 
-    hide();
 
     SwipeBackHelper.onCreate(this);
     SwipeBackHelper.getCurrentPage(this).setSwipeEdgePercent(0.2f);
   }
 
-  private void hide() {
-    // Hide status bar and navigation bar
-    mViewPager.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-        // hide nav bar
-        | View.SYSTEM_UI_FLAG_FULLSCREEN
-        // hide status bar
-        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+  @Override
+  public void onWindowFocusChanged(boolean hasFocus) {
+    super.onWindowFocusChanged(hasFocus);
+    if (hasFocus) {
+      hideSystemUI();
+      layoutToolbar.setVisibility(LinearLayout.GONE);
+    }
   }
+
+  private void hideSystemUI() {
+    // Enables regular immersive mode.
+    // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
+    // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+    View decorView = getWindow().getDecorView();
+    decorView.setSystemUiVisibility(
+            View.SYSTEM_UI_FLAG_IMMERSIVE
+                    // Hide the nav bar and status bar
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    // Set the content to appear under the system bars so that the
+                    // content doesn't resize when the system bars hide and show.
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+  }
+
+  // Shows the system bars by removing all the flags
+  // except for the ones that make the content appear under the system bars.
+  private void showSystemUI() {
+    View decorView = getWindow().getDecorView();
+    decorView.setSystemUiVisibility(
+            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+  }
+
 
   @Override protected void onPostCreate(Bundle savedInstanceState) {
     super.onPostCreate(savedInstanceState);
@@ -392,7 +423,6 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
 
     new AlertDialog.Builder(FSImageViewerActivity.this).setView(layout).setOnDismissListener(new DialogInterface.OnDismissListener() {
       @Override public void onDismiss(DialogInterface dialog) {
-        hide();
       }
     }).show();
   }
@@ -400,8 +430,10 @@ public class FSImageViewerActivity extends AppCompatActivity implements PhotoVie
   private void toggleToobarVisibility() {
     int visibility = layoutToolbar.getVisibility();
     if (visibility == LinearLayout.GONE) {
+      showSystemUI();
       layoutToolbar.setVisibility(LinearLayout.VISIBLE);
     } else {
+      hideSystemUI();
       layoutToolbar.setVisibility(LinearLayout.GONE);
     }
   }
