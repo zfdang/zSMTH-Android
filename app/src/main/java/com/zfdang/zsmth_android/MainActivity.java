@@ -58,6 +58,8 @@ import com.zfdang.zsmth_android.services.UserStatusReceiver;
 
 import java.lang.reflect.Field;
 
+import com.mob.MobSDK;
+
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -183,6 +185,7 @@ public class MainActivity extends SMTHBaseActivity
       handler.postDelayed(new Runnable() {
         @Override public void run() {
           showInfoDialog();
+          MobSDK.submitPolicyGrantResult(true,null);
         }
       }, 1000);
     }
