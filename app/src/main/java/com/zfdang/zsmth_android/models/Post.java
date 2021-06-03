@@ -375,7 +375,7 @@ public class Post {
 
       // handle quoted content
       if (line.startsWith(":")) {
-        line = "<font color=#00b4ae>" + line + "</font>";
+        line = "<font color=#6e757d" + line + "</font>";
         sb.append(line).append("<br />");
         continue;
       }
@@ -394,7 +394,7 @@ public class Post {
         linebreak = 0;
       }
 
-      // handle siguature
+      // handle signature
       // we have to make sure "--" is the last one, it might appear in post content body
       if (i == signatureStartLine) {
         // entering signature mode
