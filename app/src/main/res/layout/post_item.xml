@@ -19,7 +19,7 @@
         android:ellipsize="end"
         android:paddingLeft="2dp"
         android:text="mozilla"
-        android:textColor="@color/blue_text_night"
+        android:textColor="@color/status_text_night"
         android:textSize="@dimen/zsmth_font_size_medium"
         />
 

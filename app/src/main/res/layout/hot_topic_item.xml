@@ -17,7 +17,7 @@
       android:background="@color/recycler_view_seperator"
       android:paddingLeft="4dp"
       android:text="Category"
-      android:textColor="@color/status_text_night"
+      android:textColor="@color/colorPrimary"
       android:textSize="@dimen/zsmth_font_size_small"
       />
 
@@ -61,7 +61,7 @@
       android:gravity="right"
       android:paddingRight="8dp"
       android:text="Author"
-      android:textColor="@color/blue_text_night"
+      android:textColor="@color/colorPrimary"
       />
 
 </RelativeLayout>

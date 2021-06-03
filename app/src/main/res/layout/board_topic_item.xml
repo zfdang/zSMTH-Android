@@ -54,7 +54,7 @@
           android:layout_weight="1"
           android:paddingLeft="2dp"
           android:text="作者"
-          android:textColor="@color/blue_text_night"
+          android:textColor="@color/colorPrimary"
           />
       <TextView
           android:id="@+id/topic_public_date"
@@ -82,7 +82,7 @@
           android:layout_weight="1"
           android:paddingRight="4dp"
           android:text="回复者"
-          android:textColor="@color/blue_text_night"
+          android:textColor="@color/colorPrimary"
           />
       <TextView
           android:id="@+id/topic_reply_date"
