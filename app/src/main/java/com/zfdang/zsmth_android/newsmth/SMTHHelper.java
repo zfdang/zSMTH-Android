@@ -1283,15 +1283,16 @@ public class SMTHHelper {
 
     // smth images might be relative URLs
     // <a target="_blank" href="//static.mysmth.net/nForum/att/FamilyLife/1763462541/17096">
-    // <img border="0" title="单击此查看原图" src="//static.mysmth.net/nForum/att/FamilyLife/1763462541/17096/large" class="resizeable" /></a>
+    // <img border="0" title="单击此查看原图" src="//static.mysmth.net/nForum/att/FamilyLife/1764693655/787/large" class="resizeable">
+    // <img border="0" title="单击此查看原图" src="/nForum/att/Stock/8466915/7182/large" class="resizeable">
 
     public static String preprocessSMTHImageURL(String original) {
       if(null != original) {
         if (original.startsWith("//")) {
           // images in post or avatar
-          return "http:" + original;
+          return "https:" + original;
         } else if (original.startsWith("/nForum")) {
-          return "http://att.newsmth.net" + original;
+          return "https://static.mysmth.net" + original;
         }
       }
       return original;
