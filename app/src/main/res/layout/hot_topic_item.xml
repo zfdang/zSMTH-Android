@@ -17,7 +17,7 @@
       android:background="@color/recycler_view_seperator"
       android:paddingLeft="4dp"
       android:text="Category"
-      android:textColor="@color/colorPrimary"
+      android:textColor="@color/status_text_night"
       android:textSize="@dimen/zsmth_font_size_small"
       />
 
@@ -49,7 +49,7 @@
         android:gravity="left"
         android:paddingLeft="2dp"
         android:text="boardName"
-        android:textColor="@color/blue_text_night"
+        android:textColor="@color/colorPrimary"
         />
   </LinearLayout>
 
