@@ -76,18 +76,13 @@ public class SMTHHelper {
   static private final String SMTH_WWW_URL = "https://www.mysmth.net/";
   static private final String SMTH_IMAGE_PREFIX_CDN = "https://static.mysmth.net";
   static private final String SMTH_IMAGE_PREFIX_DIRECT = "https://www.mysmth.net";
+  // Mobile service of SMTH; this is used for webchat sharing & open in browser
   static public final String SMTH_MOBILE_URL = "https://m.mysmth.net";
-
 
   private Retrofit wRetrofit = null;
   public SMTHWWWService wService = null;
   static private final String SMTH_WWW_ENCODING = "GB2312";
-
-  // Mobile service of SMTH
-  // this interface is not used any longer
-  //    private final String SMTH_MOBILE_URL = "http://m.newsmth.net";
-  //    private Retrofit mRetrofit = null;
-
+  
   // All boards cache file
   public static int BOARD_TYPE_FAVORITE = 1;
   public static int BOARD_TYPE_ALL = 2;
