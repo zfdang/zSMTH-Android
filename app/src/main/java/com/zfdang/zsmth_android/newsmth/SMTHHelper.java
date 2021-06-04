@@ -82,7 +82,7 @@ public class SMTHHelper {
   private Retrofit wRetrofit = null;
   public SMTHWWWService wService = null;
   static private final String SMTH_WWW_ENCODING = "GB2312";
-  
+
   // All boards cache file
   public static int BOARD_TYPE_FAVORITE = 1;
   public static int BOARD_TYPE_ALL = 2;
@@ -1294,11 +1294,13 @@ public class SMTHHelper {
           // images in post or avatar
           url =  "https:" + original;
         } else if (original.startsWith("/nForum")) {
-          if(Settings.getInstance().isImageSourceCDN()) {
-            url = SMTH_IMAGE_PREFIX_CDN + original;
-          } else {
-            url = SMTH_IMAGE_PREFIX_DIRECT + original;
-          }
+          url = SMTH_IMAGE_PREFIX_CDN + original;
+        }
+
+        if(Settings.getInstance().isImageSourceCDN()) {
+          url = url.replace(SMTH_IMAGE_PREFIX_DIRECT, SMTH_IMAGE_PREFIX_CDN);
+        } else {
+          url = url.replace(SMTH_IMAGE_PREFIX_CDN, SMTH_IMAGE_PREFIX_DIRECT);
         }
       }
 

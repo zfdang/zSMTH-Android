@@ -16,8 +16,6 @@ android {
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 114
-        versionName "1.1.4"
     }
     buildTypes {
         release {
