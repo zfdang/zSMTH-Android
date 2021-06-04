@@ -17,6 +17,7 @@ import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.Settings;
 import com.zfdang.zsmth_android.helpers.MakeList;
 import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.models.Board;
@@ -1298,6 +1299,10 @@ public class SMTHHelper {
         } else if (original.startsWith("/nForum")) {
           return SMTH_IMAGE_PREFIX + original;
         }
+      }
+
+      if(! Settings.getInstance().isImageSourceCDN()) {
+        original.replace("//static.", "//www.");
       }
       return original;
     }

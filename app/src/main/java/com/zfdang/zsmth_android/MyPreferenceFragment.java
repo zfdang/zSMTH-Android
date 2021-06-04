@@ -46,6 +46,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
   CheckBoxPreference setting_volume_key_scroll;
   ListPreference setting_fontsize_control;
   CheckBoxPreference image_quality_control;
+  CheckBoxPreference image_source_cdn;
   CheckBoxPreference board_master_only;
 
   CheckBoxPreference notification_control_mail;
@@ -158,6 +159,20 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
           bLoadOriginalImage = boolVal;
         }
         Settings.getInstance().setLoadOriginalImage(bLoadOriginalImage);
+        return true;
+      }
+    });
+
+    image_source_cdn = (CheckBoxPreference) findPreference("setting_image_source_cdn");
+    image_source_cdn.setChecked(Settings.getInstance().isImageSourceCDN());
+    image_source_cdn.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+      @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
+        boolean bImageSourceCDN = Settings.getInstance().isImageSourceCDN();
+        if (newValue instanceof Boolean) {
+          Boolean boolVal = (Boolean) newValue;
+          bImageSourceCDN = boolVal;
+        }
+        Settings.getInstance().setImageSourceCDN(bImageSourceCDN);
         return true;
       }
     });

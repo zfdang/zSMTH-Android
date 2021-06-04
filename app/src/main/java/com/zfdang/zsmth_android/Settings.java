@@ -199,6 +199,25 @@ public class Settings {
     }
   }
 
+
+  // load image from cdn, or from smth website directly
+  // https://www.mysmth.net/nForum/#!article/PocketLife/3100239
+  // https://static.mysmth.net/nForum/#!article/PocketLife/3100239
+  private static final String IMAGE_SOURCE_CDN = "IMAGE_SOURCE_CDN";
+  private boolean bImageSourceCDN;
+
+  public boolean isImageSourceCDN() {
+    return bImageSourceCDN;
+  }
+
+  public void setImageSourceCDN(boolean value) {
+    if (this.bImageSourceCDN != value) {
+      this.bImageSourceCDN = value;
+      mEditor.putBoolean(IMAGE_SOURCE_CDN, this.bImageSourceCDN);
+      mEditor.commit();
+    }
+  }
+
   // show board master only items in postlist actions
   private static final String BOARD_MASTER_ONLY = "BOARD_MASTER_ONLY";
   private boolean bBoardMasterOnly;
@@ -452,6 +471,7 @@ public class Settings {
     mTarget = mPreference.getString(FORWARD_TAEGET, "");
 
     bLoadOriginalImage = mPreference.getBoolean(LOAD_ORIGINAL_IMAGE, false);
+    bImageSourceCDN = mPreference.getBoolean(IMAGE_SOURCE_CDN, true);
 
     bBoardMasterOnly = mPreference.getBoolean(BOARD_MASTER_ONLY, false);
 

@@ -58,6 +58,13 @@
 
     <CheckBoxPreference
         android:defaultValue="on"
+        android:key="setting_image_source_cdn"
+        android:summaryOff="从水木加载图片(海外访问使用)"
+        android:summaryOn="从CDN加载图片(推荐)"
+        android:title="图片来源"/>
+
+    <CheckBoxPreference
+        android:defaultValue="on"
         android:key="setting_board_master_only"
         android:summaryOff="不显示版主专用功能"
         android:summaryOn="显示版主专用功能"
