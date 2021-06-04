@@ -1292,19 +1292,20 @@ public class SMTHHelper {
     // <img border="0" title="单击此查看原图" src="/nForum/att/Stock/8466915/7182/large" class="resizeable">
 
     public static String preprocessSMTHImageURL(String original) {
+      String url = original;
       if(null != original) {
         if (original.startsWith("//")) {
           // images in post or avatar
-          return "https:" + original;
+          url =  "https:" + original;
         } else if (original.startsWith("/nForum")) {
-          return SMTH_IMAGE_PREFIX + original;
+          url = SMTH_IMAGE_PREFIX + original;
         }
       }
 
       if(! Settings.getInstance().isImageSourceCDN()) {
-        original.replace("//static.", "//www.");
+        url.replace("//static.", "//www.");
       }
-      return original;
+      return url;
     }
 
 }
