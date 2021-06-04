@@ -74,7 +74,8 @@ public class SMTHHelper {
 
   // WWW service of SMTH, but actually most of services are actually from nForum
   static private final String SMTH_WWW_URL = "https://www.mysmth.net/";
-  static private final String SMTH_IMAGE_PREFIX = "https://static.mysmth.net";
+  static private final String SMTH_IMAGE_PREFIX_CDN = "https://static.mysmth.net";
+  static private final String SMTH_IMAGE_PREFIX_DIRECT = "https://www.mysmth.net";
   static public final String SMTH_MOBILE_URL = "https://m.mysmth.net";
 
 
@@ -1298,13 +1299,14 @@ public class SMTHHelper {
           // images in post or avatar
           url =  "https:" + original;
         } else if (original.startsWith("/nForum")) {
-          url = SMTH_IMAGE_PREFIX + original;
+          if(Settings.getInstance().isImageSourceCDN()) {
+            url = SMTH_IMAGE_PREFIX_CDN + original;
+          } else {
+            url = SMTH_IMAGE_PREFIX_DIRECT + original;
+          }
         }
       }
 
-      if(! Settings.getInstance().isImageSourceCDN()) {
-        url.replace("//static.", "//www.");
-      }
       return url;
     }
 
