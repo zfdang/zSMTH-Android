@@ -72,7 +72,11 @@ public class SMTHHelper {
   public OkHttpClient mHttpClient;
 
   // WWW service of SMTH, but actually most of services are actually from nForum
-  private final String SMTH_WWW_URL = "https://www.mysmth.net/";
+  static private final String SMTH_WWW_URL = "https://www.mysmth.net/";
+  static private final String SMTH_IMAGE_PREFIX = "https://static.mysmth.net";
+  static public final String SMTH_MOBILE_URL = "https://m.mysmth.net";
+
+
   private Retrofit wRetrofit = null;
   public SMTHWWWService wService = null;
   static private final String SMTH_WWW_ENCODING = "GB2312";
@@ -1292,7 +1296,7 @@ public class SMTHHelper {
           // images in post or avatar
           return "https:" + original;
         } else if (original.startsWith("/nForum")) {
-          return "https://static.mysmth.net" + original;
+          return SMTH_IMAGE_PREFIX + original;
         }
       }
       return original;

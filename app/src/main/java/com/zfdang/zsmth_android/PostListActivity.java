@@ -603,7 +603,7 @@ public class PostListActivity extends SMTHBaseActivity
       popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 100);
     } else if (which == 7) {
       // open post in browser
-      String url = String.format("https://m.mysmth.net/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
+      String url = String.format(SMTHHelper.SMTH_MOBILE_URL + "/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
       startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
     } else if (which == 8) {
       // post_share
@@ -787,7 +787,7 @@ public class PostListActivity extends SMTHBaseActivity
     // prepare information from the post
     String title = String.format("[%s] %s @ 水木社区", mTopic.getBoardChsName(), mTopic.getTitle());
     String postURL =
-        String.format("https://m.mysmth.net/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
+        String.format(SMTHHelper.SMTH_MOBILE_URL + "/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
     String content = String.format("[%s]在大作中写到: %s", post.getAuthor(), post.getRawContent());
     // the max length of webo is 140
     if (content.length() > 110) {
