@@ -18,7 +18,7 @@
       android:background="@color/recycler_view_seperator"
       android:paddingLeft="2dp"
       android:text="Category"
-      android:textColor="@color/status_text_night"
+      android:textColor="@color/board_topic_page_indicator"
       android:textSize="@dimen/zsmth_font_size_small"
       />
   <TextView
@@ -28,7 +28,7 @@
       android:paddingLeft="2dp"
       android:paddingRight="6dp"
       android:text="Topic"
-      android:textColor="@color/status_text_night"
+      android:textColor="@color/board_topic_title"
       android:textSize="@dimen/zsmth_font_size_medium"
       />
   <RelativeLayout
@@ -54,7 +54,7 @@
           android:layout_weight="1"
           android:paddingLeft="2dp"
           android:text="作者"
-          android:textColor="@color/colorPrimary"
+          android:textColor="@color/board_topic_author"
           />
       <TextView
           android:id="@+id/topic_public_date"
@@ -64,7 +64,7 @@
           android:layout_weight="1"
           android:paddingLeft="4dp"
           android:text="2012-09-18"
-          android:textColor="@color/colorSecondaryText"
+          android:textColor="@color/board_topic_date"
           />
     </LinearLayout>
     <LinearLayout
@@ -82,7 +82,7 @@
           android:layout_weight="1"
           android:paddingRight="4dp"
           android:text="回复者"
-          android:textColor="@color/colorPrimary"
+          android:textColor="@color/board_topic_author"
           />
       <TextView
           android:id="@+id/topic_reply_date"
@@ -91,7 +91,7 @@
           android:layout_weight="1"
           android:paddingRight="6dp"
           android:text="2012-09-18"
-          android:textColor="@color/colorSecondaryText"
+          android:textColor="@color/board_topic_date"
           />
     </LinearLayout>
 
@@ -111,7 +111,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="9dp"
         android:text="Like: +15, 分数： -15; 回帖数: 129"
-        android:textColor="@color/colorSecondaryText"
+        android:textColor="@color/board_topic_status"
         />
     <ImageView
         android:id="@+id/topic_status_pinned"

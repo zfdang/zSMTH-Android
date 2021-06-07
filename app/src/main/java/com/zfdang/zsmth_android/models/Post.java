@@ -375,7 +375,7 @@ public class Post {
 
       // handle quoted content
       if (line.startsWith(":")) {
-        line = "<font color=#607D8B>" + line + "</font>";
+        line = "<font color=#299999>" + line + "</font>";
         sb.append(line).append("<br />");
         continue;
       }

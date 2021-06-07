@@ -16,7 +16,7 @@
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:text="Category"
-      android:textColor="@color/colorPrimary"
+      android:textColor="@color/board_item_category"
       />
 
   <TextView
@@ -26,7 +26,7 @@
       android:gravity="right"
       android:maxLength="25"
       android:text="版主"
-      android:textColor="@color/colorPrimary"
+      android:textColor="@color/board_item_moderator"
       />
 
   <TextView
@@ -35,7 +35,7 @@
       android:layout_height="wrap_content"
       android:layout_below="@+id/CategoryName"
       android:text="[engBoard]chsBoard"
-      android:textColor="@color/status_text_night"
+      android:textColor="@color/board_item_boardname"
       android:textSize="@dimen/zsmth_font_size_medium"
       />
 </RelativeLayout>

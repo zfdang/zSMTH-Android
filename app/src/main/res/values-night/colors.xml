@@ -50,4 +50,23 @@
 
   <color name="black_background">#000000</color>
 
+  <color name="hot_topic_item_category">#FF6B68</color>
+  <color name="hot_topic_item_title">#A9B7C6</color>
+  <color name="hot_topic_item_boardname">#CC7832</color>
+  <color name="hot_topic_item_reply">#CC7832</color>
+
+  <color name="post_content_author">#CC7832</color>
+  <color name="post_content_index">#CC7832</color>
+  <color name="post_content_date">#A9B7C6</color>
+  <color name="post_content_text">#A9B7C6</color>
+
+  <color name="board_item_category">#607D8B</color>
+  <color name="board_item_moderator">#CC7832</color>
+  <color name="board_item_boardname">#A9B7C6</color>
+
+  <color name="board_topic_page_indicator">#FF6B68</color>
+  <color name="board_topic_title">#A9B7C6</color>
+  <color name="board_topic_author">#CC7832</color>
+  <color name="board_topic_date">#A9B7C6</color>
+  <color name="board_topic_status">#727272</color>
 </resources>
