@@ -52,21 +52,21 @@
 
   <color name="hot_topic_item_category">#000000</color>
   <color name="hot_topic_item_title">#000000</color>
-  <color name="hot_topic_item_boardname">#607D8B</color>
-  <color name="hot_topic_item_reply">#607D8B</color>
+  <color name="hot_topic_item_boardname">#A66F00</color>
+  <color name="hot_topic_item_reply">#A66F00</color>
 
-  <color name="post_content_author">#000000</color>
-  <color name="post_content_index">#607D8B</color>
-  <color name="post_content_date">#607D8B</color>
+  <color name="post_content_author">#A66F00</color>
+  <color name="post_content_index">#000080</color>
+  <color name="post_content_date">#808080</color>
   <color name="post_content_text">#000000</color>
 
-  <color name="board_item_category">#607D8B</color>
-  <color name="board_item_moderator">#607D8B</color>
-  <color name="board_item_boardname">#ABC2DA</color>
+  <color name="board_item_category">#808080</color>
+  <color name="board_item_moderator">#A66F00</color>
+  <color name="board_item_boardname">#000000</color>
 
   <color name="board_topic_page_indicator">#000000</color>
   <color name="board_topic_title">#000000</color>
-  <color name="board_topic_author">#607D8B</color>
+  <color name="board_topic_author">#A66F00</color>
   <color name="board_topic_date">#727272</color>
-  <color name="board_topic_status">#727272</color>
+  <color name="board_topic_status">#808080</color>
 </resources>
