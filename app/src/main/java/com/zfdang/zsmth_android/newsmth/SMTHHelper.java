@@ -919,7 +919,7 @@ public class SMTHHelper {
       // find
       Element li = lis.first();
       String page = li.text();
-      Mail mail = new Mail(String.format("第%s页", page));
+      Mail mail = new Mail(String.format("第 %s 页", page));
       mails.add(mail);
     }
 

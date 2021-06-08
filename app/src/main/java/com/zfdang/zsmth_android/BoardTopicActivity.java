@@ -289,7 +289,7 @@ public class BoardTopicActivity extends SMTHBaseActivity
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Observer<Topic>() {
           @Override public void onSubscribe(@NonNull Disposable disposable) {
-            Topic topic = new Topic(String.format("第%d页", mCurrentPageNo));
+            Topic topic = new Topic(String.format("第 %d 页", mCurrentPageNo));
             topic.isCategory = true;
             TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
             mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
