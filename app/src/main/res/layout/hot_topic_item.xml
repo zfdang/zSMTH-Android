@@ -18,7 +18,7 @@
       android:paddingLeft="4dp"
       android:text="Category"
       android:textColor="@color/hot_topic_item_category"
-      android:textSize="@dimen/zsmth_font_size_small"
+      android:textSize="@dimen/zsmth_font_size_medium"
       android:gravity="center"
       />
 

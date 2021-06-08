@@ -51,22 +51,22 @@
   <color name="black_background">#000000</color>
 
   <color name="hot_topic_item_category">#299999</color>
-  <color name="hot_topic_item_title">#A9B7C6</color>
+  <color name="hot_topic_item_title">#B3BFCA</color>
   <color name="hot_topic_item_boardname">#CC7832</color>
   <color name="hot_topic_item_reply">#CC7832</color>
 
   <color name="post_content_author">#CC7832</color>
   <color name="post_content_index">#CC7832</color>
-  <color name="post_content_date">#A9B7C6</color>
-  <color name="post_content_text">#A9B7C6</color>
+  <color name="post_content_date">#B3BFCA</color>
+  <color name="post_content_text">#B3BFCA</color>
 
   <color name="board_item_category">#607D8B</color>
   <color name="board_item_moderator">#CC7832</color>
-  <color name="board_item_boardname">#A9B7C6</color>
+  <color name="board_item_boardname">#B3BFCA</color>
 
   <color name="board_topic_page_indicator">#299999</color>
-  <color name="board_topic_title">#A9B7C6</color>
+  <color name="board_topic_title">#B3BFCA</color>
   <color name="board_topic_author">#CC7832</color>
-  <color name="board_topic_date">#A9B7C6</color>
+  <color name="board_topic_date">#B3BFCA</color>
   <color name="board_topic_status">#727272</color>
 </resources>
