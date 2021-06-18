@@ -409,11 +409,11 @@ public class Post {
         // jump out of signature mode
         signatureMode = 0;
         line = line.replace("·", "")
-            .replace("http://www.newsmth.net", "")
-            .replace("http://m.newsmth.net", "")
-            .replace("http://newsmth.net", "")
-            .replace("newsmth.net", "")
-            .replace("m.newsmth.net", "")
+            .replace("http://www.mysmth.net", "")
+            .replace("http://m.mysmth.net", "")
+            .replace("http://mysmth.net", "")
+            .replace("mysmth.net", "")
+            .replace("m.mysmth.net", "")
             .replace("官方应用", "")
             .replace("客户端", "");
 
