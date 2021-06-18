@@ -411,6 +411,8 @@ public class Post {
         line = line.replace("·", "")
             .replace("http://www.mysmth.net", "")
             .replace("http://m.mysmth.net", "")
+            .replace("http://www.newsmth.net", "")
+            .replace("http://m.newsmth.net", "")
             .replace("http://mysmth.net", "")
             .replace("mysmth.net", "")
             .replace("m.mysmth.net", "")
