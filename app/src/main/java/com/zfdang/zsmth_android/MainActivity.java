@@ -1,5 +1,6 @@
 package com.zfdang.zsmth_android;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -29,6 +30,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -622,6 +624,10 @@ public class MainActivity extends SMTHBaseActivity
     } else if (id == R.id.nav_about) {
       fragment = aboutFragment;
       title = "关于";
+    } else if(id == R.id.nav_night_mode) {
+      boolean bNightMode = Settings.getInstance().isNightMode();
+      Settings.getInstance().setNightMode(!bNightMode);
+      setApplicationNightMode();
     }
 
     // switch fragment
@@ -637,6 +643,23 @@ public class MainActivity extends SMTHBaseActivity
 
     mDrawer.closeDrawer(GravityCompat.START);
     return true;
+  }
+
+  public void setApplicationNightMode() {
+    boolean bNightMode = Settings.getInstance().isNightMode();
+    if (bNightMode) {
+      AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+    } else {
+      AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+    }
+
+    Activity activity = this;
+    if (activity != null) {
+      Intent intent = new Intent(activity.getApplicationContext(), MainActivity.class);
+      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+      startActivity(intent);
+      activity.finish();
+    }
   }
 
   public void testCodes() {

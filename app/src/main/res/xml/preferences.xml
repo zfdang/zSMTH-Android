@@ -22,13 +22,6 @@
 
     <CheckBoxPreference
         android:defaultValue="on"
-        android:key="setting_daynight_control"
-        android:summaryOff="使用白色背景"
-        android:summaryOn="使用黑色背景"
-        android:title="配色模式"/>
-
-    <CheckBoxPreference
-        android:defaultValue="on"
         android:key="setting_post_navigation_control"
         android:summaryOff="快速导航栏已关闭"
         android:summaryOn="快速导航栏已打开"

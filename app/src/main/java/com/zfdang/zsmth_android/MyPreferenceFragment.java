@@ -41,7 +41,6 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
   Preference signature_content;
 
   CheckBoxPreference launch_hottopic_as_entry;
-  CheckBoxPreference daynight_control;
   CheckBoxPreference setting_post_navigation_control;
   CheckBoxPreference setting_volume_key_scroll;
   ListPreference setting_fontsize_control;
@@ -191,23 +190,6 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
       }
     });
 
-
-    daynight_control = (CheckBoxPreference) findPreference("setting_daynight_control");
-    daynight_control.setChecked(Settings.getInstance().isNightMode());
-    daynight_control.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-      @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
-        boolean bNightMode = Settings.getInstance().isNightMode();
-        if (newValue instanceof Boolean) {
-          Boolean boolVal = (Boolean) newValue;
-          bNightMode = boolVal;
-        }
-        Settings.getInstance().setNightMode(bNightMode);
-
-        setApplicationNightMode();
-        return true;
-      }
-    });
-
     notification_control_mail = (CheckBoxPreference) findPreference("setting_notification_control_mail");
     notification_control_mail.setChecked(Settings.getInstance().isNotificationMail());
     notification_control_mail.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -324,23 +306,6 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
-  }
-
-  public void setApplicationNightMode() {
-    boolean bNightMode = Settings.getInstance().isNightMode();
-    if (bNightMode) {
-      AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-    } else {
-      AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-    }
-
-    Activity activity = getActivity();
-    if (activity != null) {
-      Intent intent = new Intent(activity.getApplicationContext(), MainActivity.class);
-      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-      startActivity(intent);
-      activity.finish();
-    }
   }
 
   public void updateVersionInfo() {

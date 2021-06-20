@@ -31,6 +31,10 @@
         android:icon="@drawable/ic_settings_white_48dp"
         android:title="设置"/>
     <item
+        android:id="@+id/nav_night_mode"
+        android:icon="@drawable/outline_dark_mode_white_48"
+        android:title="切换配色" />
+    <item
         android:id="@+id/nav_about"
         android:icon="@drawable/ic_info_white_48dp"
         android:title="关于"/>
