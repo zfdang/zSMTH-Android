@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Build_zSMTH_APK
+name: publish_to_google_play
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -36,41 +36,16 @@ jobs:
     - name: Assemble Release APK
       run: ./gradlew assembleRelease --stacktrace
   
-    - name: Upload APK to artifacts
-      uses: actions/upload-artifact@v1
+    - name: publish to google play
+      uses: r0adkll/upload-google-play@v1
       with:
-        name: zSMTH
-        path: ./app/build/outputs/apk/
-        
-    - name: Create ZIPs
-      working-directory: ./app/build/outputs/apk/
-      run: |
-        zip -r ./zsmth.zip ./release
-
-    - name: Get git revision
-      id: get_git_revision
-      run: |
-        echo "::set-output name=tag_name::$(($(git rev-list HEAD --count) + 100))"
-        echo "::set-output name=release_name::$(($(git rev-list HEAD --count) + 100))"
-
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-          tag_name: tag-${{ steps.get_git_revision.outputs.tag_name }}
-          release_name: Release ${{ steps.get_git_revision.outputs.release_name }}
-          draft: false
-          prerelease: false
-
-    - name: Upload Release APK
-      id: upload-release-asset-images
-      uses: actions/upload-release-asset@v1
-      env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: ./app/build/outputs/apk/zsmth.zip
-          asset_name: zsmth.zip
-          asset_content_type: application/zip
+        serviceAccountJson: ${{ SERVICE_ACCOUNT_JSON }}
+        packageName: com.zfdang.zsmth_android
+        releaseFiles: app/build/outputs/apk/*.apk
+        track: production
+        inAppUpdatePriority: 2
+        userFraction: 1
+        whatsNewDirectory: distribution/whatsnew
+        mappingFile: app/build/outputs/mapping/release/mapping.txt
+  
+  
