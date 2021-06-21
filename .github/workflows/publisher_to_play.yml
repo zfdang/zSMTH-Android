@@ -39,7 +39,7 @@ jobs:
     - name: publish to google play
       uses: r0adkll/upload-google-play@v1
       with:
-        serviceAccountJson: ${{ SERVICE_ACCOUNT_JSON }}
+        serviceAccountJson: ${{  secrets.SERVICE_ACCOUNT_JSON }}
         packageName: com.zfdang.zsmth_android
         releaseFiles: app/build/outputs/apk/*.apk
         track: production
