@@ -44,8 +44,8 @@ jobs:
         releaseFiles: app/build/outputs/apk/*.apk
         track: production
         inAppUpdatePriority: 2
-        userFraction: 1
-        whatsNewDirectory: distribution/whatsnew
-        mappingFile: app/build/outputs/mapping/release/mapping.txt
+        userFraction: 1.0
+#         whatsNewDirectory: distribution/whatsnew
+#         mappingFile: app/build/outputs/mapping/release/mapping.txt
   
   
