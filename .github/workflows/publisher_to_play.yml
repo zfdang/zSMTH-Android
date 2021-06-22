@@ -41,7 +41,7 @@ jobs:
       with:
         serviceAccountJson: ${{  secrets.SERVICE_ACCOUNT_JSON }}
         packageName: com.zfdang.zsmth_android
-        releaseFiles: app/build/outputs/apk/*.apk
+        releaseFiles: app/build/outputs/apk/release/*.apk
         track: production
         inAppUpdatePriority: 2
 #         userFraction: 1.0
