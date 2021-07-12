@@ -1,6 +1,7 @@
 package com.zfdang.zsmth_android.models;
 
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.zfdang.zsmth_android.Settings;
@@ -233,8 +234,8 @@ public class Post {
     // it's important to know that not all HTML tags are supported by Html.fromHtml, see the supported list
     // https://commonsware.com/blog/Android/2010/05/26/html-tags-supported-by-textview.html
     // http://stackoverflow.com/questions/18295881/android-textview-html-font-size-tag
-    String formattedPlainText = Html.fromHtml(content.html()).toString();
-    this.htmlContent = this.parsePostPureContentFormat(formattedPlainText);
+    String formattedEscapedPlainText = TextUtils.htmlEncode(Html.fromHtml(content.html()).toString());
+    this.htmlContent = this.parsePostPureContentFormat(formattedEscapedPlainText);
   }
 
   public void mergePureContentAndLikes(){
