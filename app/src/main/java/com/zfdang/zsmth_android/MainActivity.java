@@ -556,10 +556,10 @@ public class MainActivity extends SMTHBaseActivity
 
   public void onLogin() {
     // new method to login, using webview & native smth login webpage
-    // Intent intent = new Intent(this, WebviewLoginActivity.class);
+     Intent intent = new Intent(this, WebviewLoginActivity.class);
 
     // still use the previous login method
-    Intent intent = new Intent(this, LoginActivity.class);
+//    Intent intent = new Intent(this, LoginActivity.class);
     startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
   }
 
