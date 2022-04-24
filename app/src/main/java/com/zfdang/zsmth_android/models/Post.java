@@ -415,6 +415,7 @@ public class Post {
             .replace("http://m.mysmth.net", "")
             .replace("http://m.newsmth.net", "")
             .replace("http://mysmth.net", "")
+            .replace("https://exp.mysmth.net", "")
             .replace("http://newsmth.net", "")
             .replace("mysmth.net", "")
             .replace("newsmth.net", "")
