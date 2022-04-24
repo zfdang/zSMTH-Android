@@ -94,12 +94,12 @@ public class MaintainUserStatusService extends JobIntentService {
                 final Settings setting = Settings.getInstance();
                 String username = setting.getUsername();
                 String password = setting.getPassword();
-                boolean bAutoLogin = setting.isAutoLogin();
+                boolean bSaveInfo = setting.isSaveInfo();
                 boolean bLastSuccess = setting.isLastLoginSuccess();
                 boolean bUserOnline = setting.isUserOnline();
                 boolean bLoginSuccess = false;
 //                Log.d(TAG, "call: 2.2.1 " + String.format("Autologin: %b, LastSuccess: %b, Online: %b", bAutoLogin, bLastSuccess, bUserOnline));
-                if (bAutoLogin && bLastSuccess && bUserOnline) {
+                if (bSaveInfo && bLastSuccess && bUserOnline) {
                     Iterable<Integer> its = helper.wService.login(username, password, "7").map(new Function<AjaxResponse, Integer>() {
                         @Override public Integer apply(@NonNull AjaxResponse response) throws Exception {
                             if (response.getAjax_st() == 1) {

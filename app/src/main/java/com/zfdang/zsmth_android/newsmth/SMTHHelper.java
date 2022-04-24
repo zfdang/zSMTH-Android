@@ -18,6 +18,7 @@ import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.Settings;
+import com.zfdang.zsmth_android.WebviewCookieHandler;
 import com.zfdang.zsmth_android.helpers.MakeList;
 import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.models.Board;
@@ -145,8 +146,8 @@ public class SMTHHelper {
           return originalResponse.newBuilder().header("Cache-Control", "no-cache").build();
         }
       }
-//    }).cookieJar(new WebviewCookieHandler())  // https://gist.github.com/scitbiz/8cb6d8484bb20e47d241cc8e117fa705
-    }).cookieJar(mCookieJar)  // revert back to persistentcookiejar
+    }).cookieJar(new WebviewCookieHandler())  // https://gist.github.com/scitbiz/8cb6d8484bb20e47d241cc8e117fa705
+//    }).cookieJar(mCookieJar)  // revert back to persistentcookiejar
       .cache(cache).readTimeout(15, TimeUnit.SECONDS).connectTimeout(10, TimeUnit.SECONDS).build();
 
     //        mRetrofit = new Retrofit.Builder()

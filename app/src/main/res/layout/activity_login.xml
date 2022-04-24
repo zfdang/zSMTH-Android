@@ -63,14 +63,14 @@
 
     <!-- 登录 button -->
     <CheckBox
-        android:id="@+id/auto_login"
+        android:id="@+id/save_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/signin_button"
         android:layout_below="@id/input_layout_password"
         android:layout_marginRight="10dp"
         android:checked="true"
-        android:text="@string/login_label_autologin"
+        android:text="@string/login_label_saveinfo"
         />
 
     <Button

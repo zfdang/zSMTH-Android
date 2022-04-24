@@ -40,6 +40,7 @@ import androidx.fragment.app.FragmentManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.mikepenz.aboutlibraries.LibsBuilder;
+import com.mob.MobSDK;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import com.umeng.analytics.MobclickAgent;
@@ -59,8 +60,6 @@ import com.zfdang.zsmth_android.services.AlarmBroadcastReceiver;
 import com.zfdang.zsmth_android.services.UserStatusReceiver;
 
 import java.lang.reflect.Field;
-
-import com.mob.MobSDK;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -397,9 +396,9 @@ public class MainActivity extends SMTHBaseActivity
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    Log.d(TAG, "receive login result, requestCode = " + requestCode);
+//    Log.d(TAG, "receive login result, requestCode = " + requestCode);
     if (requestCode == LOGIN_ACTIVITY_REQUEST_CODE) {
-      Log.d(TAG, "receive login result, resultCode = " + resultCode);
+//      Log.d(TAG, "receive login result, resultCode = " + resultCode);
       updateUserStatusNow();
     }
   }
@@ -555,11 +554,8 @@ public class MainActivity extends SMTHBaseActivity
   }
 
   public void onLogin() {
-    // new method to login, using webview & native smth login webpage
-     Intent intent = new Intent(this, WebviewLoginActivity.class);
-
     // still use the previous login method
-//    Intent intent = new Intent(this, LoginActivity.class);
+    Intent intent = new Intent(this, LoginActivity.class);
     startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
   }
 

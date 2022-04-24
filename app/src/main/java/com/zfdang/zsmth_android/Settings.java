@@ -56,18 +56,18 @@ public class Settings {
     }
   }
 
-  // auto login
-  private static final String AUTO_LOGIN = "auto_login";
-  private boolean bAutoLogin;
+  // save login information
+  private static final String SAVE_INFO = "save_info";
+  private boolean bSaveInfo;
 
-  public boolean isAutoLogin() {
-    return bAutoLogin;
+  public boolean isSaveInfo() {
+    return bSaveInfo;
   }
 
-  public void setAutoLogin(boolean mAutoLogin) {
-    if (this.bAutoLogin != mAutoLogin) {
-      this.bAutoLogin = mAutoLogin;
-      mEditor.putBoolean(AUTO_LOGIN, this.bAutoLogin);
+  public void setSaveInfo(boolean mSaveInfo) {
+    if (this.bSaveInfo != mSaveInfo) {
+      this.bSaveInfo = mSaveInfo;
+      mEditor.putBoolean(SAVE_INFO, this.bSaveInfo);
       mEditor.commit();
     }
   }
@@ -457,7 +457,7 @@ public class Settings {
     mShowSticky = mPreference.getBoolean(SHOW_STICKY_TOPIC, false);
     mUsername = mPreference.getString(USERNAME_KEY, "");
     mPassword = mPreference.getString(PASSWORD_KEY, "");
-    bAutoLogin = mPreference.getBoolean(AUTO_LOGIN, true);
+    bSaveInfo = mPreference.getBoolean(SAVE_INFO, true);
     bLastLoginSuccess = mPreference.getBoolean(LAST_LOGIN_SUCCESS, false);
     bUserOnline = mPreference.getBoolean(USER_ONLINE, false);
 

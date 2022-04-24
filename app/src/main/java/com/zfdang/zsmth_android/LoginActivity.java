@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
-import android.text.TextUtils;
+
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.MenuItem;
@@ -31,7 +31,7 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
 
   private EditText m_userNameEditText;
   private EditText m_passwordEditText;
-  private CheckBox mAutoLogin;
+  private CheckBox mSaveInfo;
 
   // these 3 parameters are used by webviewlogin only
   static final int LOGIN_ACTIVITY_REQUEST_CODE = 9528;  // The request code
@@ -48,15 +48,15 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
     Settings setting = Settings.getInstance();
     String username = setting.getUsername();
     String password = setting.getPassword();
-    boolean autologin = setting.isAutoLogin();
+    boolean saveinfo = setting.isSaveInfo();
 
     m_userNameEditText = (EditText) findViewById(R.id.username_edit);
     m_userNameEditText.setText(username);
     m_passwordEditText = (EditText) findViewById(R.id.password_edit);
     m_passwordEditText.setText(password);
 
-    mAutoLogin = (CheckBox) findViewById(R.id.auto_login);
-    mAutoLogin.setChecked(autologin);
+    mSaveInfo = (CheckBox) findViewById(R.id.save_info);
+    mSaveInfo.setChecked(saveinfo);
 
     TextView registerLink = (TextView) findViewById(R.id.register_link);
     registerLink.setMovementMethod(LinkMovementMethod.getInstance());
@@ -94,9 +94,41 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
         focusView.requestFocus();
         Toast.makeText(SMTHApplication.getAppContext(), "请输入用户名/密码！", Toast.LENGTH_SHORT).show();
       } else {
-        Settings.getInstance().setAutoLogin(mAutoLogin.isChecked());
-        Settings.getInstance().setLastLoginSuccess(false);
-        attemptLoginFromWWW(username, password);
+//        Settings.getInstance().setAutoLogin(mAutoLogin.isChecked());
+//        Settings.getInstance().setLastLoginSuccess(false);
+//        attemptLoginFromWWW(username, password);
+        // save info if selected
+        boolean saveinfo = mSaveInfo.isChecked();
+        Settings.getInstance().setSaveInfo(saveinfo);
+
+        if(saveinfo) {
+          // save
+          Settings.getInstance().setUsername(username);
+          Settings.getInstance().setPassword(password);
+        } else {
+          // clean existed
+          Settings.getInstance().setUsername("");
+          Settings.getInstance().setPassword("");
+        }
+
+        // continue to login with nforum web
+        Intent intent = new Intent(this, WebviewLoginActivity.class);
+        intent.putExtra(USERNAME, username);
+        intent.putExtra(PASSWORD, password);
+        startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
+      }
+    }
+  }
+
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+//    Log.d(TAG, "receive login result" + requestCode);
+    if (requestCode == LOGIN_ACTIVITY_REQUEST_CODE) {
+//      Log.d(TAG, "receive login result");
+      if (resultCode == RESULT_OK) {
+        Intent resultIntent = new Intent();
+        setResult(Activity.RESULT_OK, resultIntent);
+        finish();
       }
     }
   }
@@ -134,7 +166,7 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
                   case AjaxResponse.AJAX_RESULT_OK:
                     Toast.makeText(getApplicationContext(), "登录成功!", Toast.LENGTH_SHORT).show();
 
-                    // save username & passworld
+                    // save username & password
                     Settings.getInstance().setUsername(username);
                     Settings.getInstance().setPassword(password);
                     Settings.getInstance().setLastLoginSuccess(true);

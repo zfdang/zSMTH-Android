@@ -10,9 +10,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 // login chains:
-// http://m.newsmth.net/index
-//   ==> POST: https://m.newsmth.net/user/login
-//     ==> 302 location: http://m.newsmth.net/index?m=0108
+// http://m.mysmth.net/index
+//   ==> POST: https://m.mysmth.net/user/login
+//     ==> 302 location: http://m.mysmth.net/index?m=0108
 public class WebviewLoginClient extends WebViewClient {
 
     private static final String TAG = "WebviewLoginClient";
@@ -29,7 +29,7 @@ public class WebviewLoginClient extends WebViewClient {
 
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
 //        Log.d(TAG, "shouldOverrideUrlLoading" + url);
-        if (url.startsWith("https://m.newsmth.net/index?m=")) {
+        if (url.startsWith("https://m.mysmth.net/index?m=")) {
             Intent resultIntent = new Intent();
             activity.setResult(Activity.RESULT_OK, resultIntent);
             activity.finish();
@@ -47,7 +47,7 @@ public class WebviewLoginClient extends WebViewClient {
 
     public void onPageFinished(WebView view, String url) {
 //        Log.d(TAG, "onPageFinished" + url);
-        if (url.equals("https://m.newsmth.net/index")) {
+        if (url.equals("https://m.mysmth.net/index")) {
             // login page, input id and passwd automatically
             final String js = "javascript: " +
                     "var ids = document.getElementsByName('id');" +

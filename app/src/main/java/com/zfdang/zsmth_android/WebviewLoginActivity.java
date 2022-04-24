@@ -1,6 +1,5 @@
 package com.zfdang.zsmth_android;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -10,7 +9,7 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
 
     private WebView mWebView;
 //    private String url = "https://www.newsmth.net/";
-    private String url = "https://m.newsmth.net/index";
+    private String url = "https://m.mysmth.net/index";
 
     private String username;
     private String password;
@@ -22,8 +21,10 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
 
         // get username & password
         Bundle extras = getIntent().getExtras();
-        username = extras.getString(LoginActivity.USERNAME);
-        password = extras.getString(LoginActivity.PASSWORD);
+        if(extras != null) {
+            username = extras.getString(LoginActivity.USERNAME);
+            password = extras.getString(LoginActivity.PASSWORD);
+        }
 
         mWebView = (WebView) findViewById(R.id.webview_login);
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);

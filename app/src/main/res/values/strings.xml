@@ -25,7 +25,7 @@
     <string name="login_label_username">用户名</string>
     <string name="login_label_password">密码</string>
     <string name="login_label_signin">登录</string>
-    <string name="login_label_autologin">自动登录</string>
+    <string name="login_label_saveinfo">保存登录信息</string>
     <string name="login_register_link">没有帐号？  <a href="http://www.newsmth.net/bbsreg0.html">注册</a></string>
     <string name="login_asm_help">zSMTH  <a href="http://zsmth.zfdang.com/">使用说明</a></string>
 
