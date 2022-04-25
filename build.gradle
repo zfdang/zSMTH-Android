@@ -43,9 +43,9 @@ ext {
     compileSdkVersion = 31
     // https://developer.android.com/studio/releases/build-tools
     buildToolsVersion = '30.0.3'
-    FRESCO_VERSION = '1.13.0'
+    FRESCO_VERSION = '1.14.2'
     // https://developer.android.com/topic/libraries/support-library/revisions
     SUPPORT_LIBRARY_VERSION = '27.1.1'
-    RXJAVA2_VERSION = '2.2.20'
+    RXJAVA2_VERSION = '2.2.21'
     RXANDROID2_VERSION = '2.1.1'
 }
