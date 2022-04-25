@@ -66,7 +66,7 @@ public class MaintainUserStatusService extends JobIntentService {
         // process here:
         // 1. get user status
         // 2.1 if it's not guest, go to step 3
-        // 2.2 if it's guest, login;
+        // 2.2 if login-with-guesture-verification is used, go to step 3; otherwise try to login;
         // 2.2.1 if login success, get user status (2.2.1.1) again. go to step 3
         // 2.2.2 if login failed, go to step 3
         // 3. check whether user status == SMTHApplication.activeUser
@@ -89,8 +89,13 @@ public class MaintainUserStatusService extends JobIntentService {
                     return userStatus;
                 }
 
-                // login first
                 //Log.d(TAG, "call: " + "2.2 user not logined, try to login now...");
+                if(Settings.getInstance().isLoginWithVerification()) {
+                    // if login with gesture verification, skip
+                    return userStatus;
+                }
+
+                // now try to login
                 final Settings setting = Settings.getInstance();
                 String username = setting.getUsername();
                 String password = setting.getPassword();

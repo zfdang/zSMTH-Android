@@ -94,28 +94,34 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
         focusView.requestFocus();
         Toast.makeText(SMTHApplication.getAppContext(), "请输入用户名/密码！", Toast.LENGTH_SHORT).show();
       } else {
-//        Settings.getInstance().setAutoLogin(mAutoLogin.isChecked());
-//        Settings.getInstance().setLastLoginSuccess(false);
-//        attemptLoginFromWWW(username, password);
-        // save info if selected
-        boolean saveinfo = mSaveInfo.isChecked();
-        Settings.getInstance().setSaveInfo(saveinfo);
+        // use two methods for login: with verification, or simple login
+        if(Settings.getInstance().isLoginWithVerification()) {
+          // login with gesture verification
+          // save info if selected
+          boolean saveinfo = mSaveInfo.isChecked();
+          Settings.getInstance().setSaveInfo(saveinfo);
 
-        if(saveinfo) {
-          // save
-          Settings.getInstance().setUsername(username);
-          Settings.getInstance().setPassword(password);
+          if(saveinfo) {
+            // save
+            Settings.getInstance().setUsername(username);
+            Settings.getInstance().setPassword(password);
+          } else {
+            // clean existed
+            Settings.getInstance().setUsername("");
+            Settings.getInstance().setPassword("");
+          }
+
+          // continue to login with nforum web
+          Intent intent = new Intent(this, WebviewLoginActivity.class);
+          intent.putExtra(USERNAME, username);
+          intent.putExtra(PASSWORD, password);
+          startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
         } else {
-          // clean existed
-          Settings.getInstance().setUsername("");
-          Settings.getInstance().setPassword("");
+          // simple login
+          Settings.getInstance().setSaveInfo(mSaveInfo.isChecked());
+          Settings.getInstance().setLastLoginSuccess(false);
+          attemptLoginFromWWW(username, password);
         }
-
-        // continue to login with nforum web
-        Intent intent = new Intent(this, WebviewLoginActivity.class);
-        intent.putExtra(USERNAME, username);
-        intent.putExtra(PASSWORD, password);
-        startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
       }
     }
   }
@@ -126,6 +132,7 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
     if (requestCode == LOGIN_ACTIVITY_REQUEST_CODE) {
 //      Log.d(TAG, "receive login result");
       if (resultCode == RESULT_OK) {
+        Toast.makeText(getApplicationContext(), "登录成功!", Toast.LENGTH_SHORT).show();
         Intent resultIntent = new Intent();
         setResult(Activity.RESULT_OK, resultIntent);
         finish();
