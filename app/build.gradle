@@ -106,7 +106,6 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:$rootProject.RXANDROID2_VERSION"
 
     // OkHttp
-    implementation 'com.github.franmontiel:PersistentCookieJar:1.0.1'
     implementation "com.squareup.okhttp3:okhttp:$OKHTTP_VERSION"
     implementation "com.squareup.okhttp3:logging-interceptor:$OKHTTP_VERSION"
 

@@ -15,7 +15,7 @@ import okhttp3.HttpUrl;
  */
 // https://gist.github.com/scitbiz/8cb6d8484bb20e47d241cc8e117fa705
 // https://stackoverflow.com/questions/12731211/pass-cookies-from-httpurlconnection-java-net-cookiemanager-to-webview-android/18070681#18070681
-// 为了使webview和okhttp3使用相同的cookies, 把webview的cookiemanager做了一层包装，是的okhttp3可以直接使用
+// 为了使webview和okhttp3使用相同的cookies, 把webview的cookiemanager做了一层包装，使得okhttp3可以直接使用
 // 这样就避免了cookie同步的问题
 
 public final class WebviewCookieHandler implements CookieJar {
