@@ -47,7 +47,7 @@ def processFile(infile):
     brandWriter = io.open("branding.properties", mode="w", encoding="utf-8")
     marketingWriter = io.open("marketingName.properties", mode="w", encoding="utf-8")
     counter = 0
-    print csvReader
+    # print csvReader
     for row in csvReader:
 
         # print row
@@ -68,6 +68,7 @@ def processFile(infile):
             brandWriter.write("%s=%s\n" % (model, branding))
             marketingWriter.write("%s=%s\n" % (model, marketingName))
 
+    print "Totaly %d devices detected." % (counter)
 ########################################################
 # main entrance here
 ########################################################

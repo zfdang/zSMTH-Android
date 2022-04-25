@@ -476,7 +476,7 @@ public class Settings {
     bUseSignature = mPreference.getBoolean(USE_DEVICE_SIGNATURE, true);
     mSignature = mPreference.getString(DEVICE_SIGNATURE, "");
     if (mSignature.length() == 0) {
-      String marketingName = DeviceMarketingName.getInstance(SMTHApplication.getAppContext()).getDeviceMarketingName(false);
+      String marketingName = DeviceMarketingName.getInstance(SMTHApplication.getAppContext()).getDeviceMarketingName(true);
       setSignature(marketingName);
     }
 
