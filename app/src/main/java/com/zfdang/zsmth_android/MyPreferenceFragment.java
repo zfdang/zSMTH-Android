@@ -2,11 +2,10 @@ package com.zfdang.zsmth_android;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatDelegate;
+
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
@@ -45,6 +44,7 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
   CheckBoxPreference setting_volume_key_scroll;
   ListPreference setting_fontsize_control;
   CheckBoxPreference image_quality_control;
+  CheckBoxPreference login_with_verification;
   CheckBoxPreference image_source_cdn;
   CheckBoxPreference board_master_only;
 
@@ -158,6 +158,19 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
           bLoadOriginalImage = boolVal;
         }
         Settings.getInstance().setLoadOriginalImage(bLoadOriginalImage);
+        return true;
+      }
+    });
+
+    login_with_verification = (CheckBoxPreference) findPreference("setting_login_with_verification");
+    login_with_verification.setChecked(Settings.getInstance().isLoginWithVerification());
+    login_with_verification.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+      @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
+        boolean value = Settings.getInstance().isLoginWithVerification();
+        if (newValue instanceof Boolean) {
+          value = (Boolean) newValue;
+        }
+        Settings.getInstance().setLoginWithVerification(value);
         return true;
       }
     });

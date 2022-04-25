@@ -8,9 +8,6 @@ import android.util.Log;
 import com.zfdang.SMTHApplication;
 import com.zfdang.devicemodeltomarketingname.DeviceMarketingName;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  * Usage:
  * String username = Settings.getInstance().getUsername();
@@ -199,6 +196,21 @@ public class Settings {
     }
   }
 
+  // use normal login, or with verification
+  private static final String LOGIN_WITH_VERIFICATION = "LOGIN_WITH_VERIFICATION";
+  private boolean bLoginWithVerification;
+
+  public boolean isLoginWithVerification() {
+    return bLoginWithVerification;
+  }
+
+  public void setLoginWithVerification(boolean value) {
+    if (this.bLoginWithVerification != value) {
+      this.bLoginWithVerification = value;
+      mEditor.putBoolean(LOGIN_WITH_VERIFICATION, this.bLoginWithVerification);
+      mEditor.commit();
+    }
+  }
 
   // load image from cdn, or from smth website directly
   // https://www.mysmth.net/nForum/#!article/PocketLife/3100239
@@ -471,6 +483,7 @@ public class Settings {
     mTarget = mPreference.getString(FORWARD_TAEGET, "");
 
     bLoadOriginalImage = mPreference.getBoolean(LOAD_ORIGINAL_IMAGE, false);
+    bLoginWithVerification = mPreference.getBoolean(LOGIN_WITH_VERIFICATION, true);
     bImageSourceCDN = mPreference.getBoolean(IMAGE_SOURCE_CDN, true);
 
     bBoardMasterOnly = mPreference.getBoolean(BOARD_MASTER_ONLY, false);

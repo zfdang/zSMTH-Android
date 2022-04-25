@@ -51,6 +51,13 @@
 
     <CheckBoxPreference
         android:defaultValue="on"
+        android:key="setting_login_with_verification"
+        android:summaryOff="使用简单登录"
+        android:summaryOn="使用带验证的登录"
+        android:title="登录方式"/>
+
+    <CheckBoxPreference
+        android:defaultValue="on"
         android:key="setting_image_source_cdn"
         android:summaryOff="从水木加载图片(海外访问使用)"
         android:summaryOn="从CDN加载图片(推荐)"
