@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 # filename: extractDeviceInfos.py
 """
 python extractDeviceInfos.py -f supported_devices-text.csv
@@ -14,6 +15,7 @@ import getopt
 import csv
 import os
 import codecs
+import io
 
 ##################################
 # settings have been moved to config.py
@@ -28,6 +30,10 @@ def print_trace_stack_info():
     for msg in error_msgs:
         print msg
 
+def unicode_csv_reader(utf8_data, dialect=csv.excel, **kwargs):
+    csv_reader = csv.reader(utf8_data, dialect=dialect, **kwargs)
+    for row in csv_reader:
+        yield [unicode(cell, 'utf-8') for cell in row]
 
 def processFile(infile):
 
@@ -37,14 +43,15 @@ def processFile(infile):
 
     unkown_accounts = {}
     # csvReader = csv.reader(open(infile))
-    csvReader = csv.reader(codecs.open(infile, 'rU', 'utf-16'))
-    brandWriter = open("branding.properties", "w")
-    marketingWriter = open("marketingName.properties", "w")
+    csvReader = unicode_csv_reader(open(infile))
+    brandWriter = io.open("branding.properties", mode="w", encoding="utf-8")
+    marketingWriter = io.open("marketingName.properties", mode="w", encoding="utf-8")
     counter = 0
     print csvReader
     for row in csvReader:
 
-        if len(row) != 4:  # make sure row is parsed correctly
+        # print row
+        if len(row) != 12:  # make sure row is parsed correctly
             continue
 
         counter += 1
@@ -53,7 +60,7 @@ def processFile(infile):
 
         branding = row[0]
         marketingName = row[1]
-        model = row[3]
+        model = row[2]
         if len(branding) > 0 and len(marketingName) > 0 and len(model) > 0:
             model = model.replace("=", "\=").replace(":", "\:").replace(" ", "\ ")
             branding = branding.replace("=", "\=").replace(":", "\:").replace(" ", "\ ")
