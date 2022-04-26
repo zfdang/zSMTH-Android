@@ -46,6 +46,7 @@ public class SMTHApplication extends Application {
   public static final String NOTIFICATION_NEW_AT = "你有新@!";
   public static final String NOTIFICATION_NEW_REPLY = "你有新回复!";
   public static final String NOTIFICATION_NEW_LIKE = "你有新Like!";
+  public static final String NOTIFICATION_LOGIN_LOST = "登录已过期！请重新登录...";
 
   // IP database
   public static GEODatabase geoDB;

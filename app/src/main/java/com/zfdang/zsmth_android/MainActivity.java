@@ -357,22 +357,27 @@ public class MainActivity extends SMTHBaseActivity
       // java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
       String message = bundle.getString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE);
       if (message != null) {
-        // find the actual folder for the new message
-        if (message.contains(SMTHApplication.NOTIFICATION_NEW_MAIL)) {
-          mailListFragment.setCurrentFolder(MailListFragment.INBOX_LABEL);
-        } else if (message.contains(SMTHApplication.NOTIFICATION_NEW_LIKE)) {
-          mailListFragment.setCurrentFolder(MailListFragment.LIKE_LABEL);
-        } else if (message.contains(SMTHApplication.NOTIFICATION_NEW_AT)) {
-          mailListFragment.setCurrentFolder(MailListFragment.AT_LABEL);
-        } else if (message.contains(SMTHApplication.NOTIFICATION_NEW_REPLY)) {
-          mailListFragment.setCurrentFolder(MailListFragment.REPLY_LABEL);
-        }
-        // force mail fragment to reload
-        MailListContent.clear();
+        if(message.contains(SMTHApplication.NOTIFICATION_LOGIN_LOST)) {
+          // login status lost, show login menu
+          onLogin();
+        } else {
+          // find the actual folder for the new message
+          if (message.contains(SMTHApplication.NOTIFICATION_NEW_MAIL)) {
+            mailListFragment.setCurrentFolder(MailListFragment.INBOX_LABEL);
+          } else if (message.contains(SMTHApplication.NOTIFICATION_NEW_LIKE)) {
+            mailListFragment.setCurrentFolder(MailListFragment.LIKE_LABEL);
+          } else if (message.contains(SMTHApplication.NOTIFICATION_NEW_AT)) {
+            mailListFragment.setCurrentFolder(MailListFragment.AT_LABEL);
+          } else if (message.contains(SMTHApplication.NOTIFICATION_NEW_REPLY)) {
+            mailListFragment.setCurrentFolder(MailListFragment.REPLY_LABEL);
+          }
+          // force mail fragment to reload
+          MailListContent.clear();
 
-        fm.beginTransaction().replace(R.id.content_frame, mailListFragment).commitAllowingStateLoss();
-        // switch title of mainActivity
-        setTitle(SMTHApplication.App_Title_Prefix + "邮件");
+          fm.beginTransaction().replace(R.id.content_frame, mailListFragment).commitAllowingStateLoss();
+          // switch title of mainActivity
+          setTitle(SMTHApplication.App_Title_Prefix + "邮件");
+        }
       }
     }
   }
