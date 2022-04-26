@@ -82,16 +82,26 @@ public class MaintainUserStatusService extends JobIntentService {
             public UserStatus apply(UserStatus userStatus) throws Exception {
 //                Log.d(TAG, "2.0 " + userStatus.toString());
 
-                // check it's logined user, or guest
-                if (userStatus != null && !TextUtils.equals(userStatus.getId(), "guest")) {
-                    // logined user, just return the status for next step
-                    // Log.d(TAG, "call: 2.1 valid logined user: " + userStatus.getId());
-                    return userStatus;
+                // create a dummy userStatus if it is null
+                if(userStatus == null) {
+                    userStatus = new UserStatus();
+                }
+
+                // set id to guest if it is null
+                if(userStatus.getId() == null) {
+                    userStatus.setId("guest");
                 }
 
                 //Log.d(TAG, "call: " + "2.2 user not logined, try to login now...");
                 if(Settings.getInstance().isLoginWithVerification()) {
-                    // if login with gesture verification, skip
+                    // if login with gesture verification, skip the login attempt
+                    return userStatus;
+                }
+
+                // check it's logined user, or guest
+                if (!TextUtils.equals(userStatus.getId(), "guest")) {
+                    // logined user, just return the status for next step
+                    // Log.d(TAG, "call: 2.1 valid logined user: " + userStatus.getId());
                     return userStatus;
                 }
 
@@ -140,6 +150,12 @@ public class MaintainUserStatusService extends JobIntentService {
                     //Log.d(TAG, "call: " + "2.2.5.1 try to get userstatus again after login action");
                     UserStatus stat = SMTHHelper.queryActiveUserStatus().blockingFirst();
                     //Log.d(TAG, "call: " + stats.size());
+                    if(stat == null) {
+                        stat = new UserStatus();
+                    }
+                    if(stat.getId() == null) {
+                        stat.setId("guest");
+                    }
                     return stat;
                 } else {
                     return userStatus;
@@ -149,17 +165,16 @@ public class MaintainUserStatusService extends JobIntentService {
             @Override
             public UserStatus apply(UserStatus userStatus) throws Exception {
                 //Log.d(TAG, "3.0 call: " + userStatus.toString());
-                String userId = userStatus.getId();
-                if (userId != null && !TextUtils.equals(userId, "guest")) {
-                    // valid logined user
-                    if (SMTHApplication.activeUser != null && TextUtils.equals(userId, SMTHApplication.activeUser.getId())) {
+                if (!TextUtils.equals(userStatus.getId(), "guest")) {
+                    // valid user
+                    if (SMTHApplication.activeUser != null && TextUtils.equals(userStatus.getId(), SMTHApplication.activeUser.getId())) {
                         // current user is already cached in SMTHApplication
                         //Log.d(TAG, "call: " + "3.1 New user is the same with cached user, copy faceURL from local");
                         userStatus.setFace_url(SMTHApplication.activeUser.getFace_url());
                     } else {
                         // get correct faceURL
                         //Log.d(TAG, "call: " + "3.2 New user is different with cached user, get real face URL from remote");
-                        UserInfo userInfo = helper.wService.queryUserInformation(userId).blockingFirst();
+                        UserInfo userInfo = helper.wService.queryUserInformation(userStatus.getId()).blockingFirst();
                         if (userInfo != null) {
                             userStatus.setFace_url(userInfo.getFace_url());
                         }
@@ -177,19 +192,22 @@ public class MaintainUserStatusService extends JobIntentService {
             @Override
             public void onNext(UserStatus userStatus) {
                 //Log.d(TAG, "4.0 onNext: " + userStatus.toString());
-                String userId = userStatus.getId();
-                if (userId == null || TextUtils.equals(userId, "guest")) return;
-
                 // cache user if necessary, so we don't have to query User avatar url again in the future
                 boolean updateUserIcon = false;
-                if (!SMTHApplication.isValidUser()) {
+                if (SMTHApplication.activeUser == null || !TextUtils.equals(SMTHApplication.activeUser.getId(), userStatus.getId())) {
+                    // active user is null, or active user is different with userstatus, update the icon
                     // Log.d(TAG, "onNext: " + "4.1 cache userStatus as activeUser");
                     SMTHApplication.activeUser = userStatus;
                     updateUserIcon = true;
                 }
 
+                // get message if user is not guest
+                String message = "";
+                if(!TextUtils.equals(SMTHApplication.activeUser.getId(), "guest")) {
+                    message = getNotificationMessage(SMTHApplication.activeUser);
+                }
+
                 // send notification: 1. new message 2. new activeUser to update Sidebar status
-                String message = getNotificationMessage(userStatus);
                 if ((updateUserIcon || message.length() > 0) && mUserStatusReceiver != null) {
                     //Log.d(TAG, "4.2 cached user, valid message, valid receiver, send message");
                     Bundle bundle = new Bundle();
