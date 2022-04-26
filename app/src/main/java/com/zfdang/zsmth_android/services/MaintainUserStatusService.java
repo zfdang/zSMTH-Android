@@ -201,10 +201,13 @@ public class MaintainUserStatusService extends JobIntentService {
                     updateUserIcon = true;
                 }
 
-                // get message if user is not guest
                 String message = "";
                 if(!TextUtils.equals(SMTHApplication.activeUser.getId(), "guest")) {
+                    // get message if user is not guest
                     message = getNotificationMessage(SMTHApplication.activeUser);
+                } else if(updateUserIcon == true) {
+                    // if it's guest but updateUserIcon == true, means login status has lost
+                    message = "登录已过期！请重新登录...";
                 }
 
                 // send notification: 1. new message 2. new activeUser to update Sidebar status
