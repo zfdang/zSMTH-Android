@@ -197,9 +197,9 @@ public class MaintainUserStatusService extends JobIntentService {
                 if (SMTHApplication.activeUser == null || !TextUtils.equals(SMTHApplication.activeUser.getId(), userStatus.getId())) {
                     // active user is null, or active user is different with userstatus, update the icon
                     // Log.d(TAG, "onNext: " + "4.1 cache userStatus as activeUser");
-                    SMTHApplication.activeUser = userStatus;
                     updateUserIcon = true;
                 }
+                SMTHApplication.activeUser = userStatus;
 
                 String message = "";
                 if(!TextUtils.equals(SMTHApplication.activeUser.getId(), "guest")) {
