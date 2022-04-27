@@ -1,5 +1,6 @@
 package com.zfdang.zsmth_android;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,7 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import androidx.appcompat.app.ActionBar;
+
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -24,7 +25,6 @@ import android.widget.Toast;
 
 import com.github.chrisbanes.photoview.OnOutsidePhotoTapListener;
 import com.github.chrisbanes.photoview.OnPhotoTapListener;
-import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.FrescoUtils;
@@ -39,7 +39,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import me.relex.circleindicator.CircleIndicator;
-import com.github.chrisbanes.photoview.OnPhotoTapListener;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
 public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoTapListener, OnOutsidePhotoTapListener {
 
@@ -55,6 +56,18 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
   private ImageView btBack;
   private ImageView btInfo;
   private ImageView btSave;
+
+  private static final int RC_READ_WRITE_STORAGE = 123;
+  String mTargetImagePath;
+  boolean mTargetImageAnimation;
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+    // Forward results to EasyPermissions
+    EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+  }
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -110,15 +123,15 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
     btSave.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         int position = mViewPager.getCurrentItem();
-        final String imagePath = mURLs.get(position);
+        mTargetImagePath = mURLs.get(position);
 
         View currentView = mPagerAdapter.mCurrentView;
-        boolean isAnimation = false;
+        mTargetImageAnimation = false;
         if (currentView instanceof MyPhotoView) {
           MyPhotoView photoView = (MyPhotoView) currentView;
-          isAnimation = photoView.isAnimation();
+          mTargetImageAnimation = photoView.isAnimation();
         }
-        saveImageToFile(imagePath, isAnimation);
+        saveImageToFile();
       }
     });
 
@@ -199,50 +212,59 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
     return Integer.toHexString(imagePath.hashCode());
   }
 
-  public void saveImageToFile(String imagePath, boolean isAnimation) {
-    File imageFile = FrescoUtils.getCachedImageOnDisk(Uri.parse(imagePath));
-    if (imageFile == null) {
-      Toast.makeText(FSImageViewerActivity.this, "无法读取缓存文件！", Toast.LENGTH_LONG).show();
-      return;
-    }
-    // Log.d(TAG, "saveImageToFile: " + imageFile.getAbsolutePath());
-
-    // save image to sdcard
-    try {
-      if (TextUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED)) {
-        String path = Environment.getExternalStorageDirectory().getPath() + "/zSMTH/";
-        File dir = new File(path);
-        if (!dir.exists()) {
-          dir.mkdirs();
-        }
-
-        String IMAGE_FILE_PREFIX = "zSMTH-";
-        String IMAGE_FILE_SUFFIX = ".jpg";
-        if (isAnimation) {
-          IMAGE_FILE_SUFFIX = ".gif";
-        }
-        File outFile = new File(dir, IMAGE_FILE_PREFIX + getURLHashCode(imagePath) + IMAGE_FILE_SUFFIX);
-
-        BufferedInputStream bufr = new BufferedInputStream(new FileInputStream(imageFile));
-        BufferedOutputStream bufw = new BufferedOutputStream(new FileOutputStream(outFile));
-
-        int len = 0;
-        byte[] buf = new byte[1024];
-        while ((len = bufr.read(buf)) != -1) {
-          bufw.write(buf, 0, len);
-          bufw.flush();
-        }
-        bufw.close();
-        bufr.close();
-
-        // make sure the new file can be recognized soon
-        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(outFile)));
-
-        Toast.makeText(FSImageViewerActivity.this, "图片已存为: /zSMTH/" + outFile.getName(), Toast.LENGTH_SHORT).show();
+  @AfterPermissionGranted(RC_READ_WRITE_STORAGE)
+  void saveImageToFile() {
+    String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    if (EasyPermissions.hasPermissions(this, perms)) {
+      // Already have permission, do the thing
+      File imageFile = FrescoUtils.getCachedImageOnDisk(Uri.parse(mTargetImagePath));
+      if (imageFile == null) {
+        Toast.makeText(FSImageViewerActivity.this, "无法读取缓存文件！", Toast.LENGTH_LONG).show();
+        return;
       }
-    } catch (Exception e) {
-      Log.e(TAG, "saveImageToFile: " + Log.getStackTraceString(e));
-      Toast.makeText(FSImageViewerActivity.this, "保存图片失败:\n请授予应用存储权限！\n" + e.toString(), Toast.LENGTH_LONG).show();
+      // Log.d(TAG, "saveImageToFile: " + imageFile.getAbsolutePath());
+
+      // save image to sdcard
+      try {
+        if (TextUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED)) {
+          String path = Environment.getExternalStorageDirectory().getPath() + "/zSMTH/";
+          File dir = new File(path);
+          if (!dir.exists()) {
+            dir.mkdirs();
+          }
+
+          String IMAGE_FILE_PREFIX = "zSMTH-";
+          String IMAGE_FILE_SUFFIX = ".jpg";
+          if (mTargetImageAnimation) {
+            IMAGE_FILE_SUFFIX = ".gif";
+          }
+          File outFile = new File(dir, IMAGE_FILE_PREFIX + getURLHashCode(mTargetImagePath) + IMAGE_FILE_SUFFIX);
+
+          BufferedInputStream bufr = new BufferedInputStream(new FileInputStream(imageFile));
+          BufferedOutputStream bufw = new BufferedOutputStream(new FileOutputStream(outFile));
+
+          int len = 0;
+          byte[] buf = new byte[1024];
+          while ((len = bufr.read(buf)) != -1) {
+            bufw.write(buf, 0, len);
+            bufw.flush();
+          }
+          bufw.close();
+          bufr.close();
+
+          // make sure the new file can be recognized soon
+          sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(outFile)));
+
+          Toast.makeText(FSImageViewerActivity.this, "图片已存为: /zSMTH/" + outFile.getName(), Toast.LENGTH_SHORT).show();
+        }
+      } catch (Exception e) {
+        Log.e(TAG, "saveImageToFile: " + Log.getStackTraceString(e));
+        Toast.makeText(FSImageViewerActivity.this, "保存图片失败:\n请授予应用存储权限！\n" + e.toString(), Toast.LENGTH_LONG).show();
+      }
+    } else {
+      // Do not have permissions, request them now
+      EasyPermissions.requestPermissions(this, getString(R.string.read_write_storage_rationale),
+              RC_READ_WRITE_STORAGE, perms);
     }
   }
 

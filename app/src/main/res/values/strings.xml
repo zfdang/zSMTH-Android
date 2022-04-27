@@ -1,148 +1,150 @@
 <resources>
-    <string name="app_name">zSMTH</string>
+  <string name="app_name">zSMTH</string>
 
-    <string name="navigation_drawer_open">打开侧边导航栏</string>
-    <string name="navigation_drawer_close">关闭侧边导航栏</string>
-    <string name="nav_header_click_to_login">点击登录</string>
-
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">This is the first fragment</string>
-    <string name="setting_fragment">程序设置</string>
-    <string name="button_load_version">检查更新</string>
-    <string name="title_activity_login">zSMTH - 登录水木社区</string>
+  <string name="navigation_drawer_open">打开侧边导航栏</string>
+  <string name="navigation_drawer_close">关闭侧边导航栏</string>
+  <string name="nav_header_click_to_login">点击登录</string>
 
 
-    <!--右上的action菜单-->
-    <string name="action_settings">设置</string>
-    <string name="action_refresh">刷新</string>
-    <string name="action_switch_theme">切换主题</string>
-    <string name="action_login">登录</string>
-    <string name="action_logout">退出登录</string>
+  <!-- TODO: Remove or change this placeholder text -->
+  <string name="hello_blank_fragment">This is the first fragment</string>
+  <string name="setting_fragment">程序设置</string>
+  <string name="button_load_version">检查更新</string>
+  <string name="title_activity_login">zSMTH - 登录水木社区</string>
 
 
-    <!-- 登录页 -->
-    <string name="login_label_username">用户名</string>
-    <string name="login_label_password">密码</string>
-    <string name="login_label_signin">登录</string>
-    <string name="login_label_saveinfo">保存登录信息</string>
-    <string name="login_register_link">没有帐号？  <a href="http://www.newsmth.net/bbsreg0.html">注册</a></string>
-    <string name="login_asm_help">zSMTH  <a href="http://zsmth.zfdang.com/">使用说明</a></string>
-
-    <!-- 导读页 -->
-    <string name="guidance_label_board">版面:</string>
-    <string name="title_topic_list">Topics</string>
-    <string name="title_topic_detail">Topic Detail</string>
-
-    <!--版面主题列表-->
-    <string name="publish_date_label">作者:</string>
-    <string name="reply_date_label">回复:</string>
-
-    <!-- 同主题下导航 -->
-    <string name="first_page">首页</string>
-    <string name="last_page">末页</string>
-    <string name="pre_page">上页</string>
-    <string name="next_page">下页</string>
-    <string name="go_page">GO</string>
-    <string name="go_and_last_page">GO/末页</string>
-    <string name="post_list_title">加载中...</string>
-
-    <!-- post弹出菜单 -->
-    <string name="post_alert_title">请选择操作:</string>
-    <string name="post_reply_post">回复文章</string>
-    <string name="post_reply_mail">回信给作者</string>
-    <string name="post_query_author">查询作者信息</string>
-    <string name="post_copy_content">复制帖子内容</string>
-    <string name="post_foward">文章转寄/转帖...</string>
-    <string name="post_view_in_browser">在浏览器里打开</string>
-    <string name="post_delete_post">删除文章</string>
-    <string name="post_share">分享</string>
-
-    <string name="post_topic_delete">同主题删除(版主专用)</string>
-    <string name="post_ban_id">封ID(版主专用)</string>
-    <string name="post_mark_m">设置/取消m标记(版主专用)</string>
-    <string name="post_topic_readonly">同主题不可回复(版主专用)</string>
-
-    <string name="write_label_post">发表</string>
-    <string name="post_attach">附件</string>
-
-    <!--boardTopic的option menu-->
-    <string name="board_topic_action_search">搜索</string>
-    <string name="board_topic_action_favorite">收藏版面</string>
-    <string name="board_topic_action_sticky">显示/隐藏置顶</string>
-    <string name="board_topic_action_refresh">刷新</string>
-
-    <!--postlist的option menu-->
-    <string name="post_list_action_refresh">刷新</string>
-    <string name="post_list_action_enter_board">进入版面</string>
-
-    <string name="title_activity_fullscreen_image_viewer">全屏看图</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
-
-    <!-- fulll screen image viewer 相关 -->
-    <string name="full_image_information">图片信息</string>
-    <string name="full_image_save">保存图片</string>
-    <string name="full_image_back">返回</string>
-    <string name="board_topic_action_newpost">发帖</string>
-    <string name="title_activity_compose_post">编辑文章:</string>
-    <string name="compose_post_publish">发表</string>
-    <string name="compose_post_cancel">放弃</string>
-    <string name="title_activity_query_user">查询网友</string>
-    <string name="query_user_action_message">发站内信</string>
-    <string name="query_user_action_friend">加为好友</string>
-
-    <!--About fragment-->
-    <string name="aboutLibraries_description_showIcon">true</string>
-    <string name="aboutLibraries_description_showVersion">true</string>
-    <string name="aboutLibraries_description_text"><![CDATA[ zSMTH是水木社区BBS的一款开源Android客户端 <br /><A href="http://zsmth.zfdang.com/">http://zsmth.zfdang.com/</A><br />© 2022 zfdang ]]></string>
-    <string name="search_author_label">请输入作者ID</string>
-    <string name="search_keyword_label">请输入关键字</string>
-    <string name="search_attachment_label">带附件</string>
-    <string name="search_cancel_label">取消</string>
-    <string name="search_confirm_label">搜索</string>
-    <string name="search_elite_label">精华帖</string>
-    <string name="search_caption_label">搜索帖子</string>
+  <!--右上的action菜单-->
+  <string name="action_settings">设置</string>
+  <string name="action_refresh">刷新</string>
+  <string name="action_switch_theme">切换主题</string>
+  <string name="action_login">登录</string>
+  <string name="action_logout">退出登录</string>
 
 
-    <!--Exit Information-->
-    <string name="image_info_basic">基本信息</string>
-    <string name="image_info_filename">图片地址</string>
-    <string name="image_info_datetime">时间</string>
-    <string name="image_info_width">宽度</string>
-    <string name="image_info_height">高度</string>
-    <string name="image_info_size">文件大小</string>
-    <string name="image_info_capture">拍摄信息</string>
-    <string name="image_info_make">制造商</string>
-    <string name="image_info_model">型号</string>
-    <string name="image_info_focal_length">焦距</string>
-    <string name="image_info_aperture">光圈</string>
-    <string name="image_info_exposure_time">曝光时间</string>
-    <string name="image_info_flash">闪光</string>
-    <string name="image_info_iso">ISO</string>
-    <string name="image_info_white_balance">白平衡</string>
-    <string name="image_info_end">.END.</string>
-    <string name="share">社会化分享</string>
-    <string name="post_like_post">Like文章</string>
-    <string name="post_edit_post">修改文章</string>
-    <string name="post_convert_image">生成图片</string>
+  <!-- 登录页 -->
+  <string name="login_label_username">用户名</string>
+  <string name="login_label_password">密码</string>
+  <string name="login_label_signin">登录</string>
+  <string name="login_label_saveinfo">保存登录信息</string>
+  <string name="login_register_link">没有帐号？  <a href="http://www.newsmth.net/bbsreg0.html">注册</a></string>
+  <string name="login_asm_help">zSMTH  <a href="http://zsmth.zfdang.com/">使用说明</a></string>
 
-    <string name="mail_item_author_label">来自:</string>
-    <string name="mail_button_inbox_label">收件箱</string>
-    <string name="mail_button_outbox_label">发件箱</string>
-    <string name="mail_button_trashbox_label">回收站</string>
-    <string name="title_activity_mail_content">阅读邮件</string>
-    <string name="mail_content_menu_reply">回复邮件</string>
-    <string name="mail_list_fragment_newmail">发信</string>
-    <string name="post_filter_author">只看此ID/所有人</string>
-    <string name="mail_button_at_label">\@我</string>
-    <string name="mail_button_reply_label">回复我</string>
-    <string name="mail_button_like_label">Like我</string>
+  <!-- 导读页 -->
+  <string name="guidance_label_board">版面:</string>
+  <string name="title_topic_list">Topics</string>
+  <string name="title_topic_detail">Topic Detail</string>
 
-    <!-- 关于 -->
-    <string name="about_title">关于zSMTH</string>
-    <string name="about_content" formatted="false">版本: %s (%d).\nzSMTH-Android是水木社区BBS的开源Android客户端。\n\n1.在帖子内容处，长按将弹出‘回复’等操作菜单！\n2.点击十大帖子右上角的图标可跳至对应版面\n3.邮件左划删除\n4.使用保存图片的功能，需要在系统设置里授予zSMTH读写存储的权限。\n\n获取更新和使用说明:\nhttp://zsmth.zfdang.com/\n\nby zfdang.</string>
-    <string name="about_close">关闭</string>
-    <string name="mail_content_menu_open_post">打开原贴</string>
-    <string name="mail_content_title">加载中...</string>
+  <!--版面主题列表-->
+  <string name="publish_date_label">作者:</string>
+  <string name="reply_date_label">回复:</string>
+
+  <!-- 同主题下导航 -->
+  <string name="first_page">首页</string>
+  <string name="last_page">末页</string>
+  <string name="pre_page">上页</string>
+  <string name="next_page">下页</string>
+  <string name="go_page">GO</string>
+  <string name="go_and_last_page">GO/末页</string>
+  <string name="post_list_title">加载中...</string>
+
+  <!-- post弹出菜单 -->
+  <string name="post_alert_title">请选择操作:</string>
+  <string name="post_reply_post">回复文章</string>
+  <string name="post_reply_mail">回信给作者</string>
+  <string name="post_query_author">查询作者信息</string>
+  <string name="post_copy_content">复制帖子内容</string>
+  <string name="post_foward">文章转寄/转帖...</string>
+  <string name="post_view_in_browser">在浏览器里打开</string>
+  <string name="post_delete_post">删除文章</string>
+  <string name="post_share">分享</string>
+
+  <string name="post_topic_delete">同主题删除(版主专用)</string>
+  <string name="post_ban_id">封ID(版主专用)</string>
+  <string name="post_mark_m">设置/取消m标记(版主专用)</string>
+  <string name="post_topic_readonly">同主题不可回复(版主专用)</string>
+
+  <string name="write_label_post">发表</string>
+  <string name="post_attach">附件</string>
+
+  <!--boardTopic的option menu-->
+  <string name="board_topic_action_search">搜索</string>
+  <string name="board_topic_action_favorite">收藏版面</string>
+  <string name="board_topic_action_sticky">显示/隐藏置顶</string>
+  <string name="board_topic_action_refresh">刷新</string>
+
+  <!--postlist的option menu-->
+  <string name="post_list_action_refresh">刷新</string>
+  <string name="post_list_action_enter_board">进入版面</string>
+
+  <string name="title_activity_fullscreen_image_viewer">全屏看图</string>
+  <string name="dummy_button">Dummy Button</string>
+  <string name="dummy_content">DUMMY\nCONTENT</string>
+
+  <!-- fulll screen image viewer 相关 -->
+  <string name="full_image_information">图片信息</string>
+  <string name="full_image_save">保存图片</string>
+  <string name="full_image_back">返回</string>
+  <string name="board_topic_action_newpost">发帖</string>
+  <string name="title_activity_compose_post">编辑文章:</string>
+  <string name="compose_post_publish">发表</string>
+  <string name="compose_post_cancel">放弃</string>
+  <string name="title_activity_query_user">查询网友</string>
+  <string name="query_user_action_message">发站内信</string>
+  <string name="query_user_action_friend">加为好友</string>
+
+  <!--About fragment-->
+  <string name="aboutLibraries_description_showIcon">true</string>
+  <string name="aboutLibraries_description_showVersion">true</string>
+  <string name="aboutLibraries_description_text"><![CDATA[ zSMTH是水木社区BBS的一款开源Android客户端 <br /><A href="http://zsmth.zfdang.com/">http://zsmth.zfdang.com/</A><br />© 2022 zfdang ]]></string>
+  <string name="search_author_label">请输入作者ID</string>
+  <string name="search_keyword_label">请输入关键字</string>
+  <string name="search_attachment_label">带附件</string>
+  <string name="search_cancel_label">取消</string>
+  <string name="search_confirm_label">搜索</string>
+  <string name="search_elite_label">精华帖</string>
+  <string name="search_caption_label">搜索帖子</string>
+
+
+  <!--Exit Information-->
+  <string name="image_info_basic">基本信息</string>
+  <string name="image_info_filename">图片地址</string>
+  <string name="image_info_datetime">时间</string>
+  <string name="image_info_width">宽度</string>
+  <string name="image_info_height">高度</string>
+  <string name="image_info_size">文件大小</string>
+  <string name="image_info_capture">拍摄信息</string>
+  <string name="image_info_make">制造商</string>
+  <string name="image_info_model">型号</string>
+  <string name="image_info_focal_length">焦距</string>
+  <string name="image_info_aperture">光圈</string>
+  <string name="image_info_exposure_time">曝光时间</string>
+  <string name="image_info_flash">闪光</string>
+  <string name="image_info_iso">ISO</string>
+  <string name="image_info_white_balance">白平衡</string>
+  <string name="image_info_end">.END.</string>
+  <string name="share">社会化分享</string>
+  <string name="post_like_post">Like文章</string>
+  <string name="post_edit_post">修改文章</string>
+  <string name="post_convert_image">生成图片</string>
+
+  <string name="mail_item_author_label">来自:</string>
+  <string name="mail_button_inbox_label">收件箱</string>
+  <string name="mail_button_outbox_label">发件箱</string>
+  <string name="mail_button_trashbox_label">回收站</string>
+  <string name="title_activity_mail_content">阅读邮件</string>
+  <string name="mail_content_menu_reply">回复邮件</string>
+  <string name="mail_list_fragment_newmail">发信</string>
+  <string name="post_filter_author">只看此ID/所有人</string>
+  <string name="mail_button_at_label">\@我</string>
+  <string name="mail_button_reply_label">回复我</string>
+  <string name="mail_button_like_label">Like我</string>
+
+  <!-- 关于 -->
+  <string name="about_title">关于zSMTH</string>
+  <string name="about_content" formatted="false">版本: %s (%d).\nzSMTH-Android是水木社区BBS的开源Android客户端。\n\n1.在帖子内容处，长按将弹出‘回复’等操作菜单！\n2.点击十大帖子右上角的图标可跳至对应版面\n3.邮件左划删除\n4.使用保存图片的功能，需要在系统设置里授予zSMTH读写存储的权限。\n\n获取更新和使用说明:\nhttp://zsmth.zfdang.com/\n\nby zfdang.</string>
+  <string name="about_close">关闭</string>
+  <string name="mail_content_menu_open_post">打开原贴</string>
+  <string name="mail_content_title">加载中...</string>
+
+  <string name="read_write_storage_rationale">需要"读写存储的权限"来保存文件</string>
 </resources>
