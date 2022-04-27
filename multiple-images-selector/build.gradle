@@ -43,6 +43,8 @@ dependencies {
     implementation "com.facebook.fresco:webpsupport:$rootProject.FRESCO_VERSION"
 
     implementation 'xyz.danoz:recyclerviewfastscroller:0.1.3'
+
+    implementation 'pub.devrel:easypermissions:3.0.0'
 }
 
 // https://github.com/blundell/release-android-library
