@@ -3,6 +3,7 @@ apply plugin: 'com.github.ben-manes.versions'
 
 buildscript {
     repositories {
+        mavenCentral()
         jcenter()
         google()
         maven {
@@ -27,6 +28,7 @@ buildscript {
 
 allprojects {
     repositories {
+        mavenCentral()
         jcenter()
         google()
         maven { url "https://jitpack.io" }
@@ -44,8 +46,6 @@ ext {
     // https://developer.android.com/studio/releases/build-tools
     buildToolsVersion = '30.0.3'
     FRESCO_VERSION = '1.14.2'
-    // https://developer.android.com/topic/libraries/support-library/revisions
-    SUPPORT_LIBRARY_VERSION = '27.1.1'
     RXJAVA2_VERSION = '2.2.21'
     RXANDROID2_VERSION = '2.1.1'
 }
