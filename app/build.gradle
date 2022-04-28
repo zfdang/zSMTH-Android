@@ -147,6 +147,6 @@ dependencies {
     implementation project(':device_model_to_marketing_name')
 
     // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib-jdk8
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:latest.release'
+//    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:latest.release'
 }
 
