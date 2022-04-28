@@ -98,7 +98,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     // http://stackoverflow.com/questions/9783368/alternatives-to-preferencefragment-with-android-support-v4
     // https://github.com/Gericop/Android-Support-Preference-V7-Fix
-    implementation 'androidx.preference:preference:1.2.0'
+    implementation 'androidx.preference:preference:1.0.0'
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
 
