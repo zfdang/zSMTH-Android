@@ -278,6 +278,11 @@ public class BoardTopicActivity extends SMTHBaseActivity
             try {
               String response = responseBody.string();
               List<Topic> topics = SMTHHelper.ParseBoardTopicsFromWWW(response);
+              // add page separator
+              Topic separator = new Topic(String.format("第 %d 页", mCurrentPageNo));
+              separator.isCategory = true;
+              topics.add(0, separator);
+              // return
               return Observable.fromIterable(topics);
             } catch (Exception e) {
               Log.e(TAG, "call: " + Log.getStackTraceString(e));
@@ -289,17 +294,19 @@ public class BoardTopicActivity extends SMTHBaseActivity
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Observer<Topic>() {
           @Override public void onSubscribe(@NonNull Disposable disposable) {
-            Topic topic = new Topic(String.format("第 %d 页", mCurrentPageNo));
-            topic.isCategory = true;
-            TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
-            mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
           }
 
-          @Override public void onNext(@NonNull Topic topic) {
+          @Override
+          public void onNext(@NonNull Topic topic) {
             // Log.d(TAG, topic.toString());
             if (!topic.isSticky || mSetting.isShowSticky()) {
               TopicListContent.addBoardTopic(topic, mBoard.getBoardEngName());
-              mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+              mRecyclerView.post(new Runnable() {
+                public void run() {
+                  // There is no need to use notifyDataSetChanged()
+                  mRecyclerView.getAdapter().notifyItemInserted(TopicListContent.BOARD_TOPICS.size() - 1);
+                }
+              });
             }
           }
 

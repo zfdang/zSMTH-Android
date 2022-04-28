@@ -112,9 +112,9 @@ public class PostListActivity extends SMTHBaseActivity
     ClassicsFooter.REFRESH_FOOTER_RELEASE = "释放立即翻页";
     ClassicsFooter.REFRESH_FOOTER_LOADING = "正在加载下一页...";
     ClassicsFooter.REFRESH_FOOTER_REFRESHING = "正在刷新...";
-    ClassicsFooter.REFRESH_FOOTER_FINISH = "翻页完成";
-    ClassicsFooter.REFRESH_FOOTER_FAILED = "翻页失败";
-    ClassicsFooter.REFRESH_FOOTER_NOTHING = "没有更多数据了";
+    ClassicsFooter.REFRESH_FOOTER_FINISH = null;
+    ClassicsFooter.REFRESH_FOOTER_FAILED = null;
+    ClassicsFooter.REFRESH_FOOTER_NOTHING = null;
   }
 
 
