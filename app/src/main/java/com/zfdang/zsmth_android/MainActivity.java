@@ -128,11 +128,12 @@ public class MainActivity extends SMTHBaseActivity
     mUsername.setOnClickListener(this);
 
     // http://stackoverflow.com/questions/27097126/marquee-title-in-toolbar-actionbar-in-android-with-lollipop-sdk
-    TextView titleTextView = null;
+    TextView titleTextView;
     try {
       Field f = toolbar.getClass().getDeclaredField("mTitleTextView");
       f.setAccessible(true);
       titleTextView = (TextView) f.get(toolbar);
+      assert titleTextView != null;
       titleTextView.setEllipsize(TextUtils.TruncateAt.START);
     } catch (NoSuchFieldException e) {
     } catch (IllegalAccessException e) {
@@ -315,7 +316,7 @@ public class MainActivity extends SMTHBaseActivity
       Notification notification = mBuilder.build();
       mNotifyMgr.notify(notificationID, notification);
     } catch (Exception se) {
-      Log.e(TAG, "showNotification: " + se.toString());
+      Log.e(TAG, "showNotification: " + se);
     }
   }
 
@@ -348,6 +349,7 @@ public class MainActivity extends SMTHBaseActivity
 
   @Override protected void onNewIntent(Intent intent) {
     // this method will be triggered by showNotification(message);
+    super.onNewIntent(intent);
     FragmentManager fm = getSupportFragmentManager();
     Bundle bundle = intent.getExtras();
     if (bundle != null) {
@@ -357,7 +359,7 @@ public class MainActivity extends SMTHBaseActivity
       // java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
       String message = bundle.getString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE);
       if (message != null) {
-        if(message.contains(SMTHApplication.NOTIFICATION_LOGIN_LOST)) {
+        if (message.contains(SMTHApplication.NOTIFICATION_LOGIN_LOST)) {
           // login status lost, show login menu
           onLogin();
         } else {
@@ -427,17 +429,18 @@ public class MainActivity extends SMTHBaseActivity
     getWindow().invalidatePanelMenu(Window.FEATURE_OPTIONS_PANEL);
 
     if (SMTHApplication.isValidUser()) {
-      // update user to login user
+      // update user to logined user
       mUsername.setText(SMTHApplication.activeUser.getId());
       String faceURL = SMTHApplication.activeUser.getFace_url();
       if (faceURL != null) {
         mAvatar.setImageFromStringURL(faceURL);
       }
     } else {
-      // only user to guest
+      // when user is invalid, set notice to login
       mUsername.setText(getString(R.string.nav_header_click_to_login));
       mAvatar.setImageResource(R.drawable.ic_person_black_48dp);
     }
+    SMTHApplication.displayedUserId = mUsername.getText().toString();
   }
 
   @Override public void onBackPressed() {
@@ -601,31 +604,29 @@ public class MainActivity extends SMTHBaseActivity
 
   public boolean onNavigationItemID(int menuID) {
     // Handle navigation view item clicks here.
-    int id = menuID;
-
     Fragment fragment = null;
     String title = "";
 
-    if (id == R.id.nav_guidance) {
+    if (menuID == R.id.nav_guidance) {
       fragment = hotTopicFragment;
       title = "首页导读";
-    } else if (id == R.id.nav_favorite) {
+    } else if (menuID == R.id.nav_favorite) {
       fragment = favoriteBoardFragment;
       title = "收藏夹";
-    } else if (id == R.id.nav_all_boards) {
+    } else if (menuID == R.id.nav_all_boards) {
       fragment = allBoardFragment;
       title = "所有版面";
-    } else if (id == R.id.nav_mail) {
+    } else if (menuID == R.id.nav_mail) {
       fragment = mailListFragment;
       title = "邮件";
-    } else if (id == R.id.nav_setting) {
+    } else if (menuID == R.id.nav_setting) {
       //            fragment = settingFragment;
       fragment = preferenceFragment;
       title = "设置";
-    } else if (id == R.id.nav_about) {
+    } else if (menuID == R.id.nav_about) {
       fragment = aboutFragment;
       title = "关于";
-    } else if(id == R.id.nav_night_mode) {
+    } else if(menuID == R.id.nav_night_mode) {
       boolean bNightMode = Settings.getInstance().isNightMode();
       Settings.getInstance().setNightMode(!bNightMode);
       setApplicationNightMode();
@@ -655,12 +656,10 @@ public class MainActivity extends SMTHBaseActivity
     }
 
     Activity activity = this;
-    if (activity != null) {
-      Intent intent = new Intent(activity.getApplicationContext(), MainActivity.class);
-      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-      startActivity(intent);
-      activity.finish();
-    }
+    Intent intent = new Intent(activity.getApplicationContext(), MainActivity.class);
+    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    startActivity(intent);
+    activity.finish();
   }
 
   public void testCodes() {

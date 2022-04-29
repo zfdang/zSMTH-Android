@@ -51,10 +51,6 @@ public class SMTHApplication extends Application {
   // IP database
   public static GEODatabase geoDB;
 
-  public static boolean isValidUser() {
-    return activeUser != null && !activeUser.getId().equals("guest");
-  }
-
   @Override
   protected void attachBaseContext(Context base) {
     super.attachBaseContext(base);
@@ -63,6 +59,11 @@ public class SMTHApplication extends Application {
 
   // current logined user
   public static UserStatus activeUser;
+  public static String displayedUserId;
+  public static boolean isValidUser() {
+    return activeUser != null && !activeUser.getId().equals("guest");
+  }
+
 
   public void onCreate() {
     super.onCreate();

@@ -194,7 +194,7 @@ public class MaintainUserStatusService extends JobIntentService {
                 //Log.d(TAG, "4.0 onNext: " + userStatus.toString());
                 // cache user if necessary, so we don't have to query User avatar url again in the future
                 boolean updateUserIcon = false;
-                if (SMTHApplication.activeUser == null || !TextUtils.equals(SMTHApplication.activeUser.getId(), userStatus.getId())) {
+                if (!TextUtils.equals(userStatus.getId(), SMTHApplication.displayedUserId)) {
                     // active user is null, or active user is different with userstatus, update the icon
                     // Log.d(TAG, "onNext: " + "4.1 cache userStatus as activeUser");
                     updateUserIcon = true;
@@ -202,11 +202,11 @@ public class MaintainUserStatusService extends JobIntentService {
                 SMTHApplication.activeUser = userStatus;
 
                 String message = "";
-                if(!TextUtils.equals(SMTHApplication.activeUser.getId(), "guest")) {
-                    // get message if user is not guest
+                if(SMTHApplication.isValidUser()) {
+                    // get message if user is valid user
                     message = getNotificationMessage(SMTHApplication.activeUser);
                 } else if(updateUserIcon == true) {
-                    // if it's guest but updateUserIcon == true, means login status has lost
+                    // not a valid user, but updateUserIcon is true, means login status has lost
                     message = SMTHApplication.NOTIFICATION_LOGIN_LOST;
                 }
 
@@ -218,7 +218,8 @@ public class MaintainUserStatusService extends JobIntentService {
                         bundle.putString(SMTHApplication.SERVICE_NOTIFICATION_MESSAGE, message);
                     }
                     // Here we call send passing a resultCode and the bundle of extras
-                    mUserStatusReceiver.send(Activity.RESULT_OK, bundle);                }
+                    mUserStatusReceiver.send(Activity.RESULT_OK, bundle);
+                }
             }
 
             @Override
