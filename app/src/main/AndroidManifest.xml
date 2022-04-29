@@ -81,12 +81,6 @@
             android:configChanges="orientation|screenSize" />
 
         <!-- service -->
-        <service
-            android:name=".services.MaintainUserStatusService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="false" />
-        <receiver
-            android:name=".services.AlarmBroadcastReceiver" />
         <!-- aadapt to S8 and Mix2 -->
         <meta-data
             android:name="android.max_aspect"

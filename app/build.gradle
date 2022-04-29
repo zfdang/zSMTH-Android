@@ -106,6 +106,12 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:$rootProject.RXJAVA2_VERSION"
     implementation "io.reactivex.rxjava2:rxandroid:$rootProject.RXANDROID2_VERSION"
 
+    def work_version = "2.7.1"
+    // (Java only)
+    implementation "androidx.work:work-runtime:$work_version"
+    // optional - RxJava2 support
+    implementation "androidx.work:work-rxjava2:$work_version"
+
     // OkHttp
     implementation "com.squareup.okhttp3:okhttp:$OKHTTP_VERSION"
     implementation "com.squareup.okhttp3:logging-interceptor:$OKHTTP_VERSION"

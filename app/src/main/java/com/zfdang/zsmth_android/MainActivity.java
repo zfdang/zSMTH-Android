@@ -36,6 +36,10 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -56,10 +60,11 @@ import com.zfdang.zsmth_android.models.MailListContent;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
-import com.zfdang.zsmth_android.services.AlarmBroadcastReceiver;
+import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
 import com.zfdang.zsmth_android.services.UserStatusReceiver;
 
 import java.lang.reflect.Field;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -176,10 +181,18 @@ public class MainActivity extends SMTHBaseActivity
     setupUserStatusReceiver();
 
     // schedule the periodical background service
-    AlarmBroadcastReceiver.schedule(getApplicationContext(), mReceiver);
+    Data.Builder inputData = new Data.Builder();
+    inputData.putBoolean(MaintainUserStatusWorker.REPEAT, true);
+    WorkRequest userStatusWorkRequest =
+            new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class)
+                    .setInitialDelay(SMTHApplication.INTERVAL_TO_CHECK_MESSAGE, TimeUnit.MINUTES)
+                    .setInputData(inputData.build())
+                    .build();
+    WorkManager.getInstance(getApplicationContext()).enqueue(userStatusWorkRequest);
+
     // run the background service now
     updateUserStatusNow();
-    UpdateNavigationViewHeader();
+//    UpdateNavigationViewHeader();
 
     if (Settings.getInstance().isFirstRun()) {
       // show info dialog after 5 seconds for the first run
@@ -259,7 +272,10 @@ public class MainActivity extends SMTHBaseActivity
 
   // triger the background service right now
   private void updateUserStatusNow() {
-    AlarmBroadcastReceiver.runJobNow(getApplicationContext(), mReceiver);
+    // run worker immediately for once
+    WorkRequest userStatusWorkRequest =
+            new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class).build();
+    WorkManager.getInstance(getApplicationContext()).enqueue(userStatusWorkRequest);
   }
 
   private void setupUserStatusReceiver() {
@@ -279,6 +295,7 @@ public class MainActivity extends SMTHBaseActivity
         }
       }
     });
+    SMTHApplication.mUserStatusReceiver = mReceiver;
   }
 
   private void showNotification(String text) {
@@ -435,12 +452,13 @@ public class MainActivity extends SMTHBaseActivity
       if (faceURL != null) {
         mAvatar.setImageFromStringURL(faceURL);
       }
+      SMTHApplication.displayedUserId = SMTHApplication.activeUser.getId();
     } else {
       // when user is invalid, set notice to login
       mUsername.setText(getString(R.string.nav_header_click_to_login));
       mAvatar.setImageResource(R.drawable.ic_person_black_48dp);
+      SMTHApplication.displayedUserId = "guest";
     }
-    SMTHApplication.displayedUserId = mUsername.getText().toString();
   }
 
   @Override public void onBackPressed() {
@@ -490,9 +508,6 @@ public class MainActivity extends SMTHBaseActivity
   }
 
   private void quitNow() {
-    // stop background service
-    AlarmBroadcastReceiver.unschedule();
-
     // quit
     finish();
     android.os.Process.killProcess(android.os.Process.myPid());

@@ -180,6 +180,7 @@ public class UserStatus implements Parcelable {
   }
 
   public String getId() {
+    if (id == null) return "guest";
     return id;
   }
 
