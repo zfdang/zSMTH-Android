@@ -42,7 +42,7 @@ public class MaintainUserStatusWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        Log.d(TAG, "doWork");
+//        Log.d(TAG, "doWork");
 
         // do the job here
         doWorkInternal();

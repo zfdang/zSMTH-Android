@@ -192,7 +192,7 @@ public class MainActivity extends SMTHBaseActivity
 
     // run the background service now
     updateUserStatusNow();
-//    UpdateNavigationViewHeader();
+    UpdateNavigationViewHeader();
 
     if (Settings.getInstance().isFirstRun()) {
       // show info dialog after 5 seconds for the first run
