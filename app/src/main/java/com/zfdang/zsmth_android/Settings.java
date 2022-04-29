@@ -482,7 +482,7 @@ public class Settings {
 
     mTarget = mPreference.getString(FORWARD_TAEGET, "");
 
-    bLoadOriginalImage = mPreference.getBoolean(LOAD_ORIGINAL_IMAGE, false);
+    bLoadOriginalImage = mPreference.getBoolean(LOAD_ORIGINAL_IMAGE, true);
     bLoginWithVerification = mPreference.getBoolean(LOGIN_WITH_VERIFICATION, true);
     bImageSourceCDN = mPreference.getBoolean(IMAGE_SOURCE_CDN, true);
 
