@@ -79,8 +79,7 @@ public class SMTHHelper {
   // Mobile service of SMTH; this is used for webchat sharing & open in browser
   static public final String SMTH_MOBILE_URL = "https://m.mysmth.net";
 
-  private Retrofit wRetrofit = null;
-  public SMTHWWWService wService = null;
+  public SMTHWWWService wService;
   static private final String SMTH_WWW_ENCODING = "GB2312";
 
   // All boards cache file
@@ -94,7 +93,7 @@ public class SMTHHelper {
 
   public static SMTHHelper getInstance() {
     if (instance == null) {
-      instance = new SMTHHelper(SMTHApplication.getAppContext());
+      instance = new SMTHHelper();
     }
     return instance;
   }
@@ -112,7 +111,7 @@ public class SMTHHelper {
   }
 
   // protected constructor, can only be called by getInstance
-  protected SMTHHelper(final Context context) {
+  protected SMTHHelper() {
 
     // set your desired log level
     HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -151,12 +150,12 @@ public class SMTHHelper {
     //                .client(mHttpClient)
     //                .build();
 
-    wRetrofit = new Retrofit.Builder().baseUrl(SMTH_WWW_URL)
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-        .addConverterFactory(ScalarsConverterFactory.create())
-        .addConverterFactory(GsonConverterFactory.create())
-        .client(mHttpClient)
-        .build();
+    Retrofit wRetrofit = new Retrofit.Builder().baseUrl(SMTH_WWW_URL)
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(mHttpClient)
+            .build();
     wService = wRetrofit.create(SMTHWWWService.class);
   }
 
@@ -184,11 +183,10 @@ public class SMTHHelper {
 
   private static Bitmap loadResizedBitmapFromFile(final String filename, final int targetWidth, final int targetHeight, boolean bCompress) {
     try {
-      BitmapFactory.Options option = null;
-      Bitmap bitmap = null;
+      Bitmap bitmap;
 
       // o.inPurgeable = true;
-      bitmap = BitmapFactory.decodeFile(filename, option);
+      bitmap = BitmapFactory.decodeFile(filename, null);
       Log.d(TAG, "loadResizedBitmapFromFile: " + String.format("Pre-sized bitmap size: (%dx%d).", bitmap.getWidth(), bitmap.getHeight()));
 
       if (bCompress) {
@@ -231,7 +229,7 @@ public class SMTHHelper {
       long length = file.length();
       if (length > Integer.MAX_VALUE) {
         Log.e(TAG, "getBytesFromFile: " + "File is too large to process");
-        return bytes;
+        return null;
       }
 
       // Create the byte array to hold the data
@@ -239,7 +237,7 @@ public class SMTHHelper {
 
       // Read in the bytes
       int offset = 0;
-      int numRead = 0;
+      int numRead;
       while ((offset < bytes.length) && ((numRead = is.read(bytes, offset, bytes.length - offset)) >= 0)) {
         offset += numRead;
       }
@@ -295,9 +293,9 @@ public class SMTHHelper {
       };
 
       ExifInterface newExif = new ExifInterface(newPath);
-      for (int i = 0; i < attributes.length; i++) {
-        String value = oldExif.getAttribute(attributes[i]);
-        if (value != null) newExif.setAttribute(attributes[i], value);
+      for (String attribute : attributes) {
+        String value = oldExif.getAttribute(attribute);
+        if (value != null) newExif.setAttribute(attribute, value);
       }
       newExif.saveAttributes();
     } catch (IOException e) {
@@ -306,14 +304,13 @@ public class SMTHHelper {
   }
 
   public static byte[] getBitmapBytesWithResize(final String filename, boolean bCompress) {
-    final SMTHHelper helper = SMTHHelper.getInstance();
+//    final SMTHHelper helper = SMTHHelper.getInstance();
     Log.d(TAG, "getBitmapBytesWithResize: " + filename);
 
     if (filename.toLowerCase().endsWith(".gif")) {
       // gif, don't resize
       File infile = new File(filename);
-      byte[] byteArray = getBytesFromFile(infile);
-      return byteArray;
+      return getBytesFromFile(infile);
     } else {
       // static image, resize it
       Bitmap theBitmap = loadResizedBitmapFromFile(filename, 1200, 1200, bCompress);
@@ -326,8 +323,7 @@ public class SMTHHelper {
 
       // read data
       File infile = new File(newfilename);
-      byte[] byteArray = getBytesFromFile(infile);
-      return byteArray;
+      return getBytesFromFile(infile);
     }
   }
 
@@ -358,7 +354,7 @@ public class SMTHHelper {
   }
 
   public static List<Post> ParsePostListFromWWW(String content, Topic topic) {
-    final String TAG = "ParsePostListFromWWW";
+//    final String TAG = "ParsePostListFromWWW";
     List<Post> results = new ArrayList<>();
 
     Document doc = Jsoup.parse(content);
@@ -521,7 +517,7 @@ public class SMTHHelper {
       return results;
     }
 
-    Topic topic = null;
+    Topic topic;
     Document doc = Jsoup.parse(content);
 
     // find top10
@@ -599,7 +595,7 @@ public class SMTHHelper {
       if (sectionNames.size() == 1) {
         Element sectionName = sectionNames.first();
         String name = sectionName.text();
-        if (name == null || name.equals("系统与祝福")) {
+        if (name.equals("系统与祝福")) {
           continue;
         }
         topic = new Topic(name);
@@ -685,7 +681,7 @@ public class SMTHHelper {
           // <samp class="tag-att ico-pos-article-attach"></samp>
           // find attachment flag
           Elements samps = td.getElementsByTag("samp");
-          if (samps != null && samps.size() > 0) {
+          if (samps.size() > 0) {
             topic.setHasAttach(true);
           }
         } else if (TextUtils.equals(tdClass, "title_10")) {
@@ -860,7 +856,7 @@ public class SMTHHelper {
     matcher = pattern.matcher(content);
     while (matcher.find()) {
       String boardType = matcher.group(1);
-      String boardID = matcher.group(2);
+//      String boardID = matcher.group(2);
       String category = matcher.group(3);
       String engName = matcher.group(4);
       String chsName = matcher.group(5);
@@ -980,7 +976,7 @@ public class SMTHHelper {
     Document doc = Jsoup.parse(response);
     Elements bodies = doc.getElementsByTag("body");
 
-    if (bodies != null && bodies.size() > 0) {
+    if (bodies.size() > 0) {
       Element body = bodies.first();
 
       Elements divs = body.select("div.nav");
@@ -1013,7 +1009,7 @@ public class SMTHHelper {
 
     Document doc = Jsoup.parse(response);
     Elements errors = doc.select("table.error");
-    if (errors != null && errors.size() > 0) {
+    if (errors.size() > 0) {
       Element error = errors.first();
       return error.text();
     }
@@ -1072,7 +1068,6 @@ public class SMTHHelper {
     try {
       if (SMTHApplication.getAppContext().deleteFile(filename)) {
         Log.d("ClearBoardListCache", String.format("delete cache file %s successfully", filename));
-        return;
       }
     } catch (Exception e) {
       Log.d("ClearBoardListCache", e.toString());
@@ -1224,11 +1219,11 @@ public class SMTHHelper {
         Element link1 = t1links.first();
         String temp = link1.attr("href");
 
-        String chsBoardName = "";
-        String engBoardName = "";
+        String chsBoardName;
+        String engBoardName;
         String moderator = "";
-        String folderChsName = "";
-        String folderEngName = "";
+        String folderChsName;
+        String folderEngName;
 
         Pattern boardPattern = Pattern.compile("/nForum/board/(\\w+)");
         Matcher boardMatcher = boardPattern.matcher(temp);
