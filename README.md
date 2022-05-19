@@ -11,6 +11,12 @@
 
 ![Build_zSMTH_APK](https://github.com/zfdang/zSMTH-Android/workflows/Build_zSMTH_APK/badge.svg)
 
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+     alt="Get it on F-Droid"
+     height="80">](https://f-droid.org/packages/com.zfdang.zsmth_android/)
+[<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png"
+     alt="Get it on Google Play"
+     height="80">](https://play.google.com/store/apps/details?id=com.zfdang.zsmth_android)
 
 # 项目说明：
 
