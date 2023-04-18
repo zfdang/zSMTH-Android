@@ -74,7 +74,7 @@ public class SMTHHelper {
 
   // WWW service of SMTH, but actually most of services are actually from nForum
   static private final String SMTH_WWW_URL = "https://www.newsmth.net/";
-  static private final String SMTH_IMAGE_PREFIX_CDN = "https://static.newsmth.net";
+  static private final String SMTH_IMAGE_PREFIX_CDN = "https://static.mysmth.net";
   static private final String SMTH_IMAGE_PREFIX_DIRECT = "https://www.newsmth.net";
   // Mobile service of SMTH; this is used for webchat sharing & open in browser
   static public final String SMTH_MOBILE_URL = "https://m.newsmth.net";
