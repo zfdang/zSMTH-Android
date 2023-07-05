@@ -8,6 +8,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.work.Data;
+import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
@@ -28,12 +29,15 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 public class MaintainUserStatusWorker extends Worker {
 
     public static final String REPEAT = "REPEAT";
     private static final String TAG = "MUSWorker";
+
+    public static final String WORKER_ID=MaintainUserStatusWorker.class.getName();
 
     public MaintainUserStatusWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -73,7 +77,7 @@ public class MaintainUserStatusWorker extends Worker {
 
         final SMTHHelper helper = SMTHHelper.getInstance();
 
-        //Log.d(TAG, "1.0 get current UserStatus from remote");
+        Log.d(TAG, "1.0 get current UserStatus from remote");
         helper.wService.queryActiveUserStatus().map(new Function<UserStatus, UserStatus>() {
             @Override
             public UserStatus apply(UserStatus userStatus) throws Exception {
@@ -181,11 +185,7 @@ public class MaintainUserStatusWorker extends Worker {
                 }
                 return userStatus;
             }
-        }).observeOn(Schedulers.io()).subscribeOn(Schedulers.io()).subscribe(new Observer<UserStatus>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-            }
-
+        }).subscribe(new DisposableObserver<UserStatus>() {
             @Override
             public void onNext(UserStatus userStatus) {
                 //Log.d(TAG, "4.0 onNext: " + userStatus.toString());
@@ -253,11 +253,11 @@ public class MaintainUserStatusWorker extends Worker {
     private void enqueueNextWorker() {
         Data.Builder inputData = new Data.Builder();
         inputData.putBoolean(MaintainUserStatusWorker.REPEAT, true);
-        WorkRequest userStatusWorkRequest =
+        OneTimeWorkRequest userStatusWorkRequest =
                 new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class)
                         .setInitialDelay(SMTHApplication.INTERVAL_TO_CHECK_MESSAGE, TimeUnit.MINUTES)
                         .setInputData(inputData.build())
                         .build();
-        WorkManager.getInstance(getApplicationContext()).enqueue(userStatusWorkRequest);
+        WorkManager.getInstance(getApplicationContext()).enqueueUniqueWork(WORKER_ID, ExistingWorkPolicy.KEEP,userStatusWorkRequest);
     }
 }

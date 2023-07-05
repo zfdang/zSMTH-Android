@@ -37,6 +37,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.work.Data;
+import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
@@ -177,18 +178,20 @@ public class MainActivity extends SMTHBaseActivity
       }
     });
 
+    WorkManager.getInstance(getApplicationContext()).cancelAllWorkByTag(MaintainUserStatusWorker.class.getName());
     // setup receiver to receive user status update from periodical background service
     setupUserStatusReceiver();
 
     // schedule the periodical background service
     Data.Builder inputData = new Data.Builder();
     inputData.putBoolean(MaintainUserStatusWorker.REPEAT, true);
-    WorkRequest userStatusWorkRequest =
+    OneTimeWorkRequest userStatusWorkRequest =
             new OneTimeWorkRequest.Builder(MaintainUserStatusWorker.class)
                     .setInitialDelay(SMTHApplication.INTERVAL_TO_CHECK_MESSAGE, TimeUnit.MINUTES)
                     .setInputData(inputData.build())
                     .build();
-    WorkManager.getInstance(getApplicationContext()).enqueue(userStatusWorkRequest);
+    WorkManager.getInstance(getApplicationContext())
+            .enqueueUniqueWork(MaintainUserStatusWorker.WORKER_ID, ExistingWorkPolicy.KEEP,userStatusWorkRequest);
 
     // run the background service now
     updateUserStatusNow();
