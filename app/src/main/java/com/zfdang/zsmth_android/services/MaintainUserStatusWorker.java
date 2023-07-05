@@ -77,7 +77,7 @@ public class MaintainUserStatusWorker extends Worker {
 
         final SMTHHelper helper = SMTHHelper.getInstance();
 
-        Log.d(TAG, "1.0 get current UserStatus from remote");
+        //Log.d(TAG, "1.0 get current UserStatus from remote");
         helper.wService.queryActiveUserStatus().map(new Function<UserStatus, UserStatus>() {
             @Override
             public UserStatus apply(UserStatus userStatus) throws Exception {
