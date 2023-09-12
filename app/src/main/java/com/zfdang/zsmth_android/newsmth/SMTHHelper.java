@@ -91,7 +91,7 @@ public class SMTHHelper {
   // singleton
   private static SMTHHelper instance = null;
 
-  public static SMTHHelper getInstance() {
+  public static synchronized SMTHHelper getInstance() {
     if (instance == null) {
       instance = new SMTHHelper();
     }
