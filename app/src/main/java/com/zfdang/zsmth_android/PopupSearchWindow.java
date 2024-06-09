@@ -3,14 +3,19 @@ package com.zfdang.zsmth_android;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.PopupWindow;
+
+import androidx.activity.result.contract.ActivityResultContracts;
 
 /**
  * Created by zfdang on 2016-4-23.
@@ -71,8 +76,15 @@ public class PopupSearchWindow extends PopupWindow {
     this.setHeight((int) (size.y * 0.5));
     // http://stackoverflow.com/questions/12232724/popupwindow-dismiss-when-clicked-outside
     // this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-    // this.setOutsideTouchable(true);
+    this.setOutsideTouchable(true);
     this.setFocusable(true);
+    this.setTouchable(true);
+
+    new Handler().postDelayed(() -> {
+      etKeyword.requestFocus();
+      InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+      imm.showSoftInput(etKeyword, InputMethodManager.SHOW_IMPLICIT);
+    }, 300);
   }
 
   public interface SearchInterface {

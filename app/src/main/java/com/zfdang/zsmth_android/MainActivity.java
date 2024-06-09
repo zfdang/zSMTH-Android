@@ -1,10 +1,12 @@
 package com.zfdang.zsmth_android;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -61,10 +63,12 @@ import com.zfdang.zsmth_android.models.MailListContent;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+import com.zfdang.zsmth_android.services.KeepAliveService;
 import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
 import com.zfdang.zsmth_android.services.UserStatusReceiver;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observer;
@@ -76,6 +80,7 @@ import io.reactivex.schedulers.Schedulers;
 public class MainActivity extends SMTHBaseActivity
     implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, OnTopicFragmentInteractionListener,
     OnBoardFragmentInteractionListener, OnMailInteractionListener {
+  private Intent service;
   // used by startActivityForResult
   static final int LOGIN_ACTIVITY_REQUEST_CODE = 9527;  // The request code
   private static final String TAG = "MainActivity";
@@ -297,6 +302,16 @@ public class MainActivity extends SMTHBaseActivity
           }
         }
       }
+      @Override
+      public void onServerFailed() {
+        stopService(service);
+        SMTHApplication.activeUser = null;
+        SMTHApplication.displayedUserId = "guest";
+        runOnUiThread(() -> {
+          mUsername.setText(getString(R.string.nav_header_click_to_login));
+          mAvatar.setImageResource(R.drawable.ic_person_black_48dp);
+        });
+      }
     });
     SMTHApplication.mUserStatusReceiver = mReceiver;
   }
@@ -456,11 +471,14 @@ public class MainActivity extends SMTHBaseActivity
         mAvatar.setImageFromStringURL(faceURL);
       }
       SMTHApplication.displayedUserId = SMTHApplication.activeUser.getId();
+      init_service();
     } else {
       // when user is invalid, set notice to login
       mUsername.setText(getString(R.string.nav_header_click_to_login));
       mAvatar.setImageResource(R.drawable.ic_person_black_48dp);
       SMTHApplication.displayedUserId = "guest";
+      if (service != null)
+        stopService(service);
     }
   }
 
@@ -490,10 +508,18 @@ public class MainActivity extends SMTHBaseActivity
     }
 
     // for other cases, double back to exit app
-    DoubleBackToExit();
+    //DoubleBackToExit();
+
+    showDesktop();
   }
 
-  private void DoubleBackToExit() {
+  void showDesktop() {
+    Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+    homeIntent.addCategory(Intent.CATEGORY_HOME);
+    homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    startActivity(homeIntent);
+  }
+/*  private void DoubleBackToExit() {
     if (mDoubleBackToExit) {
       // if mDoubleBackToExit is true, exit now
       quitNow();
@@ -515,7 +541,7 @@ public class MainActivity extends SMTHBaseActivity
     finish();
     android.os.Process.killProcess(android.os.Process.myPid());
     System.exit(0);
-  }
+  }*/
 
   // show information dialog, called by first run
   private void showInfoDialog() {
@@ -603,6 +629,7 @@ public class MainActivity extends SMTHBaseActivity
 
           @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
             Toast.makeText(MainActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_LONG).show();
+            stopService(service);
           }
 
           @Override public void onError(@NonNull Throwable e) {
@@ -803,5 +830,30 @@ public class MainActivity extends SMTHBaseActivity
     public void run() {
       mDoubleBackToExit = false;
     }
+  }
+
+  private void init_service() {
+    if (service == null)
+      service = new Intent(this, KeepAliveService.class);
+    if (!isServiceRunning()) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        startForegroundService(service);
+      else
+        startService(service);
+    }
+  }
+
+  public Boolean isServiceRunning() {
+    String ServiceName = KeepAliveService.class.getName();
+    ActivityManager myManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+    ArrayList<ActivityManager.RunningServiceInfo> runningService =
+            (ArrayList<ActivityManager.RunningServiceInfo>)
+                    myManager.getRunningServices(Integer.MAX_VALUE);
+    for (int i = 0; i < runningService.size(); i++) {
+      if (runningService.get(i).service.getClassName().equals(ServiceName)) {
+        return true;
+      }
+    }
+    return false;
   }
 }

@@ -2,8 +2,10 @@ package com.zfdang.zsmth_android.newsmth;
 
 import java.util.Map;
 
+import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
@@ -13,13 +15,15 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import io.reactivex.Observable;
 
 /**
  * Created by zfdang on 2016-3-16.
  */
 
 public interface SMTHWWWService {
+
+    @GET("nForum/#!board/NewExpress?ajax")
+    Call<String> keepAlive();
 
     @FormUrlEncoded
     @Headers("X-Requested-With:XMLHttpRequest")

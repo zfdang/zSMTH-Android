@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -214,6 +215,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
       setTitle(String.format("回复文章@%s", mPostContext.getBoardEngName()));
       // set focus to content
       mContent.requestFocus();
+      getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     } else if (mPostContext.getComposingMode() == ComposePostContext.MODE_EDIT_POST) {
       mUserRow.setVisibility(View.GONE);
       mAttachRow.setVisibility(View.GONE);
@@ -238,7 +240,8 @@ public class ComposePostActivity extends SMTHBaseActivity {
       mUserID.setText(mPostContext.getPostAuthor());
       mUserID.setEnabled(false);
       // set focus to content
-      mContent.requestFocus();
+      mContent.setFocusable(true);
+      getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
     // set post title & content
