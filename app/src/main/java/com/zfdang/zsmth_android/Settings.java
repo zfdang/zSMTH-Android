@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.util.Log;
 import com.zfdang.SMTHApplication;
-import com.zfdang.devicemodeltomarketingname.DeviceMarketingName;
 
 /**
  * Usage:
@@ -473,18 +473,18 @@ public class Settings {
     bLastLoginSuccess = mPreference.getBoolean(LAST_LOGIN_SUCCESS, false);
     bUserOnline = mPreference.getBoolean(USER_ONLINE, false);
 
-    bUseSignature = mPreference.getBoolean(USE_DEVICE_SIGNATURE, true);
+    bUseSignature = mPreference.getBoolean(USE_DEVICE_SIGNATURE, false);
     mSignature = mPreference.getString(DEVICE_SIGNATURE, "");
     if (mSignature.length() == 0) {
-      String marketingName = DeviceMarketingName.getInstance(SMTHApplication.getAppContext()).getDeviceMarketingName(true);
-      setSignature(marketingName);
+//      String marketingName = DeviceMarketingName.getInstance(SMTHApplication.getAppContext()).getDeviceMarketingName(true);
+      setSignature(Build.MODEL);
     }
 
     mTarget = mPreference.getString(FORWARD_TAEGET, "");
 
-    bLoadOriginalImage = mPreference.getBoolean(LOAD_ORIGINAL_IMAGE, true);
+    bLoadOriginalImage = mPreference.getBoolean(LOAD_ORIGINAL_IMAGE, false);
     bLoginWithVerification = mPreference.getBoolean(LOGIN_WITH_VERIFICATION, true);
-    bImageSourceCDN = mPreference.getBoolean(IMAGE_SOURCE_CDN, true);
+    bImageSourceCDN = mPreference.getBoolean(IMAGE_SOURCE_CDN, false);
 
     bBoardMasterOnly = mPreference.getBoolean(BOARD_MASTER_ONLY, false);
 
@@ -497,11 +497,11 @@ public class Settings {
     bNotificationLike = mPreference.getBoolean(NOTIFICATION_LIKE, true);
     bNotificationReply = mPreference.getBoolean(NOTIFICATION_REPLY, true);
 
-    bLaunchHotTopic = mPreference.getBoolean(LAUNCH_HOTTOPIC_AS_ENTRY, true);
+    bLaunchHotTopic = mPreference.getBoolean(LAUNCH_HOTTOPIC_AS_ENTRY, false);
 
     bPostNavBar = mPreference.getBoolean(SHOW_POST_NAVITATION_BAR, true);
-    bVolumeKeyScroll = mPreference.getBoolean(VOLUME_KEY_SCROLL, true);
-    iFontIndex = mPreference.getInt(ZSMTH_FONT_INDEX, 1);
+    bVolumeKeyScroll = mPreference.getBoolean(VOLUME_KEY_SCROLL, false);
+    iFontIndex = mPreference.getInt(ZSMTH_FONT_INDEX, 4);
 
     mPostCache = mPreference.getString(COMPOSE_POST_CACHE, "");
   }

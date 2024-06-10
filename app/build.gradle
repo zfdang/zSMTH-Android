@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply from: 'MobSDK.gradle'
 
 // http://www.race604.com/android-auto-version/
 // use git count as build number, as current date as build version
@@ -150,7 +149,6 @@ dependencies {
 
     // my gradles
     implementation project(':multiple-images-selector')
-    implementation project(':device_model_to_marketing_name')
 
     // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib-jdk8
 //    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:latest.release'

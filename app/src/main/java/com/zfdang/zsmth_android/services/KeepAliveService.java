@@ -85,8 +85,7 @@ public class KeepAliveService extends Service {
                 if (count > 3) {
                     Log.d("KeepAliveService", "STOP");
                     receiver.onServiceFailed();
-                }
-                else {
+                } else {
                     Log.d("KeepAliveService", "retry: " + count);
                     doNext(retry);
                 }

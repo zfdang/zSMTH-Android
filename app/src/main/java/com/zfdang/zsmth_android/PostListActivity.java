@@ -65,9 +65,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import cn.sharesdk.framework.Platform;
-import cn.sharesdk.framework.PlatformActionListener;
-import cn.sharesdk.onekeyshare.OnekeyShare;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -814,74 +811,6 @@ public class PostListActivity extends SMTHBaseActivity
   }
 
   public void sharePost(Post post) {
-    OnekeyShare oks = new OnekeyShare();
-    //关闭sso授权
-    oks.disableSSOWhenAuthorize();
-
-    // prepare information from the post
-    String title = String.format("[%s] %s @ 水木社区", mTopic.getBoardChsName(), mTopic.getTitle());
-    String postURL =
-        String.format(SMTHHelper.SMTH_MOBILE_URL + "/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
-    String content = String.format("[%s]在大作中写到: %s", post.getAuthor(), post.getRawContent());
-    // the max length of webo is 140
-    if (content.length() > 110) {
-      content = content.substring(0, 110);
-    }
-    content += String.format("...\nLink:%s", postURL);
-
-    // default: use zSMTH logo
-    String imageURL = "http://zsmth.zfdang.com/zsmth.png";
-    List<Attachment> attaches = post.getAttachFiles();
-    if (attaches != null && attaches.size() > 0) {
-      // use the first attached image
-      imageURL = attaches.get(0).getResizedImageSource();
-    }
-
-    // more information about OnekeyShare
-    // http://wiki.mob.com/docs/sharesdk/android/cn/sharesdk/onekeyshare/OnekeyShare.html
-
-    // title标题，印象笔记、邮箱、信息、微信、人人网、QQ和QQ空间使用
-    oks.setTitle(title);
-
-    // titleUrl是标题的网络链接，仅在Linked-in,QQ和QQ空间使用
-    // oks.setTitleUrl("http://sharesdk.cn");
-
-    // text是分享文本，所有平台都需要这个字段
-    oks.setText(content);
-
-    // 分享网络图片，新浪微博分享网络图片需要通过审核后申请高级写入接口，否则请注释掉测试新浪微博
-    // imageUrl是图片的网络路径，新浪微博、人人网、QQ空间和Linked-In支持此字段
-    oks.setImageUrl(imageURL);
-
-    // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-    //oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
-
-    // url仅在微信（包括好友和朋友圈）中使用
-    oks.setUrl(postURL);
-
-    // comment是我对这条分享的评论，仅在人人网和QQ空间使用
-    //        oks.setComment("我是测试评论文本");
-    // site是分享此内容的网站名称，仅在QQ空间使用
-    //        oks.setSite("ShareSDK");
-    // siteUrl是分享此内容的网站地址，仅在QQ空间使用
-    //        oks.setSiteUrl("http://sharesdk.cn");
-
-    // set callback functions
-    oks.setCallback(new PlatformActionListener() {
-      @Override public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
-        Toast.makeText(PostListActivity.this, "分享成功!", Toast.LENGTH_SHORT).show();
-      }
-
-      @Override public void onError(Platform platform, int i, Throwable throwable) {
-        Toast.makeText(PostListActivity.this, "分享失败:\n" + throwable.toString(), Toast.LENGTH_LONG).show();
-      }
-
-      @Override public void onCancel(Platform platform, int i) {
-      }
-    });
-
-    // 启动分享GUI
-    oks.show(this);
   }
 
   @Override public boolean onTouch(View v, MotionEvent event) {
