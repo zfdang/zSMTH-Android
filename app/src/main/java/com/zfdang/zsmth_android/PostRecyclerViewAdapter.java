@@ -104,12 +104,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                     intent.putExtra(SMTHApplication.ATTACHMENT_CURRENT_POS, position);
                     mListener.startActivity(intent);
                 });
-
-                // Add the text view to the parent layout
-                // TODO 把图片重新排列
-                //viewGroup.addView(img);
                 imgList.add(img);
-
             } else if (content.getType() == ContentSegment.SEGMENT_TEXT) {
                 // Log.d("CreateView", "Text: " + content.getSpanned().toString());
 
@@ -123,6 +118,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             }
         }
 
+        int index = imgList.size() - imgList.size() > 1 ? 2 : 1;
         if (imgList.size() > 0) {
             int size, width;
 
@@ -163,7 +159,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                     gridParams.height = width / 2;
                     gridLayout.addView(imgList.get(1), gridParams);
                 }
-                viewGroup.addView(gridLayout);
+                viewGroup.addView(gridLayout, index);
             }
 
             gridLayout = new GridLayout(mListener);
@@ -176,7 +172,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                 gridParams.height = width / 3;
                 gridLayout.addView(imgList.get(i), gridParams);
             }
-            viewGroup.addView(gridLayout);
+            viewGroup.addView(gridLayout, index);
         }
     }
 

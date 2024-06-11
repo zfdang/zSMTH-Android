@@ -49,7 +49,6 @@ import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.helpers.RecyclerViewUtil;
-import com.zfdang.zsmth_android.models.Attachment;
 import com.zfdang.zsmth_android.models.Board;
 import com.zfdang.zsmth_android.models.ComposePostContext;
 import com.zfdang.zsmth_android.models.Post;
@@ -62,7 +61,6 @@ import com.zfdang.zsmth_android.newsmth.SMTHHelper;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -474,8 +472,8 @@ public class PostListActivity extends SMTHBaseActivity
     menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_copy_content), R.drawable.ic_content_copy_black_48dp)); // 5
     menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_foward), R.drawable.ic_send_black_48dp)); // 6
     menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_view_in_browser), R.drawable.ic_open_in_browser_black_48dp)); // 7
-    menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_share), R.drawable.ic_share_black_48dp)); // 8
-    menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_delete_post), R.drawable.ic_delete_black_48dp));  // 9
+    //menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_share), R.drawable.ic_share_black_48dp)); // 8
+    //menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_delete_post), R.drawable.ic_delete_black_48dp));  // 9
     menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_edit_post), R.drawable.ic_edit_black_48dp)); // 10
     menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_convert_image), R.drawable.ic_photo_black_48dp)); // 11
 
@@ -540,122 +538,128 @@ public class PostListActivity extends SMTHBaseActivity
     }
 
     Post post = PostListContent.POSTS.get(position);
-    if (which == 0) {
-      // post_reply_post
-      ComposePostContext postContext = new ComposePostContext();
-      postContext.setBoardEngName(mTopic.getBoardEngName());
-      postContext.setPostId(post.getPostID());
-      postContext.setPostTitle(mTopic.getTitle());
-      postContext.setPostAuthor(post.getRawAuthor());
-      postContext.setPostContent(post.getRawContent());
-      postContext.setComposingMode(ComposePostContext.MODE_REPLY_POST);
+    ComposePostContext postContext = new ComposePostContext();
+    Intent intent;
+    PopupLikeWindow popup = new PopupLikeWindow();
+    switch (which) {
+        case 0:
+            // post_reply_post
+            postContext.setBoardEngName(mTopic.getBoardEngName());
+            postContext.setPostId(post.getPostID());
+            postContext.setPostTitle(mTopic.getTitle());
+            postContext.setPostAuthor(post.getRawAuthor());
+            postContext.setPostContent(post.getRawContent());
+            postContext.setComposingMode(ComposePostContext.MODE_REPLY_POST);
 
-      Intent intent = new Intent(this, ComposePostActivity.class);
-      intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
-      startActivityForResult(intent, ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE);
-    } else if (which == 1) {
-      // like
-      // Toast.makeText(PostListActivity.this, "Like:TBD", Toast.LENGTH_SHORT).show();
-      PopupLikeWindow popup = new PopupLikeWindow();
-      popup.initPopupWindow(this);
-      popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 100);
-    } else if (which == 2) {
-      // post_reply_mail
-      // Toast.makeText(PostListActivity.this, "回复到作者信箱:TBD", Toast.LENGTH_SHORT).show();
-      ComposePostContext postContext = new ComposePostContext();
-      postContext.setBoardEngName(mTopic.getBoardEngName());
-      postContext.setPostId(post.getPostID());
-      postContext.setPostTitle(mTopic.getTitle());
-      postContext.setPostAuthor(post.getRawAuthor());
-      postContext.setPostContent(post.getRawContent());
-      postContext.setComposingMode(ComposePostContext.MODE_REPLY_MAIL);
+            intent = new Intent(this, ComposePostActivity.class);
+            intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
+            startActivityForResult(intent, ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE);
+            break;
+        case 1:
+            // like
+            // Toast.makeText(PostListActivity.this, "Like:TBD", Toast.LENGTH_SHORT).show();
+            popup.initPopupWindow(this);
+            popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 100);
+            break;
+        case 2:
+            // post_reply_mail
+            // Toast.makeText(PostListActivity.this, "回复到作者信箱:TBD", Toast.LENGTH_SHORT).show();
+            postContext.setBoardEngName(mTopic.getBoardEngName());
+            postContext.setPostId(post.getPostID());
+            postContext.setPostTitle(mTopic.getTitle());
+            postContext.setPostAuthor(post.getRawAuthor());
+            postContext.setPostContent(post.getRawContent());
+            postContext.setComposingMode(ComposePostContext.MODE_REPLY_MAIL);
 
-      Intent intent = new Intent(this, ComposePostActivity.class);
-      intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
-      startActivity(intent);
-    } else if (which == 3) {
-      // post_query_author
-      Intent intent = new Intent(this, QueryUserActivity.class);
-      intent.putExtra(SMTHApplication.QUERY_USER_INFO, post.getRawAuthor());
-      startActivity(intent);
-    } else if (which == 4) {
-      // read posts from current users only
-      if (mFilterUser == null) {
-        Toast.makeText(PostListActivity.this, "只看此ID! 再次选择将查看所有文章.", Toast.LENGTH_SHORT).show();
-        mFilterUser = post.getRawAuthor();
-      } else {
-        Toast.makeText(PostListActivity.this, "查看所有文章!", Toast.LENGTH_SHORT).show();
-        mFilterUser = null;
-      }
-      mCurrentPageNo = 1;
-      reloadPostList();
-    } else if (which == 5) {
-      // copy post content
-      // http://stackoverflow.com/questions/8056838/dealing-with-deprecated-android-text-clipboardmanager
-      String content;
-      if (post != null) {
-        content = post.getRawContent();
+            intent = new Intent(this, ComposePostActivity.class);
+            intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
+            startActivity(intent);
+            break;
+        case 3:
+            // post_query_author
+            intent = new Intent(this, QueryUserActivity.class);
+            intent.putExtra(SMTHApplication.QUERY_USER_INFO, post.getRawAuthor());
+            startActivity(intent);
+            break;
+        case 4:
+            // read posts from current users only
+            if (mFilterUser == null) {
+                Toast.makeText(PostListActivity.this, "只看此ID! 再次选择将查看所有文章.", Toast.LENGTH_SHORT).show();
+                mFilterUser = post.getRawAuthor();
+            } else {
+                Toast.makeText(PostListActivity.this, "查看所有文章!", Toast.LENGTH_SHORT).show();
+                mFilterUser = null;
+            }
+            mCurrentPageNo = 1;
+            reloadPostList();
+            break;
+        case 5:
+            // copy post content
+            // http://stackoverflow.com/questions/8056838/dealing-with-deprecated-android-text-clipboardmanager
+            String content;
+            if (post != null) {
+                content = post.getRawContent();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-          final android.content.ClipboardManager clipboardManager =
-              (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-          final android.content.ClipData clipData = android.content.ClipData.newPlainText("PostContent", content);
-          clipboardManager.setPrimaryClip(clipData);
-        } else {
-          final android.text.ClipboardManager clipboardManager =
-              (android.text.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-          clipboardManager.setText(content);
-        }
-        Toast.makeText(PostListActivity.this, "帖子内容已复制到剪贴板", Toast.LENGTH_SHORT).show();
-      } else {
-        Toast.makeText(PostListActivity.this, "复制失败！", Toast.LENGTH_SHORT).show();
-      }
-    } else if (which == 6) {
-      // post_foward_self
-      // Toast.makeText(PostListActivity.this, "转寄信箱:TBD", Toast.LENGTH_SHORT).show();
-      PopupForwardWindow popup = new PopupForwardWindow();
-      popup.initPopupWindow(this, post);
-      popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 100);
-    } else if (which == 7) {
-      // open post in browser
-      String url = String.format(SMTHHelper.SMTH_MOBILE_URL + "/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
-      startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-    } else if (which == 8) {
-      // post_share
-      // Toast.makeText(PostListActivity.this, "分享:TBD", Toast.LENGTH_SHORT).show();
-      sharePost(post);
-    } else if (which == 9) {
-      // delete post
-      deletePost(post);
-    } else if (which == 10) {
-      // edit post
-      ComposePostContext postContext = new ComposePostContext();
-      postContext.setBoardEngName(mTopic.getBoardEngName());
-      postContext.setPostId(post.getPostID());
-      postContext.setPostTitle(mTopic.getTitle());
-      postContext.setPostAuthor(post.getRawAuthor());
-      postContext.setPostContent(post.getRawContent());
-      postContext.setComposingMode(ComposePostContext.MODE_EDIT_POST);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    final android.content.ClipboardManager clipboardManager =
+                            (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                    final android.content.ClipData clipData = android.content.ClipData.newPlainText("PostContent", content);
+                    clipboardManager.setPrimaryClip(clipData);
+                } else {
+                    final android.text.ClipboardManager clipboardManager =
+                            (android.text.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                    clipboardManager.setText(content);
+                }
+                Toast.makeText(PostListActivity.this, "帖子内容已复制到剪贴板", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(PostListActivity.this, "复制失败！", Toast.LENGTH_SHORT).show();
+            }
+            break;
+        case 6:
+            // post_foward_self
+            // Toast.makeText(PostListActivity.this, "转寄信箱:TBD", Toast.LENGTH_SHORT).show();
+            PopupForwardWindow popupfw = new PopupForwardWindow();
+            popupfw.initPopupWindow(this, post);
+            popupfw.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 100);
+            break;
+        case 7:
+            // open post in browser
+            String url = String.format(SMTHHelper.SMTH_MOBILE_URL + "/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+            break;
+        case 8:
+            // edit post
+            postContext.setBoardEngName(mTopic.getBoardEngName());
+            postContext.setPostId(post.getPostID());
+            postContext.setPostTitle(mTopic.getTitle());
+            postContext.setPostAuthor(post.getRawAuthor());
+            postContext.setPostContent(post.getRawContent());
+            postContext.setComposingMode(ComposePostContext.MODE_EDIT_POST);
 
-      Intent intent = new Intent(this, ComposePostActivity.class);
-      intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
-      startActivity(intent);
-    } else if (which == 11) {
-      // generate screenshot of current post
-      View v = mRecyclerView.getLayoutManager().findViewByPosition(position);
+            intent = new Intent(this, ComposePostActivity.class);
+            intent.putExtra(SMTHApplication.COMPOSE_POST_CONTEXT, postContext);
+            startActivity(intent);
+            break;
+        case 9:
+            // generate screenshot of current post
+            View v = mRecyclerView.getLayoutManager().findViewByPosition(position);
 
-      // convert title + post to image
-      captureView(mTitle, v, post.getPostID());
-    } else if (which == 12) {
-      deleteTopic(post);
-    } else if (which == 13) {
-      PopupBanWindow popup = new PopupBanWindow();
-      popup.initPopupWindow(this, post);
-      popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 100);
-    } else if (which == 14) {
-      markPost(post);
-    } else if (which == 15) {
-      readonlyTopic(post);
+            // convert title + post to image
+            captureView(mTitle, v, post.getPostID());
+            break;
+        case 10:
+            deleteTopic(post);
+            break;
+        case 11:
+            PopupBanWindow popupb = new PopupBanWindow();
+            popupb.initPopupWindow(this, post);
+            popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 100);
+            break;
+        case 12:
+            markPost(post);
+            break;
+        case 13:
+            readonlyTopic(post);
     }
   }
 
@@ -808,9 +812,6 @@ public class PostListActivity extends SMTHBaseActivity
 
       }
     });
-  }
-
-  public void sharePost(Post post) {
   }
 
   @Override public boolean onTouch(View v, MotionEvent event) {

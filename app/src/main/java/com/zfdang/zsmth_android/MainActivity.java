@@ -44,7 +44,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.mikepenz.aboutlibraries.LibsBuilder;
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
 import com.zfdang.zsmth_android.listeners.OnBoardFragmentInteractionListener;
@@ -94,7 +93,6 @@ public class MainActivity extends SMTHBaseActivity
     private UserStatusReceiver mReceiver;
     // press BACK in 2 seconds, app will quit
 
-    private FloatingActionMenu mActionMenu;
     private NavigationView mNavigationView;
 
     private BottomNavigationView bottomNavigationView;

@@ -66,6 +66,7 @@
             android:id="@+id/popup_forward_target_other"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checked="true"
             android:text="其他:"
             android:textColor="@color/status_text_night"
             />
@@ -96,6 +97,7 @@
 
     <CheckBox
         android:id="@+id/popup_forward_thread"
+        android:checked="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="合集转寄"
