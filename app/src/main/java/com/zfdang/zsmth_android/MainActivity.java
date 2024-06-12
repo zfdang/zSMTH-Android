@@ -42,6 +42,7 @@ import androidx.work.WorkRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.zfdang.SMTHApplication;
@@ -108,8 +109,8 @@ public class MainActivity extends SMTHBaseActivity
         setSupportActionBar(toolbar);
 
         bottomNavigationView = findViewById(R.id.mainactivity_bottomNavigationView);
-        //disableShiftMode(bottomNavigationView);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        disableShiftMode(bottomNavigationView);
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @SuppressLint("NonConstantResourceId")
             @Override
             public boolean onNavigationItemSelected(@androidx.annotation.NonNull MenuItem item) {
@@ -130,8 +131,6 @@ public class MainActivity extends SMTHBaseActivity
                     case R.id.nav_setting:
                         onNavigationItemID(R.id.nav_setting);
                         mNavigationView.setCheckedItem(R.id.nav_setting);
-                        //FragmentManager fm = getSupportFragmentManager();
-                        //fm.beginTransaction().replace(R.id.content_frame, preferenceFragment).commit();
                         return true;
                 }
                 return false;

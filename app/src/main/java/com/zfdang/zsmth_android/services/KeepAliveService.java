@@ -60,8 +60,6 @@ public class KeepAliveService extends Service {
     }
 
     public static class MyWork extends Worker {
-        final SMTHHelper helper = SMTHHelper.getInstance();
-        UserStatusReceiver receiver = SMTHApplication.mUserStatusReceiver;
         public MyWork(Context context, WorkerParameters workerParams) {
             super(context, workerParams);
         }
@@ -75,7 +73,7 @@ public class KeepAliveService extends Service {
             try {
                 //  因为这是在service线程中的网络访问，所以同步调用并不会影响UI
                 //  也无需关心返回值，只要与水木服务器通信，即可达到保持登录状态的目的
-                helper.wService.keepAlive().execute();
+                SMTHHelper.getInstance().wService.keepAlive().execute();
                 count = 0;
                 doNext(interval);
             } catch (IOException e) {
@@ -84,7 +82,7 @@ public class KeepAliveService extends Service {
                 //  因为这时的登录状态大概率已经过期，继续刷新已无意义
                 if (count > 3) {
                     Log.d("KeepAliveService", "STOP");
-                    receiver.onServiceFailed();
+                    SMTHApplication.mUserStatusReceiver.onServiceFailed();
                 } else {
                     Log.d("KeepAliveService", "retry: " + count);
                     doNext(retry);

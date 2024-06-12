@@ -132,42 +132,24 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             GridLayout.Spec rowSpec, columnSpec;
 
             GridLayout.LayoutParams gridParams = null;
-            int remainder, i = 0;
-            remainder = size % 3;
-            if (remainder != 0) {
-                if (remainder == 1) {
-                    rowSpec = GridLayout.spec(0);
-                    columnSpec = GridLayout.spec(0);
-                    gridParams = new GridLayout.LayoutParams(rowSpec, columnSpec);
-                    gridParams.setGravity(Gravity.LEFT);
-                    gridParams.width = width;
-                    gridParams.height = width / 2;
-                    gridLayout.addView(imgList.get(0), gridParams);
-                    i = 1;
-                } else {
-                    i = 2;
-                    rowSpec = GridLayout.spec(0);
-                    columnSpec = GridLayout.spec(0);
-                    gridParams = new GridLayout.LayoutParams(rowSpec, columnSpec);
-                    gridParams.width = width / 2;
-                    gridParams.height = width / 2;
-                    gridLayout.addView(imgList.get(0), gridParams);
-
-                    columnSpec = GridLayout.spec(1);
-                    gridParams = new GridLayout.LayoutParams(rowSpec, columnSpec);
-                    gridParams.width = width / 2;
-                    gridParams.height = width / 2;
-                    gridLayout.addView(imgList.get(1), gridParams);
-                }
-                viewGroup.addView(gridLayout, index++);
+            int remainder, i;
+            remainder = i = size % 3;
+            for (int k = 0; k < remainder; ++k) {
+                rowSpec = GridLayout.spec(0);
+                columnSpec = GridLayout.spec(k);
+                gridParams = new GridLayout.LayoutParams(rowSpec, columnSpec);
+                gridParams.setGravity(Gravity.LEFT);
+                gridParams.width = width / i;
+                gridParams.height = width / 2;
+                gridLayout.addView(imgList.get(k), gridParams);
             }
+            viewGroup.addView(gridLayout, index++);
 
             gridLayout = new GridLayout(mListener);
             for (; i < size; ++i) {
                 rowSpec = GridLayout.spec((i - remainder) / 3);
                 columnSpec = GridLayout.spec((i - remainder) % 3);
                 gridParams = new GridLayout.LayoutParams(rowSpec, columnSpec);
-                //gridParams.setGravity(Gravity.LEFT);
                 gridParams.width = width / 3;
                 gridParams.height = width / 3;
                 gridLayout.addView(imgList.get(i), gridParams);
