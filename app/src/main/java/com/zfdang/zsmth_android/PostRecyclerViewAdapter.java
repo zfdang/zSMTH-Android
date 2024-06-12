@@ -159,7 +159,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
                     gridParams.height = width / 2;
                     gridLayout.addView(imgList.get(1), gridParams);
                 }
-                viewGroup.addView(gridLayout, index);
+                viewGroup.addView(gridLayout, index++);
             }
 
             gridLayout = new GridLayout(mListener);
