@@ -23,6 +23,7 @@ android {
     lint {
         abortOnError false
     }
+    namespace 'com.zfdang.multiple_images_selector'
 }
 
 dependencies {

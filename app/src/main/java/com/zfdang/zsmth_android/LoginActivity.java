@@ -1,15 +1,18 @@
 package com.zfdang.zsmth_android;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 
+import android.os.Handler;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -54,6 +57,15 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
     m_userNameEditText.setText(username);
     m_passwordEditText = (EditText) findViewById(R.id.password_edit);
     m_passwordEditText.setText(password);
+
+    if (username == null || username.isEmpty()) {
+      new Handler().postDelayed(() -> {
+        m_userNameEditText.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(m_userNameEditText, InputMethodManager.SHOW_IMPLICIT);
+      }, 300);
+    }
+
 
     mSaveInfo = (CheckBox) findViewById(R.id.save_info);
     mSaveInfo.setChecked(saveinfo);

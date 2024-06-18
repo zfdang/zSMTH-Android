@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -81,6 +82,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == REQUEST_CODE) {
       if (resultCode == RESULT_OK && data != null) {
         mPhotos = data.getStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS);
@@ -101,7 +103,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_compose_post);
 
-    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
     ActionBar bar = getSupportActionBar();
@@ -111,16 +113,16 @@ public class ComposePostActivity extends SMTHBaseActivity {
 
     mPhotos = new ArrayList<>();
 
-    mUserRow = (LinearLayout) findViewById(R.id.compose_post_userid_row);
-    mUserID = (EditText) findViewById(R.id.compose_post_userid);
-    mTitle = (EditText) findViewById(R.id.compose_post_title);
-    mAttachRow = (LinearLayout) findViewById(R.id.compose_post_attach_row);
-    mAttachments = (EditText) findViewById(R.id.compose_post_attach);
-    mCompress = (Switch) findViewById(R.id.compose_post_attach_switch);
-    mContent = (EditText) findViewById(R.id.compose_post_content);
-    mContentCount = (TextView) findViewById(R.id.compose_post_content_label);
+    mUserRow = findViewById(R.id.compose_post_userid_row);
+    mUserID = findViewById(R.id.compose_post_userid);
+    mTitle = findViewById(R.id.compose_post_title);
+    mAttachRow = findViewById(R.id.compose_post_attach_row);
+    mAttachments = findViewById(R.id.compose_post_attach);
+    mCompress = findViewById(R.id.compose_post_attach_switch);
+    mContent = findViewById(R.id.compose_post_content);
+    mContentCount = findViewById(R.id.compose_post_content_label);
 
-    mButton = (Button) findViewById(R.id.compose_post_attach_button);
+    mButton = findViewById(R.id.compose_post_attach_button);
     mButton.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         KeyboardLess.$hide(v.getContext(), mContent);
@@ -220,6 +222,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
       setTitle(String.format("修改文章@%s", mPostContext.getBoardEngName()));
       // set focus to content
       mContent.requestFocus();
+      getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     } else if (mPostContext.getComposingMode() == ComposePostContext.MODE_NEW_MAIL) {
       mAttachRow.setVisibility(View.GONE);
       setTitle("写新信件");
@@ -239,6 +242,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
       mUserID.setEnabled(false);
       // set focus to content
       mContent.requestFocus();
+      getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
     // set post title & content
@@ -292,7 +296,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
     return super.onOptionsItemSelected(item);
   }
 
-  public class BytesContainer {
+  public static class BytesContainer {
     public String filename;
     public byte[] bytes;
 
@@ -393,7 +397,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
           @Override public void onComplete() {
             dismissProgress();
 
-            String message = null;
+            String message;
             if (postPublishResult != AjaxResponse.AJAX_RESULT_OK) {
               message = "操作失败! \n错误信息:\n" + postPublishMessage;
               Toast.makeText(ComposePostActivity.this, message, Toast.LENGTH_LONG).show();

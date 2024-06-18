@@ -3,10 +3,12 @@ package com.zfdang.zsmth_android;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -73,6 +75,12 @@ public class PopupSearchWindow extends PopupWindow {
     // this.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     // this.setOutsideTouchable(true);
     this.setFocusable(true);
+
+    new Handler().postDelayed(() -> {
+      etKeyword.requestFocus();
+      InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+      imm.showSoftInput(etKeyword, InputMethodManager.SHOW_IMPLICIT);
+    }, 300);
   }
 
   public interface SearchInterface {

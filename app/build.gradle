@@ -69,6 +69,7 @@ android {
     lint {
         abortOnError false
     }
+    namespace 'com.zfdang.zsmth_android'
 }
 
 dependencies {

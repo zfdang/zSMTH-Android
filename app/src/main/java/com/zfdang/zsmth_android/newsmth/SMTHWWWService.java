@@ -4,6 +4,7 @@ import java.util.Map;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
@@ -196,4 +197,6 @@ public interface SMTHWWWService {
             @Path("boardEngName") String boardEngName, @Path("postID") String postID,
             @Field("gid") String topicID, @Field("top") String top);
 
+    @GET("/nForum/user/ajax_session.json")
+    Call<String> keepAlive();
 }

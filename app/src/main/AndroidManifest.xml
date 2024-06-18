@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.zfdang.zsmth_android">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -26,6 +25,10 @@
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
         tools:replace="android:name">
+        <service
+            android:name=".services.KeepAliveService"
+            android:enabled="true"
+            android:exported="true"></service>
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

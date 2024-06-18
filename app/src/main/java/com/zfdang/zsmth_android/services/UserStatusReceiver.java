@@ -26,7 +26,12 @@ import android.os.ResultReceiver;
     }
   }
 
+  public void onServiceFailed() {
+    receiver.onServerFailed();
+  }
+
   public interface Receiver {
     void onReceiveResult(int resultCode, Bundle resultData);
+    void onServerFailed();
   }
 }

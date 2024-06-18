@@ -1,10 +1,12 @@
 package com.zfdang.zsmth_android;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -61,10 +63,12 @@ import com.zfdang.zsmth_android.models.MailListContent;
 import com.zfdang.zsmth_android.models.Topic;
 import com.zfdang.zsmth_android.newsmth.AjaxResponse;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
+import com.zfdang.zsmth_android.services.KeepAliveService;
 import com.zfdang.zsmth_android.services.MaintainUserStatusWorker;
 import com.zfdang.zsmth_android.services.UserStatusReceiver;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observer;
@@ -79,6 +83,10 @@ public class MainActivity extends SMTHBaseActivity
   // used by startActivityForResult
   static final int LOGIN_ACTIVITY_REQUEST_CODE = 9527;  // The request code
   private static final String TAG = "MainActivity";
+
+  // keep aive service
+  private Intent keepAliveService;
+
   // guidance fragment: display hot topics
   // this fragment is using RecyclerView to show all hot topics
   HotTopicFragment hotTopicFragment = null;
@@ -297,8 +305,43 @@ public class MainActivity extends SMTHBaseActivity
           }
         }
       }
+
+      @Override
+      public void onServerFailed() {
+        stopService(keepAliveService);
+        SMTHApplication.activeUser = null;
+        SMTHApplication.displayedUserId = "guest";
+        runOnUiThread(() -> {
+          mUsername.setText(getString(R.string.nav_header_click_to_login));
+          mAvatar.setImageResource(R.drawable.ic_person_black_48dp);
+        });
+      }
     });
     SMTHApplication.mUserStatusReceiver = mReceiver;
+  }
+
+  private void init_keep_alive_service() {
+    if (keepAliveService == null)
+      keepAliveService = new Intent(this, KeepAliveService.class);
+    if (!isKeepAliveServiceRunning()) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        startForegroundService(keepAliveService);
+      else
+        startService(keepAliveService);
+    }
+  }
+  public Boolean isKeepAliveServiceRunning() {
+    String ServiceName = KeepAliveService.class.getName();
+    ActivityManager myManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+    ArrayList<ActivityManager.RunningServiceInfo> runningService =
+            (ArrayList<ActivityManager.RunningServiceInfo>)
+                    myManager.getRunningServices(Integer.MAX_VALUE);
+    for (int i = 0; i < runningService.size(); i++) {
+      if (runningService.get(i).service.getClassName().equals(ServiceName)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private void showNotification(String text) {
@@ -456,11 +499,14 @@ public class MainActivity extends SMTHBaseActivity
         mAvatar.setImageFromStringURL(faceURL);
       }
       SMTHApplication.displayedUserId = SMTHApplication.activeUser.getId();
+      init_keep_alive_service();
     } else {
       // when user is invalid, set notice to login
       mUsername.setText(getString(R.string.nav_header_click_to_login));
       mAvatar.setImageResource(R.drawable.ic_person_black_48dp);
       SMTHApplication.displayedUserId = "guest";
+      if (keepAliveService != null)
+        stopService(keepAliveService);
     }
   }
 
