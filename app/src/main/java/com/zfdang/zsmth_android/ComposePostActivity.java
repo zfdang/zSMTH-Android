@@ -216,6 +216,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
       setTitle(String.format("回复文章@%s", mPostContext.getBoardEngName()));
       // set focus to content
       mContent.requestFocus();
+      getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     } else if (mPostContext.getComposingMode() == ComposePostContext.MODE_EDIT_POST) {
       mUserRow.setVisibility(View.GONE);
       mAttachRow.setVisibility(View.GONE);
