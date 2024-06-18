@@ -21,24 +21,28 @@ import io
 # settings have been moved to config.py
 ##################################
 
+import sys
+if sys.version_info[0] >= 3:
+    unicode = str
+
 
 # print trace stack info
 def print_trace_stack_info():
     tp, val, tb = sys.exc_info()
     error_msgs = traceback.format_exception(tp, val, tb)
-    print "Python Traceback Information:"
+    print ("Python Traceback Information:")
     for msg in error_msgs:
-        print msg
+        print (msg)
 
 def unicode_csv_reader(utf8_data, dialect=csv.excel, **kwargs):
     csv_reader = csv.reader(utf8_data, dialect=dialect, **kwargs)
     for row in csv_reader:
-        yield [unicode(cell, 'utf-8') for cell in row]
+        yield [cell for cell in row]
 
 def processFile(infile):
 
     if not os.path.exists(infile):
-        print "file %s does not exist" % (infile)
+        print ("file %s does not exist" % (infile))
         sys.exit(0)
 
     unkown_accounts = {}
@@ -50,17 +54,19 @@ def processFile(infile):
     # print csvReader
     for row in csvReader:
 
-        # print row
-        if len(row) != 12:  # make sure row is parsed correctly
+        # print (row, len(row))
+        if len(row) != 16:  # make sure row is parsed correctly
             continue
 
         counter += 1
         if counter == 1:  # ignore the first row
             continue
 
-        branding = row[0]
-        marketingName = row[1]
-        model = row[2]
+        branding = row[2]
+        marketingName = row[3]
+        model = row[1]
+        print(branding, model, marketingName)
+
         if len(branding) > 0 and len(marketingName) > 0 and len(model) > 0:
             model = model.replace("=", "\=").replace(":", "\:").replace(" ", "\ ")
             branding = branding.replace("=", "\=").replace(":", "\:").replace(" ", "\ ")
@@ -68,7 +74,7 @@ def processFile(infile):
             brandWriter.write("%s=%s\n" % (model, branding))
             marketingWriter.write("%s=%s\n" % (model, marketingName))
 
-    print "Totaly %d devices detected." % (counter)
+    print ("Totaly %d devices detected." % (counter))
 ########################################################
 # main entrance here
 ########################################################
@@ -79,18 +85,18 @@ if __name__ == "__main__":
     try:
         opts, args = getopt.getopt(sys.argv[1:], "hf:", ["help", "file="])
     except getopt.GetoptError:
-        print __doc__
+        print (__doc__)
         sys.exit(2)
 
     for opt, arg in opts:
         if opt in ("-h", "--help"):
-            print __doc__
+            print (__doc__)
             sys.exit()
         elif opt in ('-f', '--file'):
             infile = arg
 
     if len(infile) == 0:
-        print __doc__
+        print (__doc__)
         sys.exit(2)
 
     # process infile

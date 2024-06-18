@@ -2,11 +2,18 @@ package com.zfdang.zsmth_android;
 
 import android.app.Activity;
 import android.content.Intent;
+
+import android.widget.GridLayout;
+import android.widget.ImageView;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.graphics.Point;
+import android.view.Display;
+import android.view.Gravity;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.klinker.android.link_builder.LinkBuilder;
@@ -19,6 +26,7 @@ import com.zfdang.zsmth_android.models.ContentSegment;
 import com.zfdang.zsmth_android.models.Post;
 import java.util.ArrayList;
 import java.util.List;
+import com.bumptech.glide.Glide;
 
 /**
  * used by HotPostFragment & BoardPostFragment
@@ -27,6 +35,9 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
 
   private final List<Post> mPosts;
   private final Activity mListener;
+
+  private GridLayout gridLayout;
+  private List<ImageView> imgList;
 
   public PostRecyclerViewAdapter(List<Post> posts, Activity listener) {
     mPosts = posts;
@@ -56,6 +67,8 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
       viewGroup.addView(contentView);
     }
 
+    imgList = new ArrayList<>();
+
     // http://stackoverflow.com/questions/13438473/clicking-html-link-in-textview-fires-weird-androidruntimeexception
     final LayoutInflater inflater = mListener.getLayoutInflater();
     for (int i = 1; i < contents.size(); i++) {
@@ -64,9 +77,16 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
       if (content.getType() == ContentSegment.SEGMENT_IMAGE) {
         // Log.d("CreateView", "Image: " + content.getUrl());
 
-        // Add the text layout to the parent layout
-        WrapContentDraweeView image = (WrapContentDraweeView) inflater.inflate(R.layout.post_item_imageview, viewGroup, false);
-        image.setImageFromStringURL(content.getUrl());
+//        // Add the text layout to the parent layout
+//        WrapContentDraweeView image = (WrapContentDraweeView) inflater.inflate(R.layout.post_item_imageview, viewGroup, false);
+//        image.setImageFromStringURL(content.getUrl());
+
+        // use grid view to replace original imageview
+        ImageView image = (ImageView) inflater.inflate(R.layout.post_item_image, viewGroup, false);
+        image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        image.setPadding(3, 3, 3, 3);
+        Glide.with(mListener).load(content.getUrl()).thumbnail(0.1f).into(image);
+        image.setTag(R.id.image_tag, content.getImgIndex());
 
         // set onclicklistener
         image.setTag(R.id.image_tag, content.getImgIndex());
@@ -90,7 +110,10 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         });
 
         // Add the text view to the parent layout
-        viewGroup.addView(image);
+//        viewGroup.addView(image);
+
+        // add image to list, instead of adding to viewgroup directly
+        imgList.add(image);
       } else if (content.getType() == ContentSegment.SEGMENT_TEXT) {
         // Log.d("CreateView", "Text: " + content.getSpanned().toString());
 
@@ -102,6 +125,45 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         // Add the text view to the parent layout
         viewGroup.addView(tv);
       }
+    }
+
+    int index = imgList.size() - imgList.size() > 1 ? 2 : 1;
+    if (imgList.size() > 0) {
+      int size, width;
+
+      Display display = mListener.getWindowManager().getDefaultDisplay();
+      Point point = new Point();
+      display.getSize(point);
+      width = point.x;
+      size = imgList.size();
+
+      gridLayout = new GridLayout(mListener);
+      GridLayout.Spec rowSpec, columnSpec;
+
+      GridLayout.LayoutParams gridParams = null;
+      int remainder, i;
+      remainder = i = size % 3;
+      for (int k = 0; k < remainder; ++k) {
+        rowSpec = GridLayout.spec(0);
+        columnSpec = GridLayout.spec(k);
+        gridParams = new GridLayout.LayoutParams(rowSpec, columnSpec);
+        gridParams.setGravity(Gravity.LEFT);
+        gridParams.width = width / i;
+        gridParams.height = width / 2;
+        gridLayout.addView(imgList.get(k), gridParams);
+      }
+      viewGroup.addView(gridLayout, index++);
+
+      gridLayout = new GridLayout(mListener);
+      for (; i < size; ++i) {
+        rowSpec = GridLayout.spec((i - remainder) / 3);
+        columnSpec = GridLayout.spec((i - remainder) % 3);
+        gridParams = new GridLayout.LayoutParams(rowSpec, columnSpec);
+        gridParams.width = width / 3;
+        gridParams.height = width / 3;
+        gridLayout.addView(imgList.get(i), gridParams);
+      }
+      viewGroup.addView(gridLayout, index);
     }
   }
 

@@ -73,6 +73,7 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
     final OKHTTP_VERSION = '3.14.9'
     final RETROFIT_VERSION = '2.9.0'
 
@@ -155,5 +156,6 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib-jdk8
 //    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:latest.release'
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
 }
 
