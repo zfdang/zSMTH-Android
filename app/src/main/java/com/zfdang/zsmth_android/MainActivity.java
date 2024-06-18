@@ -34,6 +34,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -113,7 +114,7 @@ public class MainActivity extends SMTHBaseActivity
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
     // how to adjust the height of toolbar
@@ -121,24 +122,24 @@ public class MainActivity extends SMTHBaseActivity
     // zsmth_actionbar_size @ dimen ==> ThemeOverlay.ActionBar @ styles ==> theme @ app_bar_main.xml
 
     // init floating action button & circular action menu
-    FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+    FloatingActionButton fab = findViewById(R.id.fab);
     initCircularActionMenu(fab);
 
-    mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+    mDrawer = findViewById(R.id.drawer_layout);
     mToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
     mDrawer.addDrawerListener(mToggle);
     mToggle.syncState();
 
-    mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+    mNavigationView = findViewById(R.id.nav_view);
     mNavigationView.setNavigationItemSelectedListener(this);
     mNavigationView.setCheckedItem(R.id.nav_guidance);
 
     // http://stackoverflow.com/questions/33161345/android-support-v23-1-0-update-breaks-navigationview-get-find-header
     View headerView = mNavigationView.getHeaderView(0);
-    mAvatar = (WrapContentDraweeView) headerView.findViewById(R.id.nav_user_avatar);
+    mAvatar = headerView.findViewById(R.id.nav_user_avatar);
     mAvatar.setOnClickListener(this);
 
-    mUsername = (TextView) headerView.findViewById(R.id.nav_user_name);
+    mUsername = headerView.findViewById(R.id.nav_user_name);
     mUsername.setOnClickListener(this);
 
     // http://stackoverflow.com/questions/27097126/marquee-title-in-toolbar-actionbar-in-android-with-lollipop-sdk
@@ -222,9 +223,9 @@ public class MainActivity extends SMTHBaseActivity
     SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
 
     ImageView itemIcon1 = new ImageView(this);
-    itemIcon1.setImageDrawable(getResources().getDrawable(R.drawable.ic_whatshot_white_48dp));
+    itemIcon1.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_whatshot_white_48dp, null));
     SubActionButton button1 = itemBuilder.setContentView(itemIcon1)
-        .setBackgroundDrawable(getResources().getDrawable(R.drawable.navigation_button_background))
+        .setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.navigation_button_background, null))
         .build();
     button1.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
@@ -235,9 +236,9 @@ public class MainActivity extends SMTHBaseActivity
     });
 
     ImageView itemIcon2 = new ImageView(this);
-    itemIcon2.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_white_48dp));
+    itemIcon2.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_star_white_48dp, null));
     SubActionButton button2 = itemBuilder.setContentView(itemIcon2)
-        .setBackgroundDrawable(getResources().getDrawable(R.drawable.navigation_button_background))
+        .setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.navigation_button_background, null))
         .build();
     button2.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
@@ -248,9 +249,9 @@ public class MainActivity extends SMTHBaseActivity
     });
 
     ImageView itemIcon3 = new ImageView(this);
-    itemIcon3.setImageDrawable(getResources().getDrawable(R.drawable.ic_format_list_bulleted_white_48dp));
+    itemIcon3.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_format_list_bulleted_white_48dp, null));
     SubActionButton button3 = itemBuilder.setContentView(itemIcon3)
-        .setBackgroundDrawable(getResources().getDrawable(R.drawable.navigation_button_background))
+        .setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.navigation_button_background, null))
         .build();
     button3.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
@@ -261,9 +262,9 @@ public class MainActivity extends SMTHBaseActivity
     });
 
     ImageView itemIcon4 = new ImageView(this);
-    itemIcon4.setImageDrawable(getResources().getDrawable(R.drawable.ic_email_white_48dp));
+    itemIcon4.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_email_white_48dp, null));
     SubActionButton button4 = itemBuilder.setContentView(itemIcon4)
-        .setBackgroundDrawable(getResources().getDrawable(R.drawable.navigation_button_background))
+        .setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.navigation_button_background, null))
         .build();
     button4.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
