@@ -65,6 +65,13 @@
 
     <CheckBoxPreference
         android:defaultValue="on"
+        android:key="setting_image_grid_mode"
+        android:summaryOff="图文混合"
+        android:summaryOn="图片以网格形式显示"
+        android:title="图文显示模式"/>
+
+    <CheckBoxPreference
+        android:defaultValue="on"
         android:key="setting_board_master_only"
         android:summaryOff="不显示版主专用功能"
         android:summaryOn="显示版主专用功能"

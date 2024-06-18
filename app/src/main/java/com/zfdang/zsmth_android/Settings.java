@@ -196,6 +196,22 @@ public class Settings {
     }
   }
 
+  // render image in grid mode
+  private static final String IMAGE_GRID_MODE = "IMAGE_GRID_MODE";
+  private boolean bImageGridMode;
+
+  public boolean isImageGridMode() {
+    return bImageGridMode;
+  }
+
+  public void setImageGridMode(boolean bImageGridMode) {
+    if (this.bImageGridMode != bImageGridMode) {
+      this.bImageGridMode = bImageGridMode;
+      mEditor.putBoolean(IMAGE_GRID_MODE, this.bImageGridMode);
+      mEditor.commit();
+    }
+  }
+
   // use normal login, or with verification
   private static final String LOGIN_WITH_VERIFICATION = "LOGIN_WITH_VERIFICATION";
   private boolean bLoginWithVerification;
@@ -485,6 +501,7 @@ public class Settings {
     bLoadOriginalImage = mPreference.getBoolean(LOAD_ORIGINAL_IMAGE, true);
     bLoginWithVerification = mPreference.getBoolean(LOGIN_WITH_VERIFICATION, true);
     bImageSourceCDN = mPreference.getBoolean(IMAGE_SOURCE_CDN, true);
+    bImageGridMode = mPreference.getBoolean(IMAGE_GRID_MODE, true);
 
     bBoardMasterOnly = mPreference.getBoolean(BOARD_MASTER_ONLY, false);
 

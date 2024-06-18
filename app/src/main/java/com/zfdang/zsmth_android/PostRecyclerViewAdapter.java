@@ -77,43 +77,68 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
       if (content.getType() == ContentSegment.SEGMENT_IMAGE) {
         // Log.d("CreateView", "Image: " + content.getUrl());
 
-//        // Add the text layout to the parent layout
-//        WrapContentDraweeView image = (WrapContentDraweeView) inflater.inflate(R.layout.post_item_imageview, viewGroup, false);
-//        image.setImageFromStringURL(content.getUrl());
+        if(Settings.getInstance().isImageGridMode()){
+          // use grid view to replace original imageview
+          ImageView image = (ImageView) inflater.inflate(R.layout.post_item_image, viewGroup, false);
+          image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+          image.setPadding(5, 5, 5, 5);
+          Glide.with(mListener).load(content.getUrl()).into(image);
+          image.setTag(R.id.image_tag, content.getImgIndex());
 
-        // use grid view to replace original imageview
-        ImageView image = (ImageView) inflater.inflate(R.layout.post_item_image, viewGroup, false);
-        image.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        image.setPadding(5, 5, 5, 5);
-        Glide.with(mListener).load(content.getUrl()).into(image);
-        image.setTag(R.id.image_tag, content.getImgIndex());
+          // set onclicklistener
+          image.setTag(R.id.image_tag, content.getImgIndex());
+          image.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+              int position = (int) v.getTag(R.id.image_tag);
 
-        // set onclicklistener
-        image.setTag(R.id.image_tag, content.getImgIndex());
-        image.setOnClickListener(new View.OnClickListener() {
-          @Override public void onClick(View v) {
-            int position = (int) v.getTag(R.id.image_tag);
+              Intent intent = new Intent(mListener, FSImageViewerActivity.class);
 
-            Intent intent = new Intent(mListener, FSImageViewerActivity.class);
+              ArrayList<String> urls = new ArrayList<>();
+              List<Attachment> attaches = post.getAttachFiles();
+              for (Attachment attach : attaches) {
+                // load original image in FS image viewer
+                urls.add(attach.getOriginalImageSource());
+              }
 
-            ArrayList<String> urls = new ArrayList<>();
-            List<Attachment> attaches = post.getAttachFiles();
-            for (Attachment attach : attaches) {
-              // load original image in FS image viewer
-              urls.add(attach.getOriginalImageSource());
+              intent.putStringArrayListExtra(SMTHApplication.ATTACHMENT_URLS, urls);
+              intent.putExtra(SMTHApplication.ATTACHMENT_CURRENT_POS, position);
+              mListener.startActivity(intent);
             }
+          });
 
-            intent.putStringArrayListExtra(SMTHApplication.ATTACHMENT_URLS, urls);
-            intent.putExtra(SMTHApplication.ATTACHMENT_CURRENT_POS, position);
-            mListener.startActivity(intent);
-          }
-        });
+          // add image to list, instead of adding to viewgroup directly
+          imgList.add(image);
+        } else {
+          // Add the text layout to the parent layout
+          // 采用混排模式，文字和图片混在一起
+          WrapContentDraweeView image = (WrapContentDraweeView) inflater.inflate(R.layout.post_item_imageview, viewGroup, false);
+          image.setImageFromStringURL(content.getUrl());
 
-        // Add the text view to the parent layout
-//        viewGroup.addView(image);
+          // set onclicklistener
+          image.setTag(R.id.image_tag, content.getImgIndex());
+          image.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+              int position = (int) v.getTag(R.id.image_tag);
 
-        // add image to list, instead of adding to viewgroup directly
-        imgList.add(image);
+              Intent intent = new Intent(mListener, FSImageViewerActivity.class);
+
+              ArrayList<String> urls = new ArrayList<>();
+              List<Attachment> attaches = post.getAttachFiles();
+              for (Attachment attach : attaches) {
+                // load original image in FS image viewer
+                urls.add(attach.getOriginalImageSource());
+              }
+
+              intent.putStringArrayListExtra(SMTHApplication.ATTACHMENT_URLS, urls);
+              intent.putExtra(SMTHApplication.ATTACHMENT_CURRENT_POS, position);
+              mListener.startActivity(intent);
+            }
+          });
+
+          // Add the text view to the parent layout
+          viewGroup.addView(image);
+        }
+
       } else if (content.getType() == ContentSegment.SEGMENT_TEXT) {
         // Log.d("CreateView", "Text: " + content.getSpanned().toString());
 
@@ -127,43 +152,46 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
       }
     }
 
-    int index = imgList.size() - imgList.size() > 1 ? 2 : 1;
-    if (imgList.size() > 0) {
-      int size, width;
+    if(Settings.getInstance().isImageGridMode()) {
+      // 将图片统一以网格形式添加进去
+      int index = imgList.size() - imgList.size() > 1 ? 2 : 1;
+      if (imgList.size() > 0) {
+        int size, width;
 
-      Display display = mListener.getWindowManager().getDefaultDisplay();
-      Point point = new Point();
-      display.getSize(point);
-      width = point.x;
-      size = imgList.size();
+        Display display = mListener.getWindowManager().getDefaultDisplay();
+        Point point = new Point();
+        display.getSize(point);
+        width = point.x;
+        size = imgList.size();
 
-      gridLayout = new GridLayout(mListener);
-      GridLayout.Spec rowSpec, columnSpec;
+        gridLayout = new GridLayout(mListener);
+        GridLayout.Spec rowSpec, columnSpec;
 
-      GridLayout.LayoutParams gridParams = null;
-      int remainder, i;
-      remainder = i = size % 3;
-      for (int k = 0; k < remainder; ++k) {
-        rowSpec = GridLayout.spec(0);
-        columnSpec = GridLayout.spec(k);
-        gridParams = new GridLayout.LayoutParams(rowSpec, columnSpec);
-        gridParams.setGravity(Gravity.LEFT);
-        gridParams.width = width / i;
-        gridParams.height = width / 2;
-        gridLayout.addView(imgList.get(k), gridParams);
+        GridLayout.LayoutParams gridParams = null;
+        int remainder, i;
+        remainder = i = size % 3;
+        for (int k = 0; k < remainder; ++k) {
+          rowSpec = GridLayout.spec(0);
+          columnSpec = GridLayout.spec(k);
+          gridParams = new GridLayout.LayoutParams(rowSpec, columnSpec);
+          gridParams.setGravity(Gravity.LEFT);
+          gridParams.width = width / i;
+          gridParams.height = width / 2;
+          gridLayout.addView(imgList.get(k), gridParams);
+        }
+        viewGroup.addView(gridLayout, index++);
+
+        gridLayout = new GridLayout(mListener);
+        for (; i < size; ++i) {
+          rowSpec = GridLayout.spec((i - remainder) / 3);
+          columnSpec = GridLayout.spec((i - remainder) % 3);
+          gridParams = new GridLayout.LayoutParams(rowSpec, columnSpec);
+          gridParams.width = width / 3;
+          gridParams.height = width / 3;
+          gridLayout.addView(imgList.get(i), gridParams);
+        }
+        viewGroup.addView(gridLayout, index);
       }
-      viewGroup.addView(gridLayout, index++);
-
-      gridLayout = new GridLayout(mListener);
-      for (; i < size; ++i) {
-        rowSpec = GridLayout.spec((i - remainder) / 3);
-        columnSpec = GridLayout.spec((i - remainder) % 3);
-        gridParams = new GridLayout.LayoutParams(rowSpec, columnSpec);
-        gridParams.width = width / 3;
-        gridParams.height = width / 3;
-        gridLayout.addView(imgList.get(i), gridParams);
-      }
-      viewGroup.addView(gridLayout, index);
     }
   }
 

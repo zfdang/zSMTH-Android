@@ -46,6 +46,8 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
   CheckBoxPreference image_quality_control;
   CheckBoxPreference login_with_verification;
   CheckBoxPreference image_source_cdn;
+  CheckBoxPreference image_grid_mode;
+
   CheckBoxPreference board_master_only;
 
   CheckBoxPreference notification_control_mail;
@@ -185,6 +187,20 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
           bImageSourceCDN = boolVal;
         }
         Settings.getInstance().setImageSourceCDN(bImageSourceCDN);
+        return true;
+      }
+    });
+
+    image_grid_mode = (CheckBoxPreference) findPreference("setting_image_grid_mode");
+    image_grid_mode.setChecked(Settings.getInstance().isImageGridMode());
+    image_grid_mode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+      @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
+        boolean bImageGridMode = Settings.getInstance().isImageGridMode();
+        if (newValue instanceof Boolean) {
+          Boolean boolVal = (Boolean) newValue;
+          bImageGridMode = boolVal;
+        }
+        Settings.getInstance().setImageGridMode(bImageGridMode);
         return true;
       }
     });
