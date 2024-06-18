@@ -273,7 +273,7 @@ class IpLocationSeekerBinary {
 		
 		$country = iconv("gb18030", "utf-8//IGNORE", $country);
 		if($area){
-			if(ord($area{0}) == 2) $area = ""; // 不规则字符
+			if(ord($area[0]) == 2) $area = ""; // 不规则字符
 			else $area = iconv("gb18030", "utf-8//IGNORE", $area);
 		}
 		return array($country, $area);
