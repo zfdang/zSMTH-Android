@@ -84,8 +84,8 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         // use grid view to replace original imageview
         ImageView image = (ImageView) inflater.inflate(R.layout.post_item_image, viewGroup, false);
         image.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        image.setPadding(3, 3, 3, 3);
-        Glide.with(mListener).load(content.getUrl()).thumbnail(0.1f).into(image);
+        image.setPadding(5, 5, 5, 5);
+        Glide.with(mListener).load(content.getUrl()).into(image);
         image.setTag(R.id.image_tag, content.getImgIndex());
 
         // set onclicklistener
