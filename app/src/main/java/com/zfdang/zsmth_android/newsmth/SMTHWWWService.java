@@ -197,6 +197,6 @@ public interface SMTHWWWService {
             @Path("boardEngName") String boardEngName, @Path("postID") String postID,
             @Field("gid") String topicID, @Field("top") String top);
 
-    @GET("/nForum/user/ajax_session.json")
+    @GET("/nForum/board/NewExpress?ajax")
     Call<String> keepAlive();
 }
