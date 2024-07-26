@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
-  <PreferenceCategory android:title="缓存管理">
-    <Preference
-        android:key="setting_fresco_cache"
-        android:summary="缓存大小:0B"
-        android:title="清除图片缓存"/>
-    <Preference
-        android:key="setting_okhttp3_cache"
-        android:summary="缓存大小:0B"
-        android:title="清除帖子缓存"/>
-  </PreferenceCategory>
+<!--https://stackoverflow.com/questions/18509369/android-how-to-remove-margin-padding-in-preference-screen-->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
 
   <PreferenceCategory android:title="程序设置">
     <CheckBoxPreference
+        app:iconSpaceReserved="false"
         android:defaultValue="on"
         android:key="setting_login_with_verification"
         android:summaryOff="使用简单登录"
@@ -21,6 +12,7 @@
         android:title="登录方式"/>
 
     <CheckBoxPreference
+        app:iconSpaceReserved="false"
         android:defaultValue="on"
         android:key="launch_hottopic_as_entry"
         android:summaryOff="打开收藏页面"
@@ -28,6 +20,7 @@
         android:title="初始页面"/>
 
     <CheckBoxPreference
+        app:iconSpaceReserved="false"
         android:defaultValue="on"
         android:key="setting_post_navigation_control"
         android:summaryOff="快速导航栏已关闭"
@@ -35,6 +28,7 @@
         android:title="帖子快速导航栏"/>
 
     <CheckBoxPreference
+        app:iconSpaceReserved="false"
         android:defaultValue="on"
         android:key="setting_volume_key_scroll"
         android:summaryOff="禁用音量键翻页"
@@ -42,6 +36,7 @@
         android:title="音量键翻页"/>
 
     <ListPreference
+        app:iconSpaceReserved="false"
         android:title="字体设置"
         android:key="setting_fontsize_control"
         android:summary="%s"
@@ -50,6 +45,18 @@
     </ListPreference>
 
     <CheckBoxPreference
+        app:iconSpaceReserved="false"
+        android:defaultValue="on"
+        android:key="setting_board_master_only"
+        android:summaryOff="不显示版主专用功能"
+        android:summaryOn="显示版主专用功能"
+        android:title="版主专用功能"/>
+  </PreferenceCategory>
+
+
+  <PreferenceCategory android:title="图片设置">
+    <CheckBoxPreference
+        app:iconSpaceReserved="false"
         android:defaultValue="on"
         android:key="setting_image_quality_control"
         android:summaryOff="仅在全屏看图时加载原图(GIF点击后播放)"
@@ -57,6 +64,7 @@
         android:title="图片质量"/>
 
     <CheckBoxPreference
+        app:iconSpaceReserved="false"
         android:defaultValue="on"
         android:key="setting_image_source_cdn"
         android:summaryOff="从水木加载图片(海外访问使用)"
@@ -64,42 +72,38 @@
         android:title="图片来源"/>
 
     <CheckBoxPreference
+        app:iconSpaceReserved="false"
         android:defaultValue="on"
         android:key="setting_image_grid_mode"
         android:summaryOff="图文混合"
         android:summaryOn="图片以网格形式显示"
         android:title="图文显示模式"/>
-
-    <CheckBoxPreference
-        android:defaultValue="on"
-        android:key="setting_board_master_only"
-        android:summaryOff="不显示版主专用功能"
-        android:summaryOn="显示版主专用功能"
-        android:title="版主专用功能"/>
-
   </PreferenceCategory>
-
 
   <PreferenceCategory android:title="提醒">
     <CheckBoxPreference
+        app:iconSpaceReserved="false"
         android:defaultValue="on"
         android:key="setting_notification_control_mail"
         android:summaryOff="邮件提醒已关闭"
         android:summaryOn="邮件提醒已打开"
         android:title="邮件提醒"/>
     <CheckBoxPreference
+        app:iconSpaceReserved="false"
         android:defaultValue="on"
         android:key="setting_notification_control_at"
         android:summaryOff="\@提醒已关闭"
         android:summaryOn="\@提醒已打开"
         android:title="\@我提醒"/>
     <CheckBoxPreference
+        app:iconSpaceReserved="false"
         android:defaultValue="on"
         android:key="setting_notification_control_reply"
         android:summaryOff="回复提醒已关闭"
         android:summaryOn="回复提醒已打开"
         android:title="回复提醒"/>
     <CheckBoxPreference
+        app:iconSpaceReserved="false"
         android:defaultValue="on"
         android:key="setting_notification_control_like"
         android:summaryOff="Like提醒已关闭"
@@ -109,12 +113,14 @@
 
   <PreferenceCategory android:title="设备签名">
     <CheckBoxPreference
+        app:iconSpaceReserved="false"
         android:defaultValue="on"
         android:key="setting_signature_control"
         android:summaryOff="打赏作者: dantifer@gmail.com(支付宝)"
         android:summaryOn="使用签名"
         android:title="发帖时添加设备签名"/>
     <EditTextPreference
+        app:iconSpaceReserved="false"
         android:dialogTitle="输入设备型号"
         android:key="setting_signature_content"
         android:summary=""
@@ -122,8 +128,22 @@
         />
   </PreferenceCategory>
 
+  <PreferenceCategory android:title="缓存管理">
+    <Preference
+        app:iconSpaceReserved="false"
+        android:key="setting_fresco_cache"
+        android:summary="缓存大小:0B"
+        android:title="清除图片缓存"/>
+    <Preference
+        app:iconSpaceReserved="false"
+        android:key="setting_okhttp3_cache"
+        android:summary="缓存大小:0B"
+        android:title="清除帖子缓存"/>
+  </PreferenceCategory>
+
   <PreferenceCategory android:title="更多">
     <Preference
+        app:iconSpaceReserved="false"
         android:key="setting_app_version"
         android:summary="版本号: 未知"
         android:title="检查更新"/>
