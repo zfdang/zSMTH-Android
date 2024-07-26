@@ -558,6 +558,10 @@ public class MainActivity extends SMTHBaseActivity
   }
 
   private void quitNow() {
+    // stop keep alive service
+    if (keepAliveService != null)
+      stopService(keepAliveService);
+
     // quit
     finish();
     android.os.Process.killProcess(android.os.Process.myPid());
