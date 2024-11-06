@@ -35,11 +35,6 @@ jobs:
     - name: Assemble Release APK
       run: ./gradlew assembleRelease --stacktrace
   
-    - name: Upload APK to artifacts
-      uses: actions/upload-artifact@v1
-      with:
-        name: zSMTH
-        path: ./app/build/outputs/apk/
         
     - name: Create ZIPs
       working-directory: ./app/build/outputs/apk/
