@@ -4,7 +4,7 @@ apply plugin: 'com.github.ben-manes.versions'
 buildscript {
     repositories {
         mavenCentral()
-        jcenter()
+        // jcenter()
         google()
         maven {
             url "http://mvn.mob.com/android/";
@@ -22,16 +22,24 @@ buildscript {
         // in the individual module build.gradle files
 
         // 注册MobSDK
-        classpath 'com.mob.sdk:MobSDK:2018.0319.1724'
+        classpath 'com.mob.sdk:MobSDK:+'
     }
 }
 
 allprojects {
     repositories {
         mavenCentral()
-        jcenter()
+        // jcenter()
         google()
         maven { url "https://jitpack.io" }
+        maven { url "https://maven.scijava.org/content/repositories/public/" }
+        maven {
+            url "https://repo1.maven.org/maven2/"
+        }
+        maven {
+            url "https://repo.spring.io/libs-milestone/"
+        }        
+
     }
 }
 
