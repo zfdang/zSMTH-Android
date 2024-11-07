@@ -501,7 +501,7 @@ public class Settings {
     bLoadOriginalImage = mPreference.getBoolean(LOAD_ORIGINAL_IMAGE, true);
     bLoginWithVerification = mPreference.getBoolean(LOGIN_WITH_VERIFICATION, true);
     bImageSourceCDN = mPreference.getBoolean(IMAGE_SOURCE_CDN, true);
-    bImageGridMode = mPreference.getBoolean(IMAGE_GRID_MODE, true);
+    bImageGridMode = mPreference.getBoolean(IMAGE_GRID_MODE, false);
 
     bBoardMasterOnly = mPreference.getBoolean(BOARD_MASTER_ONLY, false);
 
