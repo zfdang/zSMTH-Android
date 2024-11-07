@@ -73,13 +73,19 @@ class IpLocationSeekerBinary {
 			// echo $country, ", ", $area, "\n";
 
 			$country = str_replace("中国–", "", $country);
+			$country = str_replace("加利福尼亚州", "加州", $country);
+			$country = str_replace("德克萨斯州", "德州", $country);
+			$country = str_replace("加利福尼亚州", "加州", $country);
 			$country = str_replace("北京–北京", "北京", $country);
 			$country = str_replace("天津-天津", "天津", $country);
 			$country = str_replace("上海-上海", "上海", $country);
 			$country = str_replace("重庆-重庆", "重庆", $country);
-			$country = str_replace("加利福尼亚州", "加州", $country);
-			$country = str_replace("德克萨斯州", "德州", $country);
-			$country = str_replace("加利福尼亚州", "加州", $country);
+			// 中建连字符貌似是中文的？
+			$country = str_replace("北京–北京", "北京", $country);
+			$country = str_replace("天津–天津", "天津", $country);
+			$country = str_replace("上海–上海", "上海", $country);
+			$country = str_replace("重庆–重庆", "重庆", $country);
+
 
 
 			$area = str_replace("'", "", $area);
@@ -150,6 +156,7 @@ class IpLocationSeekerBinary {
 			// }
 
 			$result = rtrim($result, '-');
+
 			// echo "{", $country, ",", $area, "} -> {", $result, "}\n";
 			$sql = "insert into qqwry (ip, country) values ({$ip_int}, '{$result}')";
 			$sqlite_seeker->execute($sql);
