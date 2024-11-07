@@ -69,64 +69,89 @@ class IpLocationSeekerBinary {
 			fseek($this->handle, $ip_record_pos_pos, SEEK_SET);
 			$ip_record_pos = self::fgetint_with_three_bytes($this->handle);
 			list($country, $area) = $this->get_country_and_area($ip_record_pos);
-			
-			$country = str_replace("\t", "", $country);
-			$country = str_replace("\n", "", $country);
-			$country = str_replace("地区", "", $country);
-			$country = str_replace("省", "", $country);
-			$country = str_replace("市", "", $country);
-			$country = str_replace("县", "", $country);
-			$country = str_replace("区", "", $country);
-			$country = str_replace("清华大学", "清华", $country);
-			$country = str_replace("CZ88.NET", "", $country);
-			// if($use_china_province_name) $country = self::real_province_name($country);
+
+			// echo $country, ", ", $area, "\n";
+
+			$country = str_replace("中国–", "", $country);
+			$country = str_replace("北京–北京", "北京", $country);
+			$country = str_replace("天津-天津", "天津", $country);
+			$country = str_replace("上海-上海", "上海", $country);
+			$country = str_replace("重庆-重庆", "重庆", $country);
+			$country = str_replace("加利福尼亚州", "加州", $country);
+			$country = str_replace("德克萨斯州", "德州", $country);
+			$country = str_replace("加利福尼亚州", "加州", $country);
+
+
+			$area = str_replace("'", "", $area);
 			$area = str_replace("\t", "", $area);
 			$area = str_replace("\n", "", $area);
-			$area = str_replace("CZ88.NET", "", $area);
-			$area = str_replace("'", "", $area);
 			$area = str_replace("(", "-", $area);
 			$area = str_replace(")", "-", $area);
 			$area = str_replace("/", "", $area);
+			$area = str_replace("CZ88.NET", "", $area);
+			$area = str_replace("互联网有限公司", "公司", $area);
+			$area = str_replace("有限公司", "公司", $area);
+			$area = str_replace("Level3", "", $area);
+			$area = rtrim($area, '-');
+
+			// echo $country, "--", $area, "\n";
+			
+			// $country = str_replace("\t", "", $country);
+			// $country = str_replace("\n", "", $country);
+			// $country = str_replace("地区", "", $country);
+			// $country = str_replace("省", "", $country);
+			// $country = str_replace("市", "", $country);
+			// $country = str_replace("县", "", $country);
+			// $country = str_replace("区", "", $country);
+			// $country = str_replace("清华大学", "清华", $country);
+			// $country = str_replace("CZ88.NET", "", $country);
+			// if($use_china_province_name) $country = self::real_province_name($country);
 
 			// echo long2ip($ip_int), "\t{", $country, "}\t{", $area, "}\n";
 
 			$detail = "";
-			if(strpos($area, '大学') !== false && strlen($detail) == 0) {
-				$detail = substr($area, 0, strpos($area, '大学') + strlen('大学'));
-				// echo $detail, "\n";
-				$country = $country."-".$detail;
-				echo $country, "\n";
+			$result = $country;
+			if(strlen($area) > 1) { // 一个字符的，忽略掉，估计也不是啥有用信息
+				$result = $country."-".$area;				
 			}
+			// if(strpos($area, '大学') !== false && strlen($detail) == 0) {
+			// 	$detail = substr($area, 0, strpos($area, '大学') + strlen('大学'));
+			// 	// echo $detail, "\n";
+			// 	$result = $country."-".$detail;
+			// 	// echo $country, "\n";
+			// }
 
-			if(strpos($area, '学院') !== false && strlen($detail) == 0) {
-				$detail = substr($area, 0, strpos($area, '学院') + strlen('学院'));
-				// echo $detail, "\n";
-				$country = $country."-".$detail;
-				echo $country, "\n";
-			}
+			// if(strpos($area, '学院') !== false && strlen($detail) == 0) {
+			// 	$detail = substr($area, 0, strpos($area, '学院') + strlen('学院'));
+			// 	// echo $detail, "\n";
+			// 	$result = $country."-".$detail;
+			// 	// echo $country, "\n";
+			// }
 
-			if(strpos($area, '公司') !== false && strlen($detail) == 0) {
-				$detail = substr($area, 0, strpos($area, '公司') + strlen('公司'));
-				// echo $detail, "\n";
-				$country = $country."-".$detail;
-				echo $country, "\n";
-			}
+			// if(strpos($area, '公司') !== false && strlen($detail) == 0) {
+			// 	$detail = substr($area, 0, strpos($area, '公司') + strlen('公司'));
+			// 	// echo $detail, "\n";
+			// 	$result = $country."-".$detail;
+			// 	// echo $country, "\n";
+			// }
 
-			if(strpos($area, '中心') !== false && strlen($detail) == 0) {
-				$detail = substr($area, 0, strpos($area, '中心') + strlen('中心'));
-				// echo $detail, "\n";
-				$country = $country."-".$detail;
-				echo $country, "\n";
-			}
+			// if(strpos($area, '中心') !== false && strlen($detail) == 0) {
+			// 	$detail = substr($area, 0, strpos($area, '中心') + strlen('中心'));
+			// 	// echo $detail, "\n";
+			// 	$result = $country."-".$detail;
+			// 	// echo $country, "\n";
+			// }
 
-			if(strpos($area, '州') !== false && strlen($detail) == 0) {
-				$detail = substr($area, 0, strpos($area, '州') + strlen('州'));
-				// echo $detail, "\n";
-				$country = $country."-".$detail;
-				echo $country, "\n";
-			}
+			// if(strpos($area, '州') !== false && strlen($detail) == 0) {
+			// 	$detail = substr($area, 0, strpos($area, '州') + strlen('州'));
+			// 	// echo $detail, "\n";
+			// 	$result = $country."-".$detail;
+			// 	// echo $country, "\n";
+			// }
 
-			$sql = "insert into qqwry (ip, country) values ({$ip_int}, '{$country}')";
+			$result = rtrim($result, '-');
+			// echo "{", $country, ",", $area, "} -> {", $result, "}\n";
+			$sql = "insert into qqwry (ip, country) values ({$ip_int}, '{$result}')";
 			$sqlite_seeker->execute($sql);
 		}
 		
