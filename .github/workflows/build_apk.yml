@@ -7,6 +7,8 @@ name: Build_zSMTH_APK
 on:
   push:
     branches: [ master ]
+    paths-ignore:
+      - 'docs/**'    
   pull_request:
     branches: [ master ]
 
