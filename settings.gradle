@@ -1,1 +1,1 @@
-include ':app', ':multiple-images-selector', ':device_model_to_marketing_name'
+include ':app', ':multiple-images-selector', ':device_model_to_marketing_name', ':swipebackhelper'

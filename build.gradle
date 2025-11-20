@@ -13,7 +13,7 @@ buildscript {
     }
     dependencies {
         // https://developer.android.com/studio/releases/gradle-plugin.html
-        classpath 'com.android.tools.build:gradle:8.7.2'
+        classpath 'com.android.tools.build:gradle:8.13.1'
 
         // https://github.com/ben-manes/gradle-versions-plugin
         classpath 'com.github.ben-manes:gradle-versions-plugin:+'
