@@ -14,8 +14,12 @@ def appVersion = getDate()
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolsVersion
     ndkVersion "21.4.7075529"
+
+    // Explicitly enable BuildConfig generation to keep the feature when AGP removes the default
+    buildFeatures {
+        buildConfig true
+    }
 
     defaultConfig {
         applicationId "com.zfdang.zsmth_android"

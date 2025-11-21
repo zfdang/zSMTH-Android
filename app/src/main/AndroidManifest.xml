@@ -43,7 +43,10 @@
             android:name=".LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_login" />
-        <activity android:name=".WebviewLoginActivity"></activity>
+        <activity
+            android:name=".WebviewLoginActivity"
+            android:hardwareAccelerated="true"
+            android:configChanges="orientation|keyboardHidden|screenSize"></activity>
         <activity
             android:name=".BoardTopicActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

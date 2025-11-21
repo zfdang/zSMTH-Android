@@ -2,8 +2,12 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolsVersion
     namespace 'com.jude.swipbackhelper'
+
+    // Explicitly enable BuildConfig generation to avoid AGP deprecation warning
+    buildFeatures {
+        buildConfig true
+    }
 
     defaultConfig {
         minSdkVersion 17

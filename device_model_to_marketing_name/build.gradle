@@ -9,7 +9,11 @@ ext {
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolsVersion
+
+    // Explicitly enable BuildConfig generation to avoid AGP deprecation warning
+    buildFeatures {
+        buildConfig true
+    }
 
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion

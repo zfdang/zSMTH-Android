@@ -51,8 +51,6 @@ ext {
     minSdkVersion = 17
     targetSdkVersion = 29
     compileSdkVersion = 31
-    // https://developer.android.com/studio/releases/build-tools
-    buildToolsVersion = '34.0.0'
     FRESCO_VERSION = '1.14.2'
     RXJAVA2_VERSION = '2.2.21'
     RXANDROID2_VERSION = '2.1.1'
