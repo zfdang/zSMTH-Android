@@ -2,6 +2,7 @@ package com.zfdang.zsmth_android;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.webkit.ConsoleMessage;
 import android.webkit.RenderProcessGoneDetail;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -30,42 +31,54 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
 
         mWebView = (WebView) findViewById(R.id.webview_login);
 
-        WebSettings webSettings = mWebView.getSettings();
-        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
-        webSettings.setGeolocationEnabled(false);
-        webSettings.setSaveFormData(false);
-        webSettings.setSavePassword(false);
-        webSettings.setJavaScriptEnabled(true); ///------- 设置javascript 可用
+        try {
+            WebSettings webSettings = mWebView.getSettings();
+            webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+            webSettings.setGeolocationEnabled(false);
+            webSettings.setSaveFormData(false);
+            webSettings.setSavePassword(false);
+            webSettings.setJavaScriptEnabled(true); ///------- 设置javascript 可用
 
-        // https://stackoverflow.com/questions/9602124/enable-horizontal-scrolling-in-a-webview
-        webSettings.setLoadWithOverviewMode(true);
-        webSettings.setUseWideViewPort(true);
+            // https://stackoverflow.com/questions/9602124/enable-horizontal-scrolling-in-a-webview
+            webSettings.setLoadWithOverviewMode(true);
+            webSettings.setUseWideViewPort(true);
 //        mWebView.setInitialScale(120);
 //        mWebView.getSettings().setTextZoom(200);
 
-        //支持屏幕缩放
-        webSettings.setSupportZoom(true);
-        webSettings.setBuiltInZoomControls(true);
+            //支持屏幕缩放
+            webSettings.setSupportZoom(true);
+            webSettings.setBuiltInZoomControls(true);
 
-        // Android 16兼容性修复：启用必要的WebView功能
-        // Fix for Android 16: Enable necessary WebView features
-        webSettings.setDomStorageEnabled(true);  // 启用DOM存储，现代网页必需
-        webSettings.setDatabaseEnabled(true);     // 启用数据库存储
+            // Android 16兼容性修复：启用必要的WebView功能
+            // Fix for Android 16: Enable necessary WebView features
+            webSettings.setDomStorageEnabled(true);  // 启用DOM存储，现代网页必需
+            webSettings.setDatabaseEnabled(true);     // 启用数据库存储
 
-        // 允许混合内容 (需要 API 21+)
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            webSettings.setMixedContentMode(android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+            // 允许混合内容 (需要 API 21+)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                webSettings.setMixedContentMode(android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+            }
+
+            // Android 16兼容性修复：确保WebView渲染器不会因为错误而白屏
+            // Fix for Android 16: Ensure WebView renderer doesn't crash
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                webSettings.setSafeBrowsingEnabled(true);
+            }
+
+            // Ensure user agent has a modern token to avoid some sites returning mobile-empty pages
+            String ua = webSettings.getUserAgentString();
+            if (ua == null || !ua.contains("Mobile")) {
+                webSettings.setUserAgentString(ua + " Mobile-SMTH-App");
+            }
+
+            // Only set hardware layer on API 17+ to be safe
+            if (android.os.Build.VERSION.SDK_INT >= 17) {
+                mWebView.setLayerType(android.view.View.LAYER_TYPE_HARDWARE, null);
+            }
+
+        } catch (Throwable t) {
+            Log.e(TAG, "Exception while configuring WebView settings", t);
         }
-
-        // Android 16兼容性修复：确保WebView渲染器不会因为错误而白屏
-        // Fix for Android 16: Ensure WebView renderer doesn't crash
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            webSettings.setSafeBrowsingEnabled(true);
-        }
-
-        // 启用硬件加速以提高性能（Android 16推荐）
-        // Enable hardware acceleration for better performance (recommended for Android 16)
-        mWebView.setLayerType(android.view.View.LAYER_TYPE_HARDWARE, null);
 
         mWebView.setWebChromeClient(new WebChromeClient()
         {
@@ -74,6 +87,12 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
             {
                 super.onProgressChanged(view, newProgress);
                 view.requestFocus();
+            }
+
+            @Override
+            public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+                Log.i(TAG, "Console: " + consoleMessage.message() + " -- " + consoleMessage.sourceId() + ":" + consoleMessage.lineNumber());
+                return super.onConsoleMessage(consoleMessage);
             }
         });
 
@@ -102,7 +121,16 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
         };
 
         mWebView.setWebViewClient(webViewClient);
-        mWebView.loadUrl(url);
+
+        try {
+            mWebView.loadUrl(url);
+        } catch (Throwable t) {
+            Log.e(TAG, "Exception while loading URL", t);
+            // Show a simple fallback message instead of a white screen
+            if (mWebView != null) {
+                mWebView.loadData("<html><body><h3>加载失败，请检查网络或重试</h3></body></html>", "text/html", "UTF-8");
+            }
+        }
     }
 
     @Override
