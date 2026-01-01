@@ -69,7 +69,8 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
     EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
   }
 
-  @Override protected void onCreate(Bundle savedInstanceState) {
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     // 延伸显示区域到刘海
@@ -104,14 +105,16 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
 
     btBack = (ImageView) findViewById(R.id.fullscreen_button_back);
     btBack.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
+      @Override
+      public void onClick(View v) {
         finish();
       }
     });
 
     btInfo = (ImageView) findViewById(R.id.fullscreen_button_info);
     btInfo.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
+      @Override
+      public void onClick(View v) {
         int position = mViewPager.getCurrentItem();
         final String imagePath = mURLs.get(position);
 
@@ -121,7 +124,8 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
 
     btSave = (ImageView) findViewById(R.id.fullscreen_button_save);
     btSave.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
+      @Override
+      public void onClick(View v) {
         int position = mViewPager.getCurrentItem();
         mTargetImagePath = mURLs.get(position);
 
@@ -134,7 +138,6 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
         saveImageToFile();
       }
     });
-
 
     SwipeBackHelper.onCreate(this);
     SwipeBackHelper.getCurrentPage(this).setSwipeEdgePercent(0.2f);
@@ -155,16 +158,15 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
     // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
     View decorView = getWindow().getDecorView();
     decorView.setSystemUiVisibility(
-            View.SYSTEM_UI_FLAG_IMMERSIVE
-                    // Hide the nav bar and status bar
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    // Set the content to appear under the system bars so that the
-                    // content doesn't resize when the system bars hide and show.
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-    );
+        View.SYSTEM_UI_FLAG_IMMERSIVE
+            // Hide the nav bar and status bar
+            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+            | View.SYSTEM_UI_FLAG_FULLSCREEN
+            // Set the content to appear under the system bars so that the
+            // content doesn't resize when the system bars hide and show.
+            | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
   }
 
   // Shows the system bars by removing all the flags
@@ -172,23 +174,25 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
   private void showSystemUI() {
     View decorView = getWindow().getDecorView();
     decorView.setSystemUiVisibility(
-            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
   }
 
-
-  @Override protected void onPostCreate(Bundle savedInstanceState) {
+  @Override
+  protected void onPostCreate(Bundle savedInstanceState) {
     super.onPostCreate(savedInstanceState);
     SwipeBackHelper.onPostCreate(this);
   }
 
-  @Override protected void onDestroy() {
+  @Override
+  protected void onDestroy() {
     super.onDestroy();
     SwipeBackHelper.onDestroy(this);
   }
 
-  @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
+  @Override
+  public boolean onKeyDown(int keyCode, KeyEvent event) {
     if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
       mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, true);
       return true;
@@ -200,7 +204,8 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
   }
 
   // http://stackoverflow.com/questions/4500354/control-volume-keys
-  @Override public boolean onKeyUp(int keyCode, KeyEvent event) {
+  @Override
+  public boolean onKeyUp(int keyCode, KeyEvent event) {
     // disable the beep sound when volume up/down is pressed
     if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP) || (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
       return true;
@@ -212,65 +217,39 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
     return Integer.toHexString(imagePath.hashCode());
   }
 
-  @AfterPermissionGranted(RC_READ_WRITE_STORAGE)
+  // @AfterPermissionGranted(RC_READ_WRITE_STORAGE)
   void saveImageToFile() {
-    String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-    if (EasyPermissions.hasPermissions(this, perms)) {
-      // Already have permission, do the thing
-      File imageFile = FrescoUtils.getCachedImageOnDisk(Uri.parse(mTargetImagePath));
-      if (imageFile == null) {
-        Toast.makeText(FSImageViewerActivity.this, "无法读取缓存文件！", Toast.LENGTH_LONG).show();
-        return;
-      }
-      // Log.d(TAG, "saveImageToFile: " + imageFile.getAbsolutePath());
-
-      // save image to sdcard
-      try {
-        if (TextUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED)) {
-          String path = Environment.getExternalStorageDirectory().getPath() + "/zSMTH/";
-          File dir = new File(path);
-          if (!dir.exists()) {
-            dir.mkdirs();
-          }
-
-          String IMAGE_FILE_PREFIX = "zSMTH-";
-          String IMAGE_FILE_SUFFIX = ".jpg";
-          if (mTargetImageAnimation) {
-            IMAGE_FILE_SUFFIX = ".gif";
-          }
-          File outFile = new File(dir, IMAGE_FILE_PREFIX + getURLHashCode(mTargetImagePath) + IMAGE_FILE_SUFFIX);
-
-          BufferedInputStream bufr = new BufferedInputStream(new FileInputStream(imageFile));
-          BufferedOutputStream bufw = new BufferedOutputStream(new FileOutputStream(outFile));
-
-          int len = 0;
-          byte[] buf = new byte[1024];
-          while ((len = bufr.read(buf)) != -1) {
-            bufw.write(buf, 0, len);
-            bufw.flush();
-          }
-          bufw.close();
-          bufr.close();
-
-          // make sure the new file can be recognized soon
-          sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(outFile)));
-
-          Toast.makeText(FSImageViewerActivity.this, "图片已存为: /zSMTH/" + outFile.getName(), Toast.LENGTH_SHORT).show();
-        }
-      } catch (Exception e) {
-        Log.e(TAG, "saveImageToFile: " + Log.getStackTraceString(e));
-        Toast.makeText(FSImageViewerActivity.this, "保存图片失败:\n请授予应用存储权限！\n" + e.toString(), Toast.LENGTH_LONG).show();
-      }
-    } else {
-      // Do not have permissions, request them now
-      EasyPermissions.requestPermissions(this, getString(R.string.read_write_storage_rationale),
-              RC_READ_WRITE_STORAGE, perms);
+    // String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE,
+    // Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    // if (EasyPermissions.hasPermissions(this, perms)) {
+    // Already have permission, do the thing
+    File imageFile = FrescoUtils.getCachedImageOnDisk(Uri.parse(mTargetImagePath));
+    if (imageFile == null) {
+      Toast.makeText(FSImageViewerActivity.this, "无法读取缓存文件！", Toast.LENGTH_LONG).show();
+      return;
     }
+
+    String IMAGE_FILE_PREFIX = "zSMTH-";
+    String IMAGE_FILE_SUFFIX = ".jpg";
+    if (mTargetImageAnimation) {
+      IMAGE_FILE_SUFFIX = ".gif";
+    }
+    String fileName = IMAGE_FILE_PREFIX + getURLHashCode(mTargetImagePath) + IMAGE_FILE_SUFFIX;
+
+    com.zfdang.zsmth_android.helpers.FileSaveUtils.saveImageToGallery(this, imageFile, fileName);
+
+    // } else {
+    // // Do not have permissions, request them now
+    // EasyPermissions.requestPermissions(this,
+    // getString(R.string.read_write_storage_rationale),
+    // RC_READ_WRITE_STORAGE, perms);
+    // }
   }
 
   // get image attribute from exif
   private void setImageAttributeFromExif(View layout, int tv_id, ExifInterface exif, String attr) {
-    if (layout == null || exif == null) return;
+    if (layout == null || exif == null)
+      return;
     TextView tv = (TextView) layout.findViewById(tv_id);
     if (tv == null) {
       Log.d(TAG, "setImageAttributeFromExif: " + "Invalid resource ID: " + tv_id);
@@ -448,10 +427,12 @@ public class FSImageViewerActivity extends AppCompatActivity implements OnPhotoT
       Log.d("read ExifInfo", "can't read Exif information");
     }
 
-    new AlertDialog.Builder(FSImageViewerActivity.this).setView(layout).setOnDismissListener(new DialogInterface.OnDismissListener() {
-      @Override public void onDismiss(DialogInterface dialog) {
-      }
-    }).show();
+    new AlertDialog.Builder(FSImageViewerActivity.this).setView(layout)
+        .setOnDismissListener(new DialogInterface.OnDismissListener() {
+          @Override
+          public void onDismiss(DialogInterface dialog) {
+          }
+        }).show();
   }
 
   private void toggleToobarVisibility() {

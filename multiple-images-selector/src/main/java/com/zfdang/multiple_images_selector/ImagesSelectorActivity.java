@@ -48,7 +48,8 @@ import pub.devrel.easypermissions.EasyPermissions;
 import xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller;
 
 public class ImagesSelectorActivity extends AppCompatActivity
-        implements OnImageRecyclerViewInteractionListener, OnFolderRecyclerViewInteractionListener, View.OnClickListener{
+        implements OnImageRecyclerViewInteractionListener, OnFolderRecyclerViewInteractionListener,
+        View.OnClickListener {
 
     private static final String TAG = "ImageSelector";
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -81,19 +82,22 @@ public class ImagesSelectorActivity extends AppCompatActivity
 
         // hide actionbar
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null) {
+        if (actionBar != null) {
             actionBar.hide();
         }
 
         // get parameters from bundle
         Intent intent = getIntent();
-        SelectorSettings.mMaxImageNumber = intent.getIntExtra(SelectorSettings.SELECTOR_MAX_IMAGE_NUMBER, SelectorSettings.mMaxImageNumber);
-        SelectorSettings.isShowCamera = intent.getBooleanExtra(SelectorSettings.SELECTOR_SHOW_CAMERA, SelectorSettings.isShowCamera);
-        SelectorSettings.mMinImageSize = intent.getIntExtra(SelectorSettings.SELECTOR_MIN_IMAGE_SIZE, SelectorSettings.mMinImageSize);
+        SelectorSettings.mMaxImageNumber = intent.getIntExtra(SelectorSettings.SELECTOR_MAX_IMAGE_NUMBER,
+                SelectorSettings.mMaxImageNumber);
+        SelectorSettings.isShowCamera = intent.getBooleanExtra(SelectorSettings.SELECTOR_SHOW_CAMERA,
+                SelectorSettings.isShowCamera);
+        SelectorSettings.mMinImageSize = intent.getIntExtra(SelectorSettings.SELECTOR_MIN_IMAGE_SIZE,
+                SelectorSettings.mMinImageSize);
 
         ArrayList<String> selected = intent.getStringArrayListExtra(SelectorSettings.SELECTOR_INITIAL_SELECTED_LIST);
         ImageListContent.SELECTED_IMAGES.clear();
-        if(selected != null && selected.size() > 0) {
+        if (selected != null && selected.size() > 0) {
             ImageListContent.SELECTED_IMAGES.addAll(selected);
         }
 
@@ -117,10 +121,12 @@ public class ImagesSelectorActivity extends AppCompatActivity
             }
             recyclerView.setAdapter(new ImageRecyclerViewAdapter(ImageListContent.IMAGES, this));
 
-            VerticalRecyclerViewFastScroller fastScroller = (VerticalRecyclerViewFastScroller) findViewById(R.id.recyclerview_fast_scroller);
+            VerticalRecyclerViewFastScroller fastScroller = (VerticalRecyclerViewFastScroller) findViewById(
+                    R.id.recyclerview_fast_scroller);
             // Connect the recycler to the scroller (to let the scroller scroll the list)
             fastScroller.setRecyclerView(recyclerView);
-            // Connect the scroller to the recycler (to let the recycler scroll the scroller's handle)
+            // Connect the scroller to the recycler (to let the recycler scroll the
+            // scroller's handle)
             recyclerView.addOnScrollListener(fastScroller.getOnScrollListener());
         }
 
@@ -170,17 +176,25 @@ public class ImagesSelectorActivity extends AppCompatActivity
             MediaStore.Images.Media.DATE_ADDED,
             MediaStore.Images.Media.MIME_TYPE,
             MediaStore.Images.Media.SIZE,
-            MediaStore.Images.Media._ID};
+            MediaStore.Images.Media._ID };
 
     // this method is to load images and folders for all
     @AfterPermissionGranted(RC_READ_WRITE_STORAGE)
     public void LoadFolderAndImages() {
-        String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        String[] perms;
+        if (android.os.Build.VERSION.SDK_INT >= 33) {
+            perms = new String[] { Manifest.permission.READ_MEDIA_IMAGES };
+        } else {
+            perms = new String[] { Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE };
+        }
+
         if (EasyPermissions.hasPermissions(this, perms)) {
             // Already have permission, do the thing
             Log.d(TAG, "Load Folder And Images...");
             Observable.just("").flatMap(new Function<String, Observable<ImageItem>>() {
-                @Override public Observable<ImageItem> apply(@NonNull String s) throws Exception {
+                @Override
+                public Observable<ImageItem> apply(@NonNull String s) throws Exception {
                     List<ImageItem> results = new ArrayList<>();
 
                     Uri contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
@@ -225,12 +239,14 @@ public class ImagesSelectorActivity extends AppCompatActivity
                             // add current image item to all
                             allImagesFolderItem.addImageItem(item);
 
-                            // find the parent folder for this image, and add path to folderList if not existed
+                            // find the parent folder for this image, and add path to folderList if not
+                            // existed
                             String folderPath = new File(path).getParentFile().getAbsolutePath();
                             FolderItem folderItem = FolderListContent.getItem(folderPath);
                             if (folderItem == null) {
                                 // does not exist, create it
-                                folderItem = new FolderItem(StringUtils.getLastPathSegment(folderPath), folderPath, path);
+                                folderItem = new FolderItem(StringUtils.getLastPathSegment(folderPath), folderPath,
+                                        path);
                                 FolderListContent.addItem(folderItem);
                             }
                             folderItem.addImageItem(item);
@@ -239,25 +255,30 @@ public class ImagesSelectorActivity extends AppCompatActivity
                     } // } else if (cursor.moveToFirst()) {
                     return Observable.fromIterable(results);
                 }
-            }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<ImageItem>() {
-                @Override public void onSubscribe(@NonNull Disposable disposable) {
+            }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<ImageItem>() {
+                        @Override
+                        public void onSubscribe(@NonNull Disposable disposable) {
 
-                }
+                        }
 
-                @Override public void onNext(@NonNull ImageItem imageItem) {
-                    // Log.d(TAG, "onNext: " + imageItem.toString());
-                    ImageListContent.addItem(imageItem);
-                    recyclerView.getAdapter().notifyItemChanged(ImageListContent.IMAGES.size() - 1);
-                }
+                        @Override
+                        public void onNext(@NonNull ImageItem imageItem) {
+                            // Log.d(TAG, "onNext: " + imageItem.toString());
+                            ImageListContent.addItem(imageItem);
+                            recyclerView.getAdapter().notifyItemChanged(ImageListContent.IMAGES.size() - 1);
+                        }
 
-                @Override public void onError(@NonNull Throwable throwable) {
-                    Log.d(TAG, "onError: " + Log.getStackTraceString(throwable));
-                }
+                        @Override
+                        public void onError(@NonNull Throwable throwable) {
+                            Log.d(TAG, "onError: " + Log.getStackTraceString(throwable));
+                        }
 
-                @Override public void onComplete() {
+                        @Override
+                        public void onComplete() {
 
-                }
-            });
+                        }
+                    });
         } else {
             // Do not have permissions, request them now
             EasyPermissions.requestPermissions(this, getString(R.string.read_write_storage_rationale),
@@ -266,13 +287,14 @@ public class ImagesSelectorActivity extends AppCompatActivity
     }
 
     public void updateDoneButton() {
-        if(ImageListContent.SELECTED_IMAGES.size() == 0) {
+        if (ImageListContent.SELECTED_IMAGES.size() == 0) {
             mButtonConfirm.setEnabled(false);
         } else {
             mButtonConfirm.setEnabled(true);
         }
 
-        String caption = getResources().getString(R.string.selector_action_done, ImageListContent.SELECTED_IMAGES.size(), SelectorSettings.mMaxImageNumber);
+        String caption = getResources().getString(R.string.selector_action_done,
+                ImageListContent.SELECTED_IMAGES.size(), SelectorSettings.mMaxImageNumber);
         mButtonConfirm.setText(caption);
     }
 
@@ -280,7 +302,7 @@ public class ImagesSelectorActivity extends AppCompatActivity
         mFolderPopupWindow.dismiss();
 
         FolderItem folder = FolderListContent.getSelectedFolder();
-        if( !TextUtils.equals(folder.path, this.currentFolderPath) ) {
+        if (!TextUtils.equals(folder.path, this.currentFolderPath)) {
             this.currentFolderPath = folder.path;
             mFolderSelectButton.setText(folder.name);
 
@@ -300,13 +322,14 @@ public class ImagesSelectorActivity extends AppCompatActivity
 
     @Override
     public void onImageItemInteraction(ImageItem item) {
-        if(ImageListContent.bReachMaxNumber) {
-            String hint = getResources().getString(R.string.selector_reach_max_image_hint, SelectorSettings.mMaxImageNumber);
+        if (ImageListContent.bReachMaxNumber) {
+            String hint = getResources().getString(R.string.selector_reach_max_image_hint,
+                    SelectorSettings.mMaxImageNumber);
             Toast.makeText(ImagesSelectorActivity.this, hint, Toast.LENGTH_SHORT).show();
             ImageListContent.bReachMaxNumber = false;
         }
 
-        if(item.isCamera()) {
+        if (item.isCamera()) {
             launchCamera();
         }
 
@@ -315,7 +338,7 @@ public class ImagesSelectorActivity extends AppCompatActivity
 
     @AfterPermissionGranted(RC_CAMERA)
     public void launchCamera() {
-        String[] perms = {Manifest.permission.CAMERA};
+        String[] perms = { Manifest.permission.CAMERA };
         if (EasyPermissions.hasPermissions(this, perms)) {
             // Already have permission, do the thing
             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -355,7 +378,8 @@ public class ImagesSelectorActivity extends AppCompatActivity
                     Intent resultIntent = new Intent();
                     ImageListContent.clear();
                     ImageListContent.SELECTED_IMAGES.add(mTempImageFile.getAbsolutePath());
-                    resultIntent.putStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS, ImageListContent.SELECTED_IMAGES);
+                    resultIntent.putStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS,
+                            ImageListContent.SELECTED_IMAGES);
                     setResult(RESULT_OK, resultIntent);
                     finish();
                 }
@@ -371,13 +395,12 @@ public class ImagesSelectorActivity extends AppCompatActivity
         }
     }
 
-
     @Override
     public void onClick(View v) {
-        if( v == mButtonBack) {
+        if (v == mButtonBack) {
             setResult(Activity.RESULT_CANCELED);
             finish();
-        } else if(v == mButtonConfirm) {
+        } else if (v == mButtonConfirm) {
             Intent data = new Intent();
             data.putStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS, ImageListContent.SELECTED_IMAGES);
             setResult(Activity.RESULT_OK, data);

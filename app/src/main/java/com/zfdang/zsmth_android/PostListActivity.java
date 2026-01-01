@@ -86,7 +86,8 @@ import pub.devrel.easypermissions.EasyPermissions;
  * in a {@link BoardTopicActivity}.
  */
 public class PostListActivity extends SMTHBaseActivity
-    implements View.OnClickListener, OnTouchListener, RecyclerViewGestureListener.OnItemLongClickListener, PopupLikeWindow.OnLikeInterface,
+    implements View.OnClickListener, OnTouchListener, RecyclerViewGestureListener.OnItemLongClickListener,
+    PopupLikeWindow.OnLikeInterface,
     PopupForwardWindow.OnForwardInterface, PopupBanWindow.OnBanIDInterface {
 
   private static final String TAG = "PostListActivity";
@@ -117,7 +118,6 @@ public class PostListActivity extends SMTHBaseActivity
     ClassicsFooter.REFRESH_FOOTER_NOTHING = "";
   }
 
-
   private SmartRefreshLayout mRefreshLayout;
   private String mFrom;
 
@@ -130,7 +130,8 @@ public class PostListActivity extends SMTHBaseActivity
   String capPostID;
   private final static int RC_READ_WRITE_STORAGE = 1245;
 
-  @Override protected void onDestroy() {
+  @Override
+  protected void onDestroy() {
     super.onDestroy();
     SwipeBackHelper.onDestroy(this);
   }
@@ -143,13 +144,15 @@ public class PostListActivity extends SMTHBaseActivity
     EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
   }
 
-  @Override protected void onPostCreate(Bundle savedInstanceState) {
+  @Override
+  protected void onPostCreate(Bundle savedInstanceState) {
     super.onPostCreate(savedInstanceState);
     SwipeBackHelper.onPostCreate(this);
   }
 
-  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if(requestCode == ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE) {
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if (requestCode == ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE) {
       // returned from Compose activity, refresh current post
       // TODO: check resultCode
       reloadPostList();
@@ -157,7 +160,8 @@ public class PostListActivity extends SMTHBaseActivity
     super.onActivityResult(requestCode, resultCode, data);
   }
 
-  @Override protected void onCreate(Bundle savedInstanceState) {
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     SwipeBackHelper.onCreate(this);
 
@@ -182,13 +186,15 @@ public class PostListActivity extends SMTHBaseActivity
     mRefreshLayout.setEnableScrollContentWhenLoaded(false);
     mRefreshLayout.setEnableOverScrollBounce(false);
     mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
-      @Override public void onRefresh(RefreshLayout refreshLayout) {
+      @Override
+      public void onRefresh(RefreshLayout refreshLayout) {
         // reload current page
         reloadPostListWithoutAlert();
       }
     });
     mRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
-      @Override public void onLoadMore(RefreshLayout refreshLayout) {
+      @Override
+      public void onLoadMore(RefreshLayout refreshLayout) {
         // load next page if available
         goToNextPage();
       }
@@ -202,8 +208,10 @@ public class PostListActivity extends SMTHBaseActivity
     mRecyclerView.setLayoutManager(linearLayoutManager);
     mRecyclerView.setAdapter(new PostRecyclerViewAdapter(PostListContent.POSTS, this));
 
-    //  holder.mView.setOnTouchListener(this); so the event will be sent from holder.mView
-    mGestureDetector = new GestureDetector(SMTHApplication.getAppContext(), new RecyclerViewGestureListener(this, mRecyclerView));
+    // holder.mView.setOnTouchListener(this); so the event will be sent from
+    // holder.mView
+    mGestureDetector = new GestureDetector(SMTHApplication.getAppContext(),
+        new RecyclerViewGestureListener(this, mRecyclerView));
 
     // get Board information from launcher
     Intent intent = getIntent();
@@ -211,8 +219,9 @@ public class PostListActivity extends SMTHBaseActivity
     assert topic != null;
     mFrom = intent.getStringExtra(SMTHApplication.FROM_BOARD);
     // now onCreateOptionsMenu(...) is called again
-    //        invalidateOptionsMenu();
-    //        Log.d(TAG, String.format("Load post list for topic = %s, source = %s", topic.toString(), mFrom));
+    // invalidateOptionsMenu();
+    // Log.d(TAG, String.format("Load post list for topic = %s, source = %s",
+    // topic.toString(), mFrom));
 
     // set onClick Lisetner for page navigator buttons
     findViewById(R.id.post_list_first_page).setOnClickListener(this);
@@ -288,7 +297,8 @@ public class PostListActivity extends SMTHBaseActivity
     final SMTHHelper helper = SMTHHelper.getInstance();
     helper.wService.getPostListByPage(mTopic.getTopicURL(), mTopic.getTopicID(), mCurrentPageNo, mFilterUser)
         .flatMap(new Function<ResponseBody, Observable<Post>>() {
-          @Override public Observable<Post> apply(@NonNull ResponseBody responseBody) throws Exception {
+          @Override
+          public Observable<Post> apply(@NonNull ResponseBody responseBody) throws Exception {
             try {
               String response = responseBody.string();
               List<Post> posts = SMTHHelper.ParsePostListFromWWW(response, mTopic);
@@ -302,22 +312,26 @@ public class PostListActivity extends SMTHBaseActivity
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Observer<Post>() {
-          @Override public void onSubscribe(@NonNull Disposable disposable) {
+          @Override
+          public void onSubscribe(@NonNull Disposable disposable) {
 
           }
 
-          @Override public void onNext(@NonNull Post post) {
+          @Override
+          public void onNext(@NonNull Post post) {
             // Log.d(TAG, post.toString());
             PostListContent.addItem(post);
             mRecyclerView.getAdapter().notifyItemInserted(PostListContent.POSTS.size() - 1);
           }
 
-          @Override public void onError(@NonNull Throwable e) {
+          @Override
+          public void onError(@NonNull Throwable e) {
             clearLoadingHints();
             Toast.makeText(SMTHApplication.getAppContext(), "加载失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
           }
 
-          @Override public void onComplete() {
+          @Override
+          public void onComplete() {
             String title = String.format("[%d/%d] %s", mCurrentPageNo, mTopic.getTotalPageNo(), mTopic.getTitle());
             mTitle.setText(title);
             mPageNo.setText(String.format("%d", mCurrentPageNo));
@@ -327,7 +341,8 @@ public class PostListActivity extends SMTHBaseActivity
         });
   }
 
-  @Override public boolean onCreateOptionsMenu(Menu menu) {
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
     // http://stackoverflow.com/questions/10692755/how-do-i-hide-a-menu-item-in-the-actionbar
     getMenuInflater().inflate(R.menu.post_list_menu, menu);
 
@@ -342,7 +357,8 @@ public class PostListActivity extends SMTHBaseActivity
     return true;
   }
 
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
     int id = item.getItemId();
     if (id == android.R.id.home) {
       // This ID represents the Home or Up button. In the case of this
@@ -366,7 +382,8 @@ public class PostListActivity extends SMTHBaseActivity
     return super.onOptionsItemSelected(item);
   }
 
-  @Override public void onClick(View v) {
+  @Override
+  public void onClick(View v) {
     // page navigation buttons
     switch (v.getId()) {
       case R.id.post_list_first_page:
@@ -448,8 +465,10 @@ public class PostListActivity extends SMTHBaseActivity
     }
   }
 
-  @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
-    if (Settings.getInstance().isVolumeKeyScroll() && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
+  @Override
+  public boolean onKeyDown(int keyCode, KeyEvent event) {
+    if (Settings.getInstance().isVolumeKeyScroll()
+        && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
       RecyclerViewUtil.ScrollRecyclerViewByKey(mRecyclerView, keyCode);
       return true;
     }
@@ -457,46 +476,66 @@ public class PostListActivity extends SMTHBaseActivity
   }
 
   // http://stackoverflow.com/questions/4500354/control-volume-keys
-  @Override public boolean onKeyUp(int keyCode, KeyEvent event) {
+  @Override
+  public boolean onKeyUp(int keyCode, KeyEvent event) {
     // disable the beep sound when volume up/down is pressed
-    if (Settings.getInstance().isVolumeKeyScroll() && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
+    if (Settings.getInstance().isVolumeKeyScroll()
+        && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
       return true;
     }
     return super.onKeyUp(keyCode, event);
   }
 
-  @Override public boolean onItemLongClicked(final int position, View v) {
-    if (position == RecyclerView.NO_POSITION || position >= PostListContent.POSTS.size()) return false;
-//    Log.d(TAG, String.format("Post by %s is long clicked", PostListContent.POSTS.get(position).getAuthor()));
+  @Override
+  public boolean onItemLongClicked(final int position, View v) {
+    if (position == RecyclerView.NO_POSITION || position >= PostListContent.POSTS.size())
+      return false;
+    // Log.d(TAG, String.format("Post by %s is long clicked",
+    // PostListContent.POSTS.get(position).getAuthor()));
     List<PostActionAlertDialogItem> menuItemsArray = new ArrayList<PostActionAlertDialogItem>();
-    menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_reply_post), R.drawable.ic_reply_black_48dp));  // 0
+    menuItemsArray
+        .add(new PostActionAlertDialogItem(getString(R.string.post_reply_post), R.drawable.ic_reply_black_48dp)); // 0
     menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_like_post), R.drawable.like_black)); // 1
-    menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_reply_mail), R.drawable.ic_email_black_48dp)); // 2
-    menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_query_author), R.drawable.ic_person_black_48dp)); // 3
-    menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_filter_author), R.drawable.ic_find_in_page_black_48dp)); // 4
-    menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_copy_content), R.drawable.ic_content_copy_black_48dp)); // 5
+    menuItemsArray
+        .add(new PostActionAlertDialogItem(getString(R.string.post_reply_mail), R.drawable.ic_email_black_48dp)); // 2
+    menuItemsArray
+        .add(new PostActionAlertDialogItem(getString(R.string.post_query_author), R.drawable.ic_person_black_48dp)); // 3
+    menuItemsArray.add(
+        new PostActionAlertDialogItem(getString(R.string.post_filter_author), R.drawable.ic_find_in_page_black_48dp)); // 4
+    menuItemsArray.add(
+        new PostActionAlertDialogItem(getString(R.string.post_copy_content), R.drawable.ic_content_copy_black_48dp)); // 5
     menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_foward), R.drawable.ic_send_black_48dp)); // 6
-    menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_view_in_browser), R.drawable.ic_open_in_browser_black_48dp)); // 7
+    menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_view_in_browser),
+        R.drawable.ic_open_in_browser_black_48dp)); // 7
     menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_share), R.drawable.ic_share_black_48dp)); // 8
-    menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_delete_post), R.drawable.ic_delete_black_48dp));  // 9
-    menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_edit_post), R.drawable.ic_edit_black_48dp)); // 10
-    menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_convert_image), R.drawable.ic_photo_black_48dp)); // 11
+    menuItemsArray
+        .add(new PostActionAlertDialogItem(getString(R.string.post_delete_post), R.drawable.ic_delete_black_48dp)); // 9
+    menuItemsArray
+        .add(new PostActionAlertDialogItem(getString(R.string.post_edit_post), R.drawable.ic_edit_black_48dp)); // 10
+    menuItemsArray
+        .add(new PostActionAlertDialogItem(getString(R.string.post_convert_image), R.drawable.ic_photo_black_48dp)); // 11
 
-    if(Settings.getInstance().isBoardMasterOnly()){
-      menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_topic_delete), R.drawable.baseline_admin_panel_settings_black_48)); // 12
-      menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_ban_id), R.drawable.baseline_admin_panel_settings_black_48));  // 13
-      menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_mark_m), R.drawable.baseline_admin_panel_settings_black_48)); // 14
-      menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_topic_readonly), R.drawable.baseline_admin_panel_settings_black_48)); // 15
+    if (Settings.getInstance().isBoardMasterOnly()) {
+      menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_topic_delete),
+          R.drawable.baseline_admin_panel_settings_black_48)); // 12
+      menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_ban_id),
+          R.drawable.baseline_admin_panel_settings_black_48)); // 13
+      menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_mark_m),
+          R.drawable.baseline_admin_panel_settings_black_48)); // 14
+      menuItemsArray.add(new PostActionAlertDialogItem(getString(R.string.post_topic_readonly),
+          R.drawable.baseline_admin_panel_settings_black_48)); // 15
     }
 
     PostActionAlertDialogItem[] menuItems = new PostActionAlertDialogItem[menuItemsArray.size()];
     menuItemsArray.toArray(menuItems);
 
-    ListAdapter adapter = new ArrayAdapter<PostActionAlertDialogItem>(getApplicationContext(), R.layout.post_popup_menu_item, menuItems) {
+    ListAdapter adapter = new ArrayAdapter<PostActionAlertDialogItem>(getApplicationContext(),
+        R.layout.post_popup_menu_item, menuItems) {
       ViewHolder holder;
 
       public View getView(int position, View convertView, ViewGroup parent) {
-        final LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final LayoutInflater inflater = (LayoutInflater) getApplicationContext()
+            .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if (convertView == null) {
           convertView = inflater.inflate(R.layout.post_popup_menu_item, null);
@@ -536,7 +575,7 @@ public class PostListActivity extends SMTHBaseActivity
   }
 
   private void onPostPopupMenuItem(int position, int which) {
-    //        Log.d(TAG, String.format("MenuItem %d was clicked", which));
+    // Log.d(TAG, String.format("MenuItem %d was clicked", which));
     if (position >= PostListContent.POSTS.size()) {
       Log.e(TAG, "onPostPopupMenuItem: " + "Invalid Post index" + position);
       return;
@@ -564,7 +603,8 @@ public class PostListActivity extends SMTHBaseActivity
       popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 100);
     } else if (which == 2) {
       // post_reply_mail
-      // Toast.makeText(PostListActivity.this, "回复到作者信箱:TBD", Toast.LENGTH_SHORT).show();
+      // Toast.makeText(PostListActivity.this, "回复到作者信箱:TBD",
+      // Toast.LENGTH_SHORT).show();
       ComposePostContext postContext = new ComposePostContext();
       postContext.setBoardEngName(mTopic.getBoardEngName());
       postContext.setPostId(post.getPostID());
@@ -600,13 +640,13 @@ public class PostListActivity extends SMTHBaseActivity
         content = post.getRawContent();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-          final android.content.ClipboardManager clipboardManager =
-              (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+          final android.content.ClipboardManager clipboardManager = (android.content.ClipboardManager) getSystemService(
+              Context.CLIPBOARD_SERVICE);
           final android.content.ClipData clipData = android.content.ClipData.newPlainText("PostContent", content);
           clipboardManager.setPrimaryClip(clipData);
         } else {
-          final android.text.ClipboardManager clipboardManager =
-              (android.text.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+          final android.text.ClipboardManager clipboardManager = (android.text.ClipboardManager) getSystemService(
+              Context.CLIPBOARD_SERVICE);
           clipboardManager.setText(content);
         }
         Toast.makeText(PostListActivity.this, "帖子内容已复制到剪贴板", Toast.LENGTH_SHORT).show();
@@ -621,7 +661,8 @@ public class PostListActivity extends SMTHBaseActivity
       popup.showAtLocation(mRecyclerView, Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 100);
     } else if (which == 7) {
       // open post in browser
-      String url = String.format(SMTHHelper.SMTH_MOBILE_URL + "/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
+      String url = String.format(SMTHHelper.SMTH_MOBILE_URL + "/article/%s/%s?p=%d", mTopic.getBoardEngName(),
+          mTopic.getTopicID(), mCurrentPageNo);
       startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
     } else if (which == 8) {
       // post_share
@@ -669,62 +710,48 @@ public class PostListActivity extends SMTHBaseActivity
     captureViewInternal();
   }
 
-  @AfterPermissionGranted(RC_READ_WRITE_STORAGE)
-  void captureViewInternal(){
-    String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-    if (EasyPermissions.hasPermissions(this, perms)) {
-      // Already have permission, do the thing
-      //Create a Bitmap with the same dimensions
-      Bitmap image = Bitmap.createBitmap(capView1.getWidth(), capView1.getHeight() + capView2.getHeight(), Bitmap.Config.RGB_565);
-      //Draw the view inside the Bitmap
-      Canvas canvas = new Canvas(image);
+  // @AfterPermissionGranted(RC_READ_WRITE_STORAGE)
+  void captureViewInternal() {
+    // String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE,
+    // Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    // if (EasyPermissions.hasPermissions(this, perms)) {
+    // Already have permission, do the thing
+    // Create a Bitmap with the same dimensions
+    Bitmap image = Bitmap.createBitmap(capView1.getWidth(), capView1.getHeight() + capView2.getHeight(),
+        Bitmap.Config.RGB_565);
+    // Draw the view inside the Bitmap
+    Canvas canvas = new Canvas(image);
 
-      if(Settings.getInstance().isNightMode()) {
-        canvas.drawColor(Color.BLACK);
-      } else {
-        canvas.drawColor(Color.WHITE);
-      }
-      capView1.draw(canvas);
-      canvas.translate(0, capView1.getHeight());
-      capView2.draw(canvas);
-      canvas.save();
-
-      // save image to sdcard
-      try {
-        if (TextUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED)) {
-          String path = Environment.getExternalStorageDirectory().getPath() + "/zSMTH/";
-          File dir = new File(path);
-          if (!dir.exists()) {
-            dir.mkdirs();
-          }
-
-          String IMAGE_FILE_PREFIX = "post-";
-          String IMAGE_FILE_SUFFIX = ".jpg";
-          File outFile = new File(dir, IMAGE_FILE_PREFIX + capPostID + IMAGE_FILE_SUFFIX);
-          FileOutputStream out = new FileOutputStream(outFile);
-
-          image.compress(Bitmap.CompressFormat.JPEG, 90, out); //Output
-          Toast.makeText(PostListActivity.this, "截图已存为: /zSMTH/" + outFile.getName(), Toast.LENGTH_SHORT).show();
-
-          // make sure the new file can be recognized soon
-          sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(outFile)));
-        }
-      } catch (Exception e) {
-        Log.e(TAG, "saveImageToFile: " + Log.getStackTraceString(e));
-        Toast.makeText(PostListActivity.this, "保存截图失败:\n请授予应用存储权限！\n" + e.toString(), Toast.LENGTH_LONG).show();
-      }
+    if (Settings.getInstance().isNightMode()) {
+      canvas.drawColor(Color.BLACK);
     } else {
-      // Do not have permissions, request them now
-      EasyPermissions.requestPermissions(this, getString(R.string.read_write_storage_rationale),
-              RC_READ_WRITE_STORAGE, perms);
+      canvas.drawColor(Color.WHITE);
     }
+    capView1.draw(canvas);
+    canvas.translate(0, capView1.getHeight());
+    capView2.draw(canvas);
+    canvas.save();
+
+    String IMAGE_FILE_PREFIX = "post-";
+    String IMAGE_FILE_SUFFIX = ".jpg";
+    String fileName = IMAGE_FILE_PREFIX + capPostID + IMAGE_FILE_SUFFIX;
+
+    com.zfdang.zsmth_android.helpers.FileSaveUtils.saveBitmapToGallery(this, image, fileName);
+
+    // } else {
+    // // Do not have permissions, request them now
+    // EasyPermissions.requestPermissions(this,
+    // getString(R.string.read_write_storage_rationale),
+    // RC_READ_WRITE_STORAGE, perms);
+    // }
   }
 
   public void deletePost(Post post) {
     SMTHHelper helper = SMTHHelper.getInstance();
 
     helper.wService.deletePost(mTopic.getBoardEngName(), post.getPostID()).map(new Function<ResponseBody, String>() {
-      @Override public String apply(@NonNull ResponseBody responseBody) throws Exception {
+      @Override
+      public String apply(@NonNull ResponseBody responseBody) throws Exception {
         try {
           String response = SMTHHelper.DecodeResponseFromWWW(responseBody.bytes());
           return SMTHHelper.parseDeleteResponse(response);
@@ -734,20 +761,24 @@ public class PostListActivity extends SMTHBaseActivity
         return null;
       }
     }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
-      @Override public void onSubscribe(@NonNull Disposable disposable) {
+      @Override
+      public void onSubscribe(@NonNull Disposable disposable) {
 
       }
 
-      @Override public void onNext(@NonNull String s) {
-          Toast.makeText(PostListActivity.this, s, Toast.LENGTH_LONG).show();
+      @Override
+      public void onNext(@NonNull String s) {
+        Toast.makeText(PostListActivity.this, s, Toast.LENGTH_LONG).show();
       }
 
-      @Override public void onError(@NonNull Throwable e) {
+      @Override
+      public void onError(@NonNull Throwable e) {
         Toast.makeText(PostListActivity.this, "删除帖子失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
 
       }
 
-      @Override public void onComplete() {
+      @Override
+      public void onComplete() {
 
       }
     });
@@ -757,71 +788,79 @@ public class PostListActivity extends SMTHBaseActivity
     SMTHHelper helper = SMTHHelper.getInstance();
 
     helper.wService.deleteTopic(mTopic.getBoardEngName(), post.getPostID(), mTopic.getTopicID(), "d")
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Observer<AjaxResponse>() {
-      @Override public void onSubscribe(@NonNull Disposable disposable) {
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Observer<AjaxResponse>() {
+          @Override
+          public void onSubscribe(@NonNull Disposable disposable) {
 
-      }
+          }
 
-      @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
-        if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
-          Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
-        } else {
-          Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
-        }
-      }
+          @Override
+          public void onNext(@NonNull AjaxResponse ajaxResponse) {
+            if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
+              Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+            } else {
+              Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
+            }
+          }
 
-      @Override public void onError(@NonNull Throwable e) {
-        Toast.makeText(PostListActivity.this, "删除主题失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
+          @Override
+          public void onError(@NonNull Throwable e) {
+            Toast.makeText(PostListActivity.this, "删除主题失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
 
-      }
+          }
 
-      @Override public void onComplete() {
+          @Override
+          public void onComplete() {
 
-      }
-    });
+          }
+        });
   }
 
   public void OnBanIDAction(Post post, String banReason, Integer day) {
     SMTHHelper helper = SMTHHelper.getInstance();
 
     helper.wService.banID(mTopic.getBoardEngName(), post.getPostID(), banReason, day)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Observer<AjaxResponse>() {
-      @Override public void onSubscribe(@NonNull Disposable disposable) {
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Observer<AjaxResponse>() {
+          @Override
+          public void onSubscribe(@NonNull Disposable disposable) {
 
-      }
+          }
 
-      @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
-        if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
-          Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
-        } else {
-          Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
-        }
-      }
+          @Override
+          public void onNext(@NonNull AjaxResponse ajaxResponse) {
+            if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
+              Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+            } else {
+              Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
+            }
+          }
 
-      @Override public void onError(@NonNull Throwable e) {
-        Toast.makeText(PostListActivity.this, "封禁ID失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
+          @Override
+          public void onError(@NonNull Throwable e) {
+            Toast.makeText(PostListActivity.this, "封禁ID失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
 
-      }
+          }
 
-      @Override public void onComplete() {
+          @Override
+          public void onComplete() {
 
-      }
-    });
+          }
+        });
   }
 
   public void sharePost(Post post) {
     OnekeyShare oks = new OnekeyShare();
-    //关闭sso授权
+    // 关闭sso授权
     oks.disableSSOWhenAuthorize();
 
     // prepare information from the post
     String title = String.format("[%s] %s @ 水木社区", mTopic.getBoardChsName(), mTopic.getTitle());
-    String postURL =
-        String.format(SMTHHelper.SMTH_MOBILE_URL + "/article/%s/%s?p=%d", mTopic.getBoardEngName(), mTopic.getTopicID(), mCurrentPageNo);
+    String postURL = String.format(SMTHHelper.SMTH_MOBILE_URL + "/article/%s/%s?p=%d", mTopic.getBoardEngName(),
+        mTopic.getTopicID(), mCurrentPageNo);
     String content = String.format("[%s]在大作中写到: %s", post.getAuthor(), post.getRawContent());
     // the max length of webo is 140
     if (content.length() > 110) {
@@ -854,29 +893,32 @@ public class PostListActivity extends SMTHBaseActivity
     oks.setImageUrl(imageURL);
 
     // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-    //oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+    // oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
 
     // url仅在微信（包括好友和朋友圈）中使用
     oks.setUrl(postURL);
 
     // comment是我对这条分享的评论，仅在人人网和QQ空间使用
-    //        oks.setComment("我是测试评论文本");
+    // oks.setComment("我是测试评论文本");
     // site是分享此内容的网站名称，仅在QQ空间使用
-    //        oks.setSite("ShareSDK");
+    // oks.setSite("ShareSDK");
     // siteUrl是分享此内容的网站地址，仅在QQ空间使用
-    //        oks.setSiteUrl("http://sharesdk.cn");
+    // oks.setSiteUrl("http://sharesdk.cn");
 
     // set callback functions
     oks.setCallback(new PlatformActionListener() {
-      @Override public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+      @Override
+      public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
         Toast.makeText(PostListActivity.this, "分享成功!", Toast.LENGTH_SHORT).show();
       }
 
-      @Override public void onError(Platform platform, int i, Throwable throwable) {
+      @Override
+      public void onError(Platform platform, int i, Throwable throwable) {
         Toast.makeText(PostListActivity.this, "分享失败:\n" + throwable.toString(), Toast.LENGTH_LONG).show();
       }
 
-      @Override public void onCancel(Platform platform, int i) {
+      @Override
+      public void onCancel(Platform platform, int i) {
       }
     });
 
@@ -884,24 +926,28 @@ public class PostListActivity extends SMTHBaseActivity
     oks.show(this);
   }
 
-  @Override public boolean onTouch(View v, MotionEvent event) {
+  @Override
+  public boolean onTouch(View v, MotionEvent event) {
     mGestureDetector.onTouchEvent(event);
     return false;
   }
 
-  @Override public void OnLikeAction(String score, String msg) {
-    //        Log.d(TAG, "OnLikeAction: " + score + msg);
+  @Override
+  public void OnLikeAction(String score, String msg) {
+    // Log.d(TAG, "OnLikeAction: " + score + msg);
 
     SMTHHelper helper = SMTHHelper.getInstance();
     helper.wService.addLike(mTopic.getBoardEngName(), mTopic.getTopicID(), score, msg, "")
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Observer<AjaxResponse>() {
-          @Override public void onSubscribe(@NonNull Disposable disposable) {
+          @Override
+          public void onSubscribe(@NonNull Disposable disposable) {
 
           }
 
-          @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
+          @Override
+          public void onNext(@NonNull AjaxResponse ajaxResponse) {
             // Log.d(TAG, "onNext: " + ajaxResponse.toString());
             if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
               Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
@@ -911,38 +957,48 @@ public class PostListActivity extends SMTHBaseActivity
             }
           }
 
-          @Override public void onError(@NonNull Throwable e) {
+          @Override
+          public void onError(@NonNull Throwable e) {
             Toast.makeText(PostListActivity.this, "增加Like失败!\n" + e.toString(), Toast.LENGTH_LONG).show();
           }
 
-          @Override public void onComplete() {
+          @Override
+          public void onComplete() {
 
           }
         });
   }
 
-  @Override public void OnForwardAction(Post post, String target, boolean threads, boolean noref, boolean noatt) {
-    //        Log.d(TAG, "OnForwardAction: ");
+  @Override
+  public void OnForwardAction(Post post, String target, boolean threads, boolean noref, boolean noatt) {
+    // Log.d(TAG, "OnForwardAction: ");
 
     String strThreads = null;
-    if (threads) strThreads = "on";
+    if (threads)
+      strThreads = "on";
     String strNoref = null;
-    if (noref) strNoref = "on";
+    if (noref)
+      strNoref = "on";
     String strNoatt = null;
-    if (noatt) strNoatt = "on";
+    if (noatt)
+      strNoatt = "on";
     String strNoansi = null;
-    if (target != null && target.contains("@")) strNoansi = "on";
+    if (target != null && target.contains("@"))
+      strNoansi = "on";
 
     SMTHHelper helper = SMTHHelper.getInstance();
-    helper.wService.forwardPost(mTopic.getBoardEngName(), post.getPostID(), target, strThreads, strNoref, strNoatt, strNoansi)
+    helper.wService
+        .forwardPost(mTopic.getBoardEngName(), post.getPostID(), target, strThreads, strNoref, strNoatt, strNoansi)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Observer<AjaxResponse>() {
-          @Override public void onSubscribe(@NonNull Disposable disposable) {
+          @Override
+          public void onSubscribe(@NonNull Disposable disposable) {
 
           }
 
-          @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
+          @Override
+          public void onNext(@NonNull AjaxResponse ajaxResponse) {
             // Log.d(TAG, "onNext: " + ajaxResponse.toString());
             if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
               Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
@@ -951,104 +1007,121 @@ public class PostListActivity extends SMTHBaseActivity
             }
           }
 
-          @Override public void onError(@NonNull Throwable e) {
+          @Override
+          public void onError(@NonNull Throwable e) {
             Toast.makeText(PostListActivity.this, "转寄失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
           }
 
-          @Override public void onComplete() {
+          @Override
+          public void onComplete() {
 
           }
         });
   }
 
-  @Override public void OnRePostAction(Post post, String target, String outgo) {
+  @Override
+  public void OnRePostAction(Post post, String target, String outgo) {
     SMTHHelper helper = SMTHHelper.getInstance();
-    helper.wService.repostPost(mTopic.getBoardEngName(), post.getPostID(), target, outgo).map(new Function<ResponseBody, String>() {
-      @Override public String apply(@NonNull ResponseBody responseBody) throws Exception {
-        try {
-          String response = SMTHHelper.DecodeResponseFromWWW(responseBody.bytes());
-          return SMTHHelper.parseRepostResponse(response);
-        } catch (Exception e) {
-          Log.e(TAG, "call: " + Log.getStackTraceString(e));
-        }
-        return null;
-      }
-    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
-      @Override public void onSubscribe(@NonNull Disposable disposable) {
+    helper.wService.repostPost(mTopic.getBoardEngName(), post.getPostID(), target, outgo)
+        .map(new Function<ResponseBody, String>() {
+          @Override
+          public String apply(@NonNull ResponseBody responseBody) throws Exception {
+            try {
+              String response = SMTHHelper.DecodeResponseFromWWW(responseBody.bytes());
+              return SMTHHelper.parseRepostResponse(response);
+            } catch (Exception e) {
+              Log.e(TAG, "call: " + Log.getStackTraceString(e));
+            }
+            return null;
+          }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
+          @Override
+          public void onSubscribe(@NonNull Disposable disposable) {
 
-      }
+          }
 
-      @Override public void onNext(@NonNull String s) {
-        Toast.makeText(SMTHApplication.getAppContext(), s, Toast.LENGTH_SHORT).show();
-      }
+          @Override
+          public void onNext(@NonNull String s) {
+            Toast.makeText(SMTHApplication.getAppContext(), s, Toast.LENGTH_SHORT).show();
+          }
 
-      @Override public void onError(@NonNull Throwable e) {
-        Toast.makeText(SMTHApplication.getAppContext(), e.toString(), Toast.LENGTH_LONG).show();
-      }
+          @Override
+          public void onError(@NonNull Throwable e) {
+            Toast.makeText(SMTHApplication.getAppContext(), e.toString(), Toast.LENGTH_LONG).show();
+          }
 
-      @Override public void onComplete() {
+          @Override
+          public void onComplete() {
 
-      }
-    });
+          }
+        });
   }
 
   public void markPost(Post post) {
     SMTHHelper helper = SMTHHelper.getInstance();
 
     helper.wService.markPost(mTopic.getBoardEngName(), post.getPostID(), mTopic.getTopicID(), "m")
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Observer<AjaxResponse>() {
-              @Override public void onSubscribe(@NonNull Disposable disposable) {
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Observer<AjaxResponse>() {
+          @Override
+          public void onSubscribe(@NonNull Disposable disposable) {
 
-              }
+          }
 
-              @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
-                if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
-                  Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
-                } else {
-                  Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
-                }
-              }
+          @Override
+          public void onNext(@NonNull AjaxResponse ajaxResponse) {
+            if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
+              Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+            } else {
+              Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
+            }
+          }
 
-              @Override public void onError(@NonNull Throwable e) {
-                Toast.makeText(PostListActivity.this, "设置/取消m标记！\n" + e.toString(), Toast.LENGTH_LONG).show();
+          @Override
+          public void onError(@NonNull Throwable e) {
+            Toast.makeText(PostListActivity.this, "设置/取消m标记！\n" + e.toString(), Toast.LENGTH_LONG).show();
 
-              }
+          }
 
-              @Override public void onComplete() {
+          @Override
+          public void onComplete() {
 
-              }
-            });
+          }
+        });
   }
 
   public void readonlyTopic(Post post) {
     SMTHHelper helper = SMTHHelper.getInstance();
 
     helper.wService.readonlyTopic(mTopic.getBoardEngName(), post.getPostID(), mTopic.getTopicID(), ";")
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Observer<AjaxResponse>() {
-              @Override public void onSubscribe(@NonNull Disposable disposable) {
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Observer<AjaxResponse>() {
+          @Override
+          public void onSubscribe(@NonNull Disposable disposable) {
 
-              }
+          }
 
-              @Override public void onNext(@NonNull AjaxResponse ajaxResponse) {
-                if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
-                  Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
-                } else {
-                  Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
-                }
-              }
+          @Override
+          public void onNext(@NonNull AjaxResponse ajaxResponse) {
+            if (ajaxResponse.getAjax_st() == AjaxResponse.AJAX_RESULT_OK) {
+              Toast.makeText(PostListActivity.this, ajaxResponse.getAjax_msg(), Toast.LENGTH_SHORT).show();
+            } else {
+              Toast.makeText(PostListActivity.this, ajaxResponse.toString(), Toast.LENGTH_LONG).show();
+            }
+          }
 
-              @Override public void onError(@NonNull Throwable e) {
-                Toast.makeText(PostListActivity.this, "设置同主题不可回复！\n" + e.toString(), Toast.LENGTH_LONG).show();
+          @Override
+          public void onError(@NonNull Throwable e) {
+            Toast.makeText(PostListActivity.this, "设置同主题不可回复！\n" + e.toString(), Toast.LENGTH_LONG).show();
 
-              }
+          }
 
-              @Override public void onComplete() {
+          @Override
+          public void onComplete() {
 
-              }
-            });
+          }
+        });
   }
 }
