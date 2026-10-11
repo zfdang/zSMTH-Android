@@ -147,4 +147,15 @@
   <string name="mail_content_title">加载中...</string>
 
   <string name="read_write_storage_rationale">需要"读写存储的权限"来保存文件</string>
+  <string name="child_safety_title">Child Safety and Reporting</string>
+  <string name="child_safety_identity">zSMTH is an independently developed third-party client by zfdang, not the official NewSMTH forum app. Forum accounts, posts and private messages are managed by the forum operator.</string>
+  <string name="child_safety_prohibition">This client prohibits child sexual abuse and exploitation (CSAE), including CSAM, grooming, sexualization of minors, sexual extortion and soliciting or distributing such material.</string>
+  <string name="child_safety_handling">Report forum content to administrator sysop using private messages inside this app. The forum operator reviews reports and controls server-side moderation. The client developer cannot delete server posts or ban forum accounts. On receiving child safety notifications, the developer reviews client-related issues and reports to competent authorities and cooperates as required by applicable law.</string>
+  <string name="child_safety_contact">Client child safety contact: zfdang\nEmail: me@zfdang.com\nForum content reports: sysop\nPublished standards: https://zsmth.zfdang.com/child-safety.html</string>
+  <string name="child_safety_report_action">Report to Forum Administrator</string>
+  <string name="child_safety_report_notice">Your report will be sent as a NewSMTH private message to administrator sysop for forum moderation. Include the post URL, board, author ID, time and concern. Do not download, forward or attach illegal images or videos, or provide unnecessary personal information. Review your report before sending.</string>
+  <string name="child_safety_login_required">Sign in to your NewSMTH account to send a private message to sysop. Sign-in and reporting stay inside this app. Standards and contact information are available without signing in.</string>
+  <string name="child_safety_report_subject">Child safety report from zSMTH</string>
+  <string name="child_safety_report_hint">Describe the concern, post URL, board and author ID. Do not attach illegal images or videos.</string>
+  <string name="child_safety_report_success">Report submitted to sysop. Check your sent messages.</string>
 </resources>

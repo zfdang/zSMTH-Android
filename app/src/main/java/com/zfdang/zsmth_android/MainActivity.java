@@ -622,8 +622,7 @@ public class MainActivity extends SMTHBaseActivity
       showAnalyticsPrivacyDialog();
       return true;
     } else if (id == R.id.main_action_child_safety) {
-      startActivity(new Intent(Intent.ACTION_VIEW,
-          android.net.Uri.parse("https://zsmth.zfdang.com/child-safety.html")));
+      startActivity(new Intent(this, ChildSafetyActivity.class));
       return true;
     } else if (id == R.id.main_action_login) {
       onLogin();

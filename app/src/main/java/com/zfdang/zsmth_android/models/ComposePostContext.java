@@ -14,6 +14,8 @@ public class ComposePostContext implements Parcelable {
   public static int MODE_NEW_MAIL_TO_USER = 5;  // new mail in user query interface
   public static int MODE_REPLY_MAIL = 6;  // two entries: 1. reply mail in mail box 2. reply post via mail in post list
 
+  public static int MODE_CHILD_SAFETY_REPORT = 7;
+
   private String boardEngName;
   private String postTitle;
   private String postId;
