@@ -1,10 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@drawable/background_login"
-    android:orientation="vertical"
+    android:fitsSystemWindows="true"
     >
+
+  <com.google.android.material.appbar.AppBarLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:theme="@style/AppTheme.AppBarOverlay">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/login_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/zsmth_actionbar_size"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.ToolBar"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        app:titleTextAppearance="@style/Toolbar.TitleText" />
+  </com.google.android.material.appbar.AppBarLayout>
+
+  <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:fillViewport="true"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior">
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
 
   <!-- 防止默认焦点为edittext -->
   <LinearLayout
@@ -126,10 +151,6 @@
         />
   </RelativeLayout>
 
-  <ZoomButton
-      android:id="@+id/zoomButton"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      />
-
 </LinearLayout>
+  </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

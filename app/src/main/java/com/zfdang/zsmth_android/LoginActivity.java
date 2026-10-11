@@ -46,6 +46,7 @@ public class LoginActivity extends SMTHBaseActivity implements OnClickListener {
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_login);
+    setSupportActionBar(findViewById(R.id.login_toolbar));
 
     // these two variables should be loaded from preference
     Settings setting = Settings.getInstance();
