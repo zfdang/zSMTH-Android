@@ -95,18 +95,20 @@ public class BoardTopicActivity extends SMTHBaseActivity
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    @Override
-    public void onBackPressed() {
+    private void handleBackAction() {
         if (isSearchMode) {
             onRefresh();
         } else {
-            super.onBackPressed();
+            finish();
         }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new androidx.activity.OnBackPressedCallback(true) {
+            @Override public void handleOnBackPressed() { handleBackAction(); }
+        });
         SwipeBackHelper.onCreate(this);
 
         setContentView(R.layout.activity_board_topic);

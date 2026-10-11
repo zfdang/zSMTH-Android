@@ -55,6 +55,11 @@ public class KeepAliveService extends Service {
     }
 
     @Override
+    public void onTimeout(int startId, int fgsType) {
+        stopSelf();
+    }
+
+    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         return super.onStartCommand(intent, flags, startId);
     }

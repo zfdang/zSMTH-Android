@@ -6,8 +6,6 @@ import androidx.appcompat.app.AppCompatDelegate;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
-import com.mob.MobSDK;
-import com.umeng.commonsdk.UMConfigure;
 import com.zfdang.zsmth_android.Settings;
 import com.zfdang.zsmth_android.helpers.GEODatabase;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
@@ -77,11 +75,9 @@ public class SMTHApplication extends Application {
     // init IP lookup database
     geoDB = new GEODatabase(this);
 
-    // init shareSDK
-    MobSDK.init(this);
 
-    // init umeng SDK
-    UMConfigure.init(this, "56e8c05567e58e0a9e0011cc", "UMENG_CHANNEL", UMConfigure.DEVICE_TYPE_PHONE, null);
+
+    com.zfdang.zsmth_android.AnalyticsPrivacy.initialize(this);
 
     // init Fresco
     // Set<RequestListener> requestListeners = new HashSet<>();

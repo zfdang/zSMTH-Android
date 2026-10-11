@@ -48,10 +48,8 @@ import androidx.work.WorkRequest;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.mikepenz.aboutlibraries.LibsBuilder;
-import com.mob.MobSDK;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
-import com.umeng.analytics.MobclickAgent;
 import com.zfdang.SMTHApplication;
 import com.zfdang.zsmth_android.fresco.WrapContentDraweeView;
 import com.zfdang.zsmth_android.listeners.OnBoardFragmentInteractionListener;
@@ -113,6 +111,9 @@ public class MainActivity extends SMTHBaseActivity
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getOnBackPressedDispatcher().addCallback(this, new androidx.activity.OnBackPressedCallback(true) {
+      @Override public void handleOnBackPressed() { handleBackAction(); }
+    });
     setContentView(R.layout.activity_main);
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
@@ -206,17 +207,32 @@ public class MainActivity extends SMTHBaseActivity
     updateUserStatusNow();
     UpdateNavigationViewHeader();
 
-    if (Settings.getInstance().isFirstRun()) {
+    if (!AnalyticsPrivacy.hasChoice(this)) {
+      showAnalyticsPrivacyDialog();
+    } else if (Settings.getInstance().isFirstRun()) {
       // show info dialog after 5 seconds for the first run
       final Handler handler = new Handler();
       handler.postDelayed(new Runnable() {
         @Override public void run() {
           showInfoDialog();
-          MobSDK.submitPolicyGrantResult(true,null);
         }
       }, 1000);
     }
 
+  }
+
+  private void showAnalyticsPrivacyDialog() {
+    new AlertDialog.Builder(this)
+        .setTitle("隐私与可选统计")
+        .setMessage("本应用使用友盟统计 SDK 分析启动次数和使用时长。只有您选择同意后才会初始化并向友盟发送设备标识、设备与网络信息、IP 地址和使用统计；不向友盟发送水木账号、密码、帖子或私信内容。\n\n统计为可选功能，拒绝后仍可正常使用论坛。您可随时从菜单‘隐私与统计’修改选择，更改选择后请重启应用。")
+        .setPositiveButton("同意统计", (dialog, which) -> AnalyticsPrivacy.saveChoice(this, true))
+        .setNegativeButton("不使用统计", (dialog, which) -> AnalyticsPrivacy.saveChoice(this, false))
+        .setNeutralButton("隐私政策", (dialog, which) -> {
+          startActivity(new Intent(Intent.ACTION_VIEW,
+              android.net.Uri.parse("https://zsmth.zfdang.com/privacy.html")));
+        })
+        .setCancelable(false)
+        .show();
   }
 
   private void initCircularActionMenu(FloatingActionButton fab) {
@@ -346,6 +362,10 @@ public class MainActivity extends SMTHBaseActivity
   }
 
   private void showNotification(String text) {
+    if (Build.VERSION.SDK_INT >= 33 && androidx.core.content.ContextCompat.checkSelfPermission(
+        this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+      return;
+    }
     // http://stackoverflow.com/questions/13602190/java-lang-securityexception-requires-vibrate-permission-on-jelly-bean-4-2
     try {
       Intent notificationIntent = new Intent(MainActivity.this, MainActivity.class);
@@ -408,7 +428,7 @@ public class MainActivity extends SMTHBaseActivity
 
   @Override protected void onPause() {
     super.onPause();
-    MobclickAgent.onPause(this);
+    AnalyticsPrivacy.onPause(this);
   }
 
   @Override protected void onNewIntent(Intent intent) {
@@ -450,7 +470,7 @@ public class MainActivity extends SMTHBaseActivity
 
   @Override protected void onResume() {
     super.onResume();
-    MobclickAgent.onResume(this);
+    AnalyticsPrivacy.onResume(this);
   }
 
   protected void initFragments() {
@@ -511,7 +531,7 @@ public class MainActivity extends SMTHBaseActivity
     }
   }
 
-  @Override public void onBackPressed() {
+  private void handleBackAction() {
     if (mDrawer.isDrawerOpen(GravityCompat.START)) {
       mDrawer.closeDrawer(GravityCompat.START);
       return;
@@ -616,14 +636,29 @@ public class MainActivity extends SMTHBaseActivity
     // automatically handle clicks on the Home/Up button, so long
     // as you specify a parent activity in AndroidManifest.xml.
     int id = item.getItemId();
-    if (id == R.id.main_action_login) {
+    if (id == R.id.main_action_notifications) {
+      if (Build.VERSION.SDK_INT >= 33) {
+        androidx.core.app.ActivityCompat.requestPermissions(this,
+            new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1028);
+      } else {
+        Toast.makeText(this, "请在系统应用设置中管理消息通知", Toast.LENGTH_SHORT).show();
+      }
+      return true;
+    } else if (id == R.id.main_action_privacy) {
+      showAnalyticsPrivacyDialog();
+      return true;
+    } else if (id == R.id.main_action_child_safety) {
+      startActivity(new Intent(Intent.ACTION_VIEW,
+          android.net.Uri.parse("https://zsmth.zfdang.com/child-safety.html")));
+      return true;
+    } else if (id == R.id.main_action_login) {
       onLogin();
       return true;
     } else if (id == R.id.main_action_logout) {
       onLogout();
       return true;
     } else if (id == android.R.id.home) {
-      this.onBackPressed();
+      this.handleBackAction();
       return true;
     }
 

@@ -25,4 +25,10 @@
       android:orderInCategory="4"
       android:title="@string/action_logout"
       app:showAsAction="never"/>
+  <item android:id="@+id/main_action_privacy"
+      android:title="隐私与统计" android:orderInCategory="5" app:showAsAction="never"/>
+  <item android:id="@+id/main_action_child_safety"
+      android:title="儿童安全与举报" android:orderInCategory="6" app:showAsAction="never"/>
+  <item android:id="@+id/main_action_notifications"
+      android:title="开启消息通知" android:orderInCategory="7" app:showAsAction="never"/>
 </menu>
