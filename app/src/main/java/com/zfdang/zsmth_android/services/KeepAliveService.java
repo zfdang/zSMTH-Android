@@ -1,132 +1,84 @@
 package com.zfdang.zsmth_android.services;
 
-import android.annotation.SuppressLint;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.Service;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
-import android.os.IBinder;
-import android.util.Log;
-
+import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
+import androidx.work.Constraints;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
-
 import com.zfdang.SMTHApplication;
-import com.zfdang.zsmth_android.R;
 import com.zfdang.zsmth_android.newsmth.SMTHHelper;
-
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-public class KeepAliveService extends Service {
-    private static final int notId = 1;
-    private static final String channelId = "e729";
-    private final static int interval = 300; //  刷新的时间间隔，单位：秒
-    private final static int retry = 60; //  刷新失败后重试的时间间隔，单位：秒
-    private static int i = 0;
-    private static int count = 0;           //  网络访问出错的次数
+/** Session refresh uses scheduled network work rather than a permanent foreground service. */
+public final class KeepAliveService {
+    private static final String WORK_NAME = "forum-session-refresh";
+    private static final String WORK_TAG = "forum-session-refresh-v2";
+    private static final int INTERVAL_SECONDS = 300;
+    private static final int RETRY_SECONDS = 60;
 
-    @SuppressLint("NotificationId0")
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        createNotificationChannel();
-        Notification notification = new NotificationCompat.Builder(this, channelId)
-                .setContentTitle("保持在线服务")
-                .setContentText("在线中……")
-                .setSmallIcon(R.drawable.ic_launcher)
-                .setPriority(NotificationCompat.PRIORITY_MIN)
-                .setChannelId(channelId)
+    private KeepAliveService() {}
+
+    private static SharedPreferences preferences(Context context) {
+        return context.getSharedPreferences(WORK_NAME, Context.MODE_PRIVATE);
+    }
+
+    public static void start(Context context) {
+        preferences(context).edit().putBoolean("enabled", true).apply();
+        enqueue(context, INTERVAL_SECONDS, ExistingWorkPolicy.KEEP);
+    }
+
+    public static void stop(Context context) {
+        preferences(context).edit().putBoolean("enabled", false).putInt("failures", 0).commit();
+        WorkManager.getInstance(context).cancelUniqueWork(WORK_NAME);
+    }
+
+    private static void enqueue(Context context, int delay, ExistingWorkPolicy policy) {
+        OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(MyWork.class)
+                .addTag(WORK_TAG)
+                .setConstraints(new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+                .setInitialDelay(delay, TimeUnit.SECONDS)
                 .build();
-        notification.flags |= Notification.FLAG_NO_CLEAR;
-
-        startForeground(notId, notification);
-        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(MyWork.class)
-                .setInitialDelay(interval, TimeUnit.SECONDS)
-                .build();
-        WorkManager.getInstance(getApplicationContext()).enqueue(workRequest);
+        WorkManager.getInstance(context).enqueueUniqueWork(WORK_NAME, policy, request);
     }
 
-    @Override
-    public void onTimeout(int startId, int fgsType) {
-        stopSelf();
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
-    }
-
+    // Keep the worker's class name so upgrades can safely finish queued legacy requests.
     public static class MyWork extends Worker {
-        public MyWork(Context context, WorkerParameters workerParams) {
-            super(context, workerParams);
-        }
+        public MyWork(Context context, WorkerParameters parameters) { super(context, parameters); }
 
-        @NonNull
-        @Override
-        public Result doWork() {
-            ++i;
-            Log.d("KeepAliveService", "保持用户在线服务计数: " + i);
-
+        @NonNull @Override public Result doWork() {
+            Context context = getApplicationContext();
+            SharedPreferences state = preferences(context);
+            if (isStopped() || !getTags().contains(WORK_TAG) || !state.getBoolean("enabled", false)) {
+                return Result.success();
+            }
+            int nextDelay = INTERVAL_SECONDS;
             try {
-                //  因为这是在service线程中的网络访问，所以同步调用并不会影响UI
-                //  也无需关心返回值，只要与水木服务器通信，即可达到保持登录状态的目的
-                SMTHHelper.getInstance().wService.keepAlive().execute();
-                count = 0;
-                doNext(interval);
-            } catch (IOException e) {
-                ++count;
-                //  事不过三，超过三次与水木的通信失败，就停止服务
-                //  因为这时的登录状态大概率已经过期，继续刷新已无意义
-                Log.d("KeepAliveService", "与服务器通讯失败计数: " + count);
-
-                if (count > 3) {
-                    Log.d("KeepAliveService", "STOP");
-                    SMTHApplication.mUserStatusReceiver.onServiceFailed();
-                } else {
-                    Log.d("KeepAliveService", "retry: " + count);
-                    doNext(retry);
+                if (!SMTHHelper.getInstance().wService.keepAlive().execute().isSuccessful()) {
+                    throw new IOException("Session refresh failed");
                 }
+                state.edit().putInt("failures", 0).commit();
+            } catch (IOException error) {
+                int failures = state.getInt("failures", 0) + 1;
+                state.edit().putInt("failures", failures).commit();
+                if (failures > 3) {
+                    KeepAliveService.stop(context);
+                    if (SMTHApplication.mUserStatusReceiver != null) {
+                        SMTHApplication.mUserStatusReceiver.onServiceFailed();
+                    }
+                    return Result.success();
+                }
+                nextDelay = RETRY_SECONDS;
+            }
+            if (!isStopped() && state.getBoolean("enabled", false)) {
+                enqueue(context, nextDelay, ExistingWorkPolicy.APPEND_OR_REPLACE);
             }
             return Result.success();
         }
-
-        void doNext(int sec) {
-            OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(MyWork.class)
-                    .setInitialDelay(sec, TimeUnit.SECONDS)
-                    .build();
-            WorkManager.getInstance(getApplicationContext()).enqueue(workRequest);
-        }
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(channelId,
-                    "SMTH", NotificationManager.IMPORTANCE_DEFAULT);
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            channel.setSound(null, null);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d("KeepAliveService", "onDestroy");
-        stopForeground(true);
-    }
-    public KeepAliveService() {
     }
 }

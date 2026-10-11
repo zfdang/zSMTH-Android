@@ -3,6 +3,17 @@ package com.zfdang.zsmth_android;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.net.Uri;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.content.FileProvider;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
@@ -20,8 +31,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.zfdang.SMTHApplication;
-import com.zfdang.multiple_images_selector.ImagesSelectorActivity;
-import com.zfdang.multiple_images_selector.SelectorSettings;
 import com.zfdang.zsmth_android.helpers.KeyboardLess;
 import com.zfdang.zsmth_android.helpers.StringUtils;
 import com.zfdang.zsmth_android.models.ComposePostContext;
@@ -41,7 +50,6 @@ import okhttp3.RequestBody;
 public class ComposePostActivity extends SMTHBaseActivity {
 
   public static final int COMPOSE_ACTIVITY_REQUEST_CODE = 107;
-  private static final int REQUEST_CODE = 653;
   private static final String TAG = "ComposePostActivity";
   private final String UPLOAD_TEMPLATE = " [upload=%d][/upload] ";
 
@@ -66,37 +74,101 @@ public class ComposePostActivity extends SMTHBaseActivity {
   private String postPublishMessage = null;
   private AjaxResponse lastResponse = null;
 
+  private File cameraAttachment;
+  private boolean importingImages;
+  private final ActivityResultLauncher<PickVisualMediaRequest> imagePicker =
+      registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(5), this::importImages);
+  private final ActivityResultLauncher<Uri> cameraPicker =
+      registerForActivityResult(new ActivityResultContracts.TakePicture(), saved -> {
+        if (saved && cameraAttachment != null) addAttachment(cameraAttachment.getAbsolutePath());
+        else if (cameraAttachment != null) cameraAttachment.delete();
+        cameraAttachment = null;
+      });
+
   public void startImageSelector() {
-    // start multiple photos selector
-    Intent intent = new Intent(ComposePostActivity.this, ImagesSelectorActivity.class);
-    // max number of images to be selected
-    intent.putExtra(SelectorSettings.SELECTOR_MAX_IMAGE_NUMBER, 5);
-    // min size of image which will be shown; to filter tiny images (mainly icons)
-    intent.putExtra(SelectorSettings.SELECTOR_MIN_IMAGE_SIZE, 5000); // file size > 5k
-    // show camera or not
-    intent.putExtra(SelectorSettings.SELECTOR_SHOW_CAMERA, true);
-    // pass current selected images as the initial value
-    intent.putStringArrayListExtra(SelectorSettings.SELECTOR_INITIAL_SELECTED_LIST, mPhotos);
-    // start the selector
-    startActivityForResult(intent, REQUEST_CODE);
+    new AlertDialog.Builder(this).setTitle("图片附件（最多5张）")
+        .setItems(new String[]{"从相册添加", "拍照添加", "清空附件"}, (dialog, choice) -> {
+          if (choice == 2) {
+            String content = mContent.getText().toString();
+            for (int i = 1; i <= mPhotos.size(); i++) {
+              content = content.replace(String.format(Locale.ROOT, UPLOAD_TEMPLATE, i), "");
+            }
+            mContent.setText(content);
+            mContent.setSelection(content.length());
+            mPhotos.clear();
+            mAttachments.setText("共有0个附件");
+          } else if (mPhotos.size() >= 5) {
+            Toast.makeText(this, "最多添加5张图片，请先清空附件再选择", Toast.LENGTH_LONG).show();
+          } else if (choice == 0) {
+            imagePicker.launch(new PickVisualMediaRequest.Builder()
+                .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE).build());
+          } else {
+            try {
+              File directory = new File(getCacheDir(), "attachments");
+              if (!directory.exists() && !directory.mkdirs()) throw new IOException("Cannot create attachment directory");
+              cameraAttachment = File.createTempFile("camera-", ".jpg", directory);
+              cameraPicker.launch(FileProvider.getUriForFile(this, getPackageName() + ".attachments", cameraAttachment));
+            } catch (IOException | RuntimeException error) {
+              if (cameraAttachment != null) cameraAttachment.delete();
+              cameraAttachment = null;
+              Toast.makeText(this, "无法打开相机，请从相册选择图片", Toast.LENGTH_LONG).show();
+            }
+          }
+        }).setNegativeButton("取消", null).show();
   }
 
-  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-    if (requestCode == REQUEST_CODE) {
-      if (resultCode == RESULT_OK && data != null) {
-        mPhotos = data.getStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS);
-        mAttachments.setText(String.format("共有%d个附件", mPhotos.size()));
-
-        String attachments = "";
-        for (int i = 0; i < mPhotos.size(); i++) {
-          attachments += String.format(UPLOAD_TEMPLATE, i + 1);
+  private void importImages(List<Uri> images) {
+    if (images.isEmpty()) return;
+    final int remaining = 5 - mPhotos.size();
+    importingImages = true;
+    mButton.setEnabled(false);
+    new Thread(() -> {
+      ArrayList<String> imported = new ArrayList<>();
+      boolean failed = false;
+      File directory = new File(getCacheDir(), "attachments");
+      for (Uri image : images.subList(0, Math.min(remaining, images.size()))) {
+        File attachment = null;
+        try {
+          if (!directory.exists() && !directory.mkdirs()) throw new IOException("Cannot create attachment directory");
+          String extension = "image/gif".equals(getContentResolver().getType(image)) ? ".gif" : ".jpg";
+          attachment = File.createTempFile("image-", extension, directory);
+          try (InputStream input = getContentResolver().openInputStream(image);
+               FileOutputStream output = new FileOutputStream(attachment)) {
+            if (input == null) throw new IOException("Cannot open selected image");
+            byte[] buffer = new byte[8192];
+            int count;
+            while ((count = input.read(buffer)) != -1) output.write(buffer, 0, count);
+          }
+          if (attachment.length() == 0) throw new IOException("Empty image");
+          imported.add(attachment.getAbsolutePath());
+        } catch (IOException | RuntimeException error) {
+          if (attachment != null) attachment.delete();
+          failed = true;
         }
-
-        // https://stackoverflow.com/questions/3609174/android-insert-text-into-edittext-at-current-position
-        mContent.getText().insert(mContent.getSelectionStart(), attachments);
       }
-    }
+      final boolean showError = failed;
+      runOnUiThread(() -> {
+        if (isFinishing() || isDestroyed()) return;
+        for (String filename : imported) addAttachment(filename);
+        importingImages = false;
+        mButton.setEnabled(true);
+        if (showError) Toast.makeText(this, "部分图片读取失败，请重新选择", Toast.LENGTH_LONG).show();
+        if (images.size() > remaining) Toast.makeText(this, "最多5个附件，已保留前" + remaining + "张图片", Toast.LENGTH_LONG).show();
+      });
+    }, "attachment-import").start();
+  }
+
+  private void addAttachment(String filename) {
+    if (mPhotos.size() >= 5) return;
+    mPhotos.add(filename);
+    mAttachments.setText(String.format("共有%d个附件", mPhotos.size()));
+    mContent.getText().insert(Math.max(0, mContent.getSelectionStart()), String.format(Locale.ROOT, UPLOAD_TEMPLATE, mPhotos.size()));
+  }
+
+  @Override protected void onSaveInstanceState(Bundle outState) {
+    outState.putStringArrayList("attachments", mPhotos);
+    if (cameraAttachment != null) outState.putString("cameraAttachment", cameraAttachment.getAbsolutePath());
+    super.onSaveInstanceState(outState);
   }
 
   @Override protected void onCreate(Bundle savedInstanceState) {
@@ -114,13 +186,18 @@ public class ComposePostActivity extends SMTHBaseActivity {
       bar.setDisplayHomeAsUpEnabled(true);
     }
 
-    mPhotos = new ArrayList<>();
+    mPhotos = savedInstanceState == null ? new ArrayList<>() : savedInstanceState.getStringArrayList("attachments");
+    if (mPhotos == null) mPhotos = new ArrayList<>();
+    if (savedInstanceState != null && savedInstanceState.containsKey("cameraAttachment")) {
+      cameraAttachment = new File(savedInstanceState.getString("cameraAttachment"));
+    }
 
     mUserRow = findViewById(R.id.compose_post_userid_row);
     mUserID = findViewById(R.id.compose_post_userid);
     mTitle = findViewById(R.id.compose_post_title);
     mAttachRow = findViewById(R.id.compose_post_attach_row);
     mAttachments = findViewById(R.id.compose_post_attach);
+    mAttachments.setText(String.format("共有%d个附件", mPhotos.size()));
     mCompress = findViewById(R.id.compose_post_attach_switch);
     mContent = findViewById(R.id.compose_post_content);
     mContentCount = findViewById(R.id.compose_post_content_label);
@@ -311,6 +388,10 @@ public class ComposePostActivity extends SMTHBaseActivity {
   }
 
   public void publishPost() {
+    if (importingImages) {
+      Toast.makeText(this, "正在读取图片，请稍候", Toast.LENGTH_SHORT).show();
+      return;
+    }
 
     postPublishResult = AjaxResponse.AJAX_RESULT_OK;
     postPublishMessage = "";

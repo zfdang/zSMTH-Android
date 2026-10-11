@@ -1,7 +1,6 @@
 package com.zfdang.zsmth_android;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -82,9 +81,6 @@ public class MainActivity extends SMTHBaseActivity
   // used by startActivityForResult
   static final int LOGIN_ACTIVITY_REQUEST_CODE = 9527;  // The request code
   private static final String TAG = "MainActivity";
-
-  // keep aive service
-  private Intent keepAliveService;
 
   // guidance fragment: display hot topics
   // this fragment is using RecyclerView to show all hot topics
@@ -325,7 +321,7 @@ public class MainActivity extends SMTHBaseActivity
 
       @Override
       public void onServerFailed() {
-        stopService(keepAliveService);
+        KeepAliveService.stop(MainActivity.this);
         SMTHApplication.activeUser = null;
         SMTHApplication.displayedUserId = "guest";
         runOnUiThread(() -> {
@@ -338,27 +334,7 @@ public class MainActivity extends SMTHBaseActivity
   }
 
   private void init_keep_alive_service() {
-    if (keepAliveService == null)
-      keepAliveService = new Intent(this, KeepAliveService.class);
-    if (!isKeepAliveServiceRunning()) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        startForegroundService(keepAliveService);
-      else
-        startService(keepAliveService);
-    }
-  }
-  public Boolean isKeepAliveServiceRunning() {
-    String ServiceName = KeepAliveService.class.getName();
-    ActivityManager myManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-    ArrayList<ActivityManager.RunningServiceInfo> runningService =
-            (ArrayList<ActivityManager.RunningServiceInfo>)
-                    myManager.getRunningServices(Integer.MAX_VALUE);
-    for (int i = 0; i < runningService.size(); i++) {
-      if (runningService.get(i).service.getClassName().equals(ServiceName)) {
-        return true;
-      }
-    }
-    return false;
+    KeepAliveService.start(this);
   }
 
   private void showNotification(String text) {
@@ -526,8 +502,7 @@ public class MainActivity extends SMTHBaseActivity
       mUsername.setText(getString(R.string.nav_header_click_to_login));
       mAvatar.setImageResource(R.drawable.ic_person_black_48dp);
       SMTHApplication.displayedUserId = "guest";
-      if (keepAliveService != null)
-        stopService(keepAliveService);
+      KeepAliveService.stop(this);
     }
   }
 
@@ -579,8 +554,7 @@ public class MainActivity extends SMTHBaseActivity
 
   private void quitNow() {
     // stop keep alive service
-    if (keepAliveService != null)
-      stopService(keepAliveService);
+    KeepAliveService.stop(this);
 
     // quit
     finish();
