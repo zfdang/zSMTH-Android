@@ -76,6 +76,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
 
   private File cameraAttachment;
   private boolean importingImages;
+  private boolean reportSending;
   private final ActivityResultLauncher<PickVisualMediaRequest> imagePicker =
       registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(5), this::importImages);
   private final ActivityResultLauncher<Uri> cameraPicker =
@@ -233,6 +234,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
 
   // three methods to manage content cache
   private void restorePostContentFromCache() {
+    if (isChildSafetyReport()) return;
     final String content = Settings.getInstance().getPostCache();
     if (content != null && content.length() > 0 && content.length() != mContent.getText().toString().length()) {
       AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ComposePostActivity.this);
@@ -257,12 +259,13 @@ public class ComposePostActivity extends SMTHBaseActivity {
   }
 
   private void savePostContentToCache() {
+    if (isChildSafetyReport()) return;
     String content = mContent.getText().toString();
     Settings.getInstance().setPostCache(content);
   }
 
   private void clearPostContentCache() {
-    Settings.getInstance().setPostCache("");
+    if (!isChildSafetyReport()) Settings.getInstance().setPostCache("");
   }
 
   @Override protected void onPause() {
@@ -326,6 +329,19 @@ public class ComposePostActivity extends SMTHBaseActivity {
       getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
+    if (isChildSafetyReport()) {
+      mAttachRow.setVisibility(View.GONE);
+      setTitle(R.string.child_safety_report_action);
+      mUserID.setText("sysop");
+      mUserID.setEnabled(false);
+      mTitle.setText(R.string.child_safety_report_subject);
+      mTitle.setEnabled(false);
+      mContent.setText(mPostContext.getPostContent());
+      mContent.setHint(R.string.child_safety_report_hint);
+      mContent.requestFocus();
+      return;
+    }
+
     // set post title & content
     if (mPostContext.isValidPost()) {
       // have valid post information
@@ -387,17 +403,38 @@ public class ComposePostActivity extends SMTHBaseActivity {
     }
   }
 
+  private boolean isChildSafetyReport() {
+    return mPostContext != null
+        && mPostContext.getComposingMode() == ComposePostContext.MODE_CHILD_SAFETY_REPORT;
+  }
+
   public void publishPost() {
+    if (isChildSafetyReport() && reportSending) return;
+    if (isChildSafetyReport() && mContent.getText().toString().trim().isEmpty()) {
+      mContent.setError(getString(R.string.child_safety_report_hint));
+      mContent.requestFocus();
+      return;
+    }
+    if (isChildSafetyReport()
+        && (!Settings.getInstance().isUserOnline() || !Settings.getInstance().isLastLoginSuccess())) {
+      new AlertDialog.Builder(this)
+          .setMessage(R.string.child_safety_login_required)
+          .setPositiveButton(R.string.action_login,
+              (dialog, which) -> startActivity(new Intent(this, LoginActivity.class)))
+          .setNegativeButton(android.R.string.cancel, null).show();
+      return;
+    }
     if (importingImages) {
       Toast.makeText(this, "正在读取图片，请稍候", Toast.LENGTH_SHORT).show();
       return;
     }
 
+    reportSending = isChildSafetyReport();
     postPublishResult = AjaxResponse.AJAX_RESULT_OK;
     postPublishMessage = "";
     lastResponse = null;
 
-    final String progressHint = "发表文章中(%d/%d)...";
+    final String progressHint = isChildSafetyReport() ? "提交举报中(%d/%d)..." : "发表文章中(%d/%d)...";
     ComposePostActivity.totalSteps = 1;
     ComposePostActivity.currentStep = 1;
     if (mPhotos != null) {
@@ -432,14 +469,14 @@ public class ComposePostActivity extends SMTHBaseActivity {
 
     // publish post
     String postContent = mContent.getText().toString();
-    if (Settings.getInstance().bUseSignature()) {
+    if (!isChildSafetyReport() && Settings.getInstance().bUseSignature()) {
       postContent += "\n" + String.format("#发自zSMTH@%s", Settings.getInstance().getSignature());
     }
     Observable<AjaxResponse> resp2 = null;
-    if (mPostContext.getComposingMode() == ComposePostContext.MODE_NEW_MAIL
+    if (isChildSafetyReport() || mPostContext.getComposingMode() == ComposePostContext.MODE_NEW_MAIL
         || mPostContext.getComposingMode() == ComposePostContext.MODE_NEW_MAIL_TO_USER
         || mPostContext.getComposingMode() == ComposePostContext.MODE_REPLY_MAIL) {
-      String userid = mUserID.getText().toString().trim();
+      String userid = isChildSafetyReport() ? "sysop" : mUserID.getText().toString().trim();
       resp2 = SMTHHelper.sendMail(userid, mTitle.getText().toString(), postContent);
     } else if (mPostContext.getComposingMode() == ComposePostContext.MODE_NEW_POST
         || mPostContext.getComposingMode() == ComposePostContext.MODE_REPLY_POST) {
@@ -474,13 +511,25 @@ public class ComposePostActivity extends SMTHBaseActivity {
           }
 
           @Override public void onError(@NonNull Throwable e) {
+            reportSending = false;
             dismissProgress();
             Toast.makeText(SMTHApplication.getAppContext(), "发生错误:\n" + e.toString(), Toast.LENGTH_LONG).show();
 
           }
 
           @Override public void onComplete() {
+            reportSending = false;
             dismissProgress();
+            if (isChildSafetyReport() && lastResponse == null) {
+              postPublishResult = AjaxResponse.AJAX_RESULT_FAILED;
+              postPublishMessage = "未收到服务器确认，请检查发件箱后再重试。";
+            }
+            if (isChildSafetyReport() && lastResponse != null
+                && lastResponse.getAjax_msg() != null
+                && lastResponse.getAjax_msg().contains("本文可能含有不当内容")) {
+              postPublishResult = AjaxResponse.AJAX_RESULT_FAILED;
+              postPublishMessage = lastResponse.getAjax_msg();
+            }
 
             String message;
             if (postPublishResult != AjaxResponse.AJAX_RESULT_OK) {
@@ -494,6 +543,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
                 // otherwise, compose the message by ourself
                 message = "成功!";
               }
+              if (isChildSafetyReport()) message = getString(R.string.child_safety_report_success);
               Toast.makeText(SMTHApplication.getAppContext(), message, Toast.LENGTH_LONG).show();
 
               KeyboardLess.$hide(ComposePostActivity.this, mContent);

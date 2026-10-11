@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:fitsSystemWindows="true"
+    android:background="@color/body_background_night">
+  <androidx.appcompat.widget.Toolbar
+      android:id="@+id/toolbar" android:layout_width="match_parent"
+      android:layout_height="@dimen/zsmth_actionbar_size"
+      android:background="?attr/colorPrimary" android:theme="@style/ThemeOverlay.ToolBar"
+      app:titleTextAppearance="@style/Toolbar.TitleText" />
+  <ScrollView android:layout_width="match_parent" android:layout_height="0dp"
+      android:layout_weight="1" android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="20dp">
+      <TextView android:textColor="@color/status_text_night" android:layout_width="match_parent" android:layout_height="wrap_content"
+          android:text="@string/child_safety_identity" android:textSize="16sp" />
+      <TextView android:textColor="@color/status_text_night" android:layout_width="match_parent" android:layout_height="wrap_content"
+          android:layout_marginTop="16dp" android:text="@string/child_safety_prohibition"
+          android:textSize="16sp" />
+      <TextView android:textColor="@color/status_text_night" android:layout_width="match_parent" android:layout_height="wrap_content"
+          android:layout_marginTop="16dp" android:text="@string/child_safety_handling"
+          android:textSize="16sp" />
+      <TextView android:textColor="@color/status_text_night" android:layout_width="match_parent" android:layout_height="wrap_content"
+          android:layout_marginTop="16dp" android:text="@string/child_safety_contact"
+          android:textIsSelectable="true" android:textSize="16sp" />
+      <Button android:id="@+id/child_safety_report" android:layout_width="match_parent"
+          android:layout_height="wrap_content" android:layout_marginTop="24dp"
+          android:text="@string/child_safety_report_action" />
+    </LinearLayout>
+  </ScrollView>
+</LinearLayout>

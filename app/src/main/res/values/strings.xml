@@ -147,4 +147,15 @@
   <string name="mail_content_title">加载中...</string>
 
   <string name="read_write_storage_rationale">需要"读写存储的权限"来保存文件</string>
+  <string name="child_safety_title">儿童安全与举报</string>
+  <string name="child_safety_identity">zSMTH水木社区(水木清华BBS)客户端由 zfdang 独立开发，是水木社区的第三方客户端，并非论坛官方应用。论坛账号、帖子与站内信由水木社区运营方管理。</string>
+  <string name="child_safety_prohibition">本客户端禁止儿童性虐待与性剥削（CSAE），包括儿童性虐待材料（CSAM）、诱骗、性化未成年人、针对未成年人的性勒索，以及索取或传播相关材料。</string>
+  <string name="child_safety_handling">论坛内容举报可在本应用内通过站内信发送给论坛管理员 sysop。论坛运营方负责核查及服务器内容的处置；本客户端开发者没有删除服务器帖子或封禁论坛账号的权限。开发者接到儿童安全问题通知后，会核查客户端相关问题，并按适用法律向有管辖权的主管机构报告及配合处理。</string>
+  <string name="child_safety_contact">客户端儿童安全联系人：zfdang\n邮箱：me@zfdang.com\n论坛内容举报接收方：sysop\n公开标准：https://zsmth.zfdang.com/child-safety.html</string>
+  <string name="child_safety_report_action">向论坛管理员举报</string>
+  <string name="child_safety_report_notice">举报将通过水木社区站内信发送给管理员 sysop，由论坛运营方处理。请填写帖子链接、版面、作者 ID、时间和问题说明。不要下载、转发或附加违法图片或视频，也不要提供不必要的个人信息。点击发送前可检查内容。</string>
+  <string name="child_safety_login_required">向 sysop 发送站内信需要登录水木账号。登录及举报均在本应用内完成。儿童安全标准和联系人无需登录即可查看。</string>
+  <string name="child_safety_report_subject">儿童安全问题举报（来自 zSMTH）</string>
+  <string name="child_safety_report_hint">请填写举报原因、帖子链接、版面和作者 ID；勿附违法图片或视频</string>
+  <string name="child_safety_report_success">举报站内信已提交给 sysop，请在发件箱核对。</string>
 </resources>
