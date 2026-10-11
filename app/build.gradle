@@ -7,7 +7,7 @@ def getDate() {
     def formattedDate = date.format('yy.MM.dd')
     return formattedDate
 }
-def releaseVersionCode = 1027
+def releaseVersionCode = 1028
 def appVersion = getDate()
 
 android {
