@@ -101,6 +101,9 @@ public class ComposePostActivity extends SMTHBaseActivity {
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getOnBackPressedDispatcher().addCallback(this, new androidx.activity.OnBackPressedCallback(true) {
+      @Override public void handleOnBackPressed() { handleBackAction(); }
+    });
     setContentView(R.layout.activity_compose_post);
 
     Toolbar toolbar = findViewById(R.id.toolbar);
@@ -283,7 +286,7 @@ public class ComposePostActivity extends SMTHBaseActivity {
     return super.onCreateOptionsMenu(menu);
   }
 
-  @Override public void onBackPressed() {
+  private void handleBackAction() {
     onBackAction();
   }
 

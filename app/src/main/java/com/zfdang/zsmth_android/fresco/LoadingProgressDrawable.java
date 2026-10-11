@@ -66,7 +66,7 @@ public class LoadingProgressDrawable extends Drawable {
   }
 
   @Override public int getOpacity() {
-    return Color.TRANSPARENT;
+    return android.graphics.PixelFormat.TRANSPARENT;
   }
 
   @Override protected boolean onLevelChange(int level) {

@@ -6,10 +6,6 @@ buildscript {
         mavenCentral()
         // jcenter()
         google()
-        maven {
-            url "http://mvn.mob.com/android/";
-            allowInsecureProtocol = true;
-        }
     }
     dependencies {
         // https://developer.android.com/studio/releases/gradle-plugin.html
@@ -21,8 +17,6 @@ buildscript {
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
 
-        // 注册MobSDK
-        classpath 'com.mob.sdk:MobSDK:+'
     }
 }
 
@@ -48,10 +42,10 @@ task clean(type: Delete) {
 }
 
 ext {
-    minSdkVersion = 17
-    targetSdkVersion = 35
-    compileSdkVersion = 35
-    FRESCO_VERSION = '1.14.2'
+    minSdkVersion = 21
+    targetSdkVersion = 36
+    compileSdkVersion = 36
+    FRESCO_VERSION = '3.9.0'
     RXJAVA2_VERSION = '2.2.21'
     RXANDROID2_VERSION = '2.1.1'
 }
