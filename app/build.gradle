@@ -7,7 +7,7 @@ def getDate() {
     def formattedDate = date.format('yy.MM.dd')
     return formattedDate
 }
-def releaseVersionCode = 1029
+def releaseVersionCode = 1030
 def appVersion = getDate()
 
 android {
@@ -131,6 +131,9 @@ dependencies {
     // Pin the current SDK instead of resolving obsolete com.umeng.sdk artifacts.
     implementation 'com.umeng.umsdk:common:10.0.1'
     implementation 'com.umeng.umsdk:asms:1.8.7.2'
+
+    // Official WeChat SDK for user-initiated webpage card sharing.
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android:6.8.40'
 
     // other dependencies
     implementation 'pub.devrel:easypermissions:3.0.0'

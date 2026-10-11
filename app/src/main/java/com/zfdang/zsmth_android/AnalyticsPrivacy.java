@@ -29,6 +29,7 @@ public final class AnalyticsPrivacy {
     if (enabled) {
       initialize(context);
     } else if (initialized) {
+      UMConfigure.submitPolicyGrantResult(context.getApplicationContext(), false);
       MobclickAgent.disable();
       initialized = false;
       disabledForProcess = true;
@@ -46,6 +47,7 @@ public final class AnalyticsPrivacy {
     UMConfigure.enableInstallReferrerCollection(false);
     UMConfigure.setLogEnabled(false);
     UMConfigure.preInit(appContext, "56e8c05567e58e0a9e0011cc", "UMENG_CHANNEL");
+    UMConfigure.submitPolicyGrantResult(appContext, true);
     MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.MANUAL);
     UMConfigure.init(appContext, "56e8c05567e58e0a9e0011cc", "UMENG_CHANNEL",
         UMConfigure.DEVICE_TYPE_PHONE, null);

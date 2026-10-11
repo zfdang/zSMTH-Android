@@ -21,6 +21,12 @@ public class WebviewLoginActivity extends SMTHBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview_login);
+        androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.webview_login_toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        toolbar.setNavigationOnClickListener(view -> finish());
 
         // get username & password
         Bundle extras = getIntent().getExtras();

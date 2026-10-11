@@ -19,6 +19,9 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" tools:node="remove" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <queries>
+        <package android:name="com.tencent.mm" />
+    </queries>
     <application
         android:name="com.zfdang.SMTHApplication"
         android:allowBackup="true"
@@ -43,10 +46,12 @@
         </activity>
         <activity
             android:name=".LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_login" />
         <activity
             android:name=".WebviewLoginActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:hardwareAccelerated="true"
             android:configChanges="orientation|keyboardHidden|screenSize"></activity>
         <activity
@@ -90,6 +95,10 @@
             android:grantUriPermissions="true">
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/attachment_paths" />
         </provider>
+
+        <activity android:name=".wxapi.WXEntryActivity"
+            android:exported="true" android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- service -->
         <!-- aadapt to S8 and Mix2 -->

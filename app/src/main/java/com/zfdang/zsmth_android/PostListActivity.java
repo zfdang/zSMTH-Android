@@ -86,6 +86,8 @@ public class PostListActivity extends SMTHBaseActivity
     implements View.OnClickListener, OnTouchListener, RecyclerViewGestureListener.OnItemLongClickListener,
     PopupLikeWindow.OnLikeInterface,
     PopupForwardWindow.OnForwardInterface, PopupBanWindow.OnBanIDInterface {
+  private static final int LOGIN_REQUEST_CODE = 130;
+
 
   private static final String TAG = "PostListActivity";
   public RecyclerView mRecyclerView = null;
@@ -149,6 +151,9 @@ public class PostListActivity extends SMTHBaseActivity
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if (requestCode == LOGIN_REQUEST_CODE && resultCode == RESULT_OK) {
+      reloadPostList();
+    }
     if (requestCode == ComposePostActivity.COMPOSE_ACTIVITY_REQUEST_CODE) {
       // returned from Compose activity, refresh current post
       // TODO: check resultCode
@@ -296,14 +301,9 @@ public class PostListActivity extends SMTHBaseActivity
         .flatMap(new Function<ResponseBody, Observable<Post>>() {
           @Override
           public Observable<Post> apply(@NonNull ResponseBody responseBody) throws Exception {
-            try {
-              String response = responseBody.string();
-              List<Post> posts = SMTHHelper.ParsePostListFromWWW(response, mTopic);
-              return Observable.fromIterable(posts);
-            } catch (Exception e) {
-              Log.e(TAG, Log.getStackTraceString(e));
-            }
-            return null;
+            String response = responseBody.string();
+            List<Post> posts = SMTHHelper.ParsePostListFromWWW(response, mTopic);
+            return Observable.fromIterable(posts);
           }
         })
         .subscribeOn(Schedulers.io())
@@ -324,6 +324,16 @@ public class PostListActivity extends SMTHBaseActivity
           @Override
           public void onError(@NonNull Throwable e) {
             clearLoadingHints();
+            if (e instanceof com.zfdang.zsmth_android.newsmth.GuestReadVerificationException) {
+              new androidx.appcompat.app.AlertDialog.Builder(PostListActivity.this)
+                  .setTitle("需要登录或阅读验证")
+                  .setMessage(e.getMessage())
+                  .setPositiveButton("登录", (dialog, which) ->
+                      startActivityForResult(new Intent(PostListActivity.this, LoginActivity.class), LOGIN_REQUEST_CODE))
+                  .setNegativeButton("取消", null)
+                  .show();
+              return;
+            }
             Toast.makeText(SMTHApplication.getAppContext(), "加载失败！\n" + e.toString(), Toast.LENGTH_LONG).show();
           }
 
@@ -857,11 +867,32 @@ public class PostListActivity extends SMTHBaseActivity
     if (content.length() > 110) {
       content = content.substring(0, 110) + "…";
     }
-    Intent shareIntent = new Intent(Intent.ACTION_SEND);
-    shareIntent.setType("text/plain");
-    shareIntent.putExtra(Intent.EXTRA_SUBJECT, title);
-    shareIntent.putExtra(Intent.EXTRA_TEXT, title + "\n" + content + "\n" + postURL);
-    startActivity(Intent.createChooser(shareIntent, "分享帖子"));
+    final String summary = content;
+    final String text = title + "\n" + summary + "\n" + postURL;
+    new AlertDialog.Builder(this)
+        .setTitle("分享帖子")
+        .setItems(new String[]{"微信好友", "微信朋友圈", "短信", "邮件"}, (dialog, which) -> {
+          if (which < 2) {
+            WeChatShare.share(this, title, summary, postURL, which == 1);
+            return;
+          }
+          Intent intent;
+          if (which == 2) {
+            intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:"));
+            intent.putExtra("sms_body", text);
+          } else {
+            intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:?subject="
+                + Uri.encode(title) + "&body=" + Uri.encode(text)));
+            intent.putExtra(Intent.EXTRA_SUBJECT, title);
+            intent.putExtra(Intent.EXTRA_TEXT, text);
+          }
+          try {
+            startActivity(intent);
+          } catch (android.content.ActivityNotFoundException | SecurityException error) {
+            Toast.makeText(this, which == 2 ? "未找到可用的短信应用" : "未找到可用的邮件应用",
+                Toast.LENGTH_LONG).show();
+          }
+        }).show();
   }
 
   @Override

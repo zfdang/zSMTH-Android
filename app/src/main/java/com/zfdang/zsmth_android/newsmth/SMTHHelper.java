@@ -427,6 +427,7 @@ public class SMTHHelper {
     List<Post> results = new ArrayList<>();
 
     Document doc = Jsoup.parse(content);
+    GuestReadVerificationException.check(doc);
 
     // find total posts for this topic, and total pages
     Elements lis = doc.select("li.page-pre");
