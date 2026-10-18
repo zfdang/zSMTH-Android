@@ -14,6 +14,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.zfdang.SMTHApplication;
+import com.zfdang.zsmth_android.R;
 import com.zfdang.zsmth_android.Settings;
 import com.zfdang.zsmth_android.WebviewCookieHandler;
 import com.zfdang.zsmth_android.helpers.MakeList;
@@ -37,7 +38,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.security.KeyStore;
+import java.security.SecureRandom;
 import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -45,11 +50,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 import io.reactivex.Observable;
@@ -117,46 +121,87 @@ public class SMTHHelper {
     return result;
   }
 
-  // https://stackoverflow.com/questions/25509296/trusting-all-certificates-with-okhttp
+  // Builds the HTTPS client with platform trust and the bundled legacy-device root fallback.
   private static OkHttpClient getUnsafeOkHttpClient() {
     try {
-      // Create a trust manager that does not validate certificate chains
-      final TrustManager[] trustAllCerts = new TrustManager[] {
-          new X509TrustManager() {
-            @Override
-            public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType)
-                throws CertificateException {
-            }
+      TrustManagerFactory platformTrustManagerFactory = TrustManagerFactory
+          .getInstance(TrustManagerFactory.getDefaultAlgorithm());
+      platformTrustManagerFactory.init((KeyStore) null);
+      X509TrustManager platformTrustManager = null;
+      for (TrustManager trustManager : platformTrustManagerFactory.getTrustManagers()) {
+        if (trustManager instanceof X509TrustManager) {
+          platformTrustManager = (X509TrustManager) trustManager;
+          break;
+        }
+      }
+      if (platformTrustManager == null) {
+        throw new CertificateException("No platform X509TrustManager available");
+      }
 
-            @Override
-            public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType)
-                throws CertificateException {
-            }
+      CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+      X509Certificate rootCertificate;
+      try (InputStream certificateInput = SMTHApplication.getAppContext().getResources()
+          .openRawResource(R.raw.tls_root_isrg_root_x1)) {
+        rootCertificate = (X509Certificate) certificateFactory.generateCertificate(certificateInput);
+      }
 
-            @Override
-            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-              return new java.security.cert.X509Certificate[] {};
-            }
+      KeyStore bundledKeyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+      bundledKeyStore.load(null, null);
+      bundledKeyStore.setCertificateEntry("isrg-root-x1", rootCertificate);
+      TrustManagerFactory bundledTrustManagerFactory = TrustManagerFactory
+          .getInstance(TrustManagerFactory.getDefaultAlgorithm());
+      bundledTrustManagerFactory.init(bundledKeyStore);
+      X509TrustManager bundledTrustManager = null;
+      for (TrustManager trustManager : bundledTrustManagerFactory.getTrustManagers()) {
+        if (trustManager instanceof X509TrustManager) {
+          bundledTrustManager = (X509TrustManager) trustManager;
+          break;
+        }
+      }
+      if (bundledTrustManager == null) {
+        throw new CertificateException("No bundled-root X509TrustManager available");
+      }
+
+      final X509TrustManager defaultTrustManager = platformTrustManager;
+      final X509TrustManager fallbackTrustManager = bundledTrustManager;
+      final X509TrustManager compositeTrustManager = new X509TrustManager() {
+        @Override
+        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+          try {
+            defaultTrustManager.checkClientTrusted(chain, authType);
+          } catch (CertificateException platformFailure) {
+            fallbackTrustManager.checkClientTrusted(chain, authType);
           }
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+          try {
+            defaultTrustManager.checkServerTrusted(chain, authType);
+          } catch (CertificateException platformFailure) {
+            fallbackTrustManager.checkServerTrusted(chain, authType);
+          }
+        }
+
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+          X509Certificate[] defaultIssuers = defaultTrustManager.getAcceptedIssuers();
+          X509Certificate[] fallbackIssuers = fallbackTrustManager.getAcceptedIssuers();
+          X509Certificate[] issuers = new X509Certificate[defaultIssuers.length + fallbackIssuers.length];
+          System.arraycopy(defaultIssuers, 0, issuers, 0, defaultIssuers.length);
+          System.arraycopy(fallbackIssuers, 0, issuers, defaultIssuers.length, fallbackIssuers.length);
+          return issuers;
+        }
       };
 
-      // Install the all-trusting trust manager
-      final SSLContext sslContext = SSLContext.getInstance("SSL");
-      sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-      // Create an ssl socket factory with our all-trusting manager
+      final TrustManager[] trustManagers = new TrustManager[] { compositeTrustManager };
+      final SSLContext sslContext = SSLContext.getInstance("TLS");
+      sslContext.init(null, trustManagers, new SecureRandom());
       final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 
       OkHttpClient.Builder builder = new OkHttpClient.Builder();
-      builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
-      builder.hostnameVerifier(new HostnameVerifier() {
-        @Override
-        public boolean verify(String hostname, SSLSession session) {
-          return true;
-        }
-      });
-
-      OkHttpClient okHttpClient = builder.build();
-      return okHttpClient;
+      builder.sslSocketFactory(sslSocketFactory, compositeTrustManager);
+      return builder.build();
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
